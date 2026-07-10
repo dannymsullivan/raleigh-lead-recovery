@@ -1,11 +1,11 @@
-import { Calculator, DollarSign, ExternalLink, LogOut, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
+import { Calculator, DollarSign, ExternalLink, Inbox, LogOut, Mail, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { addClientAction, loginAction, logoutAction } from "../actions";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import type { Client } from "@/lib/types";
+import type { Client, PilotRequest } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +31,24 @@ async function loadClients(): Promise<{ clients: Client[]; error: string | null 
   } catch (error) {
     return {
       clients: [],
+      error: error instanceof Error ? error.message : "Unknown Supabase error"
+    };
+  }
+}
+
+async function loadPilotRequests(): Promise<{ requests: PilotRequest[]; error: string | null }> {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase.from("pilot_requests").select("*").order("created_at", { ascending: false }).limit(12);
+
+    if (error) {
+      return { requests: [], error: error.message };
+    }
+
+    return { requests: (data ?? []) as PilotRequest[], error: null };
+  } catch (error) {
+    return {
+      requests: [],
       error: error instanceof Error ? error.message : "Unknown Supabase error"
     };
   }
@@ -88,7 +106,11 @@ export default async function AdminPage({ searchParams }: PageProps) {
     );
   }
 
-  const [{ clients, error: loadError }, { dashboard, error: costError }] = await Promise.all([loadClients(), loadCosts()]);
+  const [{ clients, error: loadError }, { requests, error: requestsError }, { dashboard, error: costError }] = await Promise.all([
+    loadClients(),
+    loadPilotRequests(),
+    loadCosts()
+  ]);
 
   return (
     <main className="min-h-screen">
@@ -109,6 +131,10 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
       <div className="mx-auto max-w-6xl px-5 pt-6">
         <CostDashboardSection dashboard={dashboard} error={costError} />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 pt-6">
+        <AuditRequestsSection requests={requests} error={requestsError} />
       </div>
 
       <div className="mx-auto grid max-w-6xl gap-6 px-5 py-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -188,6 +214,86 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </section>
       </div>
     </main>
+  );
+}
+
+function AuditRequestsSection({ requests, error }: { requests: PilotRequest[]; error: string | null }) {
+  if (error) {
+    return (
+      <section className="rounded border border-red-200 bg-red-50 p-4 text-sm text-red-900">
+        Audit requests could not load: {error}
+      </section>
+    );
+  }
+
+  return (
+    <section className="rounded border border-neutral-200 bg-white p-5 shadow-sm">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div>
+          <p className="text-sm font-medium text-red-700">Landing page</p>
+          <h2 className="text-2xl font-semibold tracking-normal">Audit requests</h2>
+          <p className="mt-1 text-sm text-neutral-600">Newest free-audit form submissions from the public site.</p>
+        </div>
+        <div className="inline-flex w-fit items-center gap-2 rounded bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-700">
+          <Inbox className="h-4 w-4" aria-hidden="true" />
+          {requests.length} recent
+        </div>
+      </div>
+
+      {requests.length === 0 ? (
+        <div className="mt-5 rounded border border-dashed border-neutral-300 bg-neutral-50 p-5 text-sm text-neutral-600">
+          No audit requests yet.
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-3 lg:grid-cols-2">
+          {requests.map((request) => (
+            <article key={request.id} className="rounded border border-neutral-200 bg-neutral-50 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-normal text-neutral-950">{request.business_name}</h3>
+                  <p className="mt-1 text-sm text-neutral-600">
+                    {request.owner_name} - {request.service_area}
+                  </p>
+                </div>
+                <p className="shrink-0 text-sm text-neutral-500">{formatDateTime(request.created_at)}</p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`tel:${request.owner_phone}`}>
+                  <PhoneCall className="h-3.5 w-3.5" aria-hidden="true" />
+                  {request.owner_phone}
+                </a>
+                <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`sms:${request.owner_phone}`}>
+                  <MessageSquareText className="h-3.5 w-3.5" aria-hidden="true" />
+                  Text
+                </a>
+                {request.owner_email ? (
+                  <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`mailto:${request.owner_email}`}>
+                    <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                    Email
+                  </a>
+                ) : null}
+              </div>
+
+              {request.notes ? <p className="mt-4 text-sm leading-6 text-neutral-700">{request.notes}</p> : null}
+
+              <dl className="mt-4 grid gap-2 text-xs text-neutral-500 sm:grid-cols-2">
+                <div>
+                  <dt className="font-medium text-neutral-700">Source</dt>
+                  <dd>{request.source}</dd>
+                </div>
+                {request.website ? (
+                  <div>
+                    <dt className="font-medium text-neutral-700">Website</dt>
+                    <dd className="truncate">{request.website}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -342,6 +448,15 @@ function formatShortDate(value: string): string {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric"
+  }).format(new Date(value));
+}
+
+function formatDateTime(value: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
   }).format(new Date(value));
 }
 
