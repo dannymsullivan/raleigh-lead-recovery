@@ -105,7 +105,7 @@ export async function requestAuditAction(formData: FormData): Promise<void> {
     weekly_missed_calls: formString(formData, "weekly_missed_calls") || null,
     current_after_hours: formString(formData, "current_after_hours") || null,
     notes: formString(formData, "notes") || null,
-    source: "raleigh_lead_recovery_landing"
+    source: formString(formData, "source") || "raleigh_lead_recovery_landing"
   });
 
   if (error) {
