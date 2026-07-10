@@ -49,7 +49,7 @@ npm run dev
 
 Open `http://localhost:3000` for the public Raleigh plumber landing page.
 
-Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, and open the seeded report link.
+Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, or open the public sample at `http://localhost:3000/example-report`.
 
 ## Vapi Configuration
 

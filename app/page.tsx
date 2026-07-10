@@ -12,9 +12,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { requestAuditAction } from "./actions";
+import { demoReportHref } from "@/lib/demo-report";
 
 const demoNumber = "+19842992155";
-const demoReportHref = "/report/11111111-1111-4111-8111-111111111111";
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -243,7 +243,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               ))}
             </div>
             <a className="mt-10 inline-flex items-center gap-2 rounded bg-[#090d07] px-6 py-4 font-black text-white hover:bg-[#20251d]" href={demoReportHref}>
-              See your report
+              View example report
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </a>
           </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AlertTriangle, Clock3, PhoneCall, TrendingUp } from "lucide-react";
+import { isDemoReport, isVisibleDemoCall, resolveReportClientId } from "@/lib/demo-report";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
 import { loadClientReport } from "@/lib/supabase-server";
 import type { ReportCall } from "@/lib/report";
@@ -22,14 +23,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ReportPage({ params }: PageProps) {
-  const { clientId } = await params;
+  const { clientId: reportParam } = await params;
+  const clientId = resolveReportClientId(reportParam);
   const data = await loadClientReport(clientId);
 
   if (!data) {
     notFound();
   }
 
-  const report = buildReportModel(data.client, data.calls);
+  const isExampleReport = isDemoReport(reportParam, clientId);
+  const calls = isExampleReport ? data.calls.filter(isVisibleDemoCall) : data.calls;
+  const report = buildReportModel(data.client, calls);
 
   return (
     <main className="min-h-screen bg-[#f6f7f4]">
@@ -37,13 +41,15 @@ export default async function ReportPage({ params }: PageProps) {
         <div className="mx-auto grid max-w-6xl gap-6 px-5 py-8 md:grid-cols-[1.2fr_0.8fr] md:items-end">
           <div>
             <p className="mb-3 inline-flex rounded bg-red-100 px-2 py-1 text-sm font-medium text-red-800">
-              7-day missed call pilot
+              {isExampleReport ? "Example missed-call report" : "7-day missed call pilot"}
             </p>
             <h1 className="max-w-3xl text-4xl font-semibold tracking-normal text-neutral-950 md:text-5xl">
-              {report.client.business_name}, here is what you were missing.
+              {isExampleReport ? `Example report: what ${report.client.business_name} was missing.` : `${report.client.business_name}, here is what you were missing.`}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-700">
-              Calls answered after the line was busy or no one could pick up. Numbers are masked here; full callback details go by owner SMS.
+              {isExampleReport
+                ? "Sample missed calls from a 7-day audit. Customer details are masked, but the plumbing issues, urgency, and value bands show what the owner would receive."
+                : "Calls answered after the line was busy or no one could pick up. Numbers are masked here; full callback details go by owner SMS."}
             </p>
           </div>
           <div className="rounded border border-neutral-200 bg-neutral-950 p-5 text-white shadow-sm">
@@ -124,13 +130,13 @@ function TimelineItem({ call }: { call: ReportCall }) {
             <span className="text-sm text-neutral-500">{formatRelativeTime(call.created_at)}</span>
             <span className="text-sm text-neutral-500">{call.locationLabel}</span>
           </div>
-          <h3 className="text-lg font-semibold tracking-normal">{call.caller_name ?? "Caller name captured"}</h3>
-          <p className="mt-1 max-w-3xl text-sm leading-6 text-neutral-700">{call.issue_description ?? call.summary ?? "Call details captured."}</p>
+          <h3 className="text-lg font-semibold tracking-normal">{formatCallerName(call.caller_name)}</h3>
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-neutral-700">{call.issue_description ?? call.summary ?? "Plumbing issue captured."}</p>
           <p className="mt-2 text-sm text-neutral-600">Callback: {call.maskedCallbackNumber}</p>
         </div>
         <div className="shrink-0 text-left md:text-right">
           <p className="text-sm text-neutral-500">Value band</p>
-          <p className="font-semibold">{call.estimated_value_band.replaceAll("_", " ")}</p>
+          <p className="font-semibold">{formatValueBand(call.estimated_value_band)}</p>
           <p className="text-sm text-neutral-600">{formatCurrency(call.estimatedValue)}</p>
         </div>
       </div>
@@ -162,7 +168,49 @@ function UrgencyBadge({ urgency }: { urgency: ReportCall["urgency"] }) {
       ? "bg-red-100 text-red-800"
       : urgency === "urgent"
         ? "bg-amber-100 text-amber-900"
+        : urgency === "spam"
+          ? "bg-neutral-200 text-neutral-600"
+          : urgency === "other"
+            ? "bg-blue-100 text-blue-800"
         : "bg-neutral-100 text-neutral-700";
 
-  return <span className={`rounded px-2 py-1 text-xs font-semibold uppercase tracking-normal ${className}`}>{urgency}</span>;
+  return <span className={`rounded px-2 py-1 text-xs font-semibold uppercase tracking-normal ${className}`}>{formatUrgency(urgency)}</span>;
+}
+
+function formatCallerName(name: string | null): string {
+  if (!name || name.trim().toLowerCase() === "unknown") {
+    return "Lead details captured";
+  }
+
+  return name;
+}
+
+function formatValueBand(valueBand: ReportCall["estimated_value_band"]): string {
+  switch (valueBand) {
+    case "under_300":
+      return "Under $300";
+    case "300_800":
+      return "$300-$800";
+    case "800_2000":
+      return "$800-$2,000";
+    case "over_2000":
+      return "Over $2,000";
+    case "unknown":
+      return "Needs review";
+  }
+}
+
+function formatUrgency(urgency: ReportCall["urgency"]): string {
+  switch (urgency) {
+    case "emergency":
+      return "Emergency";
+    case "urgent":
+      return "Urgent";
+    case "standard":
+      return "Standard";
+    case "spam":
+      return "Filtered";
+    case "other":
+      return "Follow-up";
+  }
 }

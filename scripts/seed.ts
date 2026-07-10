@@ -68,7 +68,7 @@ async function main() {
     .from("calls")
     .delete()
     .eq("client_id", clientId)
-    .or("vapi_call_id.like.synthetic-%,caller_name.eq.Test Caller");
+    .or("vapi_call_id.like.demo-%,vapi_call_id.like.synthetic-%,caller_name.eq.Test Caller");
 
   if (cleanupError) {
     throw cleanupError;
@@ -85,8 +85,7 @@ async function main() {
     call("demo-008", 4, 15, 18, "Kara Singh", "+19195551008", "4820 Kaplan Dr, Raleigh, NC", "Bathroom faucet dripping steadily", "standard", "new_job", "under_300", "No rush", "2 hours"),
     call("demo-009", 4, 10, 52, "Bill Andrews", "+19195551009", "77 Jones Franklin Rd, Raleigh, NC", "Needs estimate for tankless water heater", "standard", "price_shopper", "800_2000", "Next week", "2 hours"),
     call("demo-010", 5, 12, 33, "Patricia Nguyen", "+19195551010", "308 Chavis Way, Raleigh, NC", "Only toilet in the house will not flush", "urgent", "new_job", "300_800", "Today", "2 hours"),
-    call("demo-011", 6, 14, 4, "Unknown", "+18005550100", null, "Robocall about business financing", "spam", "spam", "unknown", null, null),
-    call("demo-012", 6, 9, 36, "Helen Brooks", "+19195551012", "59 Mordecai Dr, Raleigh, NC", "Garbage disposal replacement", "standard", "new_job", "300_800", "This week", "2 hours")
+    call("demo-011", 6, 9, 36, "Helen Brooks", "+19195551012", "59 Mordecai Dr, Raleigh, NC", "Garbage disposal replacement", "standard", "new_job", "300_800", "This week", "2 hours")
   ];
 
   const { error: callsError } = await supabase.from("calls").upsert(calls, { onConflict: "vapi_call_id" });
