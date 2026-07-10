@@ -1,0 +1,14 @@
+.next/
+node_modules/
+out/
+dist/
+coverage/
+supabase/.temp/
+.env
+.env*.local
+!.env.example
+*.tsbuildinfo
+npm-debug.log*
+.vercel
+.env*
+!.env.example

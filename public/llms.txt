@@ -1,0 +1,37 @@
+# Raleigh Lead Recovery
+
+Raleigh Lead Recovery is a missed-call recovery service for Raleigh-area plumbing shops.
+
+The service helps plumbers catch calls that would otherwise go to voicemail. Customers keep calling the plumber's normal shop number. Busy, unanswered, or after-hours calls can forward to Riley, an intake assistant that captures the plumbing issue, callback number, address, urgency, and timing, then alerts the owner.
+
+## Audience
+
+- Raleigh plumbers
+- Cary, Apex, Garner, Wake Forest, Durham, and Chapel Hill plumbing shops
+- Small owner-operated service businesses that miss calls while the crew is on jobs
+
+## Offer
+
+- Free 7-day missed-call audit
+- No customer-facing number change
+- Owner text alerts with captured lead details
+- End-of-week report showing calls answered, urgent issues, lead summaries, and estimated pipeline value
+
+## Important Pages
+
+- Home: https://raleigh-lead-recovery.vercel.app/
+- Blog: https://raleigh-lead-recovery.vercel.app/blog
+- Missed-call voicemail guide: https://raleigh-lead-recovery.vercel.app/blog/plumbing-calls-going-to-voicemail
+- Missed-call forwarding guide: https://raleigh-lead-recovery.vercel.app/blog/missed-call-forwarding-for-plumbers
+- Missed plumbing call value guide: https://raleigh-lead-recovery.vercel.app/blog/how-much-is-a-missed-plumbing-call-worth
+- Video demo script: https://raleigh-lead-recovery.vercel.app/blog/video-demo-missed-call-recovery
+
+## Founder
+
+Danny Sullivan, Raleigh.
+
+LinkedIn: https://www.linkedin.com/in/danny-sullivan-raleigh
+
+## Positioning
+
+Raleigh Lead Recovery does not replace a plumbing company's phone system or dispatcher. It starts as a simple missed-call forwarding pilot. The goal is to prove whether useful calls are currently slipping to voicemail.

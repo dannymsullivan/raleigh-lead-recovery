@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: #f6f7f4;
+  --foreground: #171717;
+  --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.prose-like {
+  max-width: 68ch;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #41453d;
+}
+
+.prose-like > * + * {
+  margin-top: 1.35rem;
+}
+
+.prose-like h2 {
+  margin-top: 2.4rem;
+  color: #090d07;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.prose-like h3 {
+  color: #090d07;
+}
+
+.prose-like ul {
+  padding-left: 1.25rem;
+}
+
+.prose-like li + li {
+  margin-top: 0.75rem;
+}
+
+.prose-like li::marker {
+  color: #9fc600;
+}
+
+.prose-like blockquote {
+  margin: 2rem 0;
+  border-left: 4px solid #090d07;
+  padding-left: 1.25rem;
+  color: #090d07;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
