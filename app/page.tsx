@@ -23,77 +23,77 @@ type PageProps = {
 const heroProof = [
   "Your current number stays the same",
   "Only missed calls roll over",
-  "Plumbing issue arrives by text"
+  "Call details arrive by text"
 ];
 
 const dayProblems = [
-  "Both hands are under a sink",
-  "The crew is driving between jobs",
-  "An urgent call arrives after hours"
+  "You are helping another customer",
+  "Your team is focused on the work in front of them",
+  "A new customer calls after hours"
 ];
 
 const reportBullets = [
   "Answered calls and lead summaries",
-  "Urgent plumbing issues flagged",
+  "Urgent opportunities flagged",
   "Estimated pipeline value, not claimed revenue"
 ];
 
 const auditIncludes = [
   "Help setting up missed-call forwarding",
-  "Plumbing-specific caller intake",
-  "Owner text alerts with lead details",
+  "Caller intake customized to your business",
+  "Team text alerts with lead details",
   "A simple end-of-week report"
 ];
 
 const wedgePoints = [
   {
     title: "Not a new phone system",
-    body: "Keep your current shop number, carrier, and daily call flow. This only handles the calls that would have gone unanswered."
+    body: "Keep your current business number, carrier, and daily call flow. This only handles the calls that would have gone unanswered."
   },
   {
-    title: "Not generic AI answering",
-    body: "Riley asks plumbing-specific questions about leaks, drains, water heaters, sewer backups, urgency, address, and callback timing."
+    title: "Not one-size-fits-all answering",
+    body: "Riley asks the questions your business needs answered, including the reason for calling, location, urgency, and best callback time."
   },
   {
     title: "Not self-serve setup",
-    body: "Danny helps configure forwarding, tests the first calls, reviews the report, and tunes the shop rules during the pilot."
+    body: "Danny helps configure forwarding, tests the first calls, reviews the report, and tunes your call-handling rules during the pilot."
   }
 ];
 
 const workflow = [
   {
     title: "A missed call rolls over",
-    body: "Busy line, no answer, or after-hours. Your existing shop number forwards only the calls you miss.",
+    body: "Busy line, no answer, or after-hours. Your existing business number forwards only the calls you miss.",
     icon: PhoneCall
   },
   {
-    title: "Riley captures the job",
-    body: "Caller name, callback number, address, issue, urgency, and timing are collected with a plumbing-specific intake.",
+    title: "Riley captures the opportunity",
+    body: "Riley collects the caller's name, number, reason for calling, urgency, and timing using an intake customized to your business.",
     icon: ClipboardCheck
   },
   {
     title: "You get the lead fast",
-    body: "The owner gets the summary by text, and the weekly report shows what would have gone to voicemail.",
+    body: "The right person gets the summary by text, and the weekly report shows what would have gone to voicemail.",
     icon: MessageSquareText
   }
 ];
 
 const faqs = [
   {
-    question: "How does Riley know plumbing?",
-    answer: "Riley starts with a plumbing-specific intake for leaks, drains, water heaters, sewage backups, no-water calls, and quote requests. It captures details without quoting prices or promising dispatch."
+    question: "How does Riley learn our business?",
+    answer: "Riley is customized around your services, service area, hours, urgent-call rules, and the details your team needs before calling someone back."
   },
   {
     question: "Will customers call a new number?",
-    answer: "No. Customers keep calling your normal shop number. Only missed, busy, or after-hours calls forward to Raleigh Lead Recovery."
+    answer: "No. Customers keep calling your normal business number. Only missed, busy, or after-hours calls forward to Raleigh Lead Recovery."
   },
   {
-    question: "Can Riley learn our shop rules?",
-    answer: "Yes. The assistant can be tuned for your service area, hours, emergency rules, job types, preferred wording, and callback process."
+    question: "Can Riley follow our call-handling rules?",
+    answer: "Yes. The assistant can be tuned for your service area, hours, urgent-call rules, call types, preferred wording, and callback process."
   },
   {
     question: "Do we need software integrations?",
-    answer: "Not for the free audit. Start with simple forwarding and owner alerts. CRM, dispatch, spreadsheet, or customer database connections can come later if the audit proves useful."
+    answer: "Not for the free audit. Start with simple forwarding and team alerts. CRM, scheduling, dispatch, spreadsheet, or customer database connections can come later if the audit proves useful."
   },
   {
     question: "Can I turn it off?",
@@ -101,7 +101,7 @@ const faqs = [
   },
   {
     question: "What does the audit prove?",
-    answer: "It shows how many missed calls were answered, what the jobs were, which ones looked urgent, and the estimated value represented by the captured details."
+    answer: "It shows how many missed calls were answered, what callers needed, which ones required a fast response, and the estimated value represented by the captured details."
   }
 ];
 
@@ -148,13 +148,13 @@ export default async function LandingPage({ searchParams }: PageProps) {
           <div className="max-w-xl">
             <p className="mb-8 inline-flex items-center gap-2 text-sm font-black text-[#cfff04]">
               <Wrench className="h-4 w-4" aria-hidden="true" />
-              Missed-call recovery for Raleigh plumbers
+              Missed-call recovery for Raleigh businesses
             </p>
             <h1 className="text-6xl font-black leading-[0.98] tracking-normal sm:text-7xl lg:text-8xl">
               Keep working. We&apos;ll catch the call.
             </h1>
             <p className="mt-8 max-w-lg text-lg font-medium leading-8 text-white/72 sm:text-xl">
-              When your hands are on a water heater, drain line, or active leak, Riley answers the missed call, captures the plumbing issue, and texts the lead to your shop. No phone system migration.
+              When you are helping a customer, on the road, or done for the day, Riley answers the missed call, captures what the caller needs, and texts the lead to your team. No phone system migration.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a className="inline-flex items-center justify-center gap-2 rounded bg-[#cfff04] px-5 py-4 font-black text-[#080d06] hover:bg-[#bbed00]" href="#request">
@@ -199,9 +199,9 @@ export default async function LandingPage({ searchParams }: PageProps) {
           </figure>
 
           <div>
-            <p className="text-sm font-black text-[#d74322]">Built around a plumber&apos;s day</p>
+            <p className="text-sm font-black text-[#d74322]">Built around a busy business day</p>
             <h2 className="mt-6 max-w-2xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              You should not have to choose between the job and the phone.
+              You should not have to choose between the customer in front of you and the one calling.
             </h2>
             <p className="mt-8 max-w-2xl text-xl leading-9 text-[#41453d]">
               The calls most likely to get missed often arrive when you are least able to stop. Riley gives the caller an immediate response and gives you the context to call back quickly.
@@ -217,7 +217,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
             <div className="mt-9 flex gap-4 rounded bg-[#f0f0e9] p-6 text-lg leading-8">
               <Clock3 className="mt-1 h-6 w-6 flex-none text-[#090d07]" aria-hidden="true" />
               <p>
-                <span className="font-black">The result:</span> fewer mystery voicemails and faster callbacks with the plumbing issue already summarized.
+                <span className="font-black">The result:</span> fewer mystery voicemails and faster callbacks with the reason for calling already summarized.
               </p>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               Seven days of real calls. One clear report.
             </h2>
             <p className="mt-8 max-w-xl text-xl leading-9 text-[#41453d]">
-              See which calls were answered, what the jobs were, which were urgent, and the estimated value represented by the captured details.
+              See which calls were answered, what callers needed, which required a fast response, and the estimated value represented by the captured details.
             </p>
             <div className="mt-9 grid gap-5">
               {reportBullets.map((bullet) => (
@@ -251,14 +251,14 @@ export default async function LandingPage({ searchParams }: PageProps) {
           <div className="overflow-hidden rounded border border-[#c8c9bf] bg-[#efefe8] shadow-[0_22px_45px_rgba(9,13,7,0.12)]">
             <Image
               src="/report-preview.png?clean=1"
-              alt="Example missed-call report with captured calls and estimated job value"
+              alt="Example missed-call report with captured calls and estimated opportunity value"
               width={1400}
               height={900}
               className="w-full"
               unoptimized
             />
             <p className="border-t border-[#c8c9bf] px-5 py-4 text-base text-[#3e4238]">
-              Example report with masked customer details. Estimated values are based on captured job information.
+              Example report with masked customer details. Estimated values are based on the information each caller provides.
             </p>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               </h2>
             </div>
             <p className="max-w-3xl text-xl leading-9 text-white/68">
-              Big phone platforms manage every call, text, teammate, inbox, and workflow. Raleigh Lead Recovery starts narrower: catch missed plumbing calls, alert the owner, and prove whether those calls were worth saving.
+              Big phone platforms manage every call, text, teammate, inbox, and workflow. Raleigh Lead Recovery starts narrower: catch missed customer calls, alert your team, and prove whether those calls were worth saving.
             </p>
           </div>
 
@@ -328,7 +328,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               Try it on the calls you already miss.
             </h2>
             <p className="mt-8 max-w-xl text-xl leading-9 text-[#41453d]">
-              No card. No customer-facing number change. At the end of the week, continue only if the captured calls make sense for your shop.
+              No card. No customer-facing number change. At the end of the week, continue only if the captured calls make sense for your business.
             </p>
             <div className="mt-10 grid gap-5">
               {auditIncludes.map((item) => (
@@ -344,13 +344,13 @@ export default async function LandingPage({ searchParams }: PageProps) {
             <div className="mb-8">
               <h2 className="text-3xl font-black tracking-normal">Request the free audit</h2>
               <p className="mt-3 leading-7 text-[#41453d]">Danny will follow up personally to confirm fit and forwarding.</p>
-              {requestError ? <p className="mt-4 bg-[#fff0e8] px-3 py-2 text-sm font-black text-[#bb3d22]">Business, owner, and phone are required.</p> : null}
+              {requestError ? <p className="mt-4 bg-[#fff0e8] px-3 py-2 text-sm font-black text-[#bb3d22]">Business, contact, and phone are required.</p> : null}
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Business name" name="business_name" required />
-              <Field label="Owner name" name="owner_name" required />
-              <Field label="Mobile number" name="owner_phone" type="tel" required />
+              <Field label="Contact name" name="owner_name" required />
+              <Field label="Best phone number" name="owner_phone" type="tel" required />
               <Field label="Email" name="owner_email" type="email" />
             </div>
             <div className="mt-5">
@@ -362,7 +362,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               <textarea
                 className="mt-3 min-h-32 w-full rounded border border-[#bfc1b7] bg-[#fbfcf6] px-4 py-3 font-medium outline-none focus:border-[#090d07]"
                 name="notes"
-                placeholder="Voicemail, owner answers when available, answering service..."
+                placeholder="Voicemail, someone answers when available, answering service..."
               />
             </label>
 
@@ -378,10 +378,10 @@ export default async function LandingPage({ searchParams }: PageProps) {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.5fr_1fr]">
           <div>
             <h2 className="max-w-sm text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              Built for shops that are already busy.
+              Built for businesses that are already busy.
             </h2>
             <p className="mt-7 max-w-sm text-xl leading-9 text-white/62">
-              Start simple. Prove the missed-call volume. Add shop rules and connections only when they help.
+              Start simple. Prove the missed-call volume. Add business rules and connections only when they help.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
@@ -418,7 +418,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
           </div>
           <div className="border-[#bfc1b7] lg:border-l lg:pl-12">
             <p className="text-lg leading-8 text-[#41453d]">
-              I built Raleigh Lead Recovery for local service businesses that lose calls while the crew is on a job. I help set up forwarding, review the first week, and make sure the report shows what was actually captured.
+              I built Raleigh Lead Recovery for local businesses that lose customer calls while the team is busy. I help set up forwarding, review the first week, and make sure the report shows what was actually captured.
             </p>
             <a
               className="mt-7 inline-flex items-center gap-2 font-black text-[#090d07] underline underline-offset-4"

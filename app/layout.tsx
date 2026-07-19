@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Raleigh Lead Recovery",
-  description: "A missed-call recovery service for Raleigh plumbers that captures job calls, alerts the owner, and reports recovered leads."
+  description: "A missed-call recovery service for Raleigh businesses that captures customer calls, alerts your team, and reports recovered leads."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
