@@ -437,6 +437,9 @@ export default async function LandingPage({ searchParams }: PageProps) {
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#41453d] sm:flex-row">
           <p>© 2026 Raleigh Lead Recovery</p>
           <div className="flex gap-6">
+            <a className="font-semibold text-[#090d07]" href="https://dannysullivan.ai" rel="noreferrer" target="_blank">
+              DannySullivan.ai
+            </a>
             <Link className="font-semibold text-[#090d07]" href="/blog">
               Blog
             </Link>
