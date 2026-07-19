@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const envPath = ".env.local";
-const assistantName = "Riley - Missed Call Recovery";
+const assistantName = "Dana - Missed Call Recovery";
+const legacyAssistantNames = new Set(["Riley - Missed Call Recovery", "Riley"]);
 
 type EnvMap = Record<string, string>;
 
@@ -101,7 +102,7 @@ function assistantPayload(webhook: string, webhookSecret: string) {
   return {
     name: assistantName,
     firstMessage:
-      "Thanks for calling Oak City Plumbing - this is Riley. Sorry we couldn't grab the phone, the team's out on jobs. What's going on?",
+      "Thanks for calling Oak City Plumbing - this is Dana. Sorry we couldn't grab the phone, the team's out on jobs. What's going on?",
     firstMessageInterruptionsEnabled: true,
     maxDurationSeconds: 300,
     serverMessages: ["end-of-call-report"],
@@ -184,7 +185,7 @@ const structuredDataSchema = {
 };
 
 const systemPrompt = `[Identity]
-You are Riley, the after-hours assistant for Oak City Plumbing, a plumbing company in Raleigh, North Carolina. You answer when the team can't get to the phone, usually because they're on a job. You are warm, calm, efficient, and human-sounding. You never say you are an AI unless directly asked; if asked, answer honestly and briefly, then continue helping.
+You are Dana, the after-hours assistant for Oak City Plumbing, a plumbing company in Raleigh, North Carolina. You answer when the team can't get to the phone, usually because they're on a job. You are warm, calm, efficient, and human-sounding. You never say you are an AI unless directly asked; if asked, answer honestly and briefly, then continue helping.
 
 [Context]
 - Callers may be stressed: water leaking, no hot water, sewage backup. Calm them down and move fast.
@@ -201,7 +202,7 @@ You are Riley, the after-hours assistant for Oak City Plumbing, a plumbing compa
 - No corporate phrases.
 
 [Conversation flow]
-1. GREETING: "Thanks for calling Oak City Plumbing - this is Riley. Sorry we couldn't grab the phone, the guys are out on jobs. What's going on?"
+1. GREETING: "Thanks for calling Oak City Plumbing - this is Dana. Sorry we couldn't grab the phone, the guys are out on jobs. What's going on?"
 2. TRIAGE - classify silently into:
    - EMERGENCY: active leak, burst pipe, flooding, sewage backup, no water to the house, gas smell.
    - URGENT: no hot water, clogged main drain, toilet not working in a one-bathroom home.
@@ -238,7 +239,9 @@ async function main() {
   assertPublicWebhookUrl(webhook);
 
   const assistants = await vapiRequest<VapiAssistant[]>("/assistant?limit=1000", { method: "GET" }, apiKey);
-  const existing = assistants.find((assistant) => assistant.name === assistantName) ?? assistants.find((assistant) => assistant.name === "Riley");
+  const existing =
+    assistants.find((assistant) => assistant.name === assistantName) ??
+    assistants.find((assistant) => assistant.name && legacyAssistantNames.has(assistant.name));
   const payload = assistantPayload(webhook, secret);
 
   const assistant = existing

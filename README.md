@@ -80,7 +80,7 @@ The webhook matches clients by `message.call.assistantId` first and `message.cal
 The root route `/` is a public landing page tailored to Raleigh plumbers. The first offer is a 7-day missed-call audit:
 
 - The plumber forwards busy/no-answer/after-hours calls for one week.
-- Riley captures each missed job call and sends the owner an alert.
+- Dana captures each missed job call and sends the owner an alert.
 - The report page shows calls captured and estimated job value caught.
 - The request form stores submissions in `pilot_requests`.
 
@@ -127,7 +127,7 @@ curl -sS -X POST http://localhost:3000/api/webhooks/vapi \
           "callback_promised_by": "15 minutes"
         }
       },
-      "transcript": "Riley: What is going on? Caller: There is water everywhere under the kitchen sink."
+      "transcript": "Dana: What is going on? Caller: There is water everywhere under the kitchen sink."
     }
   }'
 ```

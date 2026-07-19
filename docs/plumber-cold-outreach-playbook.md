@@ -174,7 +174,7 @@ Facebook group version:
 ```text
 I’m looking for 3 Raleigh-area plumbing shops to try a missed-call recovery tool free for 7 days.
 
-Customers keep calling the normal shop number. If the line is busy, unanswered, or after-hours, Riley answers, captures the plumbing issue and callback number, and texts the lead to the owner.
+Customers keep calling the normal shop number. If the line is busy, unanswered, or after-hours, Dana answers, captures the plumbing issue and callback number, and texts the lead to the owner.
 
 Useful for any plumbers here, or anyone know a local owner I should talk to?
 ```
@@ -206,7 +206,7 @@ Worth trying?
 ```text
 Hey, this is Danny in Raleigh. I built a simple missed-call recovery service for local plumbers.
 
-Quick reason I'm calling: if your line is busy, unanswered, or after-hours, Riley can answer, collect the plumbing issue and callback number, and text it to you.
+Quick reason I'm calling: if your line is busy, unanswered, or after-hours, Dana can answer, collect the plumbing issue and callback number, and text it to you.
 
 I'm offering a free 7-day audit so you can see what calls would have gone to voicemail. Is the owner the right person to ask about that?
 ```

@@ -103,7 +103,7 @@ Our opportunity:
 
 ### 5. AI details without sounding too technical
 
-Quo explains that Sona can answer, collect details, summarize, transfer, and log calls. We should explain Riley the same way, but with plumber-specific examples:
+Quo explains that Sona can answer, collect details, summarize, transfer, and log calls. We should explain Dana the same way, but with plumber-specific examples:
 
 - Leak location.
 - Drain backup.
@@ -184,7 +184,7 @@ Highest priority:
 - Add one playable sample call and transcript.
 - Add a "Quo / phone system vs. Raleigh Lead Recovery" comparison section, but keep it generic unless creating a dedicated comparison page.
 - Add first real pilot metrics once available: calls answered, emergencies caught, booked jobs, estimated pipeline value.
-- Add "Riley asks" section showing exact plumbing intake questions.
+- Add "Dana asks" section showing exact plumbing intake questions.
 
 Potential comparison table:
 

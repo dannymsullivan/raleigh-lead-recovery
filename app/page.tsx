@@ -52,7 +52,7 @@ const wedgePoints = [
   },
   {
     title: "Not one-size-fits-all answering",
-    body: "Riley asks the questions your business needs answered, including the reason for calling, location, urgency, and best callback time."
+    body: "Dana asks the questions your business needs answered, including the reason for calling, location, urgency, and best callback time."
   },
   {
     title: "Not self-serve setup",
@@ -67,8 +67,8 @@ const workflow = [
     icon: PhoneCall
   },
   {
-    title: "Riley captures the opportunity",
-    body: "Riley collects the caller's name, number, reason for calling, urgency, and timing using an intake customized to your business.",
+    title: "Dana captures the opportunity",
+    body: "Dana collects the caller's name, number, reason for calling, urgency, and timing using an intake customized to your business.",
     icon: ClipboardCheck
   },
   {
@@ -80,15 +80,15 @@ const workflow = [
 
 const faqs = [
   {
-    question: "How does Riley learn our business?",
-    answer: "Riley is customized around your services, service area, hours, urgent-call rules, and the details your team needs before calling someone back."
+    question: "How does Dana learn our business?",
+    answer: "Dana is customized around your services, service area, hours, urgent-call rules, and the details your team needs before calling someone back."
   },
   {
     question: "Will customers call a new number?",
     answer: "No. Customers keep calling your normal business number. Only missed, busy, or after-hours calls forward to Raleigh Lead Recovery."
   },
   {
-    question: "Can Riley follow our call-handling rules?",
+    question: "Can Dana follow our call-handling rules?",
     answer: "Yes. The assistant can be tuned for your service area, hours, urgent-call rules, call types, preferred wording, and callback process."
   },
   {
@@ -154,7 +154,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               Keep working. We&apos;ll catch the call.
             </h1>
             <p className="mt-8 max-w-lg text-lg font-medium leading-8 text-white/72 sm:text-xl">
-              When you are helping a customer, on the road, or done for the day, Riley answers the missed call, captures what the caller needs, and texts the lead to your team. No phone system migration.
+              When you are helping a customer, on the road, or done for the day, Dana answers the missed call, captures what the caller needs, and texts the lead to your team. No phone system migration.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a className="inline-flex items-center justify-center gap-2 rounded bg-[#cfff04] px-5 py-4 font-black text-[#080d06] hover:bg-[#bbed00]" href="#request">
@@ -204,7 +204,7 @@ export default async function LandingPage({ searchParams }: PageProps) {
               You should not have to choose between the customer in front of you and the one calling.
             </h2>
             <p className="mt-8 max-w-2xl text-xl leading-9 text-[#41453d]">
-              The calls most likely to get missed often arrive when you are least able to stop. Riley gives the caller an immediate response and gives you the context to call back quickly.
+              The calls most likely to get missed often arrive when you are least able to stop. Dana gives the caller an immediate response and gives you the context to call back quickly.
             </p>
             <div className="mt-10 border-t border-[#c8c9bf]">
               {dayProblems.map((problem) => (

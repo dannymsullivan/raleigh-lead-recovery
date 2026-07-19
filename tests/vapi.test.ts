@@ -27,7 +27,7 @@ describe("extractVapiCall", () => {
             callback_promised_by: "15 minutes"
           }
         },
-        transcript: "Riley: What's going on?",
+        transcript: "Dana: What's going on?",
         recordingUrl: "https://example.com/recording.wav"
       }
     });
