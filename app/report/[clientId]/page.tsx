@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { AlertTriangle, Clock3, PhoneCall, TrendingUp } from "lucide-react";
 import { isDemoReport, isVisibleDemoCall, resolveReportClientId } from "@/lib/demo-report";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
 import { loadClientReport } from "@/lib/supabase-server";
 import type { ReportCall } from "@/lib/report";
+import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
+import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +35,9 @@ export default async function ReportPage({ params }: PageProps) {
   }
 
   const isExampleReport = isDemoReport(reportParam, clientId);
+  if (!isExampleReport && !(await canViewPrivateReport(data.client.user_id))) {
+    notFound();
+  }
   const calls = isExampleReport ? data.calls.filter(isVisibleDemoCall) : data.calls;
   const report = buildReportModel(data.client, calls);
 
@@ -95,6 +101,15 @@ export default async function ReportPage({ params }: PageProps) {
       </footer>
     </main>
   );
+}
+
+async function canViewPrivateReport(ownerUserId: string | null | undefined): Promise<boolean> {
+  const cookieStore = await cookies();
+  if (verifyAdminSessionToken(cookieStore.get(adminCookie.name)?.value)) return true;
+  if (!ownerUserId || !isSupabaseAuthConfigured()) return false;
+  const auth = await getSupabaseAuth();
+  const { data: { user } } = await auth.auth.getUser();
+  return user?.id === ownerUserId;
 }
 
 function Stat({

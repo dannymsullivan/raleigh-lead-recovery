@@ -85,7 +85,7 @@ export async function processVapiWebhook(payload: unknown, deps: WebhookDeps): P
 
   try {
     await deps.sendOwnerSms({
-      to: client.owner_phone,
+      to: client.alert_phone || client.owner_phone,
       body: buildOwnerSms(extracted)
     });
     await deps.store.markSmsSent(extracted.vapiCallId, now);

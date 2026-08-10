@@ -1,484 +1,269 @@
-import {
-  ArrowRight,
-  Check,
-  CheckCircle2,
-  Clock3,
-  ClipboardCheck,
-  ExternalLink,
-  MessageSquareText,
-  PhoneCall,
-  Wrench
-} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { requestAuditAction } from "./actions";
-import { demoReportHref } from "@/lib/demo-report";
+import { ArrowDown, ArrowRight, Check, ExternalLink, PhoneCall, Play, Quote } from "lucide-react";
+import { BrandMark } from "./components/brand-mark";
 
 const demoNumber = "+19842992155";
+const demoNumberDisplay = "(984) 299-2155";
 
-type PageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
-
-const heroProof = [
-  "Your current number stays the same",
-  "Only missed calls roll over",
-  "Call details arrive by text"
+const steps = [
+  { number: "01", title: "You miss a call.", body: "Your current number stays put. Busy, no-answer, and after-hours calls simply roll to Mabel." },
+  { number: "02", title: "Mabel gets the details.", body: "She asks what happened, where they are, how urgent it is, and when they need help. One question at a time." },
+  { number: "03", title: "You get the lead.", body: "A clean summary hits your phone and dashboard. Call back knowing exactly what the customer needs." }
 ];
 
-const dayProblems = [
-  "You are helping another customer",
-  "Your team is focused on the work in front of them",
-  "A new customer calls after hours"
-];
-
-const reportBullets = [
-  "Answered calls and lead summaries",
-  "Urgent opportunities flagged",
-  "Estimated pipeline value, not claimed revenue"
-];
-
-const auditIncludes = [
-  "Help setting up missed-call forwarding",
-  "Caller intake customized to your business",
-  "Team text alerts with lead details",
-  "A simple end-of-week report"
-];
-
-const wedgePoints = [
-  {
-    title: "Not a new phone system",
-    body: "Keep your current business number, carrier, and daily call flow. This only handles the calls that would have gone unanswered."
-  },
-  {
-    title: "Not one-size-fits-all answering",
-    body: "Dana asks the questions your business needs answered, including the reason for calling, location, urgency, and best callback time."
-  },
-  {
-    title: "Not self-serve setup",
-    body: "Danny helps configure forwarding, tests the first calls, reviews the report, and tunes your call-handling rules during the pilot."
-  }
-];
-
-const workflow = [
-  {
-    title: "A missed call rolls over",
-    body: "Busy line, no answer, or after-hours. Your existing business number forwards only the calls you miss.",
-    icon: PhoneCall
-  },
-  {
-    title: "Dana captures the opportunity",
-    body: "Dana collects the caller's name, number, reason for calling, urgency, and timing using an intake customized to your business.",
-    icon: ClipboardCheck
-  },
-  {
-    title: "You get the lead fast",
-    body: "The right person gets the summary by text, and the weekly report shows what would have gone to voicemail.",
-    icon: MessageSquareText
-  }
+const capturePoints = [
+  "Caller name and callback number",
+  "What broke, leaked, stopped, or sparked",
+  "Service address and timing",
+  "Emergency, urgent, or routine",
+  "A short summary your team can scan",
+  "The recording when you need context"
 ];
 
 const faqs = [
-  {
-    question: "How does Dana learn our business?",
-    answer: "Dana is customized around your services, service area, hours, urgent-call rules, and the details your team needs before calling someone back."
-  },
-  {
-    question: "Will customers call a new number?",
-    answer: "No. Customers keep calling your normal business number. Only missed, busy, or after-hours calls forward to Raleigh Lead Recovery."
-  },
-  {
-    question: "Can Dana follow our call-handling rules?",
-    answer: "Yes. The assistant can be tuned for your service area, hours, urgent-call rules, call types, preferred wording, and callback process."
-  },
-  {
-    question: "Do we need software integrations?",
-    answer: "Not for the free audit. Start with simple forwarding and team alerts. CRM, scheduling, dispatch, spreadsheet, or customer database connections can come later if the audit proves useful."
-  },
-  {
-    question: "Can I turn it off?",
-    answer: "Yes. You control call forwarding and can turn it off any time."
-  },
-  {
-    question: "What does the audit prove?",
-    answer: "It shows how many missed calls were answered, what callers needed, which ones required a fast response, and the estimated value represented by the captured details."
-  }
+  { q: "Do I need a new phone number?", a: "Nope. Customers keep calling the same number. You set conditional forwarding so Mabel only gets the calls your team does not answer." },
+  { q: "Does Mabel pretend to be human?", a: "No weird games. Mabel is your automated call assistant, speaks naturally, and focuses on being genuinely useful to the caller." },
+  { q: "Can she follow our rules?", a: "Yes. Service area, hours, emergencies, caller questions, callback promises, and wording are all set around your business." },
+  { q: "Can I turn it off?", a: "Any time. You control forwarding from your existing phone provider. No number porting and no hostage situation." }
 ];
 
-export default async function LandingPage({ searchParams }: PageProps) {
-  const search = (await searchParams) ?? {};
-  const requestError = search.request === "missing";
-
+export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#f3f4ee] text-[#090d07]">
-      <section className="relative min-h-[760px] overflow-hidden bg-[#080d06] text-white lg:min-h-[820px]">
-        <Image
-          src="/plumber.webp"
-          alt="Plumber working beside a water heater while a phone rings on the tool box"
-          fill
-          sizes="100vw"
-          className="object-cover object-[70%_center] sm:object-center"
-          priority
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#080d06_0%,rgba(8,13,6,0.95)_22%,rgba(8,13,6,0.52)_53%,rgba(8,13,6,0.06)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(0deg,#080d06_0%,rgba(8,13,6,0)_100%)]" />
-
-        <header className="relative z-10 px-5 py-6">
-          <nav className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-            <Link className="inline-flex min-w-0 items-center gap-3 font-bold" href="/">
-              <span className="flex h-10 w-10 items-center justify-center rounded bg-[#cfff04] text-[#080d06]">
-                <Wrench className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="truncate text-sm sm:text-base">Raleigh Lead Recovery</span>
+    <main className="overflow-hidden bg-[#f4f1e8] text-black">
+      <header className="border-b-2 border-black">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
+          <BrandMark />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <a className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 md:block" href="#how-it-works">How it works</a>
+            <Link className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 sm:block" href="/login">Sign in</Link>
+            <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-extrabold text-white transition-transform hover:-translate-y-0.5 sm:px-5" href="/signup">
+              Start free <ArrowRight className="h-4 w-4" />
             </Link>
-            <div className="flex shrink-0 items-center gap-4">
-              <Link className="hidden text-sm font-black text-white/72 hover:text-white sm:inline" href="/blog">
-                Blog
-              </Link>
-              <a className="inline-flex items-center gap-2 rounded bg-[#cfff04] px-3 py-3 text-sm font-black text-[#080d06] shadow-[0_8px_24px_rgba(207,255,4,0.22)] hover:bg-[#bbed00] sm:px-5" href="#request">
-                <span className="hidden sm:inline">Start free audit</span>
-                <span className="sm:hidden">Audit</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-            </div>
-          </nav>
-        </header>
+          </div>
+        </nav>
+      </header>
 
-        <div className="relative z-10 mx-auto flex min-h-[600px] max-w-7xl flex-col justify-center px-5 pb-20 pt-14 lg:min-h-[660px]">
-          <div className="max-w-xl">
-            <p className="mb-8 inline-flex items-center gap-2 text-sm font-black text-[#cfff04]">
-              <Wrench className="h-4 w-4" aria-hidden="true" />
-              Missed-call recovery for Raleigh businesses
+      <section className="relative border-b-2 border-black">
+        <div className="mx-auto grid min-h-[710px] max-w-6xl lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="flex flex-col justify-center px-5 py-20 sm:px-8 lg:border-r-2 lg:border-black lg:py-28 lg:pr-14">
+            <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/50">
+              <span className="h-2.5 w-2.5 rounded-full bg-black" /> Answers when you can’t
             </p>
-            <h1 className="text-6xl font-black leading-[0.98] tracking-normal sm:text-7xl lg:text-8xl">
-              Keep working. We&apos;ll catch the call.
+            <h1 className="mt-8 max-w-3xl text-[clamp(4.4rem,10vw,7.5rem)] font-black leading-[0.82] tracking-[-0.075em]">
+              Miss the call.<br />Not the job.
             </h1>
-            <p className="mt-8 max-w-lg text-lg font-medium leading-8 text-white/72 sm:text-xl">
-              When you are helping a customer, on the road, or done for the day, Dana answers the missed call, captures what the caller needs, and texts the lead to your team. No phone system migration.
+            <p className="mt-9 max-w-xl text-lg font-semibold leading-8 text-black/62 sm:text-xl">
+              Mabel answers the customer calls your team can’t, gets the important bits, and puts the lead on your board. No new number. No phone-system nonsense.
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a className="inline-flex items-center justify-center gap-2 rounded bg-[#cfff04] px-5 py-4 font-black text-[#080d06] hover:bg-[#bbed00]" href="#request">
-                Start free audit
-                <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <a className="group inline-flex h-14 items-center justify-center gap-3 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-1" href={`tel:${demoNumber}`}>
+                <span className="grid h-7 w-7 place-items-center rounded-full bg-white text-black"><Play className="ml-0.5 h-3.5 w-3.5 fill-current" /></span>
+                Call Mabel now
               </a>
-              <a className="inline-flex items-center justify-center gap-2 rounded border border-white/15 px-5 py-4 font-black text-white hover:bg-white/10" href={`tel:${demoNumber}`}>
-                <PhoneCall className="h-5 w-5" aria-hidden="true" />
-                Call the demo
-              </a>
+              <Link className="inline-flex h-14 items-center justify-center gap-2 border-2 border-black bg-transparent px-6 font-extrabold hover:bg-white" href="/signup">
+                Start 14 days free <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
+            <p className="mt-4 text-xs font-bold text-black/42">One call. About 60 seconds. Try: “My water heater is leaking.”</p>
           </div>
-        </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-5">
-          <div className="grid border border-white/10 bg-[#080d06]/95 sm:grid-cols-3">
-            {heroProof.map((point) => (
-              <div key={point} className="flex min-h-16 items-center gap-3 border-white/10 px-6 py-4 text-sm font-semibold text-white/72 sm:border-l first:sm:border-l-0">
-                <Check className="h-5 w-5 flex-none text-[#cfff04]" aria-hidden="true" />
-                {point}
-              </div>
-            ))}
+          <div className="relative flex min-h-[560px] items-center justify-center bg-white px-5 py-16 sm:px-10 lg:min-h-0">
+            <div className="absolute left-5 top-5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/40">Live demo · {demoNumberDisplay}</div>
+            <HeroCartoon />
+            <p className="absolute bottom-6 right-6 rotate-[-3deg] border-2 border-black bg-[#f4f1e8] px-4 py-2 font-mono text-xs font-bold shadow-[4px_4px_0_#000]">VOICEMAIL COULD NEVER.</p>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#fbfcf6] px-5 py-24">
-        <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-2 lg:items-center">
-          <figure className="overflow-hidden rounded border border-[#c8c9bf] bg-[#efefe8]">
-            <Image
-              src="/plumber2.webp"
-              alt="Plumber working under a sink with a phone visible in a tool bag"
-              width={1216}
-              height={832}
-              className="aspect-[1.2/1] w-full object-cover"
-              priority
-            />
-            <figcaption className="flex items-center gap-3 border-t border-[#c8c9bf] px-5 py-4 text-sm font-medium text-[#3e4238]">
-              <Wrench className="h-4 w-4" aria-hidden="true" />
-              The work demands your hands. The caller still expects an answer.
-            </figcaption>
-          </figure>
-
-          <div>
-            <p className="text-sm font-black text-[#d74322]">Built around a busy business day</p>
-            <h2 className="mt-6 max-w-2xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              You should not have to choose between the customer in front of you and the one calling.
-            </h2>
-            <p className="mt-8 max-w-2xl text-xl leading-9 text-[#41453d]">
-              The calls most likely to get missed often arrive when you are least able to stop. Dana gives the caller an immediate response and gives you the context to call back quickly.
-            </p>
-            <div className="mt-10 border-t border-[#c8c9bf]">
-              {dayProblems.map((problem) => (
-                <div key={problem} className="flex items-center gap-4 border-b border-[#c8c9bf] py-5 text-lg font-black">
-                  <Check className="h-5 w-5 flex-none text-[#9fc600]" aria-hidden="true" />
-                  {problem}
-                </div>
-              ))}
+      <section className="border-b-2 border-black bg-black text-white">
+        <div className="mx-auto grid max-w-6xl divide-y-2 divide-white/25 px-5 sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0 sm:px-8">
+          {["Keep your current number", "Only missed calls roll over", "Lead details land instantly"].map((item) => (
+            <div className="flex items-center gap-3 py-5 text-sm font-extrabold sm:px-6 first:sm:pl-0" key={item}>
+              <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-white text-black"><Check className="h-3.5 w-3.5" /></span>{item}
             </div>
-            <div className="mt-9 flex gap-4 rounded bg-[#f0f0e9] p-6 text-lg leading-8">
-              <Clock3 className="mt-1 h-6 w-6 flex-none text-[#090d07]" aria-hidden="true" />
-              <p>
-                <span className="font-black">The result:</span> fewer mystery voicemails and faster callbacks with the reason for calling already summarized.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      <section className="bg-[#fbfcf6] px-5 pb-24">
-        <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.58fr_1fr] lg:items-center">
-          <div>
-            <p className="text-sm font-black text-[#d74322]">What the audit proves</p>
-            <h2 className="mt-6 max-w-xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              Seven days of real calls. One clear report.
-            </h2>
-            <p className="mt-8 max-w-xl text-xl leading-9 text-[#41453d]">
-              See which calls were answered, what callers needed, which required a fast response, and the estimated value represented by the captured details.
-            </p>
-            <div className="mt-9 grid gap-5">
-              {reportBullets.map((bullet) => (
-                <div key={bullet} className="flex items-center gap-4 text-lg">
-                  <CheckCircle2 className="h-5 w-5 flex-none text-[#9fc600]" aria-hidden="true" />
-                  {bullet}
-                </div>
-              ))}
-            </div>
-            <a className="mt-10 inline-flex items-center gap-2 rounded bg-[#090d07] px-6 py-4 font-black text-white hover:bg-[#20251d]" href={demoReportHref}>
-              View example report
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </a>
-          </div>
-
-          <div className="overflow-hidden rounded border border-[#c8c9bf] bg-[#efefe8] shadow-[0_22px_45px_rgba(9,13,7,0.12)]">
-            <Image
-              src="/report-preview.png?clean=1"
-              alt="Example missed-call report with captured calls and estimated opportunity value"
-              width={1400}
-              height={900}
-              className="w-full"
-              unoptimized
-            />
-            <p className="border-t border-[#c8c9bf] px-5 py-4 text-base text-[#3e4238]">
-              Example report with masked customer details. Estimated values are based on the information each caller provides.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#ecede6] px-5 py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 border-b border-[#bfc1b7] pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-            <h2 className="max-w-xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              The call never hits a dead end.
-            </h2>
-            <p className="max-w-3xl text-xl leading-9 text-[#41453d]">
-              No new customer-facing number. No dispatch overhaul. Start with the calls already slipping to voicemail.
-            </p>
-          </div>
-
-          <div>
-            {workflow.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <div key={step.title} className="grid gap-5 border-b border-[#bfc1b7] py-8 lg:grid-cols-[0.12fr_0.32fr_1fr] lg:items-center">
-                  <p className="text-sm font-black text-[#4d5148]">{String(index + 1).padStart(2, "0")}</p>
-                  <div className="flex items-center gap-5">
-                    <span className="flex h-12 w-12 flex-none items-center justify-center rounded bg-[#090d07] text-white">
-                      <Icon className="h-6 w-6" aria-hidden="true" />
-                    </span>
-                    <h3 className="text-xl font-black tracking-normal">{step.title}</h3>
-                  </div>
-                  <p className="text-lg leading-8 text-[#41453d]">{step.body}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#080d06] px-5 py-24 text-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 border-b border-white/12 pb-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+      <section className="px-5 py-24 sm:px-8 sm:py-32" id="how-it-works">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
             <div>
-              <p className="text-sm font-black text-[#cfff04]">The local wedge</p>
-              <h2 className="mt-5 max-w-2xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-                Built for the calls voicemail loses.
-              </h2>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">How it works</p>
+              <h2 className="mt-6 text-5xl font-black leading-[0.92] tracking-[-0.06em] sm:text-7xl">A very short trip from ring to lead.</h2>
             </div>
-            <p className="max-w-3xl text-xl leading-9 text-white/68">
-              Big phone platforms manage every call, text, teammate, inbox, and workflow. Raleigh Lead Recovery starts narrower: catch missed customer calls, alert your team, and prove whether those calls were worth saving.
-            </p>
+            <p className="max-w-xl text-lg font-semibold leading-8 text-black/58 lg:justify-self-end">That’s the whole pitch, honestly. Your customer gets a calm answer. Your crew gets a useful lead. You keep doing the work in front of you.</p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {wedgePoints.map((point) => (
-              <div key={point.title} className="border border-white/12 bg-white/[0.03] p-6">
-                <h3 className="text-xl font-black tracking-normal">{point.title}</h3>
-                <p className="mt-4 leading-7 text-white/62">{point.body}</p>
+          <div className="mt-16 grid border-l-2 border-t-2 border-black lg:grid-cols-3">
+            {steps.map((step) => (
+              <article className="group min-h-80 border-b-2 border-r-2 border-black bg-white p-7 transition-colors hover:bg-black hover:text-white" key={step.number}>
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-xs font-bold">{step.number}</span>
+                  <ArrowDown className="h-5 w-5 transition-transform group-hover:translate-y-2" />
+                </div>
+                <h3 className="mt-24 text-3xl font-black tracking-[-0.045em]">{step.title}</h3>
+                <p className="mt-5 text-sm font-semibold leading-6 opacity-60">{step.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y-2 border-black bg-white">
+        <div className="mx-auto grid max-w-6xl lg:grid-cols-[0.78fr_1.22fr]">
+          <div className="flex flex-col justify-between border-b-2 border-black bg-black p-8 text-white sm:p-12 lg:border-b-0 lg:border-r-2">
+            <div>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/45">Your dashboard</p>
+              <h2 className="mt-6 text-5xl font-black leading-[0.92] tracking-[-0.06em] sm:text-6xl">No more mystery voicemails.</h2>
+              <p className="mt-7 text-base font-semibold leading-7 text-white/58">Every call has a name, a problem, an urgency, and a next move. It’s the call board your business always should have had.</p>
+            </div>
+            <Link className="mt-12 inline-flex items-center gap-2 text-sm font-extrabold underline decoration-2 underline-offset-4" href="/signup">Create your workspace <ArrowRight className="h-4 w-4" /></Link>
+          </div>
+          <DashboardPreview />
+        </div>
+      </section>
+
+      <section className="px-5 py-24 sm:px-8 sm:py-32">
+        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">What Mabel gets</p>
+            <h2 className="mt-6 text-5xl font-black leading-[0.92] tracking-[-0.06em] sm:text-7xl">The useful stuff. Not a novel.</h2>
+            <p className="mt-8 max-w-md text-lg font-semibold leading-8 text-black/58">The questions fit your business. The output fits on a phone screen. Miracles do happen.</p>
+          </div>
+          <div className="border-t-2 border-black">
+            {capturePoints.map((point, index) => (
+              <div className="flex items-center gap-5 border-b-2 border-black py-6" key={point}>
+                <span className="grid h-9 w-9 flex-none place-items-center rounded-full border-2 border-black font-mono text-[10px] font-bold">{String(index + 1).padStart(2, "0")}</span>
+                <p className="text-xl font-black tracking-[-0.025em] sm:text-2xl">{point}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="request" className="bg-[#fbfcf6] px-5 py-24">
-        <div className="mx-auto grid max-w-7xl overflow-hidden border border-[#d0d1c8] bg-white lg:grid-cols-[0.52fr_0.48fr]">
-          <div className="bg-[#ecede6] p-8 sm:p-14">
-            <p className="text-sm font-black text-[#d74322]">Free 7-day missed-call audit</p>
-            <h2 className="mt-6 max-w-xl text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              Try it on the calls you already miss.
-            </h2>
-            <p className="mt-8 max-w-xl text-xl leading-9 text-[#41453d]">
-              No card. No customer-facing number change. At the end of the week, continue only if the captured calls make sense for your business.
-            </p>
-            <div className="mt-10 grid gap-5">
-              {auditIncludes.map((item) => (
-                <div key={item} className="flex items-center gap-4 text-lg">
-                  <Check className="h-5 w-5 flex-none" aria-hidden="true" />
-                  {item}
-                </div>
-              ))}
-            </div>
+      <section className="border-y-2 border-black bg-black px-5 py-24 text-white sm:px-8 sm:py-28">
+        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1fr_0.72fr] lg:items-center">
+          <div>
+            <Quote className="h-9 w-9 fill-white" />
+            <blockquote className="mt-8 max-w-3xl text-4xl font-black leading-[1.02] tracking-[-0.05em] sm:text-6xl">“The team can keep their hands on the job. Mabel keeps a hand on the phone.”</blockquote>
           </div>
-
-          <form action={requestAuditAction} className="p-8 sm:p-14">
-            <div className="mb-8">
-              <h2 className="text-3xl font-black tracking-normal">Request the free audit</h2>
-              <p className="mt-3 leading-7 text-[#41453d]">Danny will follow up personally to confirm fit and forwarding.</p>
-              {requestError ? <p className="mt-4 bg-[#fff0e8] px-3 py-2 text-sm font-black text-[#bb3d22]">Business, contact, and phone are required.</p> : null}
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Business name" name="business_name" required />
-              <Field label="Contact name" name="owner_name" required />
-              <Field label="Best phone number" name="owner_phone" type="tel" required />
-              <Field label="Email" name="owner_email" type="email" />
-            </div>
-            <div className="mt-5">
-              <Field label="Service area" name="service_area" placeholder="Raleigh, Cary, Apex..." />
-            </div>
-
-            <label className="mt-5 block text-sm font-black text-[#090d07]">
-              What happens to missed calls today?
-              <textarea
-                className="mt-3 min-h-32 w-full rounded border border-[#bfc1b7] bg-[#fbfcf6] px-4 py-3 font-medium outline-none focus:border-[#090d07]"
-                name="notes"
-                placeholder="Voicemail, someone answers when available, answering service..."
-              />
-            </label>
-
-            <button className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded bg-[#090d07] px-5 py-4 font-black text-white hover:bg-[#20251d]" type="submit">
-              Request free audit
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </form>
+          <div className="border-t-2 border-white/25 pt-7 lg:border-l-2 lg:border-t-0 lg:pl-10 lg:pt-0">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-white/45">Built for real work</p>
+            <p className="mt-5 text-lg font-semibold leading-8 text-white/65">Plumbers. HVAC crews. Roofers. Med spas. Any team that’s busy serving the customer in front of them and still needs to catch the next one.</p>
+          </div>
         </div>
       </section>
 
-      <section className="bg-[#080d06] px-5 py-24 text-white">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.5fr_1fr]">
+      <section className="px-5 py-24 sm:px-8 sm:py-32">
+        <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[0.65fr_1fr]">
           <div>
-            <h2 className="max-w-sm text-5xl font-black leading-[1.02] tracking-normal lg:text-6xl">
-              Built for businesses that are already busy.
-            </h2>
-            <p className="mt-7 max-w-sm text-xl leading-9 text-white/62">
-              Start simple. Prove the missed-call volume. Add business rules and connections only when they help.
-            </p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Fine print, minus the tiny print</p>
+            <h2 className="mt-6 text-5xl font-black tracking-[-0.06em] sm:text-6xl">Good questions.</h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="border-t-2 border-black">
             {faqs.map((faq) => (
-              <details key={faq.question} className="border border-white/8 bg-white/[0.02] p-6">
-                <summary className="text-lg font-black">{faq.question}</summary>
-                <p className="mt-4 leading-7 text-white/62">{faq.answer}</p>
+              <details className="group border-b-2 border-black py-6" key={faq.q}>
+                <summary className="flex list-none items-center justify-between gap-6 text-xl font-black tracking-[-0.025em] sm:text-2xl">{faq.q}<span className="text-2xl transition-transform group-open:rotate-45">+</span></summary>
+                <p className="mt-5 max-w-2xl text-base font-semibold leading-7 text-black/58">{faq.a}</p>
               </details>
             ))}
           </div>
         </div>
-        <div className="mx-auto mt-20 max-w-7xl">
-          <a className="inline-flex items-center gap-2 font-black text-[#cfff04]" href={`tel:${demoNumber}`}>
-            <PhoneCall className="h-5 w-5" aria-hidden="true" />
-            Call the demo
+      </section>
+
+      <section className="border-y-2 border-black bg-white px-5 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+          <a href="https://raleighaiguy.com/" target="_blank" rel="noreferrer" aria-label="Visit Raleigh AI Guy">
+            <Image className="h-24 w-24 rounded-full border-2 border-black object-cover grayscale transition-transform hover:-rotate-3" src="/danny.jpeg" alt="Danny Sullivan, Raleigh AI Guy" width={128} height={128} />
           </a>
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">A real person is behind this</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.045em]">
+              Built by <a className="underline decoration-2 underline-offset-4" href="https://raleighaiguy.com/" target="_blank" rel="noreferrer">Raleigh AI Guy</a>.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-black/55">I’ll help connect the number, tune Mabel to your business, and make sure the first calls land where they should.</p>
+          </div>
+          <a className="inline-flex items-center gap-2 text-sm font-extrabold underline decoration-2 underline-offset-4" href="https://raleighaiguy.com/" target="_blank" rel="noreferrer">Visit Raleigh AI Guy <ExternalLink className="h-4 w-4" /></a>
         </div>
       </section>
 
-      <section className="bg-[#f3f4ee] px-5 py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:items-center">
-          <div className="flex items-center gap-6">
-            <Image
-              src="/danny.jpeg"
-              alt="Danny Sullivan"
-              width={96}
-              height={96}
-              className="h-24 w-24 flex-none rounded border border-[#bfc1b7] object-cover"
-            />
-            <div>
-              <p className="text-sm font-black text-[#d74322]">Built locally</p>
-              <h2 className="mt-3 text-3xl font-black leading-tight tracking-normal">Danny Sullivan, Raleigh</h2>
-            </div>
-          </div>
-          <div className="border-[#bfc1b7] lg:border-l lg:pl-12">
-            <p className="text-lg leading-8 text-[#41453d]">
-              I built Raleigh Lead Recovery for local businesses that lose customer calls while the team is busy. I help set up forwarding, review the first week, and make sure the report shows what was actually captured.
-            </p>
-            <a
-              className="mt-7 inline-flex items-center gap-2 font-black text-[#090d07] underline underline-offset-4"
-              href="https://www.linkedin.com/in/danny-sullivan-raleigh"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Connect on LinkedIn
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
+      <section className="bg-[#f4f1e8] px-5 py-24 sm:px-8 sm:py-36">
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Fourteen days free · no card</p>
+          <h2 className="mt-7 text-[clamp(4rem,10vw,8rem)] font-black leading-[0.82] tracking-[-0.075em]">Give voicemail<br />the day off.</h2>
+          <div className="mt-12 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link className="inline-flex h-14 items-center justify-center gap-2 bg-black px-7 font-extrabold text-white transition-transform hover:-translate-y-1" href="/signup">Start free <ArrowRight className="h-4 w-4" /></Link>
+            <a className="inline-flex h-14 items-center justify-center gap-2 border-2 border-black bg-white px-7 font-extrabold" href={`tel:${demoNumber}`}><PhoneCall className="h-4 w-4" /> Call Mabel</a>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-[#bfc1b7] bg-[#f3f4ee] px-5 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#41453d] sm:flex-row">
-          <p>© 2026 Raleigh Lead Recovery</p>
-          <div className="flex gap-6">
-            <a className="font-semibold text-[#090d07]" href="https://dannysullivan.ai" rel="noreferrer" target="_blank">
-              DannySullivan.ai
-            </a>
-            <Link className="font-semibold text-[#090d07]" href="/blog">
-              Blog
-            </Link>
-            <a className="font-semibold text-[#090d07]" href={`tel:${demoNumber}`}>
-              Call demo
-            </a>
-            <a className="font-semibold text-[#090d07]" href="#request">
-              Free audit
-            </a>
+      <footer className="border-t-2 border-black bg-black px-5 py-9 text-white sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 sm:flex-row sm:items-end">
+          <div>
+            <BrandMark inverted />
+            <p className="mt-5 text-xs font-semibold text-white/42">© 2026 · Built by <a className="underline underline-offset-2 hover:text-white" href="https://raleighaiguy.com/" target="_blank" rel="noreferrer">Raleigh AI Guy</a></p>
           </div>
+          <nav className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/blog">Writing</Link><Link href="/login">Sign in</Link><a href={`tel:${demoNumber}`}>Call demo</a><a href="#how-it-works">How it works</a></nav>
         </div>
       </footer>
     </main>
   );
 }
 
-function Field({
-  label,
-  name,
-  type = "text",
-  placeholder,
-  required = false
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-  required?: boolean;
-}) {
+function HeroCartoon() {
   return (
-    <label className="block text-sm font-black text-[#090d07]">
-      {label}
-      <input
-        className="mt-3 h-14 w-full rounded border border-[#bfc1b7] bg-[#fbfcf6] px-4 font-medium outline-none focus:border-[#090d07]"
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        required={required}
-      />
-    </label>
+    <svg className="w-full max-w-[460px]" viewBox="0 0 480 500" role="img" aria-label="Cartoon of Mabel catching a ringing phone call while a business owner works">
+      <path d="M54 404c66 37 305 36 376-5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="4 10" />
+      <path d="M340 101c34-28 66-16 64 22-2 37-46 66-84 78-12-43-12-73 20-100Z" fill="#f4f1e8" stroke="currentColor" strokeWidth="4" strokeLinejoin="round" />
+      <text x="337" y="133" fontFamily="monospace" fontSize="15" fontWeight="700">GOT IT.</text>
+      <text x="336" y="155" fontFamily="monospace" fontSize="11" fontWeight="700">WHAT&apos;S GOING ON?</text>
+      <path d="M288 183c19-26 58-30 78-7 16 18 12 49 2 70l-18 38-89-8-12-45c-5-20 18-28 39-48Z" fill="#fff" stroke="currentColor" strokeWidth="4" />
+      <circle cx="312" cy="194" r="37" fill="#f4f1e8" stroke="currentColor" strokeWidth="4" />
+      <path d="M282 190c8-34 57-39 67-3-7-7-16-13-28-14-14-1-26 5-39 17Z" fill="#000" />
+      <circle cx="299" cy="197" r="3.5" /><circle cx="324" cy="197" r="3.5" />
+      <path d="M300 212c8 7 17 7 25 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="M277 219c-17-7-27 5-25 19 2 12 10 27 27 34M349 217c17-8 26 5 23 20-3 13-12 25-28 33" fill="#fff" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+      <path d="M266 224c4-37-12-62-27-70M356 224c-1-39 13-58 30-67" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+      <rect x="225" y="135" width="28" height="45" rx="7" fill="#000" transform="rotate(-24 225 135)" />
+      <path d="M197 146c-8-18-2-33 10-40M183 158c-18-23-14-49 3-66M380 144c11-14 12-27 4-40M396 157c21-20 21-45 7-63" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="M262 276c-18 23-24 69-18 119M350 282c12 24 18 67 13 113" fill="none" stroke="currentColor" strokeWidth="4" />
+      <path d="M246 303h116l-14 93h-89Z" fill="#000" stroke="currentColor" strokeWidth="4" strokeLinejoin="round" />
+      <path d="M281 333h45M281 351h32M281 369h54" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="337" cy="332" r="8" fill="#fff" />
+      <path d="M111 205c-30 0-48 20-47 50 1 26 20 47 48 47 31 0 50-19 49-49-1-29-19-48-50-48Z" fill="#f4f1e8" stroke="currentColor" strokeWidth="4" />
+      <path d="M73 240c10-36 62-48 82-10-15-6-30-4-43 1-15 6-28 10-39 9Z" fill="#000" />
+      <circle cx="99" cy="256" r="3.5" /><circle cx="127" cy="256" r="3.5" />
+      <path d="M103 275c7-5 16-5 23 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="M81 299c-21 21-35 63-35 103M143 301c20 20 32 60 30 100" fill="none" stroke="currentColor" strokeWidth="4" />
+      <path d="M74 315h78l14 87H58Z" fill="#fff" stroke="currentColor" strokeWidth="4" />
+      <path d="M88 347h46M88 366h33" stroke="#000" strokeWidth="5" strokeLinecap="round" />
+      <path d="M152 323l25-25 22 20-27 27" fill="#f4f1e8" stroke="currentColor" strokeWidth="4" />
+      <path d="M54 405h374" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function DashboardPreview() {
+  const calls = [
+    { name: "Maya T.", issue: "Water heater leaking", urgency: "Emergency", value: "$1,400", time: "2m ago" },
+    { name: "Chris R.", issue: "Kitchen drain fully blocked", urgency: "Urgent", value: "$550", time: "18m ago" },
+    { name: "Alex J.", issue: "Quote for faucet replacement", urgency: "Standard", value: "$150", time: "1h ago" }
+  ];
+  return (
+    <div className="bg-[#f4f1e8] p-5 sm:p-10">
+      <div className="overflow-hidden border-2 border-black bg-white shadow-[10px_10px_0_#000]">
+        <div className="flex items-center justify-between border-b-2 border-black px-4 py-3"><div className="flex gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-black" /><span className="h-2.5 w-2.5 rounded-full border border-black" /><span className="h-2.5 w-2.5 rounded-full border border-black" /></div><p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em]">Live call board</p></div>
+        <div className="grid grid-cols-3 border-b-2 border-black">
+          {[['Calls', '12'], ['Good leads', '9'], ['Caught', '$6.8k']].map(([label, value]) => <div className="border-r-2 border-black p-4 last:border-r-0" key={label}><p className="font-mono text-[8px] font-bold uppercase text-black/45">{label}</p><p className="mt-2 text-2xl font-black tracking-[-0.05em]">{value}</p></div>)}
+        </div>
+        <div className="px-4 py-3"><p className="text-xs font-black">Recent calls</p></div>
+        <div className="divide-y-2 divide-black border-t-2 border-black">
+          {calls.map((call) => <div className="grid grid-cols-[1fr_auto] gap-4 p-4" key={call.name}><div><div className="flex items-center gap-2"><span className={`border border-black px-1.5 py-0.5 font-mono text-[7px] font-bold uppercase ${call.urgency === 'Emergency' ? 'bg-black text-white' : ''}`}>{call.urgency}</span><span className="text-[9px] font-bold text-black/35">{call.time}</span></div><p className="mt-2 text-sm font-black">{call.name}</p><p className="mt-1 text-[10px] font-semibold text-black/50">{call.issue}</p></div><div className="text-right"><p className="font-mono text-[7px] font-bold uppercase text-black/35">Est.</p><p className="mt-1 text-sm font-black">{call.value}</p></div></div>)}
+        </div>
+      </div>
+    </div>
   );
 }

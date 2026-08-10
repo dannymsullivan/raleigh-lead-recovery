@@ -62,7 +62,7 @@ const workflow = [
     icon: PhoneCall
   },
   {
-    title: "Dana captures the consult",
+    title: "Mabel captures the consult",
     body: "Caller name, callback number, treatment interest, preferred timing, new/existing client status, and basic routing notes are collected.",
     icon: ClipboardCheck
   },
@@ -76,11 +76,11 @@ const workflow = [
 const wedgePoints = [
   {
     title: "Not a call center",
-    body: "This is not a generic receptionist reading a script. Dana is tuned for consult capture and hands the lead back to your clinic."
+    body: "This is not a generic receptionist reading a script. Mabel is tuned for consult capture and hands the lead back to your clinic."
   },
   {
     title: "Not medical advice",
-    body: "Dana does not recommend treatments, diagnose, or quote clinical promises. The job is to capture intent and route follow-up."
+    body: "Mabel does not recommend treatments, diagnose, or quote clinical promises. The job is to capture intent and route follow-up."
   },
   {
     title: "Not a booking migration",
@@ -90,9 +90,9 @@ const wedgePoints = [
 
 const faqs = [
   {
-    question: "Does Dana give medical advice?",
+    question: "Does Mabel give medical advice?",
     answer:
-      "No. Dana captures appointment intent and routes the request. It should not diagnose, recommend treatment, give medical instructions, or make clinical promises."
+      "No. Mabel captures appointment intent and routes the request. It should not diagnose, recommend treatment, give medical instructions, or make clinical promises."
   },
   {
     question: "Will clients call a new number?",
@@ -100,9 +100,9 @@ const faqs = [
       "No. Clients keep calling your normal clinic number. Only missed, busy, or after-hours calls forward to Raleigh Lead Recovery."
   },
   {
-    question: "Can Dana quote prices?",
+    question: "Can Mabel quote prices?",
     answer:
-      "For the free audit, no. Dana can say the team will follow up with details. Pricing rules can be added later only if your clinic wants approved wording."
+      "For the free audit, no. Mabel can say the team will follow up with details. Pricing rules can be added later only if your clinic wants approved wording."
   },
   {
     question: "What details does the intake collect?",
@@ -173,7 +173,7 @@ export default async function MedSpasPage({ searchParams }: PageProps) {
               Catch consults after your front desk stops.
             </h1>
             <p className="mt-8 max-w-xl text-lg font-medium leading-8 text-white/72 sm:text-xl">
-              When your team is in treatment, checking out clients, or closed for the day, Dana answers missed calls, captures the consult request, and texts the lead to your clinic. No phone system migration.
+              When your team is in treatment, checking out clients, or closed for the day, Mabel answers missed calls, captures the consult request, and texts the lead to your clinic. No phone system migration.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a className="inline-flex items-center justify-center gap-2 rounded bg-[#f1d6c6] px-5 py-4 font-black text-[#1b1210] hover:bg-[#ffd9c1]" href="#request">
@@ -223,7 +223,7 @@ export default async function MedSpasPage({ searchParams }: PageProps) {
               You should not have to choose between the client in front of you and the next consult.
             </h2>
             <p className="mt-8 max-w-2xl text-xl leading-9 text-[#5a4b44]">
-              Missed calls often happen when your team is doing the work that drives revenue. Dana gives callers a calm response and gives your team the context to follow up quickly.
+              Missed calls often happen when your team is doing the work that drives revenue. Mabel gives callers a calm response and gives your team the context to follow up quickly.
             </p>
             <div className="mt-10 border-t border-[#d8c9be]">
               {clinicProblems.map((problem) => (
@@ -296,7 +296,7 @@ export default async function MedSpasPage({ searchParams }: PageProps) {
             <div className="grid gap-3 px-6 pb-6 sm:px-8 sm:pb-8">
               <SampleCall tag="BOTOX" name="Megan R." detail="Interested in first-time Botox consult before a wedding." value="$650" />
               <SampleCall tag="FILLER" name="Lauren P." detail="Asked about lip filler availability next week." value="$900" />
-              <SampleCall tag="LASER" name="Dana K." detail="Wanted laser hair removal consult and evening appointment options." value="$1,200" />
+              <SampleCall tag="LASER" name="Jamie K." detail="Wanted laser hair removal consult and evening appointment options." value="$1,200" />
             </div>
           </div>
         </div>

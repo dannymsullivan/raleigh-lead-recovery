@@ -2,7 +2,7 @@
 
 Raleigh Lead Recovery is a missed-call recovery service for Raleigh-area plumbing shops.
 
-The service helps plumbers catch calls that would otherwise go to voicemail. Customers keep calling the plumber's normal shop number. Busy, unanswered, or after-hours calls can forward to Dana, an intake assistant that captures the plumbing issue, callback number, address, urgency, and timing, then alerts the owner.
+The service helps plumbers catch calls that would otherwise go to voicemail. Customers keep calling the plumber's normal shop number. Busy, unanswered, or after-hours calls can forward to Mabel, an intake assistant that captures the plumbing issue, callback number, address, urgency, and timing, then alerts the owner.
 
 ## Audience
 

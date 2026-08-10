@@ -109,6 +109,16 @@ export async function upsertCall(
     throw error;
   }
 
+  const { error: activationError } = await supabase
+    .from("clients")
+    .update({ test_call_completed_at: now.toISOString(), forwarding_completed_at: now.toISOString() })
+    .eq("id", clientId)
+    .is("test_call_completed_at", null);
+
+  if (activationError && !activationError.message.includes("test_call_completed_at")) {
+    throw activationError;
+  }
+
   return data as Call;
 }
 

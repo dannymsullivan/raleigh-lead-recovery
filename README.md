@@ -1,6 +1,6 @@
 # Raleigh Lead Recovery
 
-Live demo for Raleigh plumbing businesses that answers missed calls through Vapi, logs captured leads in Supabase, texts the owner through Twilio, and shows a shareable 7-day report.
+Missed-call recovery SaaS for service businesses. Mabel answers forwarded calls through Vapi, logs captured leads in Supabase, alerts the owner through Twilio, and gives each customer a private call dashboard.
 
 ## Setup
 
@@ -19,8 +19,10 @@ cp .env.example .env.local
 Required values:
 
 - `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY` for customer signup, login, and session refresh
 - `SUPABASE_SECRET_KEY` for new Supabase projects, or `SUPABASE_SERVICE_ROLE_KEY` for legacy projects
 - `VAPI_WEBHOOK_SECRET`
+- `VAPI_API_KEY` for automatic assistant and trial-number provisioning
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_FROM_NUMBER`
@@ -47,7 +49,7 @@ npm run seed
 npm run dev
 ```
 
-Open `http://localhost:3000` for the public Raleigh plumber landing page.
+Open `http://localhost:3000` for the public landing page. Customer signup, guided setup, login, and the authenticated call board live at `/signup`, `/onboarding`, `/login`, and `/dashboard`.
 
 Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, or open the public sample at `http://localhost:3000/example-report`.
 
@@ -75,12 +77,27 @@ Bearer prefix: disabled / empty
 
 The webhook matches clients by `message.call.assistantId` first and `message.call.phoneNumberId` second, so store those IDs on the client record.
 
-## Landing Page And Offer
+## Self-Serve Trial
 
-The root route `/` is a public landing page tailored to Raleigh plumbers. The first offer is a 7-day missed-call audit:
+The primary customer flow is:
+
+1. Create an account with name, email, and password.
+2. Complete the guided business setup: business details, services, service area, weekly hours, emergency rules, callback expectations, alert number, and timezone.
+3. Start a 14-day no-card trial and enter the private dashboard.
+4. Connect missed-call forwarding and make a test call.
+
+Onboarding data is stored on the authenticated client's workspace. The dashboard redirects incomplete accounts back to `/onboarding`, so customers cannot skip required setup.
+
+Completing onboarding queues idempotent Vapi provisioning. The app creates a business-specific Mabel assistant, requests a US trial number in the owner's area code, stores both external IDs, and exposes retryable provisioning status in the dashboard. The first inbound webhook marks the end-to-end test call complete.
+
+The full production design—including the Twilio scale path, billing lifecycle, failure handling, security, and deployment gates—is documented in [`docs/saas-architecture.md`](docs/saas-architecture.md).
+
+## Legacy Audit Offer
+
+The earlier assisted-sales workflow remains available as a 7-day missed-call audit:
 
 - The plumber forwards busy/no-answer/after-hours calls for one week.
-- Dana captures each missed job call and sends the owner an alert.
+- Mabel captures each missed job call and sends the owner an alert.
 - The report page shows calls captured and estimated job value caught.
 - The request form stores submissions in `pilot_requests`.
 
@@ -127,7 +144,7 @@ curl -sS -X POST http://localhost:3000/api/webhooks/vapi \
           "callback_promised_by": "15 minutes"
         }
       },
-      "transcript": "Dana: What is going on? Caller: There is water everywhere under the kitchen sink."
+      "transcript": "Mabel: What is going on? Caller: There is water everywhere under the kitchen sink."
     }
   }'
 ```

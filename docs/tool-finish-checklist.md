@@ -103,7 +103,7 @@ Finish:
 
 - Confirm recording is enabled or intentionally disabled in Vapi.
 - Decide whether pilot reports should include audio playback.
-- If storing recordings, update Dana's opening language to disclose that the call may be recorded.
+- If storing recordings, update Mabel's opening language to disclose that the call may be recorded.
 - Confirm the report audio player works on mobile.
 
 Acceptance test:

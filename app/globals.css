@@ -2,9 +2,9 @@
 
 :root {
   color-scheme: light;
-  --background: #f6f7f4;
-  --foreground: #171717;
-  --font-sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --background: #f4f1e8;
+  --foreground: #000000;
+  --font-sans: "Avenir Next", "Avenir", "Century Gothic", sans-serif;
 }
 
 * {
@@ -17,6 +17,23 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 3px;
 }
 
 button,
@@ -70,7 +87,18 @@ details > summary {
 }
 
 .prose-like li::marker {
-  color: #9fc600;
+  color: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .prose-like blockquote {

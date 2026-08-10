@@ -16,11 +16,31 @@ export type ValueBand = (typeof valueBandValues)[number];
 
 export type Client = {
   id: string;
+  user_id?: string | null;
   business_name: string;
   trade: string;
   owner_name: string;
   owner_phone: string;
   owner_email: string | null;
+  service_area?: string | null;
+  business_description?: string | null;
+  services?: string[];
+  business_hours?: Record<string, { closed: boolean; open: string; close: string }>;
+  timezone?: string;
+  emergency_rules?: string | null;
+  callback_window?: string;
+  alert_phone?: string | null;
+  onboarding_completed_at?: string | null;
+  trial_started_at?: string | null;
+  trial_ends_at?: string | null;
+  account_status?: "onboarding" | "trialing" | "active" | "past_due" | "canceled";
+  provisioning_status?: "pending" | "provisioning" | "ready" | "needs_configuration" | "error";
+  provisioning_error?: string | null;
+  provisioned_phone_number?: string | null;
+  number_provider?: string | null;
+  last_provision_attempt_at?: string | null;
+  forwarding_completed_at?: string | null;
+  test_call_completed_at?: string | null;
   pilot_start: string;
   pilot_end: string;
   avg_job_value: number;
@@ -69,6 +89,10 @@ export type Call = {
   sms_error?: string | null;
   created_at: string;
   updated_at: string;
+  lead_status?: "new" | "contacted" | "booked" | "lost" | "spam";
+  owner_notes?: string | null;
+  callback_completed_at?: string | null;
+  booked_value?: number | null;
 };
 
 export type ExtractedVapiCall = {
