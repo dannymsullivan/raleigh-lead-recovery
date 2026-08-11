@@ -1,13 +1,13 @@
-import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, Inbox, LogOut, Mail, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
+import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, LogOut, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { addAuditRequestAction, addClientAction, deleteAllAuditRequestsAction, deleteAuditRequestAction, deleteClientAction, loginAction, logoutAction, updateAuditRequestAction, updateClientAction } from "../actions";
+import { addClientAction, deleteClientAction, loginAction, logoutAction, updateClientAction } from "../actions";
 import { DeleteRecordButton } from "./delete-record-button";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
 import { buildCustomerSnapshot, buildIntegrationStatuses, buildTrialForecast, type CustomerSnapshot, type IntegrationStatus, type TrialForecast } from "@/lib/operations";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import type { Client, PilotRequest } from "@/lib/types";
+import type { Client } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -33,24 +33,6 @@ async function loadClients(): Promise<{ clients: Client[]; error: string | null 
   } catch (error) {
     return {
       clients: [],
-      error: error instanceof Error ? error.message : "Unknown Supabase error"
-    };
-  }
-}
-
-async function loadPilotRequests(): Promise<{ requests: PilotRequest[]; error: string | null }> {
-  try {
-    const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.from("pilot_requests").select("*").order("created_at", { ascending: false });
-
-    if (error) {
-      return { requests: [], error: error.message };
-    }
-
-    return { requests: (data ?? []) as PilotRequest[], error: null };
-  } catch (error) {
-    return {
-      requests: [],
       error: error instanceof Error ? error.message : "Unknown Supabase error"
     };
   }
@@ -110,9 +92,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
     );
   }
 
-  const [{ clients, error: loadError }, { requests, error: requestsError }, { dashboard, error: costError }] = await Promise.all([
+  const [{ clients, error: loadError }, { dashboard, error: costError }] = await Promise.all([
     loadClients(),
-    loadPilotRequests(),
     loadCosts()
   ]);
   const customerSnapshot = buildCustomerSnapshot(clients);
@@ -136,7 +117,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </div>
       </header>
 
-      {created || updated || deleted || error?.startsWith("client-") || error?.startsWith("request") ? (
+      {created || updated || deleted || error?.startsWith("client-") ? (
         <div className="mx-auto max-w-[1440px] px-5 pt-6 sm:px-8">
           <AdminNotice created={created} updated={updated} deleted={deleted} error={error} />
         </div>
@@ -148,10 +129,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
       <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
         <CostDashboardSection dashboard={dashboard} error={costError} />
-      </div>
-
-      <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
-        <AuditRequestsSection requests={requests} error={requestsError} />
       </div>
 
       <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -406,54 +383,6 @@ function StatusPill({ value }: { value: string }) {
   );
 }
 
-function AuditRequestsSection({ requests, error }: { requests: PilotRequest[]; error: string | null }) {
-  if (error) {
-    return (
-      <section className="rounded border border-red-200 bg-red-50 p-4 text-sm text-red-900">
-        Audit requests could not load: {error}
-      </section>
-    );
-  }
-
-  return (
-    <section className="border-2 border-black bg-white">
-      <div className="flex flex-col justify-between gap-4 border-b-2 border-black p-5 sm:flex-row sm:items-end">
-        <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Lead inbox</p><h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">Audit requests</h2><p className="mt-2 text-sm font-semibold text-black/50">Historical form submissions. The public form is now offline.</p></div>
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black/45"><Inbox className="h-4 w-4" />{requests.length} stored</span>
-          <details><summary className="cursor-pointer border-2 border-black px-3 py-2 text-xs font-black">Add manually</summary><form action={addAuditRequestAction} className="mt-3 grid w-full gap-3 border-2 border-black bg-[#f4f1e8] p-4 sm:w-[420px]"><AuditRequestFields /><button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Add request</button></form></details>
-          {requests.length ? <DeleteRecordButton action={deleteAllAuditRequestsAction} label="Delete all" confirmMessage={`Delete all ${requests.length} audit requests? This cannot be undone.`} /> : null}
-        </div>
-      </div>
-
-      {requests.length === 0 ? <div className="p-6 text-sm font-semibold text-black/50">No audit requests.</div> : (
-        <div className="grid lg:grid-cols-2">
-          {requests.map((request) => (
-            <article key={request.id} className="border-b-2 border-black p-5 odd:lg:border-r-2">
-              <div className="flex items-start justify-between gap-4"><div><h3 className="text-xl font-black tracking-[-0.035em]">{request.business_name}</h3><p className="mt-1 text-sm font-semibold text-black/50">{request.owner_name} · {request.service_area}</p></div><p className="shrink-0 font-mono text-[9px] font-bold uppercase text-black/35">{formatDateTime(request.created_at)}</p></div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`tel:${request.owner_phone}`}><PhoneCall className="h-3.5 w-3.5" />{request.owner_phone}</a>
-                <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`sms:${request.owner_phone}`}><MessageSquareText className="h-3.5 w-3.5" />Text</a>
-                {request.owner_email ? <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`mailto:${request.owner_email}`}><Mail className="h-3.5 w-3.5" />Email</a> : null}
-              </div>
-              {request.notes ? <p className="mt-4 text-sm font-semibold leading-6 text-black/60">{request.notes}</p> : null}
-              <p className="mt-4 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/35">Source · {request.source}</p>
-              <div className="mt-5 flex flex-wrap items-start gap-3">
-                <details><summary className="cursor-pointer min-h-10 border-2 border-black px-3 py-2 text-xs font-black">Edit</summary><form action={updateAuditRequestAction.bind(null, request.id)} className="mt-3 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4 sm:w-[420px]"><AuditRequestFields request={request} /><button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Save request</button></form></details>
-                <DeleteRecordButton action={deleteAuditRequestAction.bind(null, request.id)} label="Delete spam" confirmMessage={`Delete the audit request from ${request.business_name}? This cannot be undone.`} />
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function AuditRequestFields({ request }: { request?: PilotRequest }) {
-  return <><div className="grid grid-cols-2 gap-3"><Field label="Business" name="business_name" defaultValue={request?.business_name ?? ""} required /><Field label="Contact" name="owner_name" defaultValue={request?.owner_name ?? ""} required /></div><div className="grid grid-cols-2 gap-3"><Field label="Phone" name="owner_phone" defaultValue={request?.owner_phone ?? ""} required /><Field label="Email" name="owner_email" type="email" defaultValue={request?.owner_email ?? ""} /></div><div className="grid grid-cols-2 gap-3"><Field label="Service area" name="service_area" defaultValue={request?.service_area ?? "Raleigh"} /><Field label="Source" name="source" defaultValue={request?.source ?? "admin"} /></div><Field label="Website" name="website" defaultValue={request?.website ?? ""} /><label className="block text-xs font-black">Notes<textarea className="mt-1 min-h-24 w-full border-2 border-black bg-white px-3 py-2 font-normal outline-none" name="notes" defaultValue={request?.notes ?? ""} /></label></>;
-}
-
 function CostDashboardSection({ dashboard, error }: { dashboard: CostDashboard | null; error: string | null }) {
   if (error) {
     return (
@@ -608,17 +537,8 @@ function formatShortDate(value: string): string {
   }).format(new Date(value));
 }
 
-function formatDateTime(value: string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit"
-  }).format(new Date(value));
-}
-
 function AdminNotice({ created, updated, deleted, error }: { created: string | null; updated: string | null; deleted: string | null; error: string | null }) {
-  const message = deleted ? `${deleted === "client" ? "Customer" : deleted === "requests" ? "All audit requests" : "Audit request"} deleted.` : updated ? `${updated === "client" ? "Customer" : "Audit request"} updated.` : created ? `${created === "request" ? "Audit request" : "Customer"} added.` : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : "Please complete the required fields.";
+  const message = deleted ? "Customer deleted." : updated ? "Customer updated." : created ? "Customer added." : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : "Please complete the required fields.";
   const isError = Boolean(error);
   return <div className={`border-2 border-black px-4 py-3 text-sm font-black ${isError ? "bg-black text-white" : "bg-white"}`}>{message}</div>;
 }

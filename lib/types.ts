@@ -50,21 +50,6 @@ export type Client = {
   created_at: string;
 };
 
-export type PilotRequest = {
-  id: string;
-  business_name: string;
-  owner_name: string;
-  owner_phone: string;
-  owner_email: string | null;
-  website: string | null;
-  service_area: string;
-  weekly_missed_calls: string | null;
-  current_after_hours: string | null;
-  notes: string | null;
-  source: string;
-  created_at: string;
-};
-
 export type Call = {
   id: string;
   client_id: string;
