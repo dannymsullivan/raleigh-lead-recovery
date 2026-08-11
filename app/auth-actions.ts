@@ -2,40 +2,96 @@
 
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import { getEmailConfirmationRedirect } from "@/lib/app-url";
+import { cookies } from "next/headers";
+import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { provisionClientWorkspace } from "@/lib/provisioning";
+
+const pendingPhoneCookie = "mabel_pending_phone";
+const pendingModeCookie = "mabel_pending_auth_mode";
 
 function value(formData: FormData, key: string): string {
   const entry = formData.get(key);
   return typeof entry === "string" ? entry.trim() : "";
 }
 
-export async function signUpAction(formData: FormData): Promise<void> {
+async function rememberPendingPhone(phone: string, mode: "signup" | "login"): Promise<void> {
+  const cookieStore = await cookies();
+  const options = {
+    httpOnly: true,
+    maxAge: 10 * 60,
+    path: "/",
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production"
+  };
+  cookieStore.set(pendingPhoneCookie, phone, options);
+  cookieStore.set(pendingModeCookie, mode, options);
+}
+
+export async function requestSignupCodeAction(formData: FormData): Promise<void> {
   if (!isSupabaseAuthConfigured()) redirect("/signup?error=configuration");
 
-  const email = value(formData, "email").toLowerCase();
-  const password = value(formData, "password");
   const ownerName = value(formData, "owner_name");
+  const phone = normalizePhoneNumber(value(formData, "phone"));
 
-  if (!email || password.length < 8 || !ownerName) {
-    redirect("/signup?error=missing");
-  }
+  if (!ownerName || !phone) redirect("/signup?error=missing");
 
   const supabase = await getSupabaseAuth();
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
+  const { error } = await supabase.auth.signInWithOtp({
+    phone,
     options: {
-      data: { owner_name: ownerName },
-      emailRedirectTo: getEmailConfirmationRedirect()
+      shouldCreateUser: true,
+      data: { owner_name: ownerName }
     }
   });
 
-  if (error || !data.user) {
-    redirect(`/signup?error=${error?.status === 422 ? "exists" : "signup"}`);
-  }
+  if (error) redirect("/signup?error=sms");
+  await rememberPendingPhone(phone, "signup");
+  redirect("/verify");
+}
+
+export async function requestLoginCodeAction(formData: FormData): Promise<void> {
+  if (!isSupabaseAuthConfigured()) redirect("/login?error=configuration");
+
+  const phone = normalizePhoneNumber(value(formData, "phone"));
+  if (!phone) redirect("/login?error=phone");
+
+  const supabase = await getSupabaseAuth();
+  const { error } = await supabase.auth.signInWithOtp({
+    phone,
+    options: { shouldCreateUser: false }
+  });
+
+  if (error) redirect("/login?error=phone");
+  await rememberPendingPhone(phone, "login");
+  redirect("/verify");
+}
+
+export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
+  if (!isSupabaseAuthConfigured()) redirect("/login?error=configuration");
+
+  const cookieStore = await cookies();
+  const phone = cookieStore.get(pendingPhoneCookie)?.value;
+  const mode = cookieStore.get(pendingModeCookie)?.value;
+  const token = value(formData, "code").replace(/\D/g, "");
+
+  if (!phone || (mode !== "signup" && mode !== "login")) redirect("/signup?error=expired");
+  if (token.length !== 6) redirect("/verify?error=code");
+
+  const supabase = await getSupabaseAuth();
+  const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
+  if (error || !data.user || !data.session) redirect("/verify?error=code");
+
+  cookieStore.delete(pendingPhoneCookie);
+  cookieStore.delete(pendingModeCookie);
+
+  if (mode === "login") redirect("/dashboard");
+
+  const ownerName = typeof data.user.user_metadata.owner_name === "string"
+    ? data.user.user_metadata.owner_name.trim()
+    : "";
+  if (!ownerName) redirect("/signup?error=missing");
 
   const today = new Date();
   const pilotEnd = new Date(today);
@@ -48,8 +104,9 @@ export async function signUpAction(formData: FormData): Promise<void> {
       business_name: "New workspace",
       trade: "service business",
       owner_name: ownerName,
-      owner_phone: "Not set",
-      owner_email: email,
+      owner_phone: phone,
+      owner_email: data.user.email ?? null,
+      alert_phone: phone,
       pilot_start: today.toISOString().slice(0, 10),
       pilot_end: pilotEnd.toISOString().slice(0, 10),
       account_status: "onboarding"
@@ -58,7 +115,7 @@ export async function signUpAction(formData: FormData): Promise<void> {
   );
 
   if (clientError) redirect("/signup?error=workspace");
-  redirect(data.session ? "/onboarding" : "/login?check_email=1");
+  redirect("/onboarding");
 }
 
 export async function completeOnboardingAction(formData: FormData): Promise<void> {
@@ -122,19 +179,6 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   if (error) redirect("/onboarding?error=save");
   after(() => provisionClientWorkspace(user.id));
   redirect("/dashboard?welcome=1");
-}
-
-export async function loginCustomerAction(formData: FormData): Promise<void> {
-  if (!isSupabaseAuthConfigured()) redirect("/login?error=configuration");
-
-  const supabase = await getSupabaseAuth();
-  const { error } = await supabase.auth.signInWithPassword({
-    email: value(formData, "email").toLowerCase(),
-    password: value(formData, "password")
-  });
-
-  if (error) redirect("/login?error=credentials");
-  redirect("/dashboard");
 }
 
 export async function logoutCustomerAction(): Promise<void> {
