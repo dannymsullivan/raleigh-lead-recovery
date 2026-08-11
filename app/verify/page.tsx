@@ -13,7 +13,7 @@ export default async function VerifyPage({ searchParams }: PageProps) {
   const phone = (await cookies()).get("mabel_pending_phone")?.value;
 
   return (
-    <AuthShell eyebrow="Check your phone" title="Enter your six-digit code." description={phone ? `We sent it to ${maskPhoneNumber(phone)}. It expires shortly.` : "Request a new code to continue."}>
+    <AuthShell eyebrow="Check your phone" title="Enter your verification code." description={phone ? `We sent it to ${maskPhoneNumber(phone)}. Next, you’ll add your business number.` : "Request a new code to continue."}>
       {hasError ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">That code is incorrect or expired. Try again or request a new one.</p> : null}
       {phone ? (
         <form action={verifyPhoneCodeAction} className="grid gap-5">

@@ -1,14 +1,20 @@
+import { normalizePhoneNumber } from "./phone";
+
 type AuthSmsEvent = {
   user?: { phone?: unknown };
   sms?: { otp?: unknown };
 };
 
 export function getAuthSmsMessage(event: AuthSmsEvent): { to: string; body: string } | null {
-  const phone = event.user?.phone;
-  const otp = event.sms?.otp;
+  const phone = typeof event.user?.phone === "string"
+    ? normalizePhoneNumber(event.user.phone)
+    : null;
+  const rawOtp = event.sms?.otp;
+  const otp = typeof rawOtp === "string" || typeof rawOtp === "number"
+    ? String(rawOtp).trim()
+    : "";
 
-  if (typeof phone !== "string" || !/^\+[1-9]\d{7,14}$/.test(phone)) return null;
-  if (typeof otp !== "string" || !/^\d{6}$/.test(otp)) return null;
+  if (!phone || !/^\d{4,10}$/.test(otp)) return null;
 
   return {
     to: phone,

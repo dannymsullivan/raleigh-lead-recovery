@@ -19,11 +19,11 @@ export default async function SignupPage({ searchParams }: PageProps) {
   const error = typeof search.error === "string" ? search.error : null;
 
   return (
-    <AuthShell eyebrow="14 days free · no card" title="Create your account. That’s it." description="We’ll text you a six-digit code. No password to remember and no email confirmation link.">
+    <AuthShell eyebrow="14 days free · no card" title="Create your account. That’s it." description="We’ll text your mobile a verification code. After that, you’ll add the business number Mabel should answer.">
       {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{errors[error] ?? errors.signup}</p> : null}
       <form action={requestSignupCodeAction} className="grid gap-5">
         <AuthField label="Your name" name="owner_name" autoComplete="name" />
-        <AuthField label="Mobile number" name="phone" type="tel" placeholder="(919) 555-0123" autoComplete="tel" />
+        <AuthField label="Mobile number for sign-in" name="phone" type="tel" placeholder="(919) 555-0123" autoComplete="tel" />
         <button className="mt-2 inline-flex h-14 items-center justify-center gap-2 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-0.5" type="submit">
           Text me a code <ArrowRight className="h-4 w-4" />
         </button>

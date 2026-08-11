@@ -77,7 +77,7 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
   const token = value(formData, "code").replace(/\D/g, "");
 
   if (!phone || (mode !== "signup" && mode !== "login")) redirect("/signup?error=expired");
-  if (token.length !== 6) redirect("/verify?error=code");
+  if (token.length < 4 || token.length > 10) redirect("/verify?error=code");
 
   const supabase = await getSupabaseAuth();
   const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
@@ -104,7 +104,7 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
       business_name: "New workspace",
       trade: "service business",
       owner_name: ownerName,
-      owner_phone: phone,
+      owner_phone: "Not set",
       owner_email: data.user.email ?? null,
       alert_phone: phone,
       pilot_start: today.toISOString().slice(0, 10),

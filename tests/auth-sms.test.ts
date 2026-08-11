@@ -13,7 +13,17 @@ describe("Supabase Auth SMS hook", () => {
   });
 
   it("rejects malformed phone numbers and codes", () => {
-    expect(getAuthSmsMessage({ user: { phone: "9195550123" }, sms: { otp: "123456" } })).toBeNull();
-    expect(getAuthSmsMessage({ user: { phone: "+19195550123" }, sms: { otp: "12345" } })).toBeNull();
+    expect(getAuthSmsMessage({ user: { phone: "5550123" }, sms: { otp: "123456" } })).toBeNull();
+    expect(getAuthSmsMessage({ user: { phone: "+19195550123" }, sms: { otp: "123" } })).toBeNull();
+  });
+
+  it("accepts numeric codes and normalizes formatted hook phone values", () => {
+    expect(getAuthSmsMessage({
+      user: { phone: "(919) 555-0123" },
+      sms: { otp: 123456 }
+    })).toEqual({
+      to: "+19195550123",
+      body: "Your Mabel verification code is 123456. It expires shortly."
+    });
   });
 });
