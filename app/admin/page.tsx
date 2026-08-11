@@ -1,9 +1,10 @@
-import { Calculator, DollarSign, ExternalLink, Inbox, LogOut, Mail, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
+import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, Inbox, LogOut, Mail, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { addClientAction, loginAction, logoutAction } from "../actions";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
+import { buildCustomerSnapshot, buildIntegrationStatuses, buildTrialForecast, type CustomerSnapshot, type IntegrationStatus, type TrialForecast } from "@/lib/operations";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Client, PilotRequest } from "@/lib/types";
 
@@ -111,17 +112,20 @@ export default async function AdminPage({ searchParams }: PageProps) {
     loadPilotRequests(),
     loadCosts()
   ]);
+  const customerSnapshot = buildCustomerSnapshot(clients);
+  const integrations = buildIntegrationStatuses(process.env, !loadError, clients);
+  const trialForecast = buildTrialForecast();
 
   return (
-    <main className="min-h-screen">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+    <main className="min-h-screen bg-[#f4f1e8] text-black">
+      <header className="border-b-2 border-black bg-[#f4f1e8]">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
           <div>
-            <p className="text-sm font-medium text-red-700">Pilot admin</p>
-            <h1 className="text-2xl font-semibold tracking-normal">Raleigh Lead Recovery</h1>
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Founder operations</p>
+            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Mabel control room</h1>
           </div>
           <form action={logoutAction}>
-            <button className="inline-flex items-center gap-2 rounded border border-neutral-300 px-3 py-2 text-sm font-medium" type="submit">
+            <button className="inline-flex h-10 items-center gap-2 border-2 border-black px-3 text-sm font-extrabold hover:bg-black hover:text-white" type="submit">
               <LogOut className="h-4 w-4" aria-hidden="true" />
               Sign out
             </button>
@@ -129,18 +133,25 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-5 pt-6">
+      <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
+        <OperationsOverview customers={customerSnapshot} integrations={integrations} forecast={trialForecast} />
+      </div>
+
+      <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
         <CostDashboardSection dashboard={dashboard} error={costError} />
       </div>
 
-      <div className="mx-auto max-w-6xl px-5 pt-6">
+      <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
         <AuditRequestsSection requests={requests} error={requestsError} />
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-6 px-5 py-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <section>
+      <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <section className="min-w-0">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">Clients</h2>
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Customer ledger</p>
+              <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">Customers</h2>
+            </div>
             {created ? <span className="rounded bg-emerald-100 px-2 py-1 text-sm text-emerald-900">Client added</span> : null}
           </div>
 
@@ -149,25 +160,30 @@ export default async function AdminPage({ searchParams }: PageProps) {
           ) : clients.length === 0 ? (
             <div className="rounded border border-neutral-200 bg-white p-5 text-sm text-neutral-600">No clients yet. Add the demo client or run the seed script.</div>
           ) : (
-            <div className="overflow-hidden rounded border border-neutral-200 bg-white">
-              <table className="w-full min-w-[680px] text-left text-sm">
-                <thead className="bg-neutral-100 text-neutral-700">
+            <div className="overflow-x-auto border-2 border-black bg-white">
+              <table className="w-full min-w-[900px] text-left text-sm">
+                <thead className="border-b-2 border-black bg-[#f4f1e8] font-mono text-[9px] uppercase tracking-[0.12em] text-black/50">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Business</th>
-                    <th className="px-4 py-3 font-medium">Trade</th>
-                    <th className="px-4 py-3 font-medium">Owner</th>
-                    <th className="px-4 py-3 font-medium">Pilot</th>
-                    <th className="px-4 py-3 font-medium">Report</th>
+                    <th className="px-4 py-3 font-bold">Business</th>
+                    <th className="px-4 py-3 font-bold">Account</th>
+                    <th className="px-4 py-3 font-bold">Setup</th>
+                    <th className="px-4 py-3 font-bold">Owner</th>
+                    <th className="px-4 py-3 font-bold">Trial / pilot</th>
+                    <th className="px-4 py-3 font-bold">Report</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-200">
+                <tbody className="divide-y divide-black/15">
                   {clients.map((client) => (
                     <tr key={client.id}>
-                      <td className="px-4 py-3 font-medium">{client.business_name}</td>
-                      <td className="px-4 py-3 text-neutral-700">{client.trade}</td>
-                      <td className="px-4 py-3 text-neutral-700">{client.owner_name}</td>
-                      <td className="px-4 py-3 text-neutral-700">
-                        {client.pilot_start} to {client.pilot_end}
+                      <td className="px-4 py-3">
+                        <p className="font-black">{client.business_name}</p>
+                        <p className="mt-1 text-xs font-semibold text-black/45">{client.trade}</p>
+                      </td>
+                      <td className="px-4 py-3"><StatusPill value={client.account_status ?? "onboarding"} /></td>
+                      <td className="px-4 py-3"><StatusPill value={client.provisioning_status ?? "pending"} /></td>
+                      <td className="px-4 py-3 font-semibold text-black/65">{client.owner_name}</td>
+                      <td className="px-4 py-3 text-xs font-semibold text-black/55">
+                        {client.trial_ends_at ? `Ends ${formatShortDate(client.trial_ends_at)}` : `${client.pilot_start} to ${client.pilot_end}`}
                       </td>
                       <td className="px-4 py-3">
                         <Link className="inline-flex items-center gap-1 font-medium text-red-700" href={`/report/${client.id}`}>
@@ -214,6 +230,151 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </section>
       </div>
     </main>
+  );
+}
+
+function OperationsOverview({
+  customers,
+  integrations,
+  forecast
+}: {
+  customers: CustomerSnapshot;
+  integrations: IntegrationStatus[];
+  forecast: TrialForecast;
+}) {
+  return (
+    <section>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Today&apos;s operating picture</p>
+          <h2 className="mt-3 text-4xl font-black tracking-[-0.055em] sm:text-5xl">Know the runway before you fill it.</h2>
+          <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-black/55">
+            Customer counts are live. Provider spend is estimated from captured usage and the rates below, so it is a planning ledger—not an invoice.
+          </p>
+        </div>
+        <div className="border-2 border-black bg-black px-5 py-4 text-white lg:text-right">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Conservative cost / activated trial</p>
+          <p className="mt-2 text-4xl font-black tabular-nums tracking-[-0.06em]">{formatUsd(forecast.perTrial.total)}</p>
+          <p className="mt-1 text-xs font-bold text-white/55">{forecast.assumptions.callsPerTrial} calls · {formatMinutes(forecast.assumptions.minutesPerTrial)} · {forecast.assumptions.trialDays} days</p>
+        </div>
+      </div>
+
+      <div className="mt-8 grid border-l-2 border-t-2 border-black sm:grid-cols-2 xl:grid-cols-6">
+        <OperationsMetric label="Customers" value={String(customers.total)} detail="all workspaces" />
+        <OperationsMetric label="Onboarding" value={String(customers.onboarding)} detail="not live yet" />
+        <OperationsMetric label="Free trials" value={String(customers.trialing)} detail="currently running" />
+        <OperationsMetric label="Active" value={String(customers.active)} detail="paying status" />
+        <OperationsMetric label="Mabel ready" value={String(customers.ready)} detail="provisioned" />
+        <OperationsMetric label="Needs attention" value={String(customers.attention)} detail={customers.expiringSoon ? `${customers.expiringSoon} trial ending soon` : "setup errors"} alert={customers.attention > 0} />
+      </div>
+
+      <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <section className="min-w-0 border-2 border-black bg-white">
+          <div className="flex items-center justify-between border-b-2 border-black px-5 py-4">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">System map</p>
+              <h3 className="mt-1 text-xl font-black tracking-[-0.035em]">Connected tools</h3>
+            </div>
+            <Server className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div className="divide-y-2 divide-black">
+            {integrations.map((integration) => (
+              <div className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center" key={integration.name}>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <IntegrationMark status={integration.status} />
+                    <p className="font-black">{integration.name}</p>
+                  </div>
+                  <p className="mt-1 text-xs font-bold text-black/45">{integration.purpose}</p>
+                  <p className="mt-2 text-sm font-semibold leading-5 text-black/65">{integration.detail}</p>
+                </div>
+                <span className={`w-fit border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${integration.status === "connected" ? "bg-black text-white" : integration.status === "attention" ? "bg-[#f4f1e8]" : "text-black/45"}`}>
+                  {integration.status.replace("_", " ")}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="min-w-0 border-2 border-black bg-white">
+          <div className="border-b-2 border-black px-5 py-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Trial runway</p>
+                <h3 className="mt-1 text-xl font-black tracking-[-0.035em]">What free HVAC trials cost</h3>
+              </div>
+              <Activity className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <p className="mt-3 text-xs font-semibold leading-5 text-black/50">
+              Includes {formatUsd(forecast.assumptions.fixedMonthlyBaseline, 0)}/month for production Vercel + Supabase, plus one verification, a prorated phone number, voice AI, model allowance, transport, and owner alerts.
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-sm">
+              <thead className="border-b border-black/20 bg-[#f4f1e8] font-mono text-[9px] uppercase tracking-[0.12em] text-black/50">
+                <tr>
+                  <th className="px-5 py-3 font-bold">Trials</th>
+                  <th className="px-5 py-3 font-bold">Usage cost</th>
+                  <th className="px-5 py-3 font-bold">+ platform baseline</th>
+                  <th className="px-5 py-3 font-bold">Per trial</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/15">
+                {forecast.scenarios.map((scenario) => (
+                  <tr key={scenario.trials}>
+                    <td className="px-5 py-4 text-xl font-black tabular-nums">{scenario.trials}</td>
+                    <td className="px-5 py-4 font-bold tabular-nums">{formatUsd(scenario.variableCost)}</td>
+                    <td className="px-5 py-4 font-black tabular-nums">{formatUsd(scenario.totalWithBaseline)}</td>
+                    <td className="px-5 py-4 text-black/55 tabular-nums">{formatUsd(scenario.totalWithBaseline / scenario.trials)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <details className="border-t-2 border-black px-5 py-4">
+            <summary className="text-sm font-black">Per-trial cost recipe</summary>
+            <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-xs sm:grid-cols-3">
+              <CostRecipe label="Vapi" value={forecast.perTrial.voiceAi} />
+              <CostRecipe label="Model/STT/TTS" value={forecast.perTrial.modelAllowance} />
+              <CostRecipe label="Voice transport" value={forecast.perTrial.voiceTransport} />
+              <CostRecipe label="Owner alerts" value={forecast.perTrial.ownerAlerts} />
+              <CostRecipe label="Signup code" value={forecast.perTrial.signupVerification} />
+              <CostRecipe label="Phone number" value={forecast.perTrial.phoneNumber} />
+            </dl>
+          </details>
+        </section>
+      </div>
+    </section>
+  );
+}
+
+function OperationsMetric({ label, value, detail, alert = false }: { label: string; value: string; detail: string; alert?: boolean }) {
+  return (
+    <div className={`border-b-2 border-r-2 border-black p-5 ${alert ? "bg-black text-white" : "bg-white"}`}>
+      <p className={`font-mono text-[9px] font-bold uppercase tracking-[0.14em] ${alert ? "text-white/50" : "text-black/45"}`}>{label}</p>
+      <p className="mt-4 text-3xl font-black tabular-nums tracking-[-0.055em]">{value}</p>
+      <p className={`mt-2 text-xs font-semibold ${alert ? "text-white/45" : "text-black/40"}`}>{detail}</p>
+    </div>
+  );
+}
+
+function IntegrationMark({ status }: { status: IntegrationStatus["status"] }) {
+  if (status === "connected") return <span className="grid h-5 w-5 place-items-center rounded-full bg-black text-white"><Check className="h-3 w-3" /></span>;
+  if (status === "attention") return <CircleAlert className="h-5 w-5" aria-hidden="true" />;
+  return <span className="h-5 w-5 rounded-full border-2 border-black/35" />;
+}
+
+function CostRecipe({ label, value }: { label: string; value: number }) {
+  return <div><dt className="font-bold text-black/45">{label}</dt><dd className="mt-1 text-base font-black tabular-nums">{formatUsd(value)}</dd></div>;
+}
+
+function StatusPill({ value }: { value: string }) {
+  const attention = value === "error" || value === "needs_configuration" || value === "past_due";
+  const positive = value === "ready" || value === "active" || value === "trialing";
+  return (
+    <span className={`inline-flex border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.08em] ${attention ? "bg-black text-white" : positive ? "bg-[#f4f1e8]" : "text-black/50"}`}>
+      {value.replaceAll("_", " ")}
+    </span>
   );
 }
 
