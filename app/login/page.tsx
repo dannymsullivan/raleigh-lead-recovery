@@ -9,10 +9,12 @@ export default async function LoginPage({ searchParams }: PageProps) {
   const search = (await searchParams) ?? {};
   const error = typeof search.error === "string" ? search.error : null;
   const checkEmail = search.check_email === "1";
+  const confirmed = search.confirmed === "1";
 
   return (
     <AuthShell eyebrow="Welcome back" title="Open your call board." description="Sign in to see the leads Mabel caught while you were busy doing the actual work.">
       {checkEmail ? <p className="mb-5 border-2 border-black bg-white p-4 text-sm font-bold">Check your inbox to confirm your email, then come back and sign in.</p> : null}
+      {confirmed ? <p className="mb-5 border-2 border-black bg-white p-4 text-sm font-bold">Email confirmed. Sign in to continue setting up Mabel.</p> : null}
       {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : "That email and password did not match."}</p> : null}
       <form action={loginCustomerAction} className="grid gap-5">
         <AuthField label="Email" name="email" type="email" autoComplete="email" />

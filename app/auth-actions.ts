@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { after } from "next/server";
+import { getEmailConfirmationRedirect } from "@/lib/app-url";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { provisionClientWorkspace } from "@/lib/provisioning";
@@ -27,7 +28,8 @@ export async function signUpAction(formData: FormData): Promise<void> {
     email,
     password,
     options: {
-      data: { owner_name: ownerName }
+      data: { owner_name: ownerName },
+      emailRedirectTo: getEmailConfirmationRedirect()
     }
   });
 
