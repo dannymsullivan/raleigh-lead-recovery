@@ -86,28 +86,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="border-b-2 border-black bg-white" aria-label="Companies Danny Sullivan has worked at">
-        <div className="mx-auto grid max-w-6xl lg:grid-cols-[0.32fr_1fr]">
-          <div className="flex items-center border-b-2 border-black px-5 py-6 sm:px-8 lg:border-b-0 lg:border-r-2">
-            <p className="font-mono text-[10px] font-bold uppercase leading-5 tracking-[0.18em] text-black/45">Experience from</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4">
-            <div className="flex min-h-24 items-center justify-center border-b-2 border-r-2 border-black px-5 sm:border-b-0">
-              <span className="text-3xl font-black lowercase tracking-[-0.08em]">stash</span>
-            </div>
-            <div className="flex min-h-24 items-center justify-center border-b-2 border-black px-5 sm:border-b-0 sm:border-r-2">
-              <span className="text-sm font-black uppercase tracking-[0.12em]">Pluralsight</span>
-            </div>
-            <div className="flex min-h-24 items-center justify-center border-r-2 border-black px-5">
-              <span className="-skew-x-6 text-2xl font-black tracking-[-0.07em]">Gametime</span>
-            </div>
-            <div className="flex min-h-24 items-center justify-center px-5">
-              <span className="text-4xl font-black tracking-[-0.1em]">2U</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="px-5 py-24 sm:px-8 sm:py-32" id="how-it-works">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
