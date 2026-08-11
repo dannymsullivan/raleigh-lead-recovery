@@ -21,3 +21,7 @@ export function getAuthSmsMessage(event: AuthSmsEvent): { to: string; body: stri
     body: `Your Mabel verification code is ${otp}. It expires shortly.`
   };
 }
+
+export function authSmsSuccessResponse(): Response {
+  return Response.json({});
+}

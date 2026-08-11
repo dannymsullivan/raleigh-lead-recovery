@@ -1,5 +1,5 @@
 import { Webhook } from "standardwebhooks";
-import { getAuthSmsMessage } from "@/lib/auth-sms";
+import { authSmsSuccessResponse, getAuthSmsMessage } from "@/lib/auth-sms";
 import { sendTwilioSms } from "@/lib/sms";
 
 export async function POST(request: Request): Promise<Response> {
@@ -24,7 +24,7 @@ export async function POST(request: Request): Promise<Response> {
 
   try {
     await sendTwilioSms(message);
-    return new Response(null, { status: 200 });
+    return authSmsSuccessResponse();
   } catch {
     return Response.json({ error: "SMS delivery failed" }, { status: 502 });
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getAuthSmsMessage } from "@/lib/auth-sms";
+import { authSmsSuccessResponse, getAuthSmsMessage } from "@/lib/auth-sms";
 
 describe("Supabase Auth SMS hook", () => {
   it("builds a verification message from a valid hook event", () => {
@@ -25,5 +25,13 @@ describe("Supabase Auth SMS hook", () => {
       to: "+19195550123",
       body: "Your Mabel verification code is 123456. It expires shortly."
     });
+  });
+
+  it("returns JSON metadata Supabase requires for a successful HTTP hook", async () => {
+    const response = authSmsSuccessResponse();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toContain("application/json");
+    await expect(response.json()).resolves.toEqual({});
   });
 });
