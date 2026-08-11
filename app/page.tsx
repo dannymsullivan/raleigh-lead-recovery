@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, Check, ExternalLink, PhoneCall, Play, Quote } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
+import { contactEmail, contactHref } from "@/lib/contact";
 
 const demoNumber = "+19842992155";
 const demoNumberDisplay = "(984) 299-2155";
@@ -206,7 +207,7 @@ export default function LandingPage() {
             <BrandMark inverted />
             <p className="mt-5 text-xs font-semibold text-white/42">© 2026 · Built by <a className="underline underline-offset-2 hover:text-white" href="https://raleighaiguy.com/" target="_blank" rel="noreferrer">Raleigh AI Guy</a></p>
           </div>
-          <nav className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/blog">Writing</Link><Link href="/login">Sign in</Link><a href={`tel:${demoNumber}`}>Call demo</a><a href="#how-it-works">How it works</a></nav>
+          <nav className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/blog">Writing</Link><Link href="/login">Sign in</Link><a href={contactHref}>{contactEmail}</a><a href={`tel:${demoNumber}`}>Call demo</a><a href="#how-it-works">How it works</a></nav>
         </div>
       </footer>
     </main>

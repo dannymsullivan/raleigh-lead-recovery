@@ -85,32 +85,112 @@ export async function addClientAction(formData: FormData): Promise<void> {
   redirect("/admin?created=1");
 }
 
-export async function requestAuditAction(formData: FormData): Promise<void> {
+const accountStatuses = new Set(["onboarding", "trialing", "active", "past_due", "canceled"]);
+const provisioningStatuses = new Set(["pending", "provisioning", "ready", "needs_configuration", "error"]);
+
+export async function updateClientAction(clientId: string, formData: FormData): Promise<void> {
+  await requireAdminSession();
+
   const businessName = formString(formData, "business_name");
+  const trade = formString(formData, "trade");
   const ownerName = formString(formData, "owner_name");
   const ownerPhone = formString(formData, "owner_phone");
+  if (!businessName || !trade || !ownerName || !ownerPhone) redirect("/admin?error=client-update");
 
-  if (!businessName || !ownerName || !ownerPhone) {
-    redirect("/?request=missing#request");
-  }
-
-  const supabase = getSupabaseAdmin();
-  const { error } = await supabase.from("pilot_requests").insert({
+  const accountStatus = formString(formData, "account_status");
+  const provisioningStatus = formString(formData, "provisioning_status");
+  const avgJobValue = Number(formString(formData, "avg_job_value"));
+  const closeRate = Number(formString(formData, "close_rate"));
+  const { error } = await getSupabaseAdmin().from("clients").update({
     business_name: businessName,
+    trade,
     owner_name: ownerName,
     owner_phone: ownerPhone,
+    owner_email: formString(formData, "owner_email") || null,
+    service_area: formString(formData, "service_area") || null,
+    pilot_start: formString(formData, "pilot_start"),
+    pilot_end: formString(formData, "pilot_end"),
+    avg_job_value: Number.isFinite(avgJobValue) ? avgJobValue : 500,
+    close_rate: Number.isFinite(closeRate) ? closeRate : 0.4,
+    account_status: accountStatuses.has(accountStatus) ? accountStatus : "onboarding",
+    provisioning_status: provisioningStatuses.has(provisioningStatus) ? provisioningStatus : "pending"
+  }).eq("id", clientId);
+
+  if (error) throw error;
+  revalidatePath("/admin");
+  redirect("/admin?updated=client");
+}
+
+export async function deleteClientAction(clientId: string): Promise<void> {
+  await requireAdminSession();
+  const admin = getSupabaseAdmin();
+  const { data: client, error: loadError } = await admin.from("clients")
+    .select("id,user_id,vapi_assistant_id,vapi_phone_number_id")
+    .eq("id", clientId)
+    .maybeSingle();
+
+  if (loadError) throw loadError;
+  if (!client) redirect("/admin?error=client-missing");
+  if (client.vapi_assistant_id || client.vapi_phone_number_id) redirect("/admin?error=client-connected");
+
+  const { error } = await admin.from("clients").delete().eq("id", clientId);
+  if (error) throw error;
+  if (client.user_id) {
+    const { error: authError } = await admin.auth.admin.deleteUser(client.user_id);
+    if (authError) throw authError;
+  }
+
+  revalidatePath("/admin");
+  redirect("/admin?deleted=client");
+}
+
+function auditRequestValues(formData: FormData) {
+  return {
+    business_name: formString(formData, "business_name"),
+    owner_name: formString(formData, "owner_name"),
+    owner_phone: formString(formData, "owner_phone"),
     owner_email: formString(formData, "owner_email") || null,
     website: formString(formData, "website") || null,
     service_area: formString(formData, "service_area") || "Raleigh",
     weekly_missed_calls: formString(formData, "weekly_missed_calls") || null,
     current_after_hours: formString(formData, "current_after_hours") || null,
     notes: formString(formData, "notes") || null,
-    source: formString(formData, "source") || "raleigh_lead_recovery_landing"
-  });
+    source: formString(formData, "source") || "admin"
+  };
+}
 
-  if (error) {
-    throw error;
-  }
+export async function addAuditRequestAction(formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const values = auditRequestValues(formData);
+  if (!values.business_name || !values.owner_name || !values.owner_phone) redirect("/admin?error=request");
+  const { error } = await getSupabaseAdmin().from("pilot_requests").insert(values);
+  if (error) throw error;
+  revalidatePath("/admin");
+  redirect("/admin?created=request");
+}
 
-  redirect("/thanks");
+export async function updateAuditRequestAction(requestId: string, formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const values = auditRequestValues(formData);
+  if (!values.business_name || !values.owner_name || !values.owner_phone) redirect("/admin?error=request-update");
+  const { error } = await getSupabaseAdmin().from("pilot_requests").update(values).eq("id", requestId);
+  if (error) throw error;
+  revalidatePath("/admin");
+  redirect("/admin?updated=request");
+}
+
+export async function deleteAuditRequestAction(requestId: string): Promise<void> {
+  await requireAdminSession();
+  const { error } = await getSupabaseAdmin().from("pilot_requests").delete().eq("id", requestId);
+  if (error) throw error;
+  revalidatePath("/admin");
+  redirect("/admin?deleted=request");
+}
+
+export async function deleteAllAuditRequestsAction(): Promise<void> {
+  await requireAdminSession();
+  const { error } = await getSupabaseAdmin().from("pilot_requests").delete().not("id", "is", null);
+  if (error) throw error;
+  revalidatePath("/admin");
+  redirect("/admin?deleted=requests");
 }

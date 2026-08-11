@@ -1,15 +1,14 @@
-import { ArrowRight, Clock3, FileText, PlayCircle, Search, Wrench } from "lucide-react";
+import { ArrowRight, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandMark } from "../components/brand-mark";
 import { blogCategories, blogPosts, siteUrl } from "@/lib/blog";
+import { contactEmail, contactHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "Blog | Raleigh Lead Recovery",
-  description:
-    "Practical missed-call recovery, call forwarding, and local lead capture advice for Raleigh plumbing shops.",
-  alternates: {
-    canonical: `${siteUrl}/blog`
-  }
+  title: "Field Notes | Raleigh Lead Recovery",
+  description: "Practical missed-call recovery, call-forwarding, and local lead-capture advice for busy service businesses.",
+  alternates: { canonical: `${siteUrl}/blog` }
 };
 
 const featuredPost = blogPosts[0];
@@ -17,143 +16,142 @@ const remainingPosts = blogPosts.slice(1);
 
 export default function BlogIndexPage() {
   return (
-    <main className="min-h-screen bg-[#f3f4ee] text-[#090d07]">
-      <header className="border-b border-[#c8c9bf] bg-[#080d06] px-5 py-6 text-white">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="inline-flex min-w-0 items-center gap-3 font-bold" href="/">
-            <span className="flex h-10 w-10 items-center justify-center rounded bg-[#cfff04] text-[#080d06]">
-              <Wrench className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="truncate">Raleigh Lead Recovery</span>
-          </Link>
-          <div className="flex shrink-0 items-center gap-4 text-sm font-black">
-            <Link className="hidden text-white/72 hover:text-white sm:inline" href="/">
-              Home
-            </Link>
-            <Link className="rounded bg-[#cfff04] px-4 py-3 text-[#080d06] hover:bg-[#bbed00]" href="/#request">
-              Free audit
+    <main className="min-h-screen bg-[#f4f1e8] text-black">
+      <header className="border-b-2 border-black">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
+          <BrandMark />
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 sm:block" href="/">Home</Link>
+            <a className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 md:block" href={contactHref}>Contact</a>
+            <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-extrabold text-white transition-transform hover:-translate-y-0.5 sm:px-5" href="/signup">
+              Start free <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </nav>
       </header>
 
-      <section className="px-5 py-20 lg:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="inline-flex items-center gap-2 text-sm font-black text-[#d74322]">
-              <Search className="h-4 w-4" aria-hidden="true" />
-              SEO library for Raleigh plumbers
-            </p>
-            <h1 className="mt-6 text-5xl font-black leading-[1.02] tracking-normal sm:text-6xl lg:text-7xl">
-              Missed-call recovery advice for busy plumbing shops.
+      <section className="border-b-2 border-black">
+        <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.12fr_0.88fr]">
+          <div className="px-5 py-20 sm:px-8 sm:py-28 lg:border-r-2 lg:border-black lg:pr-16">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Mabel field notes · Raleigh, NC</p>
+            <h1 className="mt-8 max-w-4xl text-[clamp(4.3rem,10vw,7.8rem)] font-black leading-[0.81] tracking-[-0.075em]">
+              Better calls.<br />Better jobs.
             </h1>
-            <p className="mt-7 max-w-2xl text-xl leading-9 text-[#41453d]">
-              Practical articles, scripts, and video-ready explainers about catching plumbing leads that would otherwise go to voicemail.
+            <p className="mt-9 max-w-2xl text-lg font-semibold leading-8 text-black/60 sm:text-xl">
+              Plain-English guides for service businesses that would rather capture the next customer than listen to another mystery voicemail.
             </p>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-3">
-            {blogCategories.map((category) => (
-              <span key={category} className="rounded border border-[#c8c9bf] bg-[#fbfcf6] px-4 py-2 text-sm font-black">
-                {category}
-              </span>
-            ))}
+          <div className="flex min-h-[390px] flex-col justify-between bg-black p-7 text-white sm:p-10 lg:min-h-0">
+            <div className="flex items-start justify-between gap-6">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Issue 001</span>
+              <span className="h-3 w-3 rounded-full bg-white" />
+            </div>
+            <div>
+              <p className="max-w-md text-3xl font-black leading-[1.02] tracking-[-0.045em] sm:text-4xl">Useful enough to read between jobs.</p>
+              <dl className="mt-10 grid grid-cols-3 border-l border-t border-white/30">
+                <LedgerStat label="Guides" value={String(blogPosts.length)} />
+                <LedgerStat label="Fluff" value="0" />
+                <LedgerStat label="Focus" value="Local" />
+              </dl>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="px-5 pb-24">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <Link
-            className="group grid min-h-[430px] content-between border border-[#c8c9bf] bg-[#fbfcf6] p-8 transition hover:border-[#090d07] sm:p-10"
-            href={`/blog/${featuredPost.slug}`}
-          >
+      <section className="border-b-2 border-black bg-white">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-5 py-5 sm:px-8">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/40">Browse the board</span>
+          {blogCategories.map((category, index) => (
+            <span className="inline-flex items-center gap-2 text-sm font-black" key={category}>
+              <span className="font-mono text-[9px] text-black/35">{String(index + 1).padStart(2, "0")}</span>{category}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-5 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 flex items-end justify-between gap-6">
             <div>
-              <PostMeta post={featuredPost} />
-              <h2 className="mt-7 max-w-3xl text-4xl font-black leading-tight tracking-normal sm:text-5xl">
-                {featuredPost.title}
-              </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-[#41453d]">{featuredPost.description}</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Start here</p>
+              <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">The lead story.</h2>
             </div>
-            <div className="mt-10 inline-flex items-center gap-2 font-black">
-              Read the guide
-              <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" aria-hidden="true" />
+            <span className="hidden font-mono text-xs font-bold text-black/35 sm:block">UPDATED {featuredPost.updatedAt}</span>
+          </div>
+
+          <Link className="group grid border-2 border-black bg-white lg:grid-cols-[1fr_0.36fr]" href={`/blog/${featuredPost.slug}`}>
+            <div className="p-7 sm:p-10 lg:border-r-2 lg:border-black">
+              <PostMeta post={featuredPost} />
+              <h3 className="mt-12 max-w-4xl text-4xl font-black leading-[0.96] tracking-[-0.055em] sm:text-6xl">{featuredPost.title}</h3>
+              <p className="mt-7 max-w-2xl text-base font-semibold leading-7 text-black/58 sm:text-lg">{featuredPost.description}</p>
+            </div>
+            <div className="flex min-h-52 flex-col justify-between border-t-2 border-black bg-[#f4f1e8] p-7 lg:min-h-0 lg:border-t-0">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/40">Featured guide</span>
+              <span className="inline-flex items-center gap-3 text-xl font-black">Read it <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2" aria-hidden="true" /></span>
             </div>
           </Link>
-
-          <aside className="border border-[#c8c9bf] bg-[#ecede6] p-8 sm:p-10">
-            <p className="text-sm font-black text-[#d74322]">Content plan</p>
-            <h2 className="mt-4 text-3xl font-black leading-tight tracking-normal">Start with questions plumbers already ask.</h2>
-            <p className="mt-5 leading-8 text-[#41453d]">
-              The first cluster targets missed calls, forwarding, job value, and short video demos. Each post has one clear query, a direct answer, and a path back to the free audit.
-            </p>
-            <Link className="mt-8 inline-flex items-center gap-2 rounded bg-[#090d07] px-5 py-4 font-black text-white hover:bg-[#20251d]" href="/#request">
-              Request free audit
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
-            </Link>
-          </aside>
         </div>
       </section>
 
-      <section className="border-y border-[#c8c9bf] bg-[#fbfcf6] px-5 py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-sm font-black text-[#d74322]">Latest posts</p>
-              <h2 className="mt-3 text-4xl font-black tracking-normal">Articles and video scripts</h2>
+      <section className="border-y-2 border-black bg-white">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-[0.72fr_1fr]">
+            <div className="border-b-2 border-black bg-black p-7 text-white sm:p-10 lg:border-b-0 lg:border-r-2">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/45">The rest of the board</p>
+              <h2 className="mt-6 text-5xl font-black leading-[0.9] tracking-[-0.06em] sm:text-6xl">Notes from the front desk.</h2>
+              <p className="mt-7 max-w-md text-base font-semibold leading-7 text-white/58">Forwarding, job value, voicemail, and the small operational choices that decide whether a missed ring becomes revenue.</p>
             </div>
-            <p className="max-w-xl text-[#41453d]">
-              Use article posts for search and video posts for content you can publish on YouTube, Facebook, Instagram, and LinkedIn.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {remainingPosts.map((post) => (
-              <Link key={post.slug} className="group border border-[#c8c9bf] bg-white p-6 transition hover:border-[#090d07]" href={`/blog/${post.slug}`}>
-                <PostMeta post={post} />
-                <h3 className="mt-5 text-2xl font-black leading-tight tracking-normal">{post.title}</h3>
-                <p className="mt-4 line-clamp-4 leading-7 text-[#41453d]">{post.description}</p>
-                <span className="mt-8 inline-flex items-center gap-2 font-black">
-                  Open
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
-                </span>
-              </Link>
-            ))}
+            <div className="divide-y-2 divide-black">
+              {remainingPosts.map((post, index) => (
+                <Link className="group grid gap-8 p-7 transition-colors hover:bg-[#f4f1e8] sm:grid-cols-[52px_1fr_auto] sm:items-start sm:p-9" href={`/blog/${post.slug}`} key={post.slug}>
+                  <span className="font-mono text-xs font-bold text-black/35">{String(index + 2).padStart(2, "0")}</span>
+                  <div>
+                    <PostMeta post={post} />
+                    <h3 className="mt-4 text-2xl font-black leading-[1.02] tracking-[-0.035em] sm:text-3xl">{post.title}</h3>
+                    <p className="mt-4 max-w-xl text-sm font-semibold leading-6 text-black/55">{post.description}</p>
+                  </div>
+                  <ArrowRight className="hidden h-5 w-5 transition-transform group-hover:translate-x-2 sm:block" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="bg-[#f3f4ee] px-5 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#41453d] sm:flex-row">
-          <p>© 2026 Raleigh Lead Recovery</p>
-          <div className="flex gap-6">
-            <Link className="font-semibold text-[#090d07]" href="/">
-              Home
-            </Link>
-            <Link className="font-semibold text-[#090d07]" href="/#request">
-              Free audit
-            </Link>
+      <section className="px-5 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto grid max-w-6xl gap-8 border-2 border-black bg-[#f4f1e8] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Have a missed-call question?</p>
+            <h2 className="mt-5 max-w-3xl text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-6xl">Send it to the person building Mabel.</h2>
           </div>
+          <a className="inline-flex h-14 items-center justify-center gap-3 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-1" href={contactHref}>
+            <Mail className="h-4 w-4" aria-hidden="true" /> {contactEmail}
+          </a>
+        </div>
+      </section>
+
+      <footer className="border-t-2 border-black bg-black px-5 py-9 text-white sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 sm:flex-row sm:items-end">
+          <div><BrandMark inverted /><p className="mt-5 text-xs font-semibold text-white/42">© 2026 Raleigh Lead Recovery</p></div>
+          <nav className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/">Home</Link><Link href="/signup">Start free</Link><a href={contactHref}>Contact</a></nav>
         </div>
       </footer>
     </main>
   );
 }
 
+function LedgerStat({ label, value }: { label: string; value: string }) {
+  return <div className="border-b border-r border-white/30 p-3"><dt className="font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-white/40">{label}</dt><dd className="mt-3 text-lg font-black">{value}</dd></div>;
+}
+
 function PostMeta({ post }: { post: typeof blogPosts[number] }) {
   const Icon = post.format === "video" ? PlayCircle : FileText;
-
   return (
-    <div className="flex flex-wrap items-center gap-3 text-xs font-black uppercase text-[#4d5148]">
-      <span className="inline-flex items-center gap-2 text-[#d74322]">
-        <Icon className="h-4 w-4" aria-hidden="true" />
-        {post.format}
-      </span>
+    <div className="flex flex-wrap items-center gap-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">
+      <span className="inline-flex items-center gap-2 text-black"><Icon className="h-3.5 w-3.5" aria-hidden="true" />{post.format}</span>
       <span>{post.category}</span>
-      <span className="inline-flex items-center gap-1">
-        <Clock3 className="h-4 w-4" aria-hidden="true" />
-        {post.readMinutes} min
-      </span>
+      <span className="inline-flex items-center gap-1"><Clock3 className="h-3.5 w-3.5" aria-hidden="true" />{post.readMinutes} min</span>
     </div>
   );
 }

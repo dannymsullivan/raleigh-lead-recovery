@@ -1,7 +1,8 @@
-import { ArrowRight, CalendarDays, Clock3, FileText, PlayCircle, Search, Wrench } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BrandMark } from "../../components/brand-mark";
 import {
   blogPosts,
   getBlogMetadata,
@@ -12,6 +13,7 @@ import {
   type BlogBlock,
   type BlogPost
 } from "@/lib/blog";
+import { contactEmail, contactHref } from "@/lib/contact";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -47,41 +49,33 @@ export default async function BlogPostPage({ params }: PageProps) {
   const FormatIcon = post.format === "video" ? PlayCircle : FileText;
 
   return (
-    <main className="min-h-screen bg-[#f3f4ee] text-[#090d07]">
+    <main className="min-h-screen bg-[#f4f1e8] text-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <header className="border-b border-[#c8c9bf] bg-[#080d06] px-5 py-6 text-white">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="inline-flex min-w-0 items-center gap-3 font-bold" href="/">
-            <span className="flex h-10 w-10 items-center justify-center rounded bg-[#cfff04] text-[#080d06]">
-              <Wrench className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="truncate">Raleigh Lead Recovery</span>
-          </Link>
-          <div className="flex shrink-0 items-center gap-4 text-sm font-black">
-            <Link className="hidden text-white/72 hover:text-white sm:inline" href="/blog">
-              Blog
-            </Link>
-            <Link className="rounded bg-[#cfff04] px-4 py-3 text-[#080d06] hover:bg-[#bbed00]" href="/#request">
-              Free audit
-            </Link>
+      <header className="border-b-2 border-black">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
+          <BrandMark />
+          <div className="flex shrink-0 items-center gap-4 text-sm font-black sm:gap-6">
+            <Link className="hidden hover:underline hover:decoration-2 hover:underline-offset-4 sm:inline" href="/blog">Field notes</Link>
+            <a className="hidden hover:underline hover:decoration-2 hover:underline-offset-4 md:inline" href={contactHref}>Contact</a>
+            <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-white transition-transform hover:-translate-y-0.5" href="/signup">Start free <ArrowRight className="h-4 w-4" /></Link>
           </div>
         </nav>
       </header>
 
       <article>
-        <section className="px-5 py-16 lg:py-20">
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_0.28fr] lg:items-end">
+        <section className="border-b-2 border-black px-5 py-16 sm:px-8 lg:py-24">
+          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.74fr_0.26fr] lg:items-end">
             <div>
-              <Link className="mb-8 inline-flex items-center gap-2 text-sm font-black text-[#4d5148] hover:text-[#090d07]" href="/blog">
+              <Link className="mb-8 inline-flex items-center gap-2 text-sm font-black text-black/50 hover:text-black" href="/blog">
                 <ArrowRight className="h-4 w-4 rotate-180" aria-hidden="true" />
                 Back to blog
               </Link>
-              <div className="mb-6 flex flex-wrap items-center gap-3 text-xs font-black uppercase text-[#4d5148]">
-                <span className="inline-flex items-center gap-2 text-[#d74322]">
+              <div className="mb-6 flex flex-wrap items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black/45">
+                <span className="inline-flex items-center gap-2 text-black">
                   <FormatIcon className="h-4 w-4" aria-hidden="true" />
                   {post.format}
                 </span>
@@ -95,34 +89,23 @@ export default async function BlogPostPage({ params }: PageProps) {
                   Updated {formatDate(post.updatedAt)}
                 </span>
               </div>
-              <h1 className="max-w-4xl text-5xl font-black leading-[1.02] tracking-normal sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl text-5xl font-black leading-[0.94] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
                 {post.title}
               </h1>
-              <p className="mt-7 max-w-3xl text-xl leading-9 text-[#41453d]">{post.description}</p>
+              <p className="mt-7 max-w-3xl text-lg font-semibold leading-8 text-black/58 sm:text-xl">{post.description}</p>
             </div>
 
-            <aside className="border border-[#c8c9bf] bg-[#fbfcf6] p-6">
-              <p className="inline-flex items-center gap-2 text-sm font-black text-[#d74322]">
-                <Search className="h-4 w-4" aria-hidden="true" />
-                SEO target
-              </p>
-              <dl className="mt-5 grid gap-4 text-sm">
-                <div>
-                  <dt className="font-black">Query</dt>
-                  <dd className="mt-1 text-[#41453d]">{post.targetQuery}</dd>
-                </div>
-                <div>
-                  <dt className="font-black">Buyer stage</dt>
-                  <dd className="mt-1 text-[#41453d]">{post.buyerStage}</dd>
-                </div>
-              </dl>
+            <aside className="border-2 border-black bg-black p-6 text-white">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Field note</p>
+              <p className="mt-8 text-3xl font-black tracking-[-0.05em]">Read it between jobs.</p>
+              <p className="mt-5 text-sm font-semibold leading-6 text-white/58">A practical answer, written for the person who still has to pick up the phone.</p>
             </aside>
           </div>
         </section>
 
         {post.video ? (
           <section className="px-5 pb-12">
-            <div className="mx-auto max-w-5xl overflow-hidden border border-[#c8c9bf] bg-[#080d06]">
+            <div className="mx-auto max-w-5xl overflow-hidden border-2 border-black bg-black">
               <div className="aspect-video">
                 <iframe
                   className="h-full w-full"
@@ -141,8 +124,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         ) : null}
 
         <section className="px-5 pb-20">
-          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.7fr_0.3fr]">
-            <div className="border border-[#c8c9bf] bg-[#fbfcf6] px-6 py-8 sm:px-10 sm:py-12">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.72fr_0.28fr]">
+            <div className="border-2 border-black bg-white px-6 py-8 sm:px-10 sm:py-12">
               <div className="prose-like">
                 {post.blocks.map((block, index) => (
                   <BlogBlockRenderer block={block} key={`${block.type}-${index}`} />
@@ -151,23 +134,21 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
 
             <aside className="space-y-5">
-              <div className="border border-[#c8c9bf] bg-[#ecede6] p-6">
-                <h2 className="text-2xl font-black tracking-normal">Try it on real missed calls.</h2>
-                <p className="mt-4 leading-7 text-[#41453d]">
-                  Raleigh Lead Recovery answers the calls your plumbing shop already misses and texts the lead details to the owner.
+              <div className="border-2 border-black bg-black p-6 text-white">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Talk to Danny</p>
+                <h2 className="mt-4 text-2xl font-black tracking-[-0.04em]">Have a missed-call question?</h2>
+                <p className="mt-4 text-sm font-semibold leading-6 text-white/58">
+                  Send it directly. No form, no funnel, no mystery inbox.
                 </p>
-                <Link className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded bg-[#090d07] px-5 py-4 font-black text-white hover:bg-[#20251d]" href="/#request">
-                  Start free audit
-                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
-                </Link>
+                <a className="mt-6 inline-flex w-full items-center justify-center gap-2 border-2 border-white bg-white px-4 py-4 text-sm font-black text-black hover:bg-transparent hover:text-white" href={contactHref}><Mail className="h-4 w-4" /> Email Danny</a>
               </div>
 
-              <div className="border border-[#c8c9bf] bg-[#fbfcf6] p-6">
-                <h2 className="text-lg font-black tracking-normal">Related</h2>
+              <div className="border-2 border-black bg-white p-6">
+                <h2 className="text-lg font-black tracking-[-0.03em]">Keep reading</h2>
                 <div className="mt-4 grid gap-4">
                   {relatedPosts.map((related) => (
-                    <Link key={related.slug} className="group border-t border-[#c8c9bf] pt-4 first:border-t-0 first:pt-0" href={`/blog/${related.slug}`}>
-                      <p className="text-sm font-black text-[#d74322]">{related.category}</p>
+                    <Link key={related.slug} className="group border-t-2 border-black pt-4 first:border-t-0 first:pt-0" href={`/blog/${related.slug}`}>
+                      <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/40">{related.category}</p>
                       <h3 className="mt-2 font-black leading-snug group-hover:underline">{related.title}</h3>
                     </Link>
                   ))}
@@ -178,17 +159,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         </section>
       </article>
 
-      <footer className="border-t border-[#c8c9bf] bg-[#f3f4ee] px-5 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 text-sm text-[#41453d] sm:flex-row">
-          <p>© 2026 Raleigh Lead Recovery</p>
-          <div className="flex gap-6">
-            <Link className="font-semibold text-[#090d07]" href="/blog">
-              Blog
-            </Link>
-            <Link className="font-semibold text-[#090d07]" href="/#request">
-              Free audit
-            </Link>
-          </div>
+      <footer className="border-t-2 border-black bg-black px-5 py-9 text-white sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 sm:flex-row sm:items-end">
+          <div><BrandMark inverted /><p className="mt-5 text-xs font-semibold text-white/42">© 2026 Raleigh Lead Recovery</p></div>
+          <div className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/blog">Field notes</Link><Link href="/signup">Start free</Link><a href={contactHref}>{contactEmail}</a></div>
         </div>
       </footer>
     </main>
@@ -220,9 +194,9 @@ function BlogBlockRenderer({ block }: { block: BlogBlock }) {
 
   if (block.type === "callout") {
     return (
-      <div className="my-8 border-l-4 border-[#cfff04] bg-[#ecede6] p-5">
-        <p className="text-base font-black text-[#090d07]">{block.title}</p>
-        <p className="mt-2 text-base leading-7 text-[#41453d]">{block.text}</p>
+      <div className="my-8 border-2 border-black bg-[#f4f1e8] p-5">
+        <p className="text-base font-black text-black">{block.title}</p>
+        <p className="mt-2 text-base leading-7 text-black/60">{block.text}</p>
       </div>
     );
   }
@@ -230,11 +204,11 @@ function BlogBlockRenderer({ block }: { block: BlogBlock }) {
   return (
     <div className="my-8 grid gap-4">
       {block.items.map((item, index) => (
-        <div key={item.title} className="grid gap-3 border-t border-[#c8c9bf] pt-5 sm:grid-cols-[72px_1fr]">
-          <p className="text-sm font-black text-[#4d5148]">{String(index + 1).padStart(2, "0")}</p>
+        <div key={item.title} className="grid gap-3 border-t-2 border-black pt-5 sm:grid-cols-[72px_1fr]">
+          <p className="font-mono text-xs font-bold text-black/40">{String(index + 1).padStart(2, "0")}</p>
           <div>
             <h3 className="text-xl font-black tracking-normal">{item.title}</h3>
-            <p className="mt-2 text-base leading-7 text-[#41453d]">{item.text}</p>
+            <p className="mt-2 text-base leading-7 text-black/60">{item.text}</p>
           </div>
         </div>
       ))}

@@ -6,6 +6,7 @@ import { logoutCustomerAction } from "../auth-actions";
 import { BrandMark } from "../components/brand-mark";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { contactHref } from "@/lib/contact";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
 import type { Call, Client } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
@@ -59,7 +60,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Full report</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Mabel settings</Link>
           </nav>
-          <div className="mt-auto border-2 border-black bg-white p-4"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p><p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p><a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href="mailto:hello@raleighleadrecovery.com">Email support <ChevronRight className="h-3 w-3" /></a></div>
+          <div className="mt-auto border-2 border-black bg-white p-4"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p><p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p><a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href={contactHref}>Email support <ChevronRight className="h-3 w-3" /></a></div>
         </aside>
 
         <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">

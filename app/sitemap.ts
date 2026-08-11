@@ -23,12 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9
     },
-    {
-      url: `${siteUrl}/medspas`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.75
-    },
     ...blogPosts.map((post) => ({
       url: `${siteUrl}/blog/${post.slug}`,
       lastModified: new Date(`${post.updatedAt}T00:00:00`),

@@ -1,7 +1,8 @@
 import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, Inbox, LogOut, Mail, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { addClientAction, loginAction, logoutAction } from "../actions";
+import { addAuditRequestAction, addClientAction, deleteAllAuditRequestsAction, deleteAuditRequestAction, deleteClientAction, loginAction, logoutAction, updateAuditRequestAction, updateClientAction } from "../actions";
+import { DeleteRecordButton } from "./delete-record-button";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
 import { buildCustomerSnapshot, buildIntegrationStatuses, buildTrialForecast, type CustomerSnapshot, type IntegrationStatus, type TrialForecast } from "@/lib/operations";
@@ -40,7 +41,7 @@ async function loadClients(): Promise<{ clients: Client[]; error: string | null 
 async function loadPilotRequests(): Promise<{ requests: PilotRequest[]; error: string | null }> {
   try {
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.from("pilot_requests").select("*").order("created_at", { ascending: false }).limit(12);
+    const { data, error } = await supabase.from("pilot_requests").select("*").order("created_at", { ascending: false });
 
     if (error) {
       return { requests: [], error: error.message };
@@ -70,7 +71,9 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const authenticated = await isAuthenticated();
   const search = (await searchParams) ?? {};
   const error = typeof search.error === "string" ? search.error : null;
-  const created = search.created === "1";
+  const created = typeof search.created === "string" ? search.created : null;
+  const updated = typeof search.updated === "string" ? search.updated : null;
+  const deleted = typeof search.deleted === "string" ? search.deleted : null;
 
   if (!authenticated) {
     return (
@@ -133,6 +136,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </div>
       </header>
 
+      {created || updated || deleted || error?.startsWith("client-") || error?.startsWith("request") ? (
+        <div className="mx-auto max-w-[1440px] px-5 pt-6 sm:px-8">
+          <AdminNotice created={created} updated={updated} deleted={deleted} error={error} />
+        </div>
+      ) : null}
+
       <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
         <OperationsOverview customers={customerSnapshot} integrations={integrations} forecast={trialForecast} />
       </div>
@@ -152,7 +161,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Customer ledger</p>
               <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">Customers</h2>
             </div>
-            {created ? <span className="rounded bg-emerald-100 px-2 py-1 text-sm text-emerald-900">Client added</span> : null}
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-black/40">{clients.length} total</span>
           </div>
 
           {loadError ? (
@@ -161,7 +170,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
             <div className="rounded border border-neutral-200 bg-white p-5 text-sm text-neutral-600">No clients yet. Add the demo client or run the seed script.</div>
           ) : (
             <div className="overflow-x-auto border-2 border-black bg-white">
-              <table className="w-full min-w-[900px] text-left text-sm">
+              <table className="w-full min-w-[1120px] text-left text-sm">
                 <thead className="border-b-2 border-black bg-[#f4f1e8] font-mono text-[9px] uppercase tracking-[0.12em] text-black/50">
                   <tr>
                     <th className="px-4 py-3 font-bold">Business</th>
@@ -170,6 +179,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     <th className="px-4 py-3 font-bold">Owner</th>
                     <th className="px-4 py-3 font-bold">Trial / pilot</th>
                     <th className="px-4 py-3 font-bold">Report</th>
+                    <th className="px-4 py-3 font-bold">Manage</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/15">
@@ -190,6 +200,24 @@ export default async function AdminPage({ searchParams }: PageProps) {
                           Open
                           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                         </Link>
+                      </td>
+                      <td className="px-4 py-3 align-top">
+                        <details className="w-[300px]">
+                          <summary className="cursor-pointer text-xs font-black underline decoration-2 underline-offset-4">Edit customer</summary>
+                          <form action={updateClientAction.bind(null, client.id)} className="mt-4 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4">
+                            <Field label="Business" name="business_name" defaultValue={client.business_name} required />
+                            <div className="grid grid-cols-2 gap-3"><Field label="Trade" name="trade" defaultValue={client.trade} required /><Field label="Service area" name="service_area" defaultValue={client.service_area ?? ""} /></div>
+                            <div className="grid grid-cols-2 gap-3"><Field label="Owner" name="owner_name" defaultValue={client.owner_name} required /><Field label="Phone" name="owner_phone" defaultValue={client.owner_phone} required /></div>
+                            <Field label="Email" name="owner_email" type="email" defaultValue={client.owner_email ?? ""} />
+                            <div className="grid grid-cols-2 gap-3"><SelectField label="Account" name="account_status" value={client.account_status ?? "onboarding"} options={["onboarding", "trialing", "active", "past_due", "canceled"]} /><SelectField label="Setup" name="provisioning_status" value={client.provisioning_status ?? "pending"} options={["pending", "provisioning", "ready", "needs_configuration", "error"]} /></div>
+                            <div className="grid grid-cols-2 gap-3"><Field label="Pilot start" name="pilot_start" type="date" defaultValue={client.pilot_start} required /><Field label="Pilot end" name="pilot_end" type="date" defaultValue={client.pilot_end} required /></div>
+                            <div className="grid grid-cols-2 gap-3"><Field label="Avg job value" name="avg_job_value" type="number" defaultValue={String(client.avg_job_value)} /><Field label="Close rate" name="close_rate" type="number" step="0.01" defaultValue={String(client.close_rate)} /></div>
+                            <button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Save customer</button>
+                          </form>
+                          <div className="mt-3">
+                            {client.vapi_assistant_id || client.vapi_phone_number_id ? <p className="text-xs font-bold leading-5 text-black/50">Deletion locked while Vapi resources are connected.</p> : <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete customer" confirmMessage={`Delete ${client.business_name} and all of its call history? This cannot be undone.`} />}
+                          </div>
+                        </details>
                       </td>
                     </tr>
                   ))}
@@ -388,74 +416,42 @@ function AuditRequestsSection({ requests, error }: { requests: PilotRequest[]; e
   }
 
   return (
-    <section className="rounded border border-neutral-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-sm font-medium text-red-700">Landing page</p>
-          <h2 className="text-2xl font-semibold tracking-normal">Audit requests</h2>
-          <p className="mt-1 text-sm text-neutral-600">Newest free-audit form submissions from the public site.</p>
-        </div>
-        <div className="inline-flex w-fit items-center gap-2 rounded bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-700">
-          <Inbox className="h-4 w-4" aria-hidden="true" />
-          {requests.length} recent
+    <section className="border-2 border-black bg-white">
+      <div className="flex flex-col justify-between gap-4 border-b-2 border-black p-5 sm:flex-row sm:items-end">
+        <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Lead inbox</p><h2 className="mt-1 text-2xl font-black tracking-[-0.04em]">Audit requests</h2><p className="mt-2 text-sm font-semibold text-black/50">Historical form submissions. The public form is now offline.</p></div>
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black/45"><Inbox className="h-4 w-4" />{requests.length} stored</span>
+          <details><summary className="cursor-pointer border-2 border-black px-3 py-2 text-xs font-black">Add manually</summary><form action={addAuditRequestAction} className="mt-3 grid w-full gap-3 border-2 border-black bg-[#f4f1e8] p-4 sm:w-[420px]"><AuditRequestFields /><button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Add request</button></form></details>
+          {requests.length ? <DeleteRecordButton action={deleteAllAuditRequestsAction} label="Delete all" confirmMessage={`Delete all ${requests.length} audit requests? This cannot be undone.`} /> : null}
         </div>
       </div>
 
-      {requests.length === 0 ? (
-        <div className="mt-5 rounded border border-dashed border-neutral-300 bg-neutral-50 p-5 text-sm text-neutral-600">
-          No audit requests yet.
-        </div>
-      ) : (
-        <div className="mt-5 grid gap-3 lg:grid-cols-2">
+      {requests.length === 0 ? <div className="p-6 text-sm font-semibold text-black/50">No audit requests.</div> : (
+        <div className="grid lg:grid-cols-2">
           {requests.map((request) => (
-            <article key={request.id} className="rounded border border-neutral-200 bg-neutral-50 p-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold tracking-normal text-neutral-950">{request.business_name}</h3>
-                  <p className="mt-1 text-sm text-neutral-600">
-                    {request.owner_name} - {request.service_area}
-                  </p>
-                </div>
-                <p className="shrink-0 text-sm text-neutral-500">{formatDateTime(request.created_at)}</p>
-              </div>
-
+            <article key={request.id} className="border-b-2 border-black p-5 odd:lg:border-r-2">
+              <div className="flex items-start justify-between gap-4"><div><h3 className="text-xl font-black tracking-[-0.035em]">{request.business_name}</h3><p className="mt-1 text-sm font-semibold text-black/50">{request.owner_name} · {request.service_area}</p></div><p className="shrink-0 font-mono text-[9px] font-bold uppercase text-black/35">{formatDateTime(request.created_at)}</p></div>
               <div className="mt-4 flex flex-wrap gap-2">
-                <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`tel:${request.owner_phone}`}>
-                  <PhoneCall className="h-3.5 w-3.5" aria-hidden="true" />
-                  {request.owner_phone}
-                </a>
-                <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`sms:${request.owner_phone}`}>
-                  <MessageSquareText className="h-3.5 w-3.5" aria-hidden="true" />
-                  Text
-                </a>
-                {request.owner_email ? (
-                  <a className="inline-flex items-center gap-1 rounded border border-neutral-300 bg-white px-2.5 py-1.5 text-sm font-medium" href={`mailto:${request.owner_email}`}>
-                    <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                    Email
-                  </a>
-                ) : null}
+                <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`tel:${request.owner_phone}`}><PhoneCall className="h-3.5 w-3.5" />{request.owner_phone}</a>
+                <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`sms:${request.owner_phone}`}><MessageSquareText className="h-3.5 w-3.5" />Text</a>
+                {request.owner_email ? <a className="inline-flex min-h-10 items-center gap-1 border border-black px-2.5 text-sm font-bold" href={`mailto:${request.owner_email}`}><Mail className="h-3.5 w-3.5" />Email</a> : null}
               </div>
-
-              {request.notes ? <p className="mt-4 text-sm leading-6 text-neutral-700">{request.notes}</p> : null}
-
-              <dl className="mt-4 grid gap-2 text-xs text-neutral-500 sm:grid-cols-2">
-                <div>
-                  <dt className="font-medium text-neutral-700">Source</dt>
-                  <dd>{request.source}</dd>
-                </div>
-                {request.website ? (
-                  <div>
-                    <dt className="font-medium text-neutral-700">Website</dt>
-                    <dd className="truncate">{request.website}</dd>
-                  </div>
-                ) : null}
-              </dl>
+              {request.notes ? <p className="mt-4 text-sm font-semibold leading-6 text-black/60">{request.notes}</p> : null}
+              <p className="mt-4 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/35">Source · {request.source}</p>
+              <div className="mt-5 flex flex-wrap items-start gap-3">
+                <details><summary className="cursor-pointer min-h-10 border-2 border-black px-3 py-2 text-xs font-black">Edit</summary><form action={updateAuditRequestAction.bind(null, request.id)} className="mt-3 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4 sm:w-[420px]"><AuditRequestFields request={request} /><button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Save request</button></form></details>
+                <DeleteRecordButton action={deleteAuditRequestAction.bind(null, request.id)} label="Delete spam" confirmMessage={`Delete the audit request from ${request.business_name}? This cannot be undone.`} />
+              </div>
             </article>
           ))}
         </div>
       )}
     </section>
   );
+}
+
+function AuditRequestFields({ request }: { request?: PilotRequest }) {
+  return <><div className="grid grid-cols-2 gap-3"><Field label="Business" name="business_name" defaultValue={request?.business_name ?? ""} required /><Field label="Contact" name="owner_name" defaultValue={request?.owner_name ?? ""} required /></div><div className="grid grid-cols-2 gap-3"><Field label="Phone" name="owner_phone" defaultValue={request?.owner_phone ?? ""} required /><Field label="Email" name="owner_email" type="email" defaultValue={request?.owner_email ?? ""} /></div><div className="grid grid-cols-2 gap-3"><Field label="Service area" name="service_area" defaultValue={request?.service_area ?? "Raleigh"} /><Field label="Source" name="source" defaultValue={request?.source ?? "admin"} /></div><Field label="Website" name="website" defaultValue={request?.website ?? ""} /><label className="block text-xs font-black">Notes<textarea className="mt-1 min-h-24 w-full border-2 border-black bg-white px-3 py-2 font-normal outline-none" name="notes" defaultValue={request?.notes ?? ""} /></label></>;
 }
 
 function CostDashboardSection({ dashboard, error }: { dashboard: CostDashboard | null; error: string | null }) {
@@ -621,13 +617,24 @@ function formatDateTime(value: string): string {
   }).format(new Date(value));
 }
 
+function AdminNotice({ created, updated, deleted, error }: { created: string | null; updated: string | null; deleted: string | null; error: string | null }) {
+  const message = deleted ? `${deleted === "client" ? "Customer" : deleted === "requests" ? "All audit requests" : "Audit request"} deleted.` : updated ? `${updated === "client" ? "Customer" : "Audit request"} updated.` : created ? `${created === "request" ? "Audit request" : "Customer"} added.` : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : "Please complete the required fields.";
+  const isError = Boolean(error);
+  return <div className={`border-2 border-black px-4 py-3 text-sm font-black ${isError ? "bg-black text-white" : "bg-white"}`}>{message}</div>;
+}
+
+function SelectField({ label, name, value, options }: { label: string; name: string; value: string; options: string[] }) {
+  return <label className="block text-xs font-black">{label}<select className="mt-1 min-h-10 w-full border-2 border-black bg-white px-2 font-normal" name={name} defaultValue={value}>{options.map((option) => <option key={option} value={option}>{option.replaceAll("_", " ")}</option>)}</select></label>;
+}
+
 function Field({
   label,
   name,
   type = "text",
   required = false,
   placeholder,
-  step
+  step,
+  defaultValue
 }: {
   label: string;
   name: string;
@@ -635,6 +642,7 @@ function Field({
   required?: boolean;
   placeholder?: string;
   step?: string;
+  defaultValue?: string;
 }) {
   return (
     <label className="block text-sm font-medium text-neutral-800">
@@ -646,6 +654,7 @@ function Field({
         required={required}
         placeholder={placeholder}
         step={step}
+        defaultValue={defaultValue}
       />
     </label>
   );
