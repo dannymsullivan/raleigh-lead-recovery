@@ -7,6 +7,7 @@ supabase/.temp/
 .env
 .env*.local
 !.env.example
+.gstack/
 *.tsbuildinfo
 npm-debug.log*
 .vercel
