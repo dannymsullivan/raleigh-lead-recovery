@@ -14,7 +14,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (error) throw error;
   const results = [];
   for (const campaign of data ?? []) {
-    results.push({ campaignId: campaign.id, ...(await runReactivationBatch(campaign.id, campaign.client_id, 5)) });
+    results.push({ campaignId: campaign.id, ...(await runReactivationBatch(campaign.id, campaign.client_id, 50)) });
   }
   return NextResponse.json({ ok: true, results });
 }

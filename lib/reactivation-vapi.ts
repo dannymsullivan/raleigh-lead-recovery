@@ -76,7 +76,7 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
   today.setUTCHours(0, 0, 0, 0);
   const { count } = await admin.from("reactivation_attempts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).gte("created_at", today.toISOString());
   const remainingToday = Math.max(0, campaign.daily_limit - (count ?? 0));
-  const limit = Math.min(Math.max(1, requestedLimit), 10, remainingToday);
+  const limit = Math.min(Math.max(1, requestedLimit), 50, remainingToday);
   if (!limit) return { queued: 0, failed: 0, skipped: "daily_limit_reached" };
 
   const { data: contactData, error: contactError } = await admin

@@ -52,7 +52,7 @@ The production assistant receives customer, source, lead-age, service, and prior
 
 ### 3. List and launch controls
 
-CSV parsing, US phone normalization, invalid-row filtering, duplicate detection, eligibility attestation, customer-level suppression matching, calling-window enforcement, attempt caps, daily caps, controlled batch size, retry timing, and pause/resume controls are implemented. Campaign launch remains locked unless all production telephony environment variables exist.
+CSV parsing, US phone normalization, invalid-row filtering, duplicate detection, eligibility attestation, customer-level suppression matching, calling-window enforcement, attempt caps, daily caps, controlled batch size, retry timing, and pause/resume controls are implemented. Launch and resume start an immediate batch; a plan-compatible daily Vercel runner continues active Raleigh campaigns at 9:00 a.m. EST / 10:00 a.m. EDT. Campaign launch remains locked unless all production telephony environment variables exist.
 
 ### 4. Live reactivation reporting and handoff
 

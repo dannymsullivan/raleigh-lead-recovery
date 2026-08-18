@@ -87,7 +87,7 @@ export async function launchReactivationCampaignAction(campaignId: string): Prom
   const { count } = await admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaignId).eq("client_id", clientId);
   if (!count) redirect("/dashboard/reactivation?error=no_valid_leads");
   await admin.from("reactivation_campaigns").update({ status: "running", launched_at: new Date().toISOString() }).eq("id", campaignId).eq("client_id", clientId);
-  after(() => runReactivationBatch(campaignId, clientId, 5));
+  after(() => runReactivationBatch(campaignId, clientId, 50));
   revalidatePath("/dashboard/reactivation");
   redirect("/dashboard/reactivation?launched=1");
 }
@@ -102,7 +102,7 @@ export async function resumeReactivationCampaignAction(campaignId: string): Prom
   const { clientId } = await workspace();
   if (!reactivationTelephonyReady()) redirect("/dashboard/reactivation?error=telephony");
   await getSupabaseAdmin().from("reactivation_campaigns").update({ status: "running" }).eq("id", campaignId).eq("client_id", clientId);
-  after(() => runReactivationBatch(campaignId, clientId, 5));
+  after(() => runReactivationBatch(campaignId, clientId, 50));
   revalidatePath("/dashboard/reactivation");
 }
 

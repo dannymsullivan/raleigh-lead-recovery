@@ -71,7 +71,7 @@ The authenticated customer flow is:
 7. Interested contacts move to the priority queue and trigger an immediate owner SMS with a click-to-call number and dashboard link.
 8. The owner can call, mark the lead contacted, or record a booking and estimated value from the dashboard.
 
-The protected Vercel cron runs every five minutes, respects each campaign's calling window and daily limit, retries eligible no-answers after 24 hours, and stops after the configured maximum attempts.
+Launching or resuming starts an immediate controlled batch. A protected Vercel cron continues running campaigns daily at `14:00 UTC` (9:00 a.m. Raleigh time in standard time and 10:00 a.m. in daylight time). Each run respects the campaign's calling window and daily limit, retries eligible no-answers after 24 hours, and stops after the configured maximum attempts. The runner caps any one batch at 50 calls even if a higher daily limit is configured.
 
 Create or update the production Mabel assistant with:
 
