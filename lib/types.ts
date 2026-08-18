@@ -41,6 +41,7 @@ export type Client = {
   last_provision_attempt_at?: string | null;
   forwarding_completed_at?: string | null;
   test_call_completed_at?: string | null;
+  product_mode?: "reactivation" | "missed_call_recovery";
   pilot_start: string;
   pilot_end: string;
   avg_job_value: number;
@@ -48,6 +49,71 @@ export type Client = {
   vapi_assistant_id: string | null;
   vapi_phone_number_id: string | null;
   created_at: string;
+};
+
+export type ReactivationCampaign = {
+  id: string;
+  client_id: string;
+  name: string;
+  status: "draft" | "ready" | "running" | "paused" | "completed";
+  service_type: string;
+  calling_timezone: string;
+  calling_window_start: string;
+  calling_window_end: string;
+  max_attempts: number;
+  daily_limit: number;
+  eligibility_attested_at: string | null;
+  launched_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ReactivationContactStatus = "queued" | "calling" | "interested" | "follow_up" | "booked" | "contacted" | "not_interested" | "completed_project" | "wrong_number" | "do_not_call" | "no_answer" | "failed";
+
+export type ReactivationContact = {
+  id: string;
+  client_id: string;
+  campaign_id: string;
+  name: string;
+  phone_e164: string;
+  email: string | null;
+  source: string | null;
+  lead_age_days: number | null;
+  notes: string | null;
+  status: ReactivationContactStatus;
+  outcome: string | null;
+  project_type: string | null;
+  requested_timing: string | null;
+  qualification_notes: string | null;
+  next_step: string | null;
+  estimated_value: number | null;
+  attempt_count: number;
+  last_attempt_at: string | null;
+  next_attempt_at: string | null;
+  owner_contacted_at: string | null;
+  booked_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ReactivationAttempt = {
+  id: string;
+  client_id: string;
+  campaign_id: string;
+  contact_id: string;
+  vapi_call_id: string | null;
+  status: "queued" | "in_progress" | "completed" | "failed";
+  outcome: string | null;
+  summary: string | null;
+  transcript: string | null;
+  recording_url: string | null;
+  duration_seconds: number | null;
+  structured_data: Record<string, unknown> | null;
+  error: string | null;
+  owner_alert_sent_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Call = {

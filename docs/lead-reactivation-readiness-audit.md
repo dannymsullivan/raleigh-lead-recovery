@@ -4,9 +4,9 @@ Last checked: 2026-08-18
 
 ## Executive summary
 
-Raleigh Lead Recovery has a working foundation for authentication, Vapi call ingestion, Supabase storage, Twilio alerts, and a private customer dashboard. That foundation currently implements **inbound missed-call recovery**.
+Raleigh Lead Recovery now has the production software path for **outbound prior-lead reactivation**: authentication, customer workspaces, CSV imports, eligibility controls, campaign pacing, outbound calls through Mabel, Vapi webhook ingestion, Supabase reporting, suppression handling, immediate Twilio owner alerts, and a private customer dashboard.
 
-The new homepage and public `/demo` route now show the intended **outbound old-lead reactivation** product. The demo is a complete customer-view prototype, but it uses clearly labeled sample data. A reusable roofing-demo Mabel assistant can now be provisioned with `npm run vapi:setup-reactivation`. A real customer campaign still needs campaign/contact tables, list eligibility controls, outbound call orchestration, and production canary testing.
+The upgraded Twilio number is imported into the correct Vapi organization and the production assistant and phone-number IDs are configured in Vercel. The remaining gates are operational rather than missing core product code: redeploy the new build, run an explicitly opted-in end-to-end canary, complete the appropriate Twilio messaging registration, and obtain compliance review before calling a real customer list.
 
 ## What is live and working
 
@@ -24,13 +24,14 @@ The new homepage and public `/demo` route now show the intended **outbound old-l
 - Incomplete customers are routed through onboarding before the authenticated dashboard opens.
 - Auth cookies are refreshed through the Next.js proxy.
 
-### Voice and logging foundation
+### Voice and logging
 
-- The locally configured Vapi account currently has one assistant and one Vapi-hosted phone number.
-- That assistant is labeled for the legacy `missed-call-recovery` application.
+- Vapi contains separate demo and production Mabel lead-reactivation assistants.
+- The upgraded Twilio number `+1 984 253 8680` is imported into Vapi for outbound calling.
 - Vapi end-of-call reports are authenticated, normalized, matched to a customer by assistant/phone ID, and upserted idempotently into Supabase.
-- Owner SMS delivery is claimed before sending to prevent duplicate alerts.
-- Call summaries, transcripts, recordings, lead status, owner notes, and booked value are supported by the existing dashboard.
+- Reactivation metadata maps each report to its customer, campaign, contact, and attempt.
+- Opt-outs are added to the suppression list, no-answers can be retried, and interested leads trigger idempotent owner alerts.
+- Call summaries, transcripts, recordings, outcomes, lead status, owner handoff, appointments, and estimated booked value are supported by the live dashboard.
 
 ### Reactivation demo
 
@@ -39,76 +40,47 @@ The new homepage and public `/demo` route now show the intended **outbound old-l
 - Sample phone numbers are masked and every sample metric is labeled illustrative.
 - Homepage and login both link to the demo.
 
-## What does not exist yet
+## Production capabilities now implemented
 
-### 1. A real outbound reactivation campaign model
+### 1. Outbound campaign model
 
-The database only has `clients` and inbound-style `calls`. Add:
+The production database includes `reactivation_campaigns`, `reactivation_contacts`, `reactivation_attempts`, `reactivation_appointments`, and `suppression_entries`, with tenant-scoped constraints, indexes, RLS, and timestamps. The legacy missed-call dashboard remains available as a separate product mode.
 
-- `campaigns`
-- `campaign_contacts`
-- `call_attempts`
-- `appointments`
-- `suppression_entries`
-- `demo_call_requests`
+### 2. Production outbound Mabel
 
-The public demo should eventually read from those same concepts, while the current missed-call dashboard remains available as a separate product mode.
+The production assistant receives customer, source, lead-age, service, and prior-inquiry context as call variables. It discloses that it is automated, qualifies current interest, records opt-outs, requests an owner callback or inspection, and returns structured outcomes with recordings and transcripts. It does not invent or directly confirm calendar availability.
 
-### 2. Production outbound Mabel configuration
+### 3. List and launch controls
 
-The repository now includes a separate, reusable lead-reactivation demo assistant with recording, disclosure, roofing qualification, opt-out handling, and structured outcomes. Before customer campaigns, it still needs:
+CSV parsing, US phone normalization, invalid-row filtering, duplicate detection, eligibility attestation, customer-level suppression matching, calling-window enforcement, attempt caps, daily caps, controlled batch size, retry timing, and pause/resume controls are implemented. Campaign launch remains locked unless all production telephony environment variables exist.
 
-- Customer, lead-source, and prior-inquiry context.
-- Appointment booking or controlled live transfer.
-- Campaign-level voicemail and retry policies.
-- A webhook/data path that maps its structured outcomes into the reactivation dashboard.
+### 4. Live reactivation reporting and handoff
 
-### 3. List upload and launch controls
+The authenticated `/dashboard/reactivation` route reads live campaign data and shows records, attempts, outcomes, recordings, transcripts, interested leads, bookings, and estimated pipeline. Interested leads appear first, trigger an immediate owner SMS, and provide click-to-call, contacted, and booking actions. Direct calendar-slot confirmation and live call transfer are future enhancements, not requirements for the owner-callback pilot flow.
 
-Before calls can be placed, build:
+## Remaining production gates
 
-- CSV import and phone normalization.
-- Duplicate detection.
-- Eligibility attestation by the customer.
-- Internal and customer-level suppression matching.
-- Calling-window/timezone enforcement.
-- Attempt caps and pacing.
-- A preflight preview and emergency stop.
+### 1. Production canary
 
-### 4. Live reactivation reporting
+Code, unit, lint, and production build checks pass, but this audit has not placed an outbound call. Run one controlled canary using an explicitly opted-in phone number the owner controls:
 
-The new `/demo` page is a product prototype, not a database-backed campaign. The production dashboard must calculate:
-
-- Eligible records.
-- Attempts and unique contacts attempted.
-- Connections and meaningful conversations.
-- Interested and qualified leads.
-- Appointments and live transfers.
-- Opt-outs, wrong numbers, and completed projects.
-- Customer-confirmed pipeline and closed revenue.
-
-### 5. Production canary coverage
-
-Code, unit, build, and public-route checks pass, but this audit did not send an OTP or call a real consumer. Run one controlled canary using a phone number the owner controls:
-
-1. Sign up on production.
-2. Receive and verify the Twilio-backed Supabase OTP.
-3. Complete onboarding.
-4. Confirm Vapi provisioning completes.
-5. Place a test call.
-6. Confirm the webhook creates one record.
-7. Confirm the owner SMS arrives once.
-8. Confirm the authenticated dashboard displays the call.
-
-Repeat the canary after the outbound campaign model exists using one explicitly opted-in test contact.
+1. Sign up on production and complete onboarding.
+2. Create a campaign with a daily limit of one.
+3. Import one eligible test contact and launch it during the configured calling window.
+4. Confirm the call originates from the Twilio number and Mabel receives the expected variables.
+5. Complete an interested conversation and confirm one attempt, transcript, recording, and structured outcome appear.
+6. Confirm the interested lead moves to the priority queue and exactly one owner SMS arrives.
+7. Use the dashboard to call the lead, mark it contacted, and record a booking.
+8. Test an opt-out with a second controlled number and confirm it cannot be called again.
 
 ## Twilio decision
 
 ### What was verified
 
-- Production Twilio variable names are present in Vercel.
-- Vercel stores them as Sensitive values, so the CLI cannot retrieve them for an account-status API check.
-- The current account tier therefore could not be proven from this environment.
+- The Twilio account is upgraded, active, and funded.
+- The active local number is `+1 984 253 8680` with voice and SMS capability.
+- The number is imported into Vapi as **Raleigh Lead Recovery Outbound**.
+- Production Vercel contains the outbound assistant ID, outbound phone-number ID, and protected cron secret as sensitive values.
 
 ### What is required
 
@@ -120,7 +92,7 @@ For SMS:
 - A toll-free sender is outside A2P 10DLC but needs toll-free verification.
 - OTP can alternatively move to Twilio Verify, but the current app uses the custom Supabase send-SMS hook and `TWILIO_FROM_NUMBER`.
 
-Recommended next action: open Twilio Console, confirm the project shows a paid balance/account, identify the configured `TWILIO_FROM_NUMBER`, and verify its messaging registration status before the production canary.
+Required next action: verify or complete the appropriate A2P 10DLC or toll-free registration for the number used by `TWILIO_FROM_NUMBER` before relying on production SMS delivery.
 
 Official references:
 
@@ -139,12 +111,10 @@ The site now uses `danny@raleighleadrecovery.com`. The Namecheap Email Forwardin
 
 ## Recommended build order
 
-1. Confirm paid Twilio status, sender type, and messaging registration.
-2. Run the existing inbound signup-to-dashboard production canary.
-3. Add the reactivation campaign schema and migrations.
-4. Build CSV preflight, eligibility, suppression, and calling controls.
-5. Create the separate outbound Mabel assistant and Vapi call trigger.
-6. Connect real campaign events to the dashboard modeled by `/demo`.
-7. Add calendar booking/live transfer and customer notifications.
-8. Run an opted-in outbound canary and review every transcript/disposition.
-9. Start one capped 250–500-record design-partner pilot after legal/compliance review.
+1. Commit, push, and confirm the production deployment is ready.
+2. Verify Twilio messaging registration for the configured SMS sender.
+3. Run the one-contact opted-in outbound canary above and review the full transcript, recording, outcome, and SMS handoff.
+4. Tune Mabel's prompt and voice from the canary rather than from simulation alone.
+5. Obtain compliance review for the selected niche, lead source, consent basis, states, recording disclosure, and calling windows.
+6. Start with a capped design-partner pilot and manually review every disposition before increasing volume.
+7. Add direct calendar availability or live transfer only after the owner-callback workflow proves demand.

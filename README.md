@@ -1,6 +1,6 @@
 # Raleigh Lead Recovery
 
-Lead recovery software for service businesses. The production foundation currently supports inbound missed-call recovery: Mabel answers forwarded calls through Vapi, logs captured leads in Supabase, alerts the owner through Twilio, and gives each customer a private call dashboard. The public `/demo` route prototypes the outbound old-lead reactivation dashboard now being built.
+Lead recovery software for service businesses. The production app supports authenticated customer workspaces, eligible-lead CSV imports, controlled outbound campaigns through Mabel and Vapi, call outcomes and recordings in Supabase, immediate Twilio alerts for interested leads, and a private lead-reactivation dashboard. The public `/demo` route shows the same workflow with clearly labeled sample data. The earlier inbound missed-call recovery flow remains available for legacy workspaces.
 
 ## Setup
 
@@ -23,11 +23,14 @@ Required values:
 - `SUPABASE_SECRET_KEY` for new Supabase projects, or `SUPABASE_SERVICE_ROLE_KEY` for legacy projects
 - `VAPI_WEBHOOK_SECRET`
 - `VAPI_API_KEY` for automatic assistant and trial-number provisioning
+- `VAPI_OUTBOUND_ASSISTANT_ID` for the production Mabel reactivation assistant
+- `VAPI_OUTBOUND_PHONE_NUMBER_ID` for the Twilio number imported into Vapi
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_FROM_NUMBER`
 - `ADMIN_PASSWORD`
 - `NEXT_PUBLIC_APP_URL`
+- `CRON_SECRET` for the protected campaign runner
 
 3. Run the Supabase migration:
 
@@ -53,7 +56,28 @@ Open `http://localhost:3000` for the public landing page. Customer signup, guide
 
 Open `http://localhost:3000/demo` for the public lead-reactivation dashboard prototype. Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, or open the legacy missed-call sample at `http://localhost:3000/example-report`.
 
-The current-state audit and remaining production work are documented in [`docs/lead-reactivation-readiness-audit.md`](docs/lead-reactivation-readiness-audit.md).
+The current-state audit and final production gates are documented in [`docs/lead-reactivation-readiness-audit.md`](docs/lead-reactivation-readiness-audit.md).
+
+## Production Lead Reactivation
+
+The authenticated customer flow is:
+
+1. Create an account and complete business onboarding.
+2. Create a lead-reactivation campaign with calling hours, attempt limits, and a daily cap.
+3. Upload a CSV containing `name`, `phone`, and optional `email`, `source`, `age_days`, and `notes` fields.
+4. Attest that the contacts are eligible, previously inquired or otherwise provided permission, and have been checked against applicable suppression requirements.
+5. Launch or pause the campaign from the dashboard.
+6. Mabel calls in controlled batches through the imported Twilio number. Vapi sends the recording, transcript, summary, and structured outcome back to the application.
+7. Interested contacts move to the priority queue and trigger an immediate owner SMS with a click-to-call number and dashboard link.
+8. The owner can call, mark the lead contacted, or record a booking and estimated value from the dashboard.
+
+The protected Vercel cron runs every five minutes, respects each campaign's calling window and daily limit, retries eligible no-answers after 24 hours, and stops after the configured maximum attempts.
+
+Create or update the production Mabel assistant with:
+
+```bash
+npm run vapi:setup-outbound
+```
 
 ## Mabel Reactivation Demo
 
@@ -128,9 +152,11 @@ Public pricing copy:
 
 ## Twilio Notes
 
-US local long-code numbers need A2P 10DLC registration before outbound app SMS will reliably deliver. Error `30034` means Twilio blocked the message because the sender is unregistered.
+The production Twilio account is upgraded and its `+1 984 253 8680` number is imported into Vapi as the outbound Mabel number. The Vapi number ID is stored as a sensitive production environment variable rather than committed to this repository.
 
-For fast owner-alert testing, use a Twilio toll-free number as `TWILIO_FROM_NUMBER`. Trial Twilio projects are limited to one Twilio-owned number, so either upgrade the project or release the existing local Twilio sender before buying a toll-free sender.
+US local long-code numbers need A2P 10DLC registration before application SMS will reliably deliver at production volume. Error `30034` means Twilio blocked the message because the sender is unregistered. Complete A2P registration (or use a verified toll-free sender) before relying on owner alerts and authentication SMS in a customer launch.
+
+Outbound automated calls must only use properly eligible contacts and must comply with applicable federal and state calling, disclosure, consent, time-of-day, recording, and opt-out rules. The in-app attestation and suppression list are operational safeguards, not a substitute for legal review.
 
 ## Webhook Test
 

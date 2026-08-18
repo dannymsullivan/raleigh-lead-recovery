@@ -27,6 +27,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (!clientData) redirect("/signup?error=workspace");
   const client = clientData as Client;
   if (!client.onboarding_completed_at) redirect("/onboarding");
+  if (client.product_mode === "reactivation") redirect("/dashboard/reactivation");
 
   const { data: callData } = await admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50);
   const calls = (callData ?? []) as Call[];
@@ -56,6 +57,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[230px_1fr]">
         <aside className="hidden min-h-[calc(100vh-82px)] border-r-2 border-black p-5 lg:flex lg:flex-col">
           <nav className="grid gap-1 text-sm font-extrabold">
+            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Lead reactivation</Link>
             <Link className="flex items-center gap-3 bg-black px-3 py-3 text-white" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Full report</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Mabel settings</Link>

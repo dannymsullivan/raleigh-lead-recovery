@@ -13,6 +13,7 @@
     "seed": "tsx scripts/seed.ts",
     "vapi:setup": "tsx scripts/setup-vapi.ts",
     "vapi:setup-reactivation": "tsx scripts/setup-vapi-reactivation.ts",
+    "vapi:setup-outbound": "tsx scripts/setup-vapi-outbound.ts",
     "vapi:download-demo": "tsx scripts/download-vapi-demo-recording.ts"
   },
   "dependencies": {

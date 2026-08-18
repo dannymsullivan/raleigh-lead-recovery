@@ -125,7 +125,7 @@ export default function LandingPage() {
           <p className="eyebrow">The overlooked pipeline</p>
           <h2>Your next customer may already be sitting in your CRM.</h2>
           <p>
-            Most roofing companies keep buying new leads while hundreds of old inquiries quietly age out. Some inquired at a bad time. Some never answered. Some were never followed up with enough. Mabel gives those leads another useful conversation.
+            Most roofing companies keep buying new leads while hundreds of earlier inquiries quietly age out. Some homeowners inquired before they were ready. Some paused to compare options. Mabel gives them a helpful way to reconnect when the timing is better.
           </p>
         </div>
         <div className="recovery-problem-cards">
@@ -138,8 +138,8 @@ export default function LandingPage() {
           <article>
             <PhoneCall aria-hidden="true" />
             <p className="card-number">02</p>
-            <h3>Never fully worked</h3>
-            <p>Your team moved on, but the homeowner&apos;s project may not have.</p>
+            <h3>Timing may have changed</h3>
+            <p>A homeowner who wasn&apos;t ready then may be ready to move forward now.</p>
           </article>
           <article>
             <Sparkles aria-hidden="true" />

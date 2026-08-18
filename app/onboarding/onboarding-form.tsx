@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, BriefcaseBusiness, Check, Clock3, PhoneIncoming } from "lucide-react";
+import { ArrowLeft, ArrowRight, BriefcaseBusiness, Check, Clock3, Database } from "lucide-react";
 import { completeOnboardingAction } from "../auth-actions";
 import type { Client } from "@/lib/types";
 
@@ -9,7 +9,7 @@ const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 
 const stepContent = [
   { icon: BriefcaseBusiness, label: "Your business", description: "The basics Mabel needs to greet callers correctly." },
-  { icon: PhoneIncoming, label: "What you do", description: "Services and coverage, so Mabel knows which calls fit." },
+  { icon: Database, label: "What you do", description: "Services and coverage, so Mabel can qualify the old leads." },
   { icon: Clock3, label: "Hours & rules", description: "When to answer, what is urgent, and where alerts go." }
 ];
 
@@ -75,7 +75,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             </div>
 
             <div className={step === 2 ? "block" : "hidden"}>
-              <StepHeading eyebrow="Step 2 of 3" title="What calls should Mabel understand?" body="Plain English is perfect. This becomes the starting point for your call assistant." />
+              <StepHeading eyebrow="Step 2 of 3" title="What leads should Mabel understand?" body="Plain English is perfect. This becomes the starting point for your reactivation conversations." />
               <div className="mt-9 grid gap-6">
                 <label className="block text-sm font-black">Your services <span className="font-semibold text-black/40">· one per line or separated by commas</span>
                   <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} defaultValue={client.services?.join("\n") ?? ""} />
@@ -109,7 +109,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               <div className="mt-8 border-2 border-black bg-white p-5">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">What happens next</p>
                 <div className="mt-4 grid gap-3 text-sm font-bold sm:grid-cols-3">
-                  <p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Workspace opens</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> 14-day trial starts</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Connect your number</p>
+                  <p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Workspace opens</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Import eligible leads</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Review before launch</p>
                 </div>
               </div>
             </div>

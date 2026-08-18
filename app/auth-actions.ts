@@ -1,12 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { after } from "next/server";
 import { cookies } from "next/headers";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
-import { provisionClientWorkspace } from "@/lib/provisioning";
 
 const pendingPhoneCookie = "mabel_pending_phone";
 const pendingModeCookie = "mabel_pending_auth_mode";
@@ -172,13 +170,13 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     pilot_start: trialStartedAt.toISOString().slice(0, 10),
     pilot_end: trialEndsAt.toISOString().slice(0, 10),
     account_status: "trialing",
+    product_mode: "reactivation",
     provisioning_status: "pending",
     provisioning_error: null
   }).eq("user_id", user.id);
 
   if (error) redirect("/onboarding?error=save");
-  after(() => provisionClientWorkspace(user.id));
-  redirect("/dashboard?welcome=1");
+  redirect("/dashboard/reactivation?welcome=1");
 }
 
 export async function logoutCustomerAction(): Promise<void> {
