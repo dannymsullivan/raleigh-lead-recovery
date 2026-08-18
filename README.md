@@ -95,7 +95,7 @@ After the call ends, copy its call ID into `VAPI_REACTIVATION_DEMO_CALL_ID` and 
 npm run vapi:download-demo
 ```
 
-The downloader saves the approved recording as `public/mabel-roofing-demo.mp3`. Set `NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL=/mabel-roofing-demo.mp3` to show the audio player on the homepage. Review the entire recording and obtain permission from every participant before publishing it.
+The downloader saves the approved recording as `public/mabel-lead-recovery-demo.mp3`. Set `NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL=/mabel-lead-recovery-demo.mp3` to show the audio player on the homepage. Review the entire recording and obtain permission from every participant before publishing it.
 
 ## Vapi Configuration
 

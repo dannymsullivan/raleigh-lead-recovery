@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const envPath = ".env.local";
-const outputPath = resolve("public/mabel-roofing-demo.mp3");
+const outputPath = resolve("public/mabel-lead-recovery-demo.mp3");
 
 type CallArtifact = {
   recordingUrl?: string;
@@ -44,16 +44,20 @@ async function main() {
   }
 
   const call = (await callResponse.json()) as CallArtifact;
-  const recordingUrl =
+  const hasRecording = Boolean(
     call.artifact?.recording?.stereoUrl ??
-    call.artifact?.recording?.monoUrl ??
-    call.artifact?.recording?.url ??
-    call.artifact?.recordingUrl ??
-    call.stereoRecordingUrl ??
-    call.recordingUrl;
-  if (!recordingUrl) throw new Error("The call is complete, but Vapi has not published a recording artifact yet. Wait a minute and retry.");
+      call.artifact?.recording?.monoUrl ??
+      call.artifact?.recording?.url ??
+      call.artifact?.recordingUrl ??
+      call.stereoRecordingUrl ??
+      call.recordingUrl
+  );
+  if (!hasRecording) throw new Error("The call is complete, but Vapi has not published a recording artifact yet. Wait a minute and retry.");
 
-  const recordingResponse = await fetch(recordingUrl);
+  const recordingResponse = await fetch(`https://api.vapi.ai/call/${callId}/mono-recording`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+    redirect: "follow"
+  });
   if (!recordingResponse.ok) throw new Error(`Could not download recording: ${recordingResponse.status}`);
   const bytes = Buffer.from(await recordingResponse.arrayBuffer());
   if (bytes.length < 1_000) throw new Error("The downloaded recording is unexpectedly small; nothing was written.");
@@ -61,7 +65,7 @@ async function main() {
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, bytes);
   console.log(`Saved ${bytes.length.toLocaleString()} bytes to ${outputPath}`);
-  console.log("Review the full recording, then set NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL=/mabel-roofing-demo.mp3.");
+  console.log("Review the full recording, then set NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL=/mabel-lead-recovery-demo.mp3.");
 }
 
 main().catch((error) => {
