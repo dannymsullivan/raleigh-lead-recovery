@@ -384,7 +384,21 @@ export function getBlogMetadata(post: BlogPost): Metadata {
       type: "article",
       url,
       publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt
+      modifiedTime: post.updatedAt,
+      images: [
+        {
+          url: "/raleigh-lead-recovery-social.png",
+          width: 1200,
+          height: 630,
+          alt: "Raleigh Lead Recovery turns old leads into new business"
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: ["/raleigh-lead-recovery-social.png"]
     }
   };
 }
