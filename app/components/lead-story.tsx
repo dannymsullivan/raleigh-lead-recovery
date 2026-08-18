@@ -1,44 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Moon, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Database, PhoneCall } from "lucide-react";
 
 const stories = [
   {
-    label: "Plumbing",
-    time: "10:47 PM",
-    customer: "My water heater is leaking. Can someone come tomorrow?",
-    question: "I can help with that. What’s the service address?",
-    answer: "Address received · active leak · shutoff located",
-    response: "I can reserve the 8–10 AM window tomorrow. Does that work?",
-    booked: "Tomorrow · 8–10 AM",
+    label: "Never reached",
+    age: "Lead age · 94 days",
+    name: "Sarah M.",
+    source: "Roof replacement estimate",
+    opener: "Hi Sarah, this is Mabel calling for Oak City Roofing about the roof estimate you requested earlier this year. Did you ever get that project taken care of?",
+    reply: "Not yet. We put it off, but we need to revisit it before fall.",
+    outcome: "Inspection requested",
   },
   {
-    label: "HVAC",
-    time: "8:26 PM",
-    customer: "Our upstairs AC stopped working. How soon can you come?",
-    question: "I’m sorry you’re dealing with that. What’s the property address?",
-    answer: "Address received · no cooling upstairs · system running",
-    response: "I have an arrival window tomorrow morning or afternoon. Which is better?",
-    booked: "Tomorrow morning",
+    label: "No decision",
+    age: "Lead age · 167 days",
+    name: "Marcus T.",
+    source: "Storm damage inquiry",
+    opener: "Hi Marcus, this is Mabel calling for Oak City Roofing. You spoke with the team after a storm earlier this year. Is the roof work still unresolved?",
+    reply: "Yes. I have the insurance paperwork now and need someone to look at it again.",
+    outcome: "Qualified follow-up",
   },
   {
-    label: "Roofing",
-    time: "6:14 AM",
-    customer: "A branch hit our roof and water is coming in.",
-    question: "I’ll mark this urgent. Is everyone safe, and what’s the address?",
-    answer: "Address received · active leak · storm damage",
-    response: "The emergency team can call you by 7 AM and prioritize the inspection.",
-    booked: "Urgent callback queued",
-  },
-  {
-    label: "Exterior",
-    time: "9:38 PM",
-    customer: "How much to clean the gutters on my house?",
-    question: "Happy to help. What’s the property address?",
-    answer: "Address received · two-story home · 2,100 sq ft",
-    response: "This should be about $179–$219. I can reserve Tuesday or Thursday.",
-    booked: "Thursday reserved",
+    label: "Went quiet",
+    age: "Lead age · 61 days",
+    name: "Jamie R.",
+    source: "Online estimate request",
+    opener: "Hi Jamie, this is Mabel calling for Oak City Roofing about your earlier estimate request. Is a roof replacement still something you're considering?",
+    reply: "It is. I got busy and never scheduled the inspection.",
+    outcome: "Inspection requested",
   },
 ];
 
@@ -48,13 +39,14 @@ export function LeadStory() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % stories.length), 7000);
+    const timer = window.setInterval(() => setActive((current) => (current + 1) % stories.length), 7500);
     return () => window.clearInterval(timer);
   }, []);
 
   return (
-    <div className="story-wrap">
-      <div className="story-tabs" role="tablist" aria-label="Example lead scenarios">
+    <div className="recovery-story-wrap">
+      <div className="recovery-story-label"><span>Example lead journey</span><span>Sample data</span></div>
+      <div className="story-tabs" role="tablist" aria-label="Example old lead scenarios">
         {stories.map((item, index) => (
           <button
             aria-selected={index === active}
@@ -69,21 +61,25 @@ export function LeadStory() {
         ))}
       </div>
 
-      <div className="story-card" key={story.label}>
-        <div className="story-header">
-          <span><Moon aria-hidden="true" /> Lead arrives · {story.time}</span>
-          <span className="live-status">Mabel answered</span>
+      <div className="recovery-story-card" key={story.label}>
+        <div className="recovery-record">
+          <div className="recovery-record-icon"><Database aria-hidden="true" /></div>
+          <div><span>{story.age}</span><strong>{story.name}</strong><p>{story.source}</p></div>
+          <span className="record-status">Cold</span>
         </div>
-        <div className="conversation">
-          <div className="message customer-message"><span>Customer</span><p>{story.customer}</p></div>
-          <div className="message mabel-message"><span><Sparkles aria-hidden="true" /> Mabel</span><p>{story.question}</p></div>
-          <div className="signal"><Check aria-hidden="true" /> {story.answer}</div>
-          <div className="message mabel-message"><span><Sparkles aria-hidden="true" /> Mabel</span><p>{story.response}</p></div>
-        </div>
-        <div className="booked-row"><span><Check aria-hidden="true" /> Booked</span><strong>{story.booked}</strong></div>
-      </div>
 
-      <div className="competitor-note"><span>7:00 AM · Your competitor</span><strong>New lead · 8 hours old</strong></div>
+        <div className="recovery-connector"><span /><PhoneCall aria-hidden="true" /><span /></div>
+
+        <div className="recovery-conversation">
+          <div className="recovery-bubble mabel-bubble"><span>Mabel · AI calling agent</span><p>{story.opener}</p></div>
+          <div className="recovery-bubble lead-bubble"><span>{story.name}</span><p>{story.reply}</p></div>
+        </div>
+
+        <div className="recovery-outcome">
+          <span><Check aria-hidden="true" /> Interest recovered</span>
+          <strong>{story.outcome} <ArrowRight aria-hidden="true" /></strong>
+        </div>
+      </div>
     </div>
   );
 }

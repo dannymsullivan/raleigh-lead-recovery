@@ -1,6 +1,6 @@
 # Raleigh Lead Recovery
 
-Missed-call recovery SaaS for service businesses. Mabel answers forwarded calls through Vapi, logs captured leads in Supabase, alerts the owner through Twilio, and gives each customer a private call dashboard.
+Lead recovery software for service businesses. The production foundation currently supports inbound missed-call recovery: Mabel answers forwarded calls through Vapi, logs captured leads in Supabase, alerts the owner through Twilio, and gives each customer a private call dashboard. The public `/demo` route prototypes the outbound old-lead reactivation dashboard now being built.
 
 ## Setup
 
@@ -51,7 +51,27 @@ npm run dev
 
 Open `http://localhost:3000` for the public landing page. Customer signup, guided setup, login, and the authenticated call board live at `/signup`, `/onboarding`, `/login`, and `/dashboard`.
 
-Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, or open the public sample at `http://localhost:3000/example-report`.
+Open `http://localhost:3000/demo` for the public lead-reactivation dashboard prototype. Open `http://localhost:3000/admin`, sign in with `ADMIN_PASSWORD`, or open the legacy missed-call sample at `http://localhost:3000/example-report`.
+
+The current-state audit and remaining production work are documented in [`docs/lead-reactivation-readiness-audit.md`](docs/lead-reactivation-readiness-audit.md).
+
+## Mabel Reactivation Demo
+
+Create or update the reusable roofing-demo assistant in the configured Vapi account:
+
+```bash
+npm run vapi:setup-reactivation
+```
+
+The command stores the assistant ID in `VAPI_REACTIVATION_ASSISTANT_ID`. In Vapi, open **Mabel — Lead Reactivation Demo**, choose **Talk to Assistant**, and play the homeowner in one of the scenarios in [`docs/vapi-roofing-demo-scenarios.md`](docs/vapi-roofing-demo-scenarios.md).
+
+After the call ends, copy its call ID into `VAPI_REACTIVATION_DEMO_CALL_ID` and download the recording:
+
+```bash
+npm run vapi:download-demo
+```
+
+The downloader saves the approved recording as `public/mabel-roofing-demo.mp3`. Set `NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL=/mabel-roofing-demo.mp3` to show the audio player on the homepage. Review the entire recording and obtain permission from every participant before publishing it.
 
 ## Vapi Configuration
 

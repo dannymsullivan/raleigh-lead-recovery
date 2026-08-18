@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "seed": "tsx scripts/seed.ts",
-    "vapi:setup": "tsx scripts/setup-vapi.ts"
+    "vapi:setup": "tsx scripts/setup-vapi.ts",
+    "vapi:setup-reactivation": "tsx scripts/setup-vapi-reactivation.ts",
+    "vapi:download-demo": "tsx scripts/download-vapi-demo-recording.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",

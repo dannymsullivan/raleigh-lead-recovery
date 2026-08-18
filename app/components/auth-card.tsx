@@ -18,10 +18,10 @@ export function AuthShell({
       <section className="flex flex-col justify-between border-b-2 border-black bg-black p-6 text-white sm:p-10 lg:border-b-0 lg:border-r-2">
         <BrandMark inverted />
         <div className="my-20 max-w-lg">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/55">Your missed-call command center</p>
-          <h2 className="mt-6 text-5xl font-black leading-[0.94] tracking-[-0.055em] sm:text-7xl">Every missed call. None of the mystery.</h2>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/55">Your lead recovery command center</p>
+          <h2 className="mt-6 text-5xl font-black leading-[0.94] tracking-[-0.055em] sm:text-7xl">Old leads in. Real opportunities out.</h2>
           <ul className="mt-10 grid gap-4 text-sm font-bold text-white/75">
-            {["See what every caller needed", "Get urgent leads in front of the right person", "Track the opportunity Mabel recovered"].map((item) => (
+            {["See what every conversation uncovered", "Get qualified homeowners to the right rep", "Track every opportunity Mabel recovered"].map((item) => (
               <li className="flex items-center gap-3" key={item}>
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-white text-black"><Check className="h-3.5 w-3.5" /></span>
                 {item}
