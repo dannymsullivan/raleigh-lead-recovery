@@ -156,6 +156,10 @@ The production Twilio account is upgraded and its `+1 984 253 8680` number is im
 
 US local long-code numbers need A2P 10DLC registration before application SMS will reliably deliver at production volume. Error `30034` means Twilio blocked the message because the sender is unregistered. Complete A2P registration (or use a verified toll-free sender) before relying on owner alerts and authentication SMS in a customer launch.
 
+The application records the exact signup and alert consent disclosures in `messaging_consents`. Transactional alerts are blocked unless the current destination matches an active consent record on the customer workspace. Verification and alert messages identify Raleigh Lead Recovery and include STOP/HELP instructions. Twilio automatically handles the standard English opt-out keywords for long-code numbers. Public messaging disclosures are available at `/privacy` and `/terms`.
+
+The current Twilio onboarding must use a **Sole Proprietor Brand** while Raleigh Lead Recovery has no EIN. Do not submit the draft business/EIN profile or its unrelated legacy website. Twilio requires the proprietor to personally complete identity/biometric verification before Brand and Campaign registration can continue.
+
 Outbound automated calls must only use properly eligible contacts and must comply with applicable federal and state calling, disclosure, consent, time-of-day, recording, and opt-out rules. The in-app attestation and suppression list are operational safeguards, not a substitute for legal review.
 
 ## Webhook Test

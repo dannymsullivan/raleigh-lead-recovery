@@ -8,7 +8,7 @@ describe("Supabase Auth SMS hook", () => {
       sms: { otp: "123456" }
     })).toEqual({
       to: "+19195550123",
-      body: "Your Mabel verification code is 123456. It expires shortly."
+      body: "Raleigh Lead Recovery: Your verification code is 123456. It expires shortly. Reply STOP to unsubscribe; HELP for help."
     });
   });
 
@@ -23,7 +23,7 @@ describe("Supabase Auth SMS hook", () => {
       sms: { otp: 123456 }
     })).toEqual({
       to: "+19195550123",
-      body: "Your Mabel verification code is 123456. It expires shortly."
+      body: "Raleigh Lead Recovery: Your verification code is 123456. It expires shortly. Reply STOP to unsubscribe; HELP for help."
     });
   });
 

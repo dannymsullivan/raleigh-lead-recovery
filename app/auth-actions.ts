@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
+import { alertConsentText, messagingConsentVersion, verificationConsentText } from "@/lib/messaging-consent";
 
 const pendingPhoneCookie = "mabel_pending_phone";
 const pendingModeCookie = "mabel_pending_auth_mode";
@@ -34,13 +35,27 @@ export async function requestSignupCodeAction(formData: FormData): Promise<void>
   const phone = normalizePhoneNumber(value(formData, "phone"));
 
   if (!ownerName || !phone) redirect("/signup?error=missing");
+  if (formData.get("sms_consent") !== "on") redirect("/signup?error=consent");
+
+  const consentedAt = new Date().toISOString();
+
+  const admin = getSupabaseAdmin();
+  const { error: consentError } = await admin.from("messaging_consents").insert({
+    phone_e164: phone,
+    purpose: "verification",
+    consent_version: messagingConsentVersion,
+    consent_text: verificationConsentText,
+    source: "signup_checkbox",
+    consented_at: consentedAt
+  });
+  if (consentError) redirect("/signup?error=signup");
 
   const supabase = await getSupabaseAuth();
   const { error } = await supabase.auth.signInWithOtp({
     phone,
     options: {
       shouldCreateUser: true,
-      data: { owner_name: ownerName }
+      data: { owner_name: ownerName, verification_sms_consent_at: consentedAt, verification_sms_consent_version: messagingConsentVersion }
     }
   });
 
@@ -54,6 +69,17 @@ export async function requestLoginCodeAction(formData: FormData): Promise<void> 
 
   const phone = normalizePhoneNumber(value(formData, "phone"));
   if (!phone) redirect("/login?error=phone");
+
+  const admin = getSupabaseAdmin();
+  const { error: consentError } = await admin.from("messaging_consents").insert({
+    phone_e164: phone,
+    purpose: "verification",
+    consent_version: messagingConsentVersion,
+    consent_text: verificationConsentText,
+    source: "login_code_request",
+    consented_at: new Date().toISOString()
+  });
+  if (consentError) redirect("/login?error=phone");
 
   const supabase = await getSupabaseAuth();
   const { error } = await supabase.auth.signInWithOtp({
@@ -84,7 +110,22 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
   cookieStore.delete(pendingPhoneCookie);
   cookieStore.delete(pendingModeCookie);
 
-  if (mode === "login") redirect("/dashboard");
+  const admin = getSupabaseAdmin();
+  if (mode === "login") {
+    const { data: existingClient } = await admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle();
+    await admin.from("messaging_consents").upsert({
+      client_id: existingClient?.id ?? null,
+      user_id: data.user.id,
+      phone_e164: phone,
+      purpose: "verification",
+      consent_version: messagingConsentVersion,
+      consent_text: verificationConsentText,
+      source: "login_code_request",
+      consented_at: new Date().toISOString(),
+      revoked_at: null
+    }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
+    redirect("/dashboard");
+  }
 
   const ownerName = typeof data.user.user_metadata.owner_name === "string"
     ? data.user.user_metadata.owner_name.trim()
@@ -95,8 +136,7 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
   const pilotEnd = new Date(today);
   pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 14);
 
-  const admin = getSupabaseAdmin();
-  const { error: clientError } = await admin.from("clients").upsert(
+  const { data: workspace, error: clientError } = await admin.from("clients").upsert(
     {
       user_id: data.user.id,
       business_name: "New workspace",
@@ -110,9 +150,20 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
       account_status: "onboarding"
     },
     { onConflict: "user_id" }
-  );
+  ).select("id").single();
 
-  if (clientError) redirect("/signup?error=workspace");
+  if (clientError || !workspace) redirect("/signup?error=workspace");
+  await admin.from("messaging_consents").upsert({
+    client_id: workspace.id,
+    user_id: data.user.id,
+    phone_e164: phone,
+    purpose: "verification",
+    consent_version: messagingConsentVersion,
+    consent_text: verificationConsentText,
+    source: "signup_checkbox",
+    consented_at: typeof data.user.user_metadata.verification_sms_consent_at === "string" ? data.user.user_metadata.verification_sms_consent_at : new Date().toISOString(),
+    revoked_at: null
+  }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
   redirect("/onboarding");
 }
 
@@ -128,10 +179,12 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   const ownerPhone = value(formData, "owner_phone");
   const trade = value(formData, "trade");
   const serviceArea = value(formData, "service_area");
+  const alertPhone = normalizePhoneNumber(value(formData, "alert_phone") || ownerPhone);
 
-  if (!businessName || !ownerName || !ownerPhone || !trade || !serviceArea) {
+  if (!businessName || !ownerName || !ownerPhone || !trade || !serviceArea || !alertPhone) {
     redirect("/onboarding?error=missing");
   }
+  if (formData.get("alert_sms_consent") !== "on") redirect("/onboarding?error=consent");
 
   const dayNames = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
   const businessHours = Object.fromEntries(dayNames.map((day) => [day, {
@@ -163,7 +216,9 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     timezone: value(formData, "timezone") || "America/New_York",
     emergency_rules: value(formData, "emergency_rules") || null,
     callback_window: value(formData, "callback_window") || "Within 15 minutes for emergencies; within 2 hours otherwise",
-    alert_phone: value(formData, "alert_phone") || ownerPhone,
+    alert_phone: alertPhone,
+    alert_sms_consent_at: trialStartedAt.toISOString(),
+    alert_sms_consent_phone: alertPhone,
     onboarding_completed_at: trialStartedAt.toISOString(),
     trial_started_at: trialStartedAt.toISOString(),
     trial_ends_at: trialEndsAt.toISOString(),
@@ -176,6 +231,19 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   }).eq("user_id", user.id);
 
   if (error) redirect("/onboarding?error=save");
+  const { data: client, error: clientLookupError } = await admin.from("clients").select("id").eq("user_id", user.id).single();
+  if (clientLookupError || !client) redirect("/onboarding?error=save");
+  await admin.from("messaging_consents").upsert({
+    client_id: client.id,
+    user_id: user.id,
+    phone_e164: alertPhone,
+    purpose: "lead_alerts",
+    consent_version: messagingConsentVersion,
+    consent_text: alertConsentText,
+    source: "onboarding_checkbox",
+    consented_at: trialStartedAt.toISOString(),
+    revoked_at: null
+  }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
   redirect("/dashboard/reactivation?welcome=1");
 }
 

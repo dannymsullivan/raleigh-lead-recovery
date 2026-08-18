@@ -240,7 +240,7 @@ export default function LandingPage() {
       <footer className="site-footer">
         <div className="page-shell footer-row">
           <div><BrandMark inverted /><p>© 2026 Raleigh Lead Recovery</p></div>
-          <nav aria-label="Footer navigation"><Link href="/blog">Writing</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
+          <nav aria-label="Footer navigation"><Link href="/blog">Writing</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
         </div>
       </footer>
     </main>

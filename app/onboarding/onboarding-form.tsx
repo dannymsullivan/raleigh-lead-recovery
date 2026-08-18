@@ -59,7 +59,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             {[1, 2, 3].map((number) => <span className={`h-1.5 flex-1 ${number <= step ? "bg-black" : "bg-black/12"}`} key={number} />)}
           </div>
 
-          {error ? <p className="mb-7 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "missing" ? "Add the required business details before finishing setup." : "We could not save the workspace. Please try again."}</p> : null}
+          {error ? <p className="mb-7 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "missing" ? "Add the required business details before finishing setup." : error === "consent" ? "Confirm permission to send transactional lead alerts to the alert number." : "We could not save the workspace. Please try again."}</p> : null}
 
           <form action={completeOnboardingAction} ref={formRef}>
             <div className={step === 1 ? "block" : "hidden"}>
@@ -103,6 +103,10 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                   <select className="mt-2 h-13 w-full border-2 border-black bg-white px-4 font-semibold outline-none focus:shadow-[5px_5px_0_#000]" name="timezone" defaultValue={client.timezone ?? "America/New_York"}>
                     <option value="America/New_York">Eastern Time</option><option value="America/Chicago">Central Time</option><option value="America/Denver">Mountain Time</option><option value="America/Los_Angeles">Pacific Time</option>
                   </select>
+                </label>
+                <label className="flex items-start gap-3 border-2 border-black bg-white p-4 text-xs font-semibold leading-5 text-black/65">
+                  <input className="mt-1 h-4 w-4 flex-none accent-black" name="alert_sms_consent" type="checkbox" required />
+                  <span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Raleigh Lead Recovery may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is not a condition of purchase.</span>
                 </label>
               </div>
 

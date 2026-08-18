@@ -1,4 +1,5 @@
 import type { ReactivationOutcome } from "./reactivation";
+import { buildLeadAlertSms } from "./messaging-consent";
 
 type JsonRecord = Record<string, unknown>;
 const outcomes = new Set<ReactivationOutcome>(["interested_now", "follow_up_later", "project_completed", "not_interested", "wrong_number", "do_not_call", "no_answer", "failed"]);
@@ -61,5 +62,5 @@ export function extractReactivationReport(payload: unknown): ReactivationReport 
 }
 
 export function buildInterestedLeadSms(businessName: string, contactName: string, phone: string, requestedTiming: string | null, dashboardUrl: string): string {
-  return `INTERESTED LEAD for ${businessName}: ${contactName} wants to reconnect${requestedTiming ? ` (${requestedTiming})` : ""}. Call ${phone}. Open: ${dashboardUrl}`;
+  return buildLeadAlertSms({ businessName, contactName, phone, requestedTiming, dashboardUrl });
 }

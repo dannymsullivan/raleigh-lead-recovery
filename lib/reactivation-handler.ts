@@ -4,6 +4,7 @@ import { contactStatusForOutcome, isPriorityOutcome } from "./reactivation";
 import { buildInterestedLeadSms, type ReactivationReport } from "./reactivation-webhook";
 import { getSupabaseAdmin } from "./supabase-server";
 import type { Client, ReactivationContact } from "./types";
+import { hasAlertSmsConsent } from "./messaging-consent";
 
 export async function processReactivationReport(
   report: ReactivationReport,
@@ -61,6 +62,7 @@ export async function processReactivationReport(
     await admin.from("reactivation_appointments").upsert({ client_id: report.clientId, campaign_id: report.campaignId, contact_id: report.contactId, requested_window: report.requestedTiming, status: "requested" }, { onConflict: "contact_id" });
   }
   if (!isPriorityOutcome(report.outcome) || attempt.owner_alert_sent_at) return { status: "processed", alert: "skipped" };
+  if (!hasAlertSmsConsent(client)) return { status: "processed", alert: "no_consent" };
 
   const { data: claimed } = await admin.from("reactivation_attempts").update({ owner_alert_sent_at: now.toISOString() }).eq("id", attempt.id).is("owner_alert_sent_at", null).select("id").maybeSingle();
   if (!claimed) return { status: "processed", alert: "already_sent" };

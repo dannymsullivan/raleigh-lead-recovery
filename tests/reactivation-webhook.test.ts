@@ -12,6 +12,8 @@ describe("reactivation Vapi reports", () => {
   });
 
   it("builds an immediate owner handoff alert", () => {
-    expect(buildInterestedLeadSms("Oak City Roofing", "Sarah", "+19195550123", "Tomorrow", "https://example.com/dashboard")).toContain("INTERESTED LEAD for Oak City Roofing: Sarah");
+    const message = buildInterestedLeadSms("Oak City Roofing", "Sarah", "+19195550123", "Tomorrow", "https://example.com/dashboard");
+    expect(message).toContain("Raleigh Lead Recovery alert for Oak City Roofing: Sarah");
+    expect(message).toContain("Reply STOP to unsubscribe; HELP for help.");
   });
 });

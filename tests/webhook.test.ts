@@ -8,6 +8,8 @@ const client: Client = {
   trade: "plumbing",
   owner_name: "Marcus",
   owner_phone: "+19195550123",
+  alert_sms_consent_at: "2026-07-01T00:00:00.000Z",
+  alert_sms_consent_phone: "+19195550123",
   owner_email: null,
   pilot_start: "2026-07-01",
   pilot_end: "2026-07-08",
@@ -143,6 +145,16 @@ describe("processVapiWebhook", () => {
     expect(sendOwnerSms).not.toHaveBeenCalled();
   });
 
+  it("skips SMS when the alert recipient has not consented", async () => {
+    const fakeStore = store({ findClientByVapiIds: vi.fn().mockResolvedValue({ ...client, alert_sms_consent_at: null, alert_sms_consent_phone: null }) });
+    const sendOwnerSms = vi.fn();
+    const result = await processVapiWebhook(payload(), { store: fakeStore, sendOwnerSms });
+
+    expect(result).toMatchObject({ status: "processed", sms: "skipped" });
+    expect(fakeStore.claimSmsSend).not.toHaveBeenCalled();
+    expect(sendOwnerSms).not.toHaveBeenCalled();
+  });
+
   it("releases the SMS claim when Twilio fails", async () => {
     const fakeStore = store();
     const sendOwnerSms = vi.fn().mockRejectedValue(new Error("Twilio down"));
@@ -178,6 +190,6 @@ describe("buildOwnerSms", () => {
       transcript: null,
       recordingUrl: null,
       durationSeconds: null
-    })).toContain("CAUGHT MISSED CALL (emergency): Tanya - Burst pipe. Call: +19195554821.");
+    })).toContain("Raleigh Lead Recovery alert: CAUGHT MISSED CALL (emergency): Tanya - Burst pipe. Call: +19195554821.");
   });
 });

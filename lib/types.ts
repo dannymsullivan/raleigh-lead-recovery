@@ -30,6 +30,8 @@ export type Client = {
   emergency_rules?: string | null;
   callback_window?: string;
   alert_phone?: string | null;
+  alert_sms_consent_at?: string | null;
+  alert_sms_consent_phone?: string | null;
   onboarding_completed_at?: string | null;
   trial_started_at?: string | null;
   trial_ends_at?: string | null;

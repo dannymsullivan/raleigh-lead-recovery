@@ -1,4 +1,5 @@
 import { normalizePhoneNumber } from "./phone";
+import { buildVerificationSms } from "./messaging-consent";
 
 type AuthSmsEvent = {
   user?: { phone?: unknown };
@@ -18,7 +19,7 @@ export function getAuthSmsMessage(event: AuthSmsEvent): { to: string; body: stri
 
   return {
     to: phone,
-    body: `Your Mabel verification code is ${otp}. It expires shortly.`
+    body: buildVerificationSms(otp)
   };
 }
 

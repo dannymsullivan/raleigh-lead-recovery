@@ -1,5 +1,6 @@
 import type { Call, Client, ExtractedVapiCall } from "./types";
 import { extractVapiCall } from "./vapi";
+import { hasAlertSmsConsent } from "./messaging-consent";
 
 export type SmsMessage = {
   to: string;
@@ -38,7 +39,7 @@ export function buildOwnerSms(call: ExtractedVapiCall): string {
   const address = call.serviceAddress ?? "No address captured";
   const timing = call.requestedTiming ?? "Timing not captured";
 
-  return `CAUGHT MISSED CALL (${call.urgency}): ${caller} - ${issue}. Call: ${callback}. Addr: ${address}. Wants: ${timing}.`;
+  return `Raleigh Lead Recovery alert: CAUGHT MISSED CALL (${call.urgency}): ${caller} - ${issue}. Call: ${callback}. Addr: ${address}. Wants: ${timing}. Reply STOP to unsubscribe; HELP for help.`;
 }
 
 export async function processVapiWebhook(payload: unknown, deps: WebhookDeps): Promise<WebhookProcessingResult> {
@@ -74,7 +75,7 @@ export async function processVapiWebhook(payload: unknown, deps: WebhookDeps): P
 
   await deps.store.upsertCall(client.id, extracted, payload, now);
 
-  if (!shouldSendOwnerSms(extracted)) {
+  if (!shouldSendOwnerSms(extracted) || !hasAlertSmsConsent(client)) {
     return { status: "processed", callId: extracted.vapiCallId, sms: "skipped" };
   }
 

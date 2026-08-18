@@ -6,6 +6,8 @@ import { after } from "next/server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { provisionClientWorkspace } from "@/lib/provisioning";
+import { normalizePhoneNumber } from "@/lib/phone";
+import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
 
 type LeadStatus = "new" | "contacted" | "booked" | "lost" | "spam";
 
@@ -72,7 +74,9 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
   const { userId, clientId } = await currentWorkspace();
   const businessName = formValue(formData, "business_name");
   const ownerPhone = formValue(formData, "owner_phone");
-  if (!businessName || !ownerPhone) redirect("/dashboard/settings?error=missing");
+  const alertPhone = normalizePhoneNumber(formValue(formData, "alert_phone") || ownerPhone);
+  if (!businessName || !ownerPhone || !alertPhone) redirect("/dashboard/settings?error=missing");
+  if (formData.get("alert_sms_consent") !== "on") redirect("/dashboard/settings?error=consent");
 
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
   const businessHours = Object.fromEntries(days.map((day) => [day, {
@@ -83,6 +87,7 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
   const services = formValue(formData, "services").split(/[\n,]/).map((item) => item.trim()).filter(Boolean).slice(0, 30);
 
   const admin = getSupabaseAdmin();
+  const consentedAt = new Date().toISOString();
   const { error } = await admin.from("clients").update({
     business_name: businessName,
     owner_phone: ownerPhone,
@@ -94,12 +99,25 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
     timezone: formValue(formData, "timezone") || "America/New_York",
     emergency_rules: formValue(formData, "emergency_rules") || null,
     callback_window: formValue(formData, "callback_window") || "The team will call back as soon as possible.",
-    alert_phone: formValue(formData, "alert_phone") || ownerPhone,
+    alert_phone: alertPhone,
+    alert_sms_consent_at: consentedAt,
+    alert_sms_consent_phone: alertPhone,
     provisioning_status: "provisioning",
     provisioning_error: null
   }).eq("id", clientId);
 
   if (error) redirect("/dashboard/settings?error=save");
+  await admin.from("messaging_consents").upsert({
+    client_id: clientId,
+    user_id: userId,
+    phone_e164: alertPhone,
+    purpose: "lead_alerts",
+    consent_version: messagingConsentVersion,
+    consent_text: alertConsentText,
+    source: "settings_checkbox",
+    consented_at: consentedAt,
+    revoked_at: null
+  }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
   after(() => provisionClientWorkspace(userId, { forceAssistantUpdate: true }));
   revalidatePath("/dashboard");
   redirect("/dashboard/settings?saved=1");

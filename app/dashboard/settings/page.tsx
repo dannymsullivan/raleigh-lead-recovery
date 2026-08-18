@@ -35,7 +35,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
 
           <form action={saveAssistantSettingsAction} className="grid gap-7">
             {search.saved === "1" ? <div className="flex items-center gap-3 border-2 border-black bg-black p-4 text-sm font-black text-white"><Check className="h-4 w-4" /> Saved. Mabel is updating now.</div> : null}
-            {search.error ? <div className="border-2 border-black bg-white p-4 text-sm font-black">We could not save those settings. Check the required fields and try again.</div> : null}
+            {search.error ? <div className="border-2 border-black bg-white p-4 text-sm font-black">{search.error === "consent" ? "Confirm permission to send transactional alerts to the alert number." : "We could not save those settings. Check the required fields and try again."}</div> : null}
 
             <SettingsSection number="01" title="Business basics">
               <div className="grid gap-5 sm:grid-cols-2"><Field label="Business name" name="business_name" defaultValue={client.business_name} required /><Field label="Business phone" name="owner_phone" type="tel" defaultValue={client.owner_phone} required /><Field label="Business type" name="trade" defaultValue={client.trade} /><Field label="Service area" name="service_area" defaultValue={client.service_area ?? ""} /></div>
@@ -46,6 +46,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               <label className="block text-sm font-black">Services<textarea className="mt-2 min-h-36 w-full border-2 border-black bg-white p-3 font-semibold leading-6" name="services" defaultValue={client.services?.join("\n") ?? ""} placeholder="One service per line" /></label>
               <label className="mt-5 block text-sm font-black">What counts as an emergency?<textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-3 font-semibold leading-6" name="emergency_rules" defaultValue={client.emergency_rules ?? ""} /></label>
               <div className="mt-5 grid gap-5 sm:grid-cols-2"><Field label="Callback expectation" name="callback_window" defaultValue={client.callback_window ?? ""} /><Field label="Send lead alerts to" name="alert_phone" type="tel" defaultValue={client.alert_phone ?? client.owner_phone} /></div>
+              <label className="mt-5 flex items-start gap-3 border-2 border-black bg-white p-4 text-xs font-semibold leading-5 text-black/65"><input className="mt-1 h-4 w-4 flex-none accent-black" name="alert_sms_consent" type="checkbox" required /><span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Raleigh Lead Recovery may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help.</span></label>
             </SettingsSection>
 
             <SettingsSection number="03" title="Weekly hours">
