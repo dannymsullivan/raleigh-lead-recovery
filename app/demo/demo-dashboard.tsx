@@ -61,7 +61,7 @@ export function DemoDashboard() {
         <div className="mt-auto border-t-2 border-black pt-5">
           <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">Signed in as</p>
           <p className="mt-2 text-sm font-black">Jordan Lee</p>
-          <p className="text-xs font-semibold text-black/45">Oak City Roofing</p>
+          <p className="text-xs font-semibold text-black/45">Oak City Home Services</p>
         </div>
       </aside>
 
@@ -74,7 +74,7 @@ export function DemoDashboard() {
                 <span className="border border-black bg-[#d8ff57] px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.12em]">Illustrative data</span>
               </div>
               <h1 className="mt-4 max-w-4xl font-serif text-4xl font-semibold leading-[0.94] tracking-[-0.055em] sm:text-6xl">Your old leads are talking again.</h1>
-              <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-black/50">Follow the campaign from uploaded records to conversations, qualified homeowners, and booked inspections.</p>
+              <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-black/50">Follow the campaign from uploaded records to conversations, qualified customers, and booked appointments.</p>
             </div>
             <div className="flex items-center gap-3 border-2 border-black bg-white px-4 py-3 text-sm font-black shadow-[4px_4px_0_#000]">
               <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#769000]" /> Mabel is calling
@@ -85,7 +85,7 @@ export function DemoDashboard() {
             <Metric icon={Database} label="Leads loaded" value={String(demoCampaign.listSize)} detail="approved records" />
             <Metric icon={PhoneCall} label="Attempts" value={String(demoCampaign.attempted)} detail={`${demoCampaignProgress()}% of list`} />
             <Metric icon={Users} label="Conversations" value={String(demoCampaign.connected)} detail="meaningful connects" />
-            <Metric icon={CalendarCheck} label="Booked" value={String(demoCampaign.booked)} detail="inspections" accent />
+            <Metric icon={CalendarCheck} label="Booked" value={String(demoCampaign.booked)} detail="appointments" accent />
             <Metric icon={CircleDollarSign} label="Est. pipeline" value={formatDemoCurrency(demoCampaign.estimatedPipeline)} detail="illustrative only" />
           </div>
 
@@ -101,7 +101,7 @@ export function DemoDashboard() {
                   <FunnelRow label="Attempted" value={demoCampaign.attempted} max={demoCampaign.listSize} />
                   <FunnelRow label="Conversations" value={demoCampaign.connected} max={demoCampaign.listSize} />
                   <FunnelRow label="Interested" value={demoCampaign.interested} max={demoCampaign.listSize} accent />
-                  <FunnelRow label="Inspections booked" value={demoCampaign.booked} max={demoCampaign.listSize} dark />
+                  <FunnelRow label="Appointments booked" value={demoCampaign.booked} max={demoCampaign.listSize} dark />
                 </div>
                 <div className="border-2 border-black bg-[#f4f1e8] p-5">
                   <p className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-black/40">The useful number</p>

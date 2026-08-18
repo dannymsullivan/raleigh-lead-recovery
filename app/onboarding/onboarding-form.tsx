@@ -68,7 +68,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                 <Field label="Business name" name="business_name" defaultValue={client.business_name === "New workspace" ? "" : client.business_name} autoComplete="organization" required />
                 <Field label="Your name" name="owner_name" defaultValue={client.owner_name} autoComplete="name" required />
                 <Field label="Business phone" name="owner_phone" type="tel" defaultValue={client.owner_phone === "Not set" ? "" : client.owner_phone} autoComplete="tel" required />
-                <Field label="Business type" name="trade" placeholder="Plumbing, HVAC, roofing…" defaultValue={client.trade === "service business" ? "" : client.trade} required />
+                <Field label="Business type" name="trade" placeholder="Plumbing, HVAC, electrical…" defaultValue={client.trade === "service business" ? "" : client.trade} required />
                 <Field label="Service area" name="service_area" placeholder="Raleigh, Cary, Apex…" defaultValue={client.service_area ?? ""} required />
                 <Field label="Account email" name="account_email" type="email" defaultValue={email} disabled />
               </div>

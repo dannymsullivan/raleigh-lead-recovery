@@ -17,7 +17,7 @@ export type DemoLead = {
 };
 
 export const demoCampaign = {
-  businessName: "Oak City Roofing",
+  businessName: "Oak City Home Services",
   name: "Spring database recovery",
   status: "Calling now",
   listSize: 500,
@@ -28,7 +28,7 @@ export const demoCampaign = {
   estimatedPipeline: 216000,
   startedAt: "August 12, 2026",
   callingWindow: "Monday–Friday · 9:00 AM–6:00 PM ET",
-  scriptVersion: "Roof replacement · v1.3",
+  scriptVersion: "Past estimate · v1.3",
   nextCallAt: "Today · 2:15 PM",
 };
 
@@ -37,7 +37,7 @@ export const demoLeads: DemoLead[] = [
     id: "lead-001",
     name: "Sarah M.",
     phone: "(919) •••-1842",
-    source: "Roof replacement estimate",
+    source: "Water heater estimate",
     ageDays: 94,
     status: "booked",
     outcome: "Inspection booked",
@@ -47,7 +47,7 @@ export const demoLeads: DemoLead[] = [
     lastContact: "12 minutes ago",
     summary: "Put the project on hold earlier this year. Ready to revisit it before fall and requested a morning inspection.",
     transcript: [
-      { speaker: "Mabel", text: "Did you ever get that roof project taken care of?" },
+      { speaker: "Mabel", text: "Did you ever get that water heater project taken care of?" },
       { speaker: "Lead", text: "Not yet. We put it off, but we need to revisit it before fall." },
       { speaker: "Mabel", text: "I can help get an inspection back on the calendar. Is morning or afternoon usually better?" },
     ],
@@ -56,18 +56,18 @@ export const demoLeads: DemoLead[] = [
     id: "lead-002",
     name: "Marcus T.",
     phone: "(984) •••-7106",
-    source: "Storm damage inquiry",
+    source: "HVAC replacement inquiry",
     ageDays: 167,
     status: "qualified",
-    outcome: "Insurance paperwork ready",
+    outcome: "Replacement still needed",
     nextStep: "Sales rep callback today",
     value: 18000,
     attempts: 2,
     lastContact: "38 minutes ago",
-    summary: "Still has unresolved storm damage and now has the insurance paperwork. Wants a rep to review the claim before scheduling.",
+    summary: "The system is acting up again after the project was postponed. Wants a rep to review replacement options before scheduling.",
     transcript: [
-      { speaker: "Mabel", text: "Is the roof work from that storm still unresolved?" },
-      { speaker: "Lead", text: "Yes. I finally have the paperwork and need someone to look at it again." },
+      { speaker: "Mabel", text: "Is the HVAC replacement you discussed with the team still unresolved?" },
+      { speaker: "Lead", text: "Yes. We put it off, but the system is acting up again and I need someone to look at it." },
     ],
   },
   {
@@ -84,7 +84,7 @@ export const demoLeads: DemoLead[] = [
     lastContact: "1 hour ago",
     summary: "Got busy after requesting an estimate and never scheduled. Confirmed the project is still active and booked an afternoon visit.",
     transcript: [
-      { speaker: "Mabel", text: "Is a roof replacement still something you're considering?" },
+      { speaker: "Mabel", text: "Is that home-service project still something you're considering?" },
       { speaker: "Lead", text: "It is. I got busy and never scheduled the inspection." },
     ],
   },
@@ -128,7 +128,7 @@ export const demoLeads: DemoLead[] = [
     id: "lead-006",
     name: "Elena W.",
     phone: "(919) •••-6618",
-    source: "Roof inspection form",
+    source: "Service inspection form",
     ageDays: 78,
     status: "no_answer",
     outcome: "Voicemail left",

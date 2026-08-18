@@ -85,7 +85,7 @@ export default function LandingPage() {
           <p className="eyebrow">Meet Mabel</p>
           <h2 id="hear-mabel">Hear an old lead become a live opportunity.</h2>
           <p>
-            This short roofing scenario shows how Mabel reopens the conversation, confirms current interest, and gives the team a useful next step.
+            This short home-service scenario shows how Mabel reopens the conversation, confirms current interest, and gives the team a useful next step.
           </p>
         </div>
         <div className="audio-player">
@@ -93,7 +93,7 @@ export default function LandingPage() {
           <div className="audio-player-body">
             <div className="audio-meta">
               <div>
-                <strong>{demoCallUrl ? "Mabel roofing reactivation demo" : "Demo recording coming next"}</strong>
+                <strong>{demoCallUrl ? "Mabel lead reactivation demo" : "Demo recording coming next"}</strong>
                 <span>{demoCallUrl ? "Recorded with permission" : "Mabel is configured and ready in Vapi"}</span>
               </div>
               {demoCallUrl ? <span className="audio-length">Recorded demo</span> : null}
@@ -125,7 +125,7 @@ export default function LandingPage() {
           <p className="eyebrow">The overlooked pipeline</p>
           <h2>Your next customer may already be sitting in your CRM.</h2>
           <p>
-            Most roofing companies keep buying new leads while hundreds of earlier inquiries quietly age out. Some homeowners inquired before they were ready. Some paused to compare options. Mabel gives them a helpful way to reconnect when the timing is better.
+            Most service businesses keep buying new leads while hundreds of earlier inquiries quietly age out. Some customers reached out before they were ready. Some paused to compare options. Mabel gives them a helpful way to reconnect when the timing is better.
           </p>
         </div>
         <div className="recovery-problem-cards">
@@ -153,7 +153,7 @@ export default function LandingPage() {
       <section className="recovery-process page-shell" id="how-it-works">
         <div className="section-heading recovery-process-heading">
           <p className="eyebrow">How it works</p>
-          <h2>Old list in.<br />Real opportunities out.</h2>
+          <h2>Old leads in.<br />New business out.</h2>
         </div>
         <ol className="process-list recovery-process-list">
           <li>
