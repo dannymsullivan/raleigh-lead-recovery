@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1875" height="1275" viewBox="0 0 1875 1275">
+  <defs>
+    <pattern id="grid" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M96 0H0V96" fill="none" stroke="#f4f1e8" stroke-opacity=".055" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1875" height="1275" fill="#11130f"/>
+  <rect width="1875" height="1275" fill="url(#grid)"/>
+  <g transform="translate(105 95)">
+    <rect x="0" y="0" width="82" height="82" rx="18" fill="#d8ff57"/>
+    <rect x="4" y="4" width="74" height="74" rx="15" fill="none" stroke="#11130f" stroke-width="4"/>
+    <path d="M25 62V21h18c12 0 20 7 20 17s-8 17-20 17H25m18 0 20 14" fill="none" stroke="#11130f" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/>
+    <text x="106" y="30" fill="#f4f1e8" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="-.5">RALEIGH LEAD</text>
+    <text x="106" y="61" fill="#d8ff57" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="-.5">RECOVERY</text>
+  </g>
+  <text x="105" y="390" fill="#f4f1e8" font-family="Georgia, serif" font-size="146" font-weight="700" letter-spacing="-8">
+    <tspan x="105" dy="0">Your old leads</tspan>
+    <tspan x="105" dy="140">aren’t dead.</tspan>
+  </text>
+  <rect x="105" y="585" width="900" height="26" fill="#d8ff57" transform="rotate(-1 105 585)"/>
+  <text x="105" y="705" fill="#b9bcb3" font-family="Arial, sans-serif" font-size="43" font-weight="600">
+    <tspan x="105" dy="0">Hear Mabel follow up with a lead—</tspan>
+    <tspan x="105" dy="62">using your business name.</tspan>
+  </text>
+  <g transform="translate(1240 132)">
+    <rect width="520" height="1010" rx="58" fill="#e8ed84"/>
+    <text x="64" y="88" fill="#3c4038" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="4">LIVE PHONE DEMO</text>
+    <image href="../public/qr-demo-handout.svg" x="64" y="155" width="392" height="392"/>
+    <text x="64" y="625" fill="#11130f" font-family="Arial, sans-serif" font-size="29" font-weight="900" letter-spacing="1.5">SCAN TO TRY MABEL</text>
+    <text x="64" y="685" fill="#3c4038" font-family="Arial, sans-serif" font-size="28" font-weight="600">
+      <tspan x="64" dy="0">Enter your first name,</tspan>
+      <tspan x="64" dy="43">business, and number.</tspan>
+      <tspan x="64" dy="43">Mabel calls you live.</tspan>
+    </text>
+    <line x1="64" y1="835" x2="456" y2="835" stroke="#11130f" stroke-opacity=".3" stroke-width="3"/>
+    <text x="64" y="890" fill="#11130f" font-family="Arial, sans-serif" font-size="23" font-weight="900">WEEKDAYS · NOON–7 PM ET</text>
+    <text x="64" y="945" fill="#3c4038" font-family="Arial, sans-serif" font-size="24" font-weight="700">raleighleadrecovery.com/demo</text>
+  </g>
+  <text x="105" y="1135" fill="#d8ff57" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="3">OLD ESTIMATES · NO-DECISIONS · MISSED FOLLOW-UP · SERVICE REMINDERS</text>
+</svg>

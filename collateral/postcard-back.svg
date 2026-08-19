@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1875" height="1275" viewBox="0 0 1875 1275">
+  <defs>
+    <pattern id="grid" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M96 0H0V96" fill="none" stroke="#11130f" stroke-opacity=".045" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1875" height="1275" fill="#f4f1e8"/>
+  <rect width="1875" height="1275" fill="url(#grid)"/>
+  <text x="105" y="115" fill="#596057" font-family="Arial, sans-serif" font-size="24" font-weight="900" letter-spacing="4">AI LEAD RECOVERY FOR GROWING BUSINESSES</text>
+  <text x="105" y="265" fill="#11130f" font-family="Georgia, serif" font-size="98" font-weight="700" letter-spacing="-5">
+    <tspan x="105" dy="0">Mabel finds the people</tspan>
+    <tspan x="105" dy="100">who are still interested.</tspan>
+  </text>
+  <g transform="translate(105 525)" font-family="Arial, sans-serif">
+    <g>
+      <circle cx="28" cy="28" r="28" fill="#d8ff57"/><text x="28" y="37" text-anchor="middle" fill="#11130f" font-size="23" font-weight="900">1</text>
+      <text x="82" y="20" fill="#11130f" font-size="30" font-weight="900">Connect your leads.</text>
+      <text x="82" y="57" fill="#666b63" font-size="23" font-weight="600">CSV, CRM view, webhook, Zapier, or Make.</text>
+    </g>
+    <g transform="translate(0 145)">
+      <circle cx="28" cy="28" r="28" fill="#d8ff57"/><text x="28" y="37" text-anchor="middle" fill="#11130f" font-size="23" font-weight="900">2</text>
+      <text x="82" y="20" fill="#11130f" font-size="30" font-weight="900">Mabel follows up naturally.</text>
+      <text x="82" y="57" fill="#666b63" font-size="23" font-weight="600">She qualifies interest and handles objections.</text>
+    </g>
+    <g transform="translate(0 290)">
+      <circle cx="28" cy="28" r="28" fill="#d8ff57"/><text x="28" y="37" text-anchor="middle" fill="#11130f" font-size="23" font-weight="900">3</text>
+      <text x="82" y="20" fill="#11130f" font-size="30" font-weight="900">Your team gets the opportunity.</text>
+      <text x="82" y="57" fill="#666b63" font-size="23" font-weight="600">Calls, summaries, appointments, and outcomes.</text>
+    </g>
+  </g>
+  <g transform="translate(1285 160)">
+    <rect width="480" height="835" rx="40" fill="#11130f"/>
+    <text x="50" y="72" fill="#d8ff57" font-family="Arial, sans-serif" font-size="22" font-weight="900" letter-spacing="4">HEAR IT YOURSELF</text>
+    <image href="../public/qr-demo-handout.svg" x="50" y="118" width="380" height="380"/>
+    <text x="50" y="570" fill="#f4f1e8" font-family="Georgia, serif" font-size="53" font-weight="700" letter-spacing="-2">
+      <tspan x="50" dy="0">Try the live</tspan><tspan x="50" dy="55">phone demo.</tspan>
+    </text>
+    <text x="50" y="705" fill="#aeb1aa" font-family="Arial, sans-serif" font-size="23" font-weight="600">raleighleadrecovery.com/demo</text>
+    <text x="50" y="765" fill="#f4f1e8" font-family="Arial, sans-serif" font-size="21" font-weight="900">WEEKDAYS · NOON–7 PM ET</text>
+  </g>
+  <line x1="105" y1="1115" x2="1765" y2="1115" stroke="#11130f" stroke-width="3"/>
+  <text x="105" y="1180" fill="#11130f" font-family="Arial, sans-serif" font-size="27" font-weight="900">DANNY SULLIVAN · RALEIGH, NORTH CAROLINA</text>
+  <text x="1765" y="1180" text-anchor="end" fill="#596057" font-family="Arial, sans-serif" font-size="27" font-weight="700">danny@meetraleighaiguy.com</text>
+</svg>

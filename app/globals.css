@@ -2588,13 +2588,13 @@ body {
   }
 
   .recovery-dashboard-preview {
-    height: 420px;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
   }
 
   .recovery-dashboard-preview img {
-    width: 680px;
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
   }
 
   .recovery-dashboard-sync {
@@ -2717,6 +2717,36 @@ body {
 }
 
 @media (max-width: 640px) {
+  .recovery-dashboard {
+    padding-block: 68px 72px;
+  }
+
+  .recovery-dashboard-window {
+    margin-top: 36px;
+  }
+
+  .recovery-dashboard-sync {
+    padding: 16px;
+  }
+
+  .recovery-dashboard-sync div > span {
+    font-size: 0.58rem;
+  }
+
+  .recovery-dashboard-window figcaption {
+    padding: 9px 11px;
+    font-size: 0.46rem;
+    line-height: 1.45;
+  }
+
+  .recovery-autopilot {
+    padding-bottom: 52px;
+  }
+
+  .recovery-use-cases {
+    padding-top: 52px;
+  }
+
   .recovery-use-cases-grid {
     grid-template-columns: 1fr;
   }
