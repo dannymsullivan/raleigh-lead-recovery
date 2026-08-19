@@ -102,7 +102,6 @@ export default function LandingPage() {
             <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="hero">
               Try Mabel on your phone <ArrowRight aria-hidden="true" />
             </a>
-            <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="hero">Or book a 15-minute fit call</a>
           </div>
           <p className="microcopy">25 eligible old leads · 14 days · No setup fee</p>
         </div>
@@ -309,8 +308,8 @@ export default function LandingPage() {
             <p>
               No platform migration. No long contract. We define a small eligible list, agree on what counts as qualified, and show you the complete outcome.
             </p>
-            <a className="button button-accent" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="pilot">
-              Book my 15-minute fit call <ArrowRight aria-hidden="true" />
+            <a className="button button-accent" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="pilot">
+              Try Mabel on my phone <ArrowRight aria-hidden="true" />
             </a>
           </div>
           <div className="recovery-pilot-card">
@@ -353,7 +352,7 @@ export default function LandingPage() {
           <h2>Built and supported in Raleigh.</h2>
           <p>I&apos;ll scope the list with you, tune Mabel to your sales process, and review the calls before a campaign scales.</p>
         </div>
-        <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="founder">Book time with Danny <ArrowRight aria-hidden="true" /></a>
+        <a className="text-link" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="founder">Try Mabel on your phone <ArrowRight aria-hidden="true" /></a>
       </section>
 
       <section className="final-cta recovery-final page-shell">
@@ -362,7 +361,6 @@ export default function LandingPage() {
         <p>Experience the call on your own phone, then decide whether it belongs in your follow-up process.</p>
         <div className="hero-actions centered-actions">
           <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel on my phone <ArrowRight aria-hidden="true" /></a>
-          <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="final_cta">Or book a 15-minute fit call</a>
         </div>
       </section>
 
