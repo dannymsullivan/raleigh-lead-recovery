@@ -133,7 +133,7 @@ export async function deleteClientAction(clientId: string): Promise<void> {
   await requireAdminSession();
   const admin = getSupabaseAdmin();
   const { data: client, error: loadError } = await admin.from("clients")
-    .select("id,user_id,vapi_assistant_id,vapi_phone_number_id")
+    .select("id,vapi_assistant_id,vapi_phone_number_id")
     .eq("id", clientId)
     .maybeSingle();
 
@@ -143,10 +143,6 @@ export async function deleteClientAction(clientId: string): Promise<void> {
 
   const { error } = await admin.from("clients").delete().eq("id", clientId);
   if (error) throw error;
-  if (client.user_id) {
-    const { error: authError } = await admin.auth.admin.deleteUser(client.user_id);
-    if (authError) throw authError;
-  }
 
   revalidatePath("/admin");
   redirect("/admin?deleted=client");

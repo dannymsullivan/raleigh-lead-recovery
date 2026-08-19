@@ -194,7 +194,14 @@ export default async function AdminPage({ searchParams }: PageProps) {
                         </Link>
                       </td>
                       <td className="px-4 py-3 align-top">
-                        <Link className="mb-3 inline-flex items-center gap-2 border-2 border-black bg-black px-3 py-2 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
+                          <Link className="inline-flex min-h-10 items-center gap-2 border-2 border-black bg-black px-3 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
+                          {client.vapi_assistant_id || client.vapi_phone_number_id ? (
+                            <span className="inline-flex min-h-10 items-center border-2 border-black/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">Demo protected</span>
+                          ) : (
+                            <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete" confirmMessage={`Delete ${client.business_name} and all of its call history? This cannot be undone.`} />
+                          )}
+                        </div>
                         <details className="w-[300px]">
                           <summary className="cursor-pointer text-xs font-black underline decoration-2 underline-offset-4">Edit customer</summary>
                           <form action={updateClientAction.bind(null, client.id)} className="mt-4 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4">
@@ -207,9 +214,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
                             <div className="grid grid-cols-2 gap-3"><Field label="Avg job value" name="avg_job_value" type="number" defaultValue={String(client.avg_job_value)} /><Field label="Close rate" name="close_rate" type="number" step="0.01" defaultValue={String(client.close_rate)} /></div>
                             <button className="min-h-11 bg-black px-4 text-sm font-black text-white" type="submit">Save customer</button>
                           </form>
-                          <div className="mt-3">
-                            {client.vapi_assistant_id || client.vapi_phone_number_id ? <p className="text-xs font-bold leading-5 text-black/50">Deletion locked while Vapi resources are connected.</p> : <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete customer" confirmMessage={`Delete ${client.business_name} and all of its call history? This cannot be undone.`} />}
-                          </div>
                         </details>
                       </td>
                     </tr>
