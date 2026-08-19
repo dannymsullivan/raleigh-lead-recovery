@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getSupabaseAdmin } from "./supabase-server";
+import { buildReactivationCallRequest } from "./reactivation-call";
 import type { Client, ReactivationCampaign, ReactivationContact } from "./types";
 
 type VapiCall = { id: string; status?: string };
@@ -34,27 +35,40 @@ async function createVapiCall(client: Client, campaign: ReactivationCampaign, co
   const response = await fetch("https://api.vapi.ai/call", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      assistantId,
-      phoneNumberId,
-      customer: { number: contact.phone_e164, name: contact.name, email: contact.email ?? undefined },
-      metadata: { app: "lead-reactivation", clientId: client.id, campaignId: campaign.id, contactId: contact.id },
-      assistantOverrides: {
-        variableValues: {
-          business_name: client.business_name,
-          owner_name: client.owner_name,
-          contact_name: contact.name,
-          service_type: campaign.service_type || client.trade,
-          lead_source: contact.source || "a previous inquiry",
-          lead_age_context: contact.lead_age_days ? `${contact.lead_age_days} days ago` : "some time ago",
-          prior_context: contact.notes || "No additional context was provided.",
-          callback_expectation: client.callback_window || "as soon as possible"
-        }
-      }
-    })
+    body: JSON.stringify(buildReactivationCallRequest(client, campaign, contact, { assistantId, phoneNumberId }))
   });
   if (!response.ok) throw new Error(`Vapi call failed (${response.status}): ${(await response.text()).slice(0, 500)}`);
   return (await response.json()) as VapiCall;
+}
+
+export async function queueReactivationContactCall(
+  client: Client,
+  campaign: ReactivationCampaign,
+  contact: ReactivationContact
+): Promise<{ callId: string; attemptId: string }> {
+  const admin = getSupabaseAdmin();
+  const { data: suppressed } = await admin.from("suppression_entries").select("id").eq("client_id", client.id).eq("phone_e164", contact.phone_e164).maybeSingle();
+  if (suppressed) throw new Error("This phone number is suppressed.");
+
+  const { data: attempt, error: insertError } = await admin.from("reactivation_attempts").insert({
+    client_id: client.id,
+    campaign_id: campaign.id,
+    contact_id: contact.id,
+    status: "queued"
+  }).select("id").single();
+  if (insertError) throw insertError;
+
+  try {
+    const call = await createVapiCall(client, campaign, contact);
+    await admin.from("reactivation_attempts").update({ vapi_call_id: call.id, status: "in_progress" }).eq("id", attempt.id);
+    await admin.from("reactivation_contacts").update({ status: "calling", attempt_count: contact.attempt_count + 1, last_attempt_at: new Date().toISOString() }).eq("id", contact.id);
+    return { callId: call.id, attemptId: attempt.id as string };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown Vapi error";
+    await admin.from("reactivation_attempts").update({ status: "failed", error: message.slice(0, 500) }).eq("id", attempt.id);
+    await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed", attempt_count: contact.attempt_count + 1 }).eq("id", contact.id);
+    throw error;
+  }
 }
 
 export async function runReactivationBatch(campaignId: string, clientId?: string, requestedLimit = 5): Promise<{ queued: number; failed: number; skipped: string | null }> {
@@ -94,23 +108,16 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
   let failed = 0;
 
   for (const contact of contacts) {
-    const { data: suppressed } = await admin.from("suppression_entries").select("id").eq("client_id", client.id).eq("phone_e164", contact.phone_e164).maybeSingle();
-    if (suppressed) {
-      await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
-      continue;
-    }
-    const { data: attempt, error: insertError } = await admin.from("reactivation_attempts").insert({ client_id: client.id, campaign_id: campaign.id, contact_id: contact.id, status: "queued" }).select("id").single();
-    if (insertError) throw insertError;
     try {
-      const call = await createVapiCall(client, campaign, contact);
-      await admin.from("reactivation_attempts").update({ vapi_call_id: call.id, status: "in_progress" }).eq("id", attempt.id);
-      await admin.from("reactivation_contacts").update({ status: "calling", attempt_count: contact.attempt_count + 1, last_attempt_at: new Date().toISOString() }).eq("id", contact.id);
+      await queueReactivationContactCall(client, campaign, contact);
       queued += 1;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown Vapi error";
-      await admin.from("reactivation_attempts").update({ status: "failed", error: message.slice(0, 500) }).eq("id", attempt.id);
-      await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed", attempt_count: contact.attempt_count + 1 }).eq("id", contact.id);
-      failed += 1;
+      if (message === "This phone number is suppressed.") {
+        await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
+      } else {
+        failed += 1;
+      }
     }
   }
   return { queued, failed, skipped: null };

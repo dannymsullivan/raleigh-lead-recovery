@@ -22,7 +22,7 @@ Required values:
 - `SUPABASE_PUBLISHABLE_KEY` for customer signup, login, and session refresh
 - `SUPABASE_SECRET_KEY` for new Supabase projects, or `SUPABASE_SERVICE_ROLE_KEY` for legacy projects
 - `VAPI_WEBHOOK_SECRET`
-- `VAPI_API_KEY` for automatic assistant and trial-number provisioning
+- `VAPI_API_KEY` for automatic assistant and trial-number provisioning plus authenticated recording retrieval
 - `VAPI_OUTBOUND_ASSISTANT_ID` for the production Mabel reactivation assistant
 - `VAPI_OUTBOUND_PHONE_NUMBER_ID` for the Twilio number imported into Vapi
 - `TWILIO_ACCOUNT_SID`
@@ -68,8 +68,9 @@ The authenticated customer flow is:
 4. Attest that the contacts are eligible, previously inquired or otherwise provided permission, and have been checked against applicable suppression requirements.
 5. Launch or pause the campaign from the dashboard.
 6. Mabel calls in controlled batches through the imported Twilio number. Vapi sends the recording, transcript, summary, and structured outcome back to the application.
-7. Interested contacts move to the priority queue and trigger an immediate owner SMS with a click-to-call number and dashboard link.
-8. The owner can call, mark the lead contacted, or record a booking and estimated value from the dashboard.
+7. Dashboard recording playback goes through an authenticated server route. The browser never receives the Vapi private API key or reuses Vapi's private storage URL directly.
+8. Interested contacts move to the priority queue and trigger an immediate owner SMS with a click-to-call number and dashboard link.
+9. The owner can call, mark the lead contacted, or record a booking and estimated value from the dashboard.
 
 Launching or resuming starts an immediate controlled batch. A protected Vercel cron continues running campaigns daily at `14:00 UTC` (9:00 a.m. Raleigh time in standard time and 10:00 a.m. in daylight time). Each run respects the campaign's calling window and daily limit, retries eligible no-answers after 24 hours, and stops after the configured maximum attempts. The runner caps any one batch at 50 calls even if a higher daily limit is configured.
 

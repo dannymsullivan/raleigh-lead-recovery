@@ -1,4 +1,4 @@
-import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, LogOut, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
+import { Activity, Calculator, Check, CircleAlert, DollarSign, ExternalLink, FlaskConical, LogOut, MessageSquareText, PhoneCall, Plus, Server, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { addClientAction, deleteClientAction, loginAction, logoutAction, updateClientAction } from "../actions";
@@ -8,6 +8,8 @@ import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
 import { buildCustomerSnapshot, buildIntegrationStatuses, buildTrialForecast, type CustomerSnapshot, type IntegrationStatus, type TrialForecast } from "@/lib/operations";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Client } from "@/lib/types";
+import { createOrResetTestBusinessAction } from "./test-business/actions";
+import { retryTransientCredentialError } from "@/lib/retry";
 
 export const dynamic = "force-dynamic";
 
@@ -22,14 +24,12 @@ async function isAuthenticated(): Promise<boolean> {
 
 async function loadClients(): Promise<{ clients: Client[]; error: string | null }> {
   try {
-    const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
-
-    if (error) {
-      return { clients: [], error: error.message };
-    }
-
-    return { clients: (data ?? []) as Client[], error: null };
+    return await retryTransientCredentialError(async () => {
+      const supabase = getSupabaseAdmin();
+      const { data, error } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
+      if (error) throw error;
+      return { clients: (data ?? []) as Client[], error: null };
+    });
   } catch (error) {
     return {
       clients: [],
@@ -40,7 +40,7 @@ async function loadClients(): Promise<{ clients: Client[]; error: string | null 
 
 async function loadCosts(): Promise<{ dashboard: CostDashboard | null; error: string | null }> {
   try {
-    return { dashboard: await loadCostDashboard(), error: null };
+    return { dashboard: await retryTransientCredentialError(() => loadCostDashboard()), error: null };
   } catch (error) {
     return {
       dashboard: null,
@@ -99,6 +99,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const customerSnapshot = buildCustomerSnapshot(clients);
   const integrations = buildIntegrationStatuses(process.env, !loadError, clients);
   const trialForecast = buildTrialForecast();
+  const testClient = clients.find((client) => client.is_test_account);
 
   return (
     <main className="min-h-screen bg-[#f4f1e8] text-black">
@@ -129,6 +130,19 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
       <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
         <CostDashboardSection dashboard={dashboard} error={costError} />
+      </div>
+
+      <div className="mx-auto max-w-[1440px] px-5 pt-8 sm:px-8">
+        <section className="border-2 border-black bg-[#d8ff57] p-6 sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div>
+              <div className="flex items-center gap-2"><FlaskConical className="h-5 w-5" /><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em]">Production-path test business</p></div>
+              <h2 className="mt-3 text-3xl font-black tracking-[-0.05em]">Test Mabel with real customer data.</h2>
+              <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">Creates a protected HVAC customer, campaign, and lead. Calls can only go to the configured test owner phone.</p>
+            </div>
+            {testClient ? <Link className="inline-flex h-12 items-center justify-center gap-2 bg-black px-5 text-sm font-black text-white" href={`/admin/customers/${testClient.id}`}>Open test CRM <ExternalLink className="h-4 w-4" /></Link> : <form action={createOrResetTestBusinessAction} className="grid gap-3 sm:grid-cols-[180px_180px_220px_auto]"><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="business_name" defaultValue="Oak City Home Services" aria-label="Test business name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="owner_name" defaultValue="Daniel" aria-label="Test owner name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="test_phone" type="tel" placeholder="Your test phone" aria-label="Test phone" required /><button className="h-12 bg-black px-5 text-sm font-black text-white" type="submit">Create test business</button></form>}
+          </div>
+        </section>
       </div>
 
       <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -164,7 +178,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     <tr key={client.id}>
                       <td className="px-4 py-3">
                         <p className="font-black">{client.business_name}</p>
-                        <p className="mt-1 text-xs font-semibold text-black/45">{client.trade}</p>
+                        <p className="mt-1 text-xs font-semibold text-black/45">{client.trade}{client.is_test_account ? " · TEST" : ""}</p>
                       </td>
                       <td className="px-4 py-3"><StatusPill value={client.account_status ?? "onboarding"} /></td>
                       <td className="px-4 py-3"><StatusPill value={client.provisioning_status ?? "pending"} /></td>
@@ -179,6 +193,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                         </Link>
                       </td>
                       <td className="px-4 py-3 align-top">
+                        <Link className="mb-3 inline-flex items-center gap-1 text-xs font-black underline decoration-2 underline-offset-4" href={`/admin/customers/${client.id}`}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
                         <details className="w-[300px]">
                           <summary className="cursor-pointer text-xs font-black underline decoration-2 underline-offset-4">Edit customer</summary>
                           <form action={updateClientAction.bind(null, client.id)} className="mt-4 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4">
@@ -538,7 +553,7 @@ function formatShortDate(value: string): string {
 }
 
 function AdminNotice({ created, updated, deleted, error }: { created: string | null; updated: string | null; deleted: string | null; error: string | null }) {
-  const message = deleted ? "Customer deleted." : updated ? "Customer updated." : created ? "Customer added." : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : "Please complete the required fields.";
+  const message = deleted ? "Customer deleted." : updated ? "Customer updated." : created ? "Customer added." : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : error === "test-phone" ? "Enter a valid phone number for the protected test business." : "Please complete the required fields.";
   const isError = Boolean(error);
   return <div className={`border-2 border-black px-4 py-3 text-sm font-black ${isError ? "bg-black text-white" : "bg-white"}`}>{message}</div>;
 }

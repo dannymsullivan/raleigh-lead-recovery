@@ -44,6 +44,7 @@ export type Client = {
   forwarding_completed_at?: string | null;
   test_call_completed_at?: string | null;
   product_mode?: "reactivation" | "missed_call_recovery";
+  is_test_account?: boolean;
   pilot_start: string;
   pilot_end: string;
   avg_job_value: number;

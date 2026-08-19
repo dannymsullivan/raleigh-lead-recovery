@@ -8,6 +8,7 @@ import { loadClientReport } from "@/lib/supabase-server";
 import type { ReportCall } from "@/lib/report";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
+import { recordingPlaybackPath } from "@/lib/vapi-recording";
 
 export const dynamic = "force-dynamic";
 
@@ -88,7 +89,7 @@ export default async function ReportPage({ params }: PageProps) {
         ) : (
           <div className="grid gap-3">
             {report.calls.map((call) => (
-              <TimelineItem key={call.id} call={call} />
+              <TimelineItem key={call.id} call={call} showRecording={!isExampleReport} />
             ))}
           </div>
         )}
@@ -135,7 +136,11 @@ function Stat({
   );
 }
 
-function TimelineItem({ call }: { call: ReportCall }) {
+function TimelineItem({ call, showRecording }: { call: ReportCall; showRecording: boolean }) {
+  const recordingUrl = showRecording && call.recording_url
+    ? recordingPlaybackPath("calls", call.id)
+    : null;
+
   return (
     <article className="rounded border border-neutral-200 bg-white p-4 shadow-sm">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
@@ -156,14 +161,14 @@ function TimelineItem({ call }: { call: ReportCall }) {
         </div>
       </div>
 
-      {(call.recording_url || call.summary || call.transcript) ? (
+      {(recordingUrl || call.summary || call.transcript) ? (
         <details className="mt-4 border-t border-neutral-200 pt-3">
           <summary className="text-sm font-medium text-neutral-900">Recording, summary, and transcript</summary>
-          {call.recording_url ? (
+          {recordingUrl ? (
             <div className="mt-3 rounded bg-neutral-100 p-3">
               <p className="text-sm font-medium text-neutral-900">Call recording</p>
-              <audio className="mt-2 w-full" controls preload="none" src={call.recording_url}>
-                <a className="font-medium underline" href={call.recording_url}>
+              <audio className="mt-2 w-full" controls preload="none" src={recordingUrl}>
+                <a className="font-medium underline" href={recordingUrl}>
                   Open call recording
                 </a>
               </audio>

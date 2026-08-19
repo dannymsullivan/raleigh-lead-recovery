@@ -11,6 +11,7 @@ import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/repo
 import type { Call, Client } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
 import { ProvisioningPoll } from "./provisioning-poll";
+import { recordingPlaybackPath } from "@/lib/vapi-recording";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard | Raleigh Lead Recovery", robots: { index: false, follow: false } };
@@ -116,7 +117,7 @@ function LeadCard({ call }: { call: ReturnType<typeof buildReportModel>["calls"]
       </div>
 
       <details className="mt-4 border-t border-black/15 pt-3"><summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black"><Headphones className="h-3.5 w-3.5" /> Recording, transcript & notes</summary><div className="mt-4 grid gap-4">
-        {call.recording_url ? <audio className="w-full" controls preload="none" src={call.recording_url} /> : null}
+        {call.recording_url ? <audio className="w-full" controls preload="none" src={recordingPlaybackPath("calls", call.id)} /> : null}
         {call.transcript ? <pre className="max-h-52 overflow-auto whitespace-pre-wrap bg-black/5 p-3 text-xs leading-5">{call.transcript}</pre> : null}
         <form action={saveCallNotesAction.bind(null, call.id)} className="flex gap-2"><input className="min-w-0 flex-1 border-2 border-black bg-white px-3 text-sm font-semibold" name="owner_notes" defaultValue={call.owner_notes ?? ""} placeholder="Add a note for your team…" /><button className="bg-black px-4 text-xs font-black text-white" type="submit">Save note</button></form>
       </div></details>

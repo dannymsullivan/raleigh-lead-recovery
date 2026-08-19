@@ -71,8 +71,8 @@ export function buildCustomerSnapshot(clients: Client[], now = new Date()): Cust
 
 export function buildIntegrationStatuses(environment: Environment, databaseConnected: boolean, clients: Client[]): IntegrationStatus[] {
   const vapiConfigured = has(environment, "VAPI_API_KEY") && has(environment, "VAPI_WEBHOOK_SECRET") && (has(environment, "VAPI_PUBLIC_WEBHOOK_URL") || has(environment, "NEXT_PUBLIC_APP_URL"));
-  const twilioConfigured = has(environment, "TWILIO_ACCOUNT_SID") && has(environment, "TWILIO_AUTH_TOKEN");
-  const verifyConfigured = twilioConfigured && has(environment, "TWILIO_VERIFY_SERVICE_SID");
+  const twilioConfigured = has(environment, "TWILIO_ACCOUNT_SID") && has(environment, "TWILIO_AUTH_TOKEN") && has(environment, "TWILIO_FROM_NUMBER");
+  const a2pApproved = environment.TWILIO_A2P_APPROVED?.trim().toLowerCase() === "true";
   const readyClients = clients.filter((client) => client.provisioning_status === "ready").length;
 
   return [
@@ -86,13 +86,13 @@ export function buildIntegrationStatuses(environment: Environment, databaseConne
       name: "Vapi",
       purpose: "Mabel voice agent and call capture",
       status: vapiConfigured ? "connected" : "not_configured",
-      detail: vapiConfigured ? `${readyClients} customer setup${readyClients === 1 ? "" : "s"} ready` : "API key, webhook secret, or public URL is missing"
+      detail: vapiConfigured ? databaseConnected ? `${readyClients} customer setup${readyClients === 1 ? "" : "s"} ready` : "Configured; customer readiness unavailable until the database reconnects" : "API key, webhook secret, or public URL is missing"
     },
     {
-      name: "Twilio Verify",
-      purpose: "Customer sign-in codes",
-      status: verifyConfigured ? "connected" : twilioConfigured ? "attention" : "not_configured",
-      detail: verifyConfigured ? "Verify service configured" : twilioConfigured ? "Messaging is configured, but Verify is not; US login texts can be blocked" : "Twilio credentials are missing"
+      name: "Twilio Messaging",
+      purpose: "Customer sign-in codes and owner alerts",
+      status: twilioConfigured && a2pApproved ? "connected" : twilioConfigured ? "attention" : "not_configured",
+      detail: twilioConfigured && a2pApproved ? "A2P registration approved and messaging ready" : twilioConfigured ? "Credentials and sender are connected; A2P approval is the remaining blocker" : "Twilio credentials or sender number are missing"
     },
     {
       name: "Vercel",

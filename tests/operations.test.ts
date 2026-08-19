@@ -40,17 +40,28 @@ describe("operations dashboard", () => {
     expect(snapshot).toEqual({ total: 2, onboarding: 1, trialing: 1, active: 0, attention: 1, ready: 1, expiringSoon: 1 });
   });
 
-  it("flags Twilio until a Verify service is configured", () => {
+  it("flags Twilio until A2P messaging is approved", () => {
     const statuses = buildIntegrationStatuses({
       VAPI_API_KEY: "set",
       VAPI_WEBHOOK_SECRET: "set",
       NEXT_PUBLIC_APP_URL: "https://example.com",
       TWILIO_ACCOUNT_SID: "set",
       TWILIO_AUTH_TOKEN: "set",
+      TWILIO_FROM_NUMBER: "+19195550123",
       VERCEL_ENV: "production"
     }, true, []);
 
-    expect(statuses.find((status) => status.name === "Twilio Verify")?.status).toBe("attention");
+    expect(statuses.find((status) => status.name === "Twilio Messaging")).toMatchObject({ status: "attention", detail: expect.stringContaining("remaining blocker") });
     expect(statuses.find((status) => status.name === "Supabase")?.status).toBe("connected");
+  });
+
+  it("marks Twilio messaging connected after A2P approval", () => {
+    const statuses = buildIntegrationStatuses({
+      TWILIO_ACCOUNT_SID: "set",
+      TWILIO_AUTH_TOKEN: "set",
+      TWILIO_FROM_NUMBER: "+19195550123",
+      TWILIO_A2P_APPROVED: "true"
+    }, true, []);
+    expect(statuses.find((status) => status.name === "Twilio Messaging")?.status).toBe("connected");
   });
 });
