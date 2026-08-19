@@ -1,6 +1,6 @@
 # Raleigh Lead Recovery: Dead-Lead Reactivation Action Plan
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## The decision
 
@@ -38,10 +38,10 @@ Researched roofing company
 Prospect opts into a Mabel demo call
         |
         v
-Mabel calls, demonstrates the experience, qualifies the account
+Mabel calls with an industry-tuned lead scenario
         |
         v
-15-minute founder discovery call
+Prospect chooses whether to book a 15-minute setup call
         |
         v
 250-500 lead reactivation pilot
@@ -167,26 +167,27 @@ Score the first list A/B/C. Smartlead receives only verified A and B contacts. T
 
 ## Workstream 4: replace the Smartlead campaign
 
-Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign.
+Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign. The current source copy lives in `docs/smartlead-mabel-feedback-sequence.md`.
 
 ### Campaign setup
 
-- Campaign name: `Roofing — Dead Lead Reactivation — Triangle — V1`
-- Segment A: owners/GMs at smaller multi-crew roofing companies.
-- Segment B: sales/marketing leaders at larger local roofers.
-- Plain-text emails, no images, attachments, or first-touch links.
-- Four touches over roughly 12-16 days.
-- One low-friction CTA per email.
+- Campaign name: `Mabel Live Demo — Triangle — V1`
+- Build separate, clearly labeled cohorts for roofing, HVAC, plumbing, real estate, home services, and event services rather than mixing every industry into one untracked list.
+- Use the matching industry opening when the source data is reliable; otherwise use the generic older-inquiries opening.
+- Plain-text emails with no images or attachments and one direct link to the live demo.
+- Four touches on days 0, 3, 7, and 12.
+- One low-friction CTA throughout: experience Mabel on the recipient's own phone and share a reaction.
+- Do not include Calendly in the cold sequence. The demo success state offers the setup call after the recipient has heard Mabel.
 - Keep sending-domain health, mailbox volume, reply handling, address/opt-out requirements, and suppression lists intact.
 
 ### Message sequence
 
-1. **Observation + question:** ask what happens to estimates or web leads the team never reaches or never closes.
-2. **Economic angle:** they already paid for those leads; Mabel works a controlled sample without replacing the CRM.
-3. **Experience angle:** offer to have Mabel call them so they can hear the exact experience.
-4. **Close the loop:** ask whether old-lead reactivation is simply not a priority.
+1. **Problem + experience:** ask what happens to older inquiries and offer the one-minute live demo.
+2. **Friction removal:** clarify that the demo needs no CRM access, customer data, or lead list.
+3. **Operational trust:** explain eligibility checks, no-double-call controls, dashboard reporting, and CRM sync.
+4. **Close the loop:** make a final request for blunt feedback and end the sequence.
 
-The desired first reply is not a meeting. It is either `yes, show me` or an answer about how they currently handle old leads. When a prospect wants the call, send them to the consent form or collect an explicit requested number and time, log it, and then trigger Mabel.
+The primary conversion is a completed opt-in demo call, not a meeting. The `/demo` form captures the recipient's explicit request and consent before Mabel calls. A positive reply is the secondary signal. If the call feels promising, the demo page offers a 15-minute setup call and a 25-lead trial.
 
 ### Campaign metrics
 
@@ -194,32 +195,30 @@ Ignore opens as the main decision signal. Track delivered, total replies, positi
 
 ## Workstream 5: build two separate AI agents
 
-### A. Mabel — opt-in sales demo
+### A. Mabel — opt-in industry demo
 
-Purpose: demonstrate the product, uncover lead volume and pain, and book a founder call. It should not attempt to close a complex contract.
+Purpose: let the prospect experience the conversation from an older lead's point of view. The demo uses fictional business context selected by industry; it does not interrogate the prospect about their business or attempt to close a contract.
 
-Opening:
+Example opening pattern:
 
-> Hi {{first_name}}, this is Mabel, Raleigh Lead Recovery's AI calling assistant. You asked me to call so you could hear how the experience works. Is now still a good time for a two-minute demo?
+> Hi {{first_name}}, this is Mabel calling for {{fictional_business_name}} about the {{prior_inquiry}} you reached out about. Did I catch you at an okay time?
 
-Core questions, one at a time:
+The exact follow-up is tuned to HVAC, plumbing, roofing, real estate, home services, or events. It should:
 
-1. About how many web or estimate leads go cold in a normal month?
-2. What usually happens after your team stops following up?
-3. Are those records in a CRM that can be exported?
-4. If Mabel found an interested homeowner, should it book an inspection, transfer the call, or send the opportunity to a rep?
-5. Would it be useful to map a small pilot with Danny?
+1. Confirm whether the prior need is still relevant.
+2. Ask one or two natural, industry-specific qualification questions.
+3. Establish the preferred next step without inventing availability or promising a booking.
+4. Close cleanly once the handoff is understood.
 
 Required behaviors:
 
-- Clearly disclose that Mabel is AI.
-- Confirm the call is still wanted before continuing.
-- Keep the call to about two minutes unless the prospect is actively engaging.
-- Explain the outcome in plain language; do not give a Vapi/AI feature tour.
+- Use only the fictional business and lead context supplied by the demo request.
+- Keep the call brief and conversational, usually around one to two minutes.
+- Ask one primary question at a time and keep most turns under thirty words.
 - Never promise conversion rates, appointments, or revenue.
-- Handle `not interested`, `remove me`, wrong number, and reschedule immediately.
-- Book an approved calendar slot, transfer to Danny only during defined hours, or send a follow-up link with permission.
-- Capture call outcome, estimated monthly lead volume, CRM/exportability, preferred handoff, timeline, objections, and meeting status.
+- Handle `not interested`, `remove me`, wrong number, and voicemail immediately.
+- Do not claim access to a live calendar, CRM, or customer record in the public demo.
+- Let the web page present the trial and Calendly setup call after the call starts.
 
 ### B. Mabel — customer lead-reactivation agent
 
@@ -291,7 +290,7 @@ Reuse the existing Vapi webhook, transcript, recording, Supabase, and dashboard 
 
 ### Days 8-12: agent and data foundation
 
-- Build the opt-in sales demo assistant and structured call analysis.
+- Build the opt-in industry demo assistants and structured call analysis.
 - Add the demo request, campaign, contact, attempt, appointment, and suppression data model.
 - Add rate limits, calling windows, attempt limits, opt-out handling, and an emergency stop.
 - Run scripted tests for happy path, objection, wrong number, voicemail, reschedule, opt-out, and tool failure.
@@ -346,6 +345,6 @@ Within 30 days:
 - 50 high-fit Triangle roofers are researched and scored.
 - At least 25 verified contacts receive the controlled V1 sequence.
 - Every AI sales call is tied to a recorded request.
-- The sales demo agent completes the flow reliably and books correctly.
+- The industry demo agents complete their lead scenarios reliably, and the page presents the setup call afterward.
 - One eligible design-partner pilot is ready to run or running.
 - Reporting can show attempts → conversations → qualified leads → appointments without fabricated ROI.
