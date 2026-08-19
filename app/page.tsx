@@ -23,7 +23,9 @@ const pilotHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
   "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
-const demoCallUrl = process.env.NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL?.trim();
+const demoCallUrl =
+  process.env.NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL?.trim() ||
+  "/mabel-lead-recovery-demo.mp3";
 
 const faqs = [
   {
@@ -69,9 +71,9 @@ export default function LandingPage() {
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <a href="#pilot">The pilot</a>
-            <Link href="/demo">Live demo</Link>
+            <Link href="/demo" data-analytics-event="demo_dashboard_opened" data-analytics-location="header">Live demo</Link>
             <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href={pilotHref} target="_blank" rel="noreferrer">
+            <a className="button button-dark button-small" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="header">
               Book a fit call <ArrowRight aria-hidden="true" />
             </a>
           </div>
@@ -86,7 +88,7 @@ export default function LandingPage() {
             You already paid to generate the leads. Mabel follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
           </p>
           <div className="hero-actions">
-            <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer">
+            <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="hero">
               Book a 15-minute fit call <ArrowRight aria-hidden="true" />
             </a>
             <a className="text-link" href="#hear-mabel">Hear Mabel recover a lead</a>
@@ -116,7 +118,7 @@ export default function LandingPage() {
               {demoCallUrl ? <span className="audio-length">Recorded demo</span> : null}
             </div>
             {demoCallUrl ? (
-              <audio controls preload="metadata" src={demoCallUrl}>
+              <audio controls preload="metadata" src={demoCallUrl} data-analytics-event="demo_audio_played" data-analytics-location="meet_mabel">
                 <a href={demoCallUrl}>Open the Mabel demo recording</a>
               </audio>
             ) : (
@@ -258,7 +260,7 @@ export default function LandingPage() {
             <p>
               No platform migration. No long contract. We define a small eligible list, agree on what counts as qualified, and show you the complete outcome.
             </p>
-            <a className="button button-accent" href={pilotHref} target="_blank" rel="noreferrer">
+            <a className="button button-accent" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="pilot">
               Book my 15-minute fit call <ArrowRight aria-hidden="true" />
             </a>
           </div>
@@ -302,7 +304,7 @@ export default function LandingPage() {
           <h2>Built and supported in Raleigh.</h2>
           <p>I&apos;ll scope the list with you, tune Mabel to your sales process, and review the calls before a campaign scales.</p>
         </div>
-        <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer">Book time with Danny <ArrowRight aria-hidden="true" /></a>
+        <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="founder">Book time with Danny <ArrowRight aria-hidden="true" /></a>
       </section>
 
       <section className="final-cta recovery-final page-shell">
@@ -310,7 +312,7 @@ export default function LandingPage() {
         <h2>Let&apos;s find out who&apos;s still interested.</h2>
         <p>Start with a controlled sample of leads already sitting in your CRM.</p>
         <div className="hero-actions centered-actions">
-          <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer">Book my 15-minute fit call <ArrowRight aria-hidden="true" /></a>
+          <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="final_cta">Book my 15-minute fit call <ArrowRight aria-hidden="true" /></a>
         </div>
       </section>
 
