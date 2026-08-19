@@ -33,6 +33,10 @@ const faqs = [
     a: "No. Mabel works a controlled list and sends interested, qualified homeowners back into the process your team already uses.",
   },
   {
+    q: "Does Mabel know what each lead originally asked about?",
+    a: "Yes. You choose the approved context Mabel receives, such as the service requested, when the inquiry came in, and useful prior notes. She uses it to pick up naturally, avoid repeating questions you already answered, and ask relevant follow-ups without exposing internal notes or sensitive information.",
+  },
+  {
     q: "What happens when someone is interested?",
     a: "When calendar booking is connected, Mabel can offer approved open times, book the selected appointment, and send the customer an email confirmation. She can also text the right person on your team with the call summary and appointment details.",
   },
@@ -165,7 +169,7 @@ export default function LandingPage() {
           </li>
           <li>
             <span>02</span>
-            <div><h3>Mabel has the conversations.</h3><p>The AI calling agent follows your approved script, qualifies current interest, handles opt-outs, and records every outcome.</p></div>
+            <div><h3>Mabel picks up where they left off.</h3><p>Give her the approved context from each lead—the service requested, when they reached out, and useful prior notes—and she can ask specific questions instead of starting from scratch.</p></div>
           </li>
           <li>
             <span>03</span>
