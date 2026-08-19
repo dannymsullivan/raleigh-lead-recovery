@@ -207,37 +207,36 @@ export default function LandingPage() {
           <p className="eyebrow">Start simple. Automate when ready.</p>
           <h2 id="autopilot-heading">Let the CRM decide when Mabel calls.</h2>
           <p>
-            Start with one approved CSV—not access to your whole system. When you&apos;re ready, connect a limited CRM view or webhook and define exactly when an inactive lead becomes eligible.
+            Start with an approved CSV. When you&apos;re ready, connect a CRM view or webhook and define exactly when an inactive lead becomes eligible.
           </p>
         </div>
         <div className="recovery-autopilot-grid">
           <article>
             <TimerReset aria-hidden="true" />
-            <span>01</span>
-            <h3>A lead becomes eligible.</h3>
+            <span>01 · Eligibility</span>
+            <h3>Your rules choose the lead.</h3>
             <p>Your rules can require a specific stage, source, and period with no activity before a lead enters Mabel&apos;s queue.</p>
           </article>
           <article>
             <RefreshCw aria-hidden="true" />
-            <span>02</span>
-            <h3>Activity is checked again.</h3>
-            <p>Before dialing, recent calls, emails, appointments, status changes, manual holds, and opt-outs cause the call to be skipped.</p>
+            <span>02 · Safety check</span>
+            <h3>Mabel checks before calling.</h3>
+            <p>Recent calls, emails, appointments, status changes, holds, and opt-outs automatically stop the call.</p>
           </article>
           <article>
             <ShieldCheck aria-hidden="true" />
-            <span>03</span>
-            <h3>Every outcome comes back.</h3>
-            <p>Attempts, summaries, dispositions, appointments, and opt-outs appear in the dashboard and can sync back to the CRM.</p>
+            <span>03 · Sync</span>
+            <h3>The outcome comes back.</h3>
+            <p>Attempts, summaries, appointments, and opt-outs appear in the dashboard and can sync back to your CRM.</p>
           </article>
         </div>
-        <p className="recovery-autopilot-note"><strong>Start simple:</strong> an approved CSV. <strong>Automate when ready:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
         <div className="recovery-integrations" id="crm-connections" aria-labelledby="integration-heading">
           <div className="recovery-integrations-heading">
             <div>
-              <p className="eyebrow">Your stack stays in place.</p>
-              <h3 id="integration-heading">Built to work with the tools growing businesses already use.</h3>
+              <p className="eyebrow">Works with your stack.</p>
+              <h3 id="integration-heading">Keep the tools you already use.</h3>
             </div>
-            <p>We connect through an available API, webhook, Zapier or Make workflow, or an approved export—depending on the platform and the customer&apos;s permissions.</p>
+            <p>Your CRM stays the source of truth while Mabel follows the eligibility and activity rules you approve.</p>
           </div>
           <ul className="integration-logo-grid" aria-label="Compatible CRM and automation platforms">
             {integrationTools.map((tool) => (
@@ -247,13 +246,7 @@ export default function LandingPage() {
               </li>
             ))}
           </ul>
-          <div className="integration-connection" aria-label="Connection methods feeding Mabel">
-            <span>Native API where available</span>
-            <span>Webhooks</span>
-            <span>Zapier / Make</span>
-            <span>Scoped CSV</span>
-            <strong>Mabel</strong>
-          </div>
+          <p className="integration-methods">Connect through an available API, webhook, Zapier, Make, or an approved CSV.</p>
         </div>
       </section>
 
@@ -298,10 +291,10 @@ export default function LandingPage() {
 
       <section className="final-cta recovery-final page-shell">
         <p className="eyebrow">Hear it for yourself</p>
-        <h2>Try Mabel before you share a single lead.</h2>
+        <h2>Try Mabel now.</h2>
         <p>Experience the call on your own phone, then decide whether it belongs in your follow-up process.</p>
         <div className="hero-actions centered-actions">
-          <a className="button button-dark" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel on my phone <ArrowRight aria-hidden="true" /></a>
+          <a className="button button-dark" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel now <ArrowRight aria-hidden="true" /></a>
         </div>
       </section>
 
