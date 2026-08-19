@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   CalendarCheck,
-  Check,
   Database,
   MailCheck,
   MessageSquareText,
@@ -45,7 +44,7 @@ const faqs = [
   },
   {
     q: "Do we have to give you access to our whole CRM?",
-    a: "No. The pilot can start with a CSV containing only 25 approved leads and the context Mabel needs. If the test works, an ongoing program can use a scoped CRM view or webhook instead of broad account access.",
+    a: "No. You can start with a small CSV containing only approved leads and the context Mabel needs. A connected workflow can use a scoped CRM view or webhook instead of broad account access.",
   },
   {
     q: "What if our team contacted a lead yesterday?",
@@ -68,7 +67,7 @@ const faqs = [
     a: "Every campaign starts with eligibility, suppression, calling-window, disclosure, and brand-rule checks. Opt-outs are recorded immediately, and you approve the conversation before launch.",
   },
   {
-    q: "What will we see at the end of a pilot?",
+    q: "What can we track?",
     a: "A clear funnel from eligible records and call attempts through conversations, qualified opportunities, appointments, opt-outs, and customer-confirmed pipeline.",
   },
 ];
@@ -81,7 +80,6 @@ export default function LandingPage() {
           <BrandMark />
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
-            <a href="#pilot">The pilot</a>
             <Link href="/login">Sign in</Link>
             <a className="button button-dark button-small" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
               Try Mabel <ArrowRight aria-hidden="true" />
@@ -91,14 +89,6 @@ export default function LandingPage() {
       </header>
 
       <DemoCallForm bookingUrl={pilotHref} />
-
-      <section className="recovery-proof-strip" aria-label="Pilot benefits">
-        <div className="page-shell recovery-proof-grid">
-          <div><strong>25</strong><span>eligible old leads in one controlled test</span></div>
-          <div><strong>14 days</strong><span>to run and review the test</span></div>
-          <div><strong>$0 setup</strong><span>with no CRM replacement required</span></div>
-        </div>
-      </section>
 
       <section className="recovery-problem page-shell">
         <div className="recovery-section-heading">
@@ -138,7 +128,7 @@ export default function LandingPage() {
         <ol className="process-list recovery-process-list">
           <li>
             <span>01</span>
-            <div><h3>Choose the right segment.</h3><p>We start with 25 eligible leads from an agreed source and time period—not your entire database.</p></div>
+            <div><h3>Choose the right segment.</h3><p>Start with a small set of approved leads from an agreed source and time period—not your entire database.</p></div>
           </li>
           <li>
             <span>02</span>
@@ -217,7 +207,7 @@ export default function LandingPage() {
           <p className="eyebrow">Start simple. Automate when ready.</p>
           <h2 id="autopilot-heading">Let the CRM decide when Mabel calls.</h2>
           <p>
-            The pilot needs only one approved CSV—not access to your whole system. If it earns the right to continue, we connect a limited CRM view or webhook and agree on exactly when an inactive lead becomes eligible.
+            Start with one approved CSV—not access to your whole system. When you&apos;re ready, connect a limited CRM view or webhook and define exactly when an inactive lead becomes eligible.
           </p>
         </div>
         <div className="recovery-autopilot-grid">
@@ -240,7 +230,7 @@ export default function LandingPage() {
             <p>Attempts, summaries, dispositions, appointments, and opt-outs appear in the dashboard and can sync back to the CRM.</p>
           </article>
         </div>
-        <p className="recovery-autopilot-note"><strong>Pilot:</strong> 25 approved rows in a CSV. <strong>Ongoing:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
+        <p className="recovery-autopilot-note"><strong>Start simple:</strong> an approved CSV. <strong>Automate when ready:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
         <div className="recovery-integrations" id="crm-connections" aria-labelledby="integration-heading">
           <div className="recovery-integrations-heading">
             <div>
@@ -281,40 +271,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="recovery-pilot" id="pilot">
-        <div className="page-shell recovery-pilot-grid">
-          <div className="recovery-pilot-copy">
-            <p className="eyebrow eyebrow-light">The recovery pilot</p>
-            <h2>Find fresh opportunity in leads you already paid for.</h2>
-            <p>
-              No platform migration. No long contract. We define a small eligible list, agree on what counts as qualified, and show you the complete outcome.
-            </p>
-            <a className="button button-accent" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="pilot">
-              Try Mabel on my phone <ArrowRight aria-hidden="true" />
-            </a>
-          </div>
-          <div className="recovery-pilot-card">
-            <div className="pilot-card-top">
-              <span>Controlled campaign</span>
-              <span className="pilot-status"><i /> Pilot ready</span>
-            </div>
-            <ul>
-              <li><Check aria-hidden="true" /><span><strong>25 eligible old leads</strong> from one agreed segment</span></li>
-              <li><Check aria-hidden="true" /><span><strong>14-day test</strong> with no setup fee</span></li>
-              <li><Check aria-hidden="true" /><span><strong>Customer-approved conversation</strong> and handoff rules</span></li>
-              <li><Check aria-hidden="true" /><span><strong>Calendar and notifications</strong> configured around your workflow</span></li>
-              <li><Check aria-hidden="true" /><span><strong>Recorded dispositions</strong> for every attempted lead</span></li>
-              <li><Check aria-hidden="true" /><span><strong>Results report</strong> tied to actual outcomes</span></li>
-            </ul>
-            <div className="pilot-card-bottom"><ShieldCheck aria-hidden="true" /> Eligibility and suppression review before launch</div>
-          </div>
-        </div>
-      </section>
-
       <section className="faq-section page-shell recovery-faq">
         <div className="section-heading compact-heading">
           <p className="eyebrow">Good questions</p>
-          <h2>Before you hand over a list.</h2>
+          <h2>What happens after the demo.</h2>
         </div>
         <div className="faq-list">
           {faqs.map((faq) => (

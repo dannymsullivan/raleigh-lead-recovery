@@ -758,6 +758,37 @@ body {
   line-height: 1.7;
 }
 
+.demo-call-offer {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 22px;
+  border-block: 1px solid #c7c9bf;
+}
+
+.demo-call-offer span {
+  padding: 14px 10px;
+  border-right: 1px solid #c7c9bf;
+  color: #6d7168;
+  font-size: 0.58rem;
+  font-weight: 750;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.demo-call-offer span:last-child {
+  border-right: 0;
+}
+
+.demo-call-offer strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Baskerville", Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
 .demo-call-next-step .demo-call-submit {
   width: 100%;
   padding-inline: 20px;

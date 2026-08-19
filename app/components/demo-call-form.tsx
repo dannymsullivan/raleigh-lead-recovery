@@ -65,9 +65,14 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
         {state === "success" ? (
           <div className="demo-call-next-step">
             <span className="demo-call-success-icon"><PhoneIncoming aria-hidden="true" /></span>
-            <p className="eyebrow">Mabel is calling now</p>
-            <h3>That&apos;s the experience your leads would receive.</h3>
-            <p>{message} When you&apos;re ready, we can map this to your lead source, sales process, and handoff rules.</p>
+            <p className="eyebrow">Your demo is on the way</p>
+            <h3>Like what you hear? Try Mabel on 25 real leads.</h3>
+            <p>{message} The next step is a short setup call to map Mabel to your lead source, sales process, and handoff rules.</p>
+            <div className="demo-call-offer" aria-label="Starter trial details">
+              <span><strong>25</strong> eligible leads</span>
+              <span><strong>14 days</strong> to test</span>
+              <span><strong>$0</strong> setup fee</span>
+            </div>
             <a
               className="demo-call-submit"
               href={bookingUrl}
@@ -78,7 +83,7 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
             >
               Book a 15-minute setup call <ArrowRight aria-hidden="true" />
             </a>
-            <span className="demo-call-next-note"><Check aria-hidden="true" /> No CRM access or lead list needed for the first conversation.</span>
+            <span className="demo-call-next-note"><Check aria-hidden="true" /> Start with an approved CSV. No CRM replacement required.</span>
           </div>
         ) : <>
         <div className="demo-call-form-heading">
