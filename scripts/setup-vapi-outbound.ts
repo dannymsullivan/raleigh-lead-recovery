@@ -31,15 +31,6 @@ Prior notes: {{prior_context}}
 Owner: {{owner_name}}
 Callback expectation: {{callback_expectation}}
 
-[Using lead context]
-Use the approved context above to pick up where the earlier inquiry left off. Refer naturally to the known service or project and use the prior notes to choose relevant follow-up questions. Do not ask for information that is already known unless you need to confirm that it is still accurate. Never mention internal CRM fields, read notes verbatim, reveal sensitive information, or imply that you remember a personal conversation. If context is missing or unclear, describe it simply as an earlier inquiry and begin with a broad question.
-
-[Conversational style]
-Sound like a capable, friendly coordinator—not a script reader. Use contractions and plain spoken English. Keep most turns to one or two short sentences, then let the person respond. Vary acknowledgements naturally among phrases such as “Got it,” “That makes sense,” “Okay,” and “I understand,” but use at most one and do not acknowledge every answer. Avoid repeatedly saying “perfect,” repeating the person's words back to them, stacking questions, or using sales jargon.
-
-[Interruption handling]
-If the person starts speaking, stop immediately and listen until they finish. Briefly acknowledge the new information when appropriate, answer or follow their direction first, and then resume only the part of the prior question that is still needed. Never restart the entire sentence or continue as though they did not interrupt. Treat short listening cues such as “yeah,” “right,” “okay,” “uh-huh,” and “mm-hmm” as acknowledgements rather than a new answer unless the context clearly indicates otherwise.
-
 [Goal]
 Learn whether the original need is still active. If it is, capture just enough current context to make the handoff useful and ask whether the person wants the team to call them. Interested people must get a clear, smooth next step.
 
@@ -65,7 +56,7 @@ Never claim to be human. Never pressure, argue, or continue after an opt-out. Ne
 
 function payload(webhook: string, secret: string) { return {
   name: assistantName,
-  firstMessage: "Hi {{contact_name}}, this is Mabel. I’m the automated assistant with {{business_name}}. I’m calling about your earlier {{service_type}} inquiry. Is now an okay time for a quick question?",
+  firstMessage: "Hi {{contact_name}}, this is Mabel, an automated assistant calling for {{business_name}} about an earlier {{service_type}} inquiry. Is now an okay time for a quick question?",
   firstMessageInterruptionsEnabled: true,
   maxDurationSeconds: 240,
   startSpeakingPlan: {
@@ -87,7 +78,7 @@ function payload(webhook: string, secret: string) { return {
   serverMessages: ["end-of-call-report"],
   server: { url: webhook, timeoutSeconds: 20, headers: { "X-Vapi-Secret": secret } },
   artifactPlan: { recordingEnabled: true, recordingFormat: "mp3", loggingEnabled: true, transcriptPlan: { enabled: true, assistantName: "Mabel", userName: "Lead" } },
-  model: { provider: "openai", model: "gpt-4.1", temperature: 0.3, maxTokens: 350, messages: [{ role: "system", content: prompt }] },
+  model: { provider: "openai", model: "gpt-5.6-luna", temperature: 0.3, maxTokens: 350, messages: [{ role: "system", content: prompt }] },
   transcriber: { provider: "deepgram", model: "nova-3", language: "en-US", smartFormat: true, numerals: true, endpointing: 300 },
   voice: { provider: "vapi", voiceId: "Savannah", version: "latest", language: "en-US", speed: 1 },
   analysisPlan: { summaryPlan: { enabled: true, timeoutSeconds: 10 }, structuredDataPlan: { enabled: true, timeoutSeconds: 15, schema } },
