@@ -91,8 +91,8 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
           <div><p>Try Mabel now</p><strong>Live calls: weekdays, noon–7 PM ET</strong></div>
         </div>
         <label>
-          Your name
-          <input name="name" type="text" autoComplete="name" maxLength={70} required placeholder="Alex Morgan" />
+          First name
+          <input name="name" type="text" autoComplete="given-name" maxLength={70} required placeholder="Alex" />
         </label>
         <label>
           Business Mabel is calling for
