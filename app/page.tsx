@@ -2,9 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  CalendarCheck,
   Check,
   Database,
   Headphones,
+  MailCheck,
+  MessageSquareText,
   PhoneCall,
   Play,
   ShieldCheck,
@@ -31,7 +34,7 @@ const faqs = [
   },
   {
     q: "What happens when someone is interested?",
-    a: "Mabel can book an approved inspection time, make a live handoff, or send the opportunity to the right rep with the call summary and context.",
+    a: "When calendar booking is connected, Mabel can offer approved open times, book the selected appointment, and send the customer an email confirmation. She can also text the right person on your team with the call summary and appointment details.",
   },
   {
     q: "How do you protect our list and our reputation?",
@@ -175,6 +178,33 @@ export default function LandingPage() {
         </ol>
       </section>
 
+      <section className="recovery-booking page-shell" aria-labelledby="booking-handoff">
+        <div className="recovery-booking-heading">
+          <p className="eyebrow">From conversation to calendar</p>
+          <h2 id="booking-handoff">Mabel can finish the handoff while they&apos;re still on the phone.</h2>
+          <p>
+            When we connect the business&apos;s calendar and confirmation workflow, Mabel can check approved availability, book the selected time, email the customer a calendar invitation, and text your team with the details.
+          </p>
+        </div>
+        <div className="recovery-booking-grid">
+          <article>
+            <CalendarCheck aria-hidden="true" />
+            <h3>Offer real availability.</h3>
+            <p>Mabel offers only approved open times based on the business&apos;s hours, appointment length, notice, and buffer rules.</p>
+          </article>
+          <article>
+            <MailCheck aria-hidden="true" />
+            <h3>Book and confirm.</h3>
+            <p>Once the customer chooses, Mabel books the appointment and sends the calendar invitation. She confirms it only after the calendar accepts it.</p>
+          </article>
+          <article>
+            <MessageSquareText aria-hidden="true" />
+            <h3>Alert the right person.</h3>
+            <p>Your team receives the scheduled time, contact details, call summary, and a link to the complete conversation in the dashboard.</p>
+          </article>
+        </div>
+      </section>
+
       <section className="recovery-pilot" id="pilot">
         <div className="page-shell recovery-pilot-grid">
           <div className="recovery-pilot-copy">
@@ -195,6 +225,7 @@ export default function LandingPage() {
             <ul>
               <li><Check aria-hidden="true" /><span><strong>250–500 eligible leads</strong> from one agreed segment</span></li>
               <li><Check aria-hidden="true" /><span><strong>Customer-approved conversation</strong> and handoff rules</span></li>
+              <li><Check aria-hidden="true" /><span><strong>Calendar and notifications</strong> configured around your workflow</span></li>
               <li><Check aria-hidden="true" /><span><strong>Recorded dispositions</strong> for every attempted lead</span></li>
               <li><Check aria-hidden="true" /><span><strong>Results report</strong> tied to actual outcomes</span></li>
             </ul>
