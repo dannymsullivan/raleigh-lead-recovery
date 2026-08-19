@@ -109,7 +109,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
         ) : <>
         <div className="demo-call-form-heading">
           <span><Footprints aria-hidden="true" /></span>
-          <div><p>Try Mabel now</p><strong>Put yourself in your customer&apos;s shoes.</strong><small>Live calls: weekdays, noon–7 PM ET</small></div>
+          <div><p>Try Mabel now</p><strong>Put yourself in your customer&apos;s shoes.</strong><small>One-time live phone demo</small></div>
         </div>
         <fieldset className="demo-type-picker">
           <legend>Choose your business type</legend>

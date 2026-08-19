@@ -86,9 +86,9 @@ describe("public Mabel demo calls", () => {
     expect(events.assistantOverrides.variableValues.service_type).toBe("event service quote");
   });
 
-  it("limits live demos to the published weekday calling window", () => {
-    expect(isPublicDemoCallingWindow(new Date("2026-08-19T16:00:00.000Z"))).toBe(true);
-    expect(isPublicDemoCallingWindow(new Date("2026-08-19T23:00:00.000Z"))).toBe(false);
-    expect(isPublicDemoCallingWindow(new Date("2026-08-22T16:00:00.000Z"))).toBe(false);
+  it("allows opt-in demos daily during normal waking hours", () => {
+    expect(isPublicDemoCallingWindow(new Date("2026-08-19T13:00:00.000Z"))).toBe(true);
+    expect(isPublicDemoCallingWindow(new Date("2026-08-23T16:00:00.000Z"))).toBe(true);
+    expect(isPublicDemoCallingWindow(new Date("2026-08-20T00:00:00.000Z"))).toBe(false);
   });
 });

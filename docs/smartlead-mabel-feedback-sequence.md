@@ -17,7 +17,7 @@ The live demo handles the next step. After the call starts, the page offers a 25
 - Use `https://www.raleighleadrecovery.com/demo` in every email.
 - Start at 5 new contacts per weekday and increase only after the mailbox and domain remain healthy.
 - Import only ZeroBounce-verified contacts.
-- For the Raleigh list, send between 12:15 and 4:30 p.m. Eastern on weekdays so the live demo is available when someone clicks. The demo accepts calls until 7 p.m. Eastern.
+- For the Raleigh list, send between 10 a.m. and 4:30 p.m. Eastern on weekdays, with randomized spacing between messages. The opt-in demo accepts calls daily from 9 a.m. to 8 p.m. Eastern.
 - Remove bounced, unsubscribed, role-based, and obviously irrelevant contacts before launch.
 - Let Smartlead add the configured unsubscribe footer if required; do not add images, buttons, attachments, or a second CTA.
 

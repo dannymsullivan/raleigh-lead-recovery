@@ -56,13 +56,11 @@ export function parsePublicDemoCallInput(value: unknown): PublicDemoCallInput {
 export function isPublicDemoCallingWindow(date = new Date()): boolean {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",
-    weekday: "short",
     hour: "2-digit",
     hourCycle: "h23"
   }).formatToParts(date);
-  const weekday = parts.find((part) => part.type === "weekday")?.value;
   const hour = Number(parts.find((part) => part.type === "hour")?.value ?? -1);
-  return weekday !== "Sat" && weekday !== "Sun" && hour >= 12 && hour < 19;
+  return hour >= 9 && hour < 20;
 }
 
 export function buildPublicDemoCallRequest(

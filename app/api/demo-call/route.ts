@@ -33,7 +33,7 @@ function friendlyValidationError(error: unknown): string {
   const code = error instanceof Error ? error.message : "invalid_request";
   if (code === "consent_required") return "Please confirm the one-time call and recording consent.";
   if (code === "phone_invalid") return "Enter a valid U.S. or Canadian phone number.";
-  if (code.includes("required")) return "Please complete your name, business name, and phone number.";
+  if (code.includes("required")) return "Please complete your name and phone number.";
   return "Please check the form and try again.";
 }
 
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   if (!isPublicDemoCallingWindow()) {
-    return NextResponse.json({ ok: false, error: "Live demo calls are available weekdays from noon to 7 PM Eastern." }, { status: 409 });
+    return NextResponse.json({ ok: false, error: "Demo calls are available daily from 9 AM to 8 PM Eastern." }, { status: 409 });
   }
 
   let body: Record<string, unknown>;
