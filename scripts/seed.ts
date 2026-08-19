@@ -45,6 +45,7 @@ async function main() {
   const { error: clientError } = await supabase.from("clients").upsert(
     {
       id: clientId,
+      slug: "oak-city-plumbing",
       business_name: "Oak City Plumbing",
       trade: "plumbing",
       owner_name: "Marcus Hill",

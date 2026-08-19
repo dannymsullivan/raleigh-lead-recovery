@@ -9,18 +9,21 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Call, Client, ReactivationAttempt, ReactivationCampaign, ReactivationContact } from "@/lib/types";
 import { recordingPlaybackPath } from "@/lib/vapi-recording";
 import { placeTestBusinessCallAction } from "../../test-business/actions";
+import { customerCrmPath } from "@/lib/customer-slug";
 
 export const dynamic = "force-dynamic";
-type PageProps = { params: Promise<{ clientId: string }>; searchParams?: Promise<Record<string, string | string[] | undefined>> };
+type PageProps = { params: Promise<{ customerSlug: string }>; searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
 export default async function CustomerCrmPage({ params, searchParams }: PageProps) {
   const cookieStore = await cookies();
   if (!verifyAdminSessionToken(cookieStore.get(adminCookie.name)?.value)) redirect("/admin?error=session");
-  const { clientId } = await params;
+  const { customerSlug } = await params;
   const admin = getSupabaseAdmin();
-  const { data: clientData } = await admin.from("clients").select("*").eq("id", clientId).maybeSingle();
+  const lookupColumn = /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(customerSlug) ? "id" : "slug";
+  const { data: clientData } = await admin.from("clients").select("*").eq(lookupColumn, customerSlug).maybeSingle();
   if (!clientData) notFound();
   const client = clientData as Client;
+  const clientId = client.id;
   const [{ data: campaignData }, { data: contactData }, { data: attemptData }, { data: callData }] = await Promise.all([
     admin.from("reactivation_campaigns").select("*").eq("client_id", clientId).order("created_at", { ascending: false }),
     admin.from("reactivation_contacts").select("*").eq("client_id", clientId).order("updated_at", { ascending: false }),
@@ -54,7 +57,7 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
         <Metric icon={CalendarDays} label="Pipeline" value={`$${pipeline.toLocaleString()}`} detail={`${booked.length} booked`} />
       </section>
 
-      {client.is_test_account ? <section className="mt-8 border-2 border-black bg-[#d8ff57] p-6 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end"><div><div className="flex items-center gap-2"><TestTube2 className="h-5 w-5" /><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em]">End-to-end test lab</p></div><h2 className="mt-3 text-3xl font-black tracking-[-0.05em]">Call through the real customer pipeline.</h2><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">Mabel receives this account’s business name, owner, service, lead source, age, and notes. The safety guard only permits the configured owner or alert phone.</p></div>{testContact ? <form action={placeTestBusinessCallAction.bind(null, client.id, testContact.id)}><button className="h-12 bg-black px-5 text-sm font-black text-white disabled:opacity-40" disabled={!reactivationTelephonyReady()} type="submit">Call {maskPhoneNumber(testContact.phone_e164)} now</button></form> : null}</div></section> : null}
+      {client.is_test_account ? <section className="mt-8 border-2 border-black bg-[#d8ff57] p-6 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end"><div><div className="flex items-center gap-2"><TestTube2 className="h-5 w-5" /><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em]">End-to-end test lab</p></div><h2 className="mt-3 text-3xl font-black tracking-[-0.05em]">Call through the real customer pipeline.</h2><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">Mabel receives this account’s business name, owner, service, lead source, age, and notes. The safety guard only permits the configured owner or alert phone.</p></div>{testContact ? <form action={placeTestBusinessCallAction.bind(null, client.id, customerCrmPath(client), testContact.id)}><button className="h-12 bg-black px-5 text-sm font-black text-white disabled:opacity-40" disabled={!reactivationTelephonyReady()} type="submit">Call {maskPhoneNumber(testContact.phone_e164)} now</button></form> : null}</div></section> : null}
 
       <section className="mt-10 grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <div className="border-2 border-black bg-white"><div className="border-b-2 border-black p-5"><p className="font-mono text-[10px] font-bold uppercase text-black/45">Campaigns</p><h2 className="mt-1 text-2xl font-black">Recovery programs</h2></div><div className="divide-y-2 divide-black">{campaigns.map((campaign) => <div className="p-5" key={campaign.id}><div className="flex items-start justify-between gap-4"><div><p className="font-black">{campaign.name}</p><p className="mt-1 text-xs font-semibold text-black/45">{campaign.service_type} · {campaign.max_attempts} attempts max</p></div><Status value={campaign.status} /></div></div>)}{!campaigns.length ? <p className="p-5 text-sm font-semibold text-black/45">No campaigns yet.</p> : null}</div></div>

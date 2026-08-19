@@ -6,6 +6,7 @@ import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { alertConsentText, messagingConsentVersion, verificationConsentText } from "@/lib/messaging-consent";
+import { uniqueCustomerSlug } from "@/lib/customer-slug";
 
 const pendingPhoneCookie = "mabel_pending_phone";
 const pendingModeCookie = "mabel_pending_auth_mode";
@@ -135,11 +136,14 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
   const today = new Date();
   const pilotEnd = new Date(today);
   pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 14);
+  const workspaceName = `${ownerName} workspace`;
+  const workspaceSlug = await uniqueCustomerSlug(admin, workspaceName);
 
   const { data: workspace, error: clientError } = await admin.from("clients").upsert(
     {
       user_id: data.user.id,
-      business_name: "New workspace",
+      slug: workspaceSlug,
+      business_name: workspaceName,
       trade: "service business",
       owner_name: ownerName,
       owner_phone: "Not set",
@@ -204,7 +208,11 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   trialEndsAt.setUTCDate(trialEndsAt.getUTCDate() + 14);
 
   const admin = getSupabaseAdmin();
+  const { data: existingClient, error: existingClientError } = await admin.from("clients").select("id,slug").eq("user_id", user.id).single();
+  if (existingClientError || !existingClient) redirect("/onboarding?error=save");
+  const slug = await uniqueCustomerSlug(admin, businessName, existingClient.id);
   const { error } = await admin.from("clients").update({
+    slug,
     business_name: businessName,
     owner_name: ownerName,
     owner_phone: ownerPhone,

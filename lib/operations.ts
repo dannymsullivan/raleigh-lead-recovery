@@ -110,7 +110,11 @@ export function buildTrialForecast(environment: Environment = process.env): Tria
   const minutesPerTrial = callsPerTrial * averageCallMinutes;
   const voiceAi = minutesPerTrial * envNumber(environment, "COST_VAPI_HOSTING_PER_MIN", 0.05);
   const modelAllowance = minutesPerTrial * envNumber(environment, "COST_MODEL_PROVIDER_PER_MIN", 0.04);
-  const voiceTransport = minutesPerTrial * envNumber(environment, "COST_TWILIO_LOCAL_INBOUND_PER_MIN", 0.0085);
+  const voiceTransport = minutesPerTrial * envNumber(
+    environment,
+    "COST_TWILIO_OUTBOUND_PER_MIN",
+    envNumber(environment, "COST_TWILIO_LOCAL_INBOUND_PER_MIN", 0.014)
+  );
   const smsSegments = callsPerTrial * envNumber(environment, "COST_SMS_SEGMENTS_PER_ALERT", 2);
   const ownerAlerts = smsSegments * (
     envNumber(environment, "COST_TWILIO_SMS_BASE_PER_SEGMENT", 0.0083) +

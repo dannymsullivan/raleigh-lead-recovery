@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
+import { customerCrmPath, uniqueCustomerSlug } from "@/lib/customer-slug";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { queueReactivationContactCall, reactivationTelephonyReady } from "@/lib/reactivation-vapi";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
@@ -33,10 +34,12 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
   const assistantId = process.env.VAPI_OUTBOUND_ASSISTANT_ID?.trim() || null;
   const phoneNumberId = process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID?.trim() || null;
 
-  const { data: existing, error: existingError } = await admin.from("clients").select("id").eq("is_test_account", true).order("created_at").limit(1).maybeSingle();
+  const { data: existing, error: existingError } = await admin.from("clients").select("id,slug").eq("is_test_account", true).order("created_at").limit(1).maybeSingle();
   if (existingError) throw existingError;
+  const slug = existing?.slug || await uniqueCustomerSlug(admin, businessName, existing?.id);
 
   const clientValues = {
+    slug,
     business_name: businessName.slice(0, 160),
     trade: "HVAC",
     owner_name: ownerName.slice(0, 120),
@@ -105,30 +108,32 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
   }, { onConflict: "campaign_id,phone_e164" });
   if (contactError) throw contactError;
 
+  const crmPath = customerCrmPath(client);
   revalidatePath("/admin");
-  revalidatePath(`/admin/customers/${client.id}`);
-  redirect(`/admin/customers/${client.id}?setup=1`);
+  revalidatePath(crmPath);
+  redirect(`${crmPath}?setup=1`);
 }
 
-export async function placeTestBusinessCallAction(clientId: string, contactId: string): Promise<void> {
+export async function placeTestBusinessCallAction(clientId: string, crmPath: string, contactId: string): Promise<void> {
   await requireAdmin();
-  if (!reactivationTelephonyReady()) redirect(`/admin/customers/${clientId}?error=telephony`);
+  if (!crmPath.startsWith("/admin/customers/")) redirect("/admin?error=client-path");
+  if (!reactivationTelephonyReady()) redirect(`${crmPath}?error=telephony`);
   const admin = getSupabaseAdmin();
   const [{ data: clientData }, { data: contactData }] = await Promise.all([
     admin.from("clients").select("*").eq("id", clientId).eq("is_test_account", true).maybeSingle(),
     admin.from("reactivation_contacts").select("*").eq("id", contactId).eq("client_id", clientId).maybeSingle()
   ]);
-  if (!clientData || !contactData) redirect(`/admin/customers/${clientId}?error=test-record`);
+  if (!clientData || !contactData) redirect(`${crmPath}?error=test-record`);
   const contact = contactData as ReactivationContact;
   const { data: campaignData } = await admin.from("reactivation_campaigns").select("*").eq("id", contact.campaign_id).eq("client_id", clientId).maybeSingle();
-  if (!campaignData) redirect(`/admin/customers/${clientId}?error=test-record`);
+  if (!campaignData) redirect(`${crmPath}?error=test-record`);
 
   try {
     await queueReactivationContactCall(clientData as Client, campaignData as ReactivationCampaign, contact);
   } catch (error) {
     const code = error instanceof Error && error.message.includes("configured owner") ? "test-guard" : "call";
-    redirect(`/admin/customers/${clientId}?error=${code}`);
+    redirect(`${crmPath}?error=${code}`);
   }
-  revalidatePath(`/admin/customers/${clientId}`);
-  redirect(`/admin/customers/${clientId}?called=1`);
+  revalidatePath(crmPath);
+  redirect(`${crmPath}?called=1`);
 }

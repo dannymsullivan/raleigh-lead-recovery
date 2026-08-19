@@ -22,13 +22,13 @@ function client(overrides: Partial<Client> = {}): Client {
 }
 
 describe("operations dashboard", () => {
-  it("models a conservative 14-day HVAC trial and cohort runway", () => {
+  it("models a 14-day test trial and cohort runway", () => {
     const forecast = buildTrialForecast({});
 
     expect(forecast.assumptions).toMatchObject({ trialDays: 14, callsPerTrial: 20, averageCallMinutes: 2.5, minutesPerTrial: 50 });
-    expect(forecast.perTrial.total).toBeCloseTo(6.03197, 4);
+    expect(forecast.perTrial.total).toBeCloseTo(6.30697, 4);
     expect(forecast.scenarios[0]).toEqual({ trials: 10, variableCost: expect.any(Number), totalWithBaseline: expect.any(Number) });
-    expect(forecast.scenarios[0].totalWithBaseline).toBeCloseTo(105.31967, 3);
+    expect(forecast.scenarios[0].totalWithBaseline).toBeCloseTo(108.06967, 3);
   });
 
   it("summarizes customer lifecycle and provisioning attention", () => {

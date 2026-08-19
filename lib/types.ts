@@ -16,6 +16,7 @@ export type ValueBand = (typeof valueBandValues)[number];
 
 export type Client = {
   id: string;
+  slug?: string | null;
   user_id?: string | null;
   business_name: string;
   trade: string;

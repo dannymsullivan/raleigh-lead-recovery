@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { adminCookie, createAdminSessionToken, verifyAdminPassword, verifyAdminSessionToken } from "@/lib/admin";
+import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -63,7 +64,9 @@ export async function addClientAction(formData: FormData): Promise<void> {
   defaultPilotEnd.setUTCDate(defaultPilotEnd.getUTCDate() + 7);
 
   const supabase = getSupabaseAdmin();
+  const slug = await uniqueCustomerSlug(supabase, businessName);
   const { error } = await supabase.from("clients").insert({
+    slug,
     business_name: businessName,
     trade,
     owner_name: ownerName,
@@ -101,7 +104,12 @@ export async function updateClientAction(clientId: string, formData: FormData): 
   const provisioningStatus = formString(formData, "provisioning_status");
   const avgJobValue = Number(formString(formData, "avg_job_value"));
   const closeRate = Number(formString(formData, "close_rate"));
-  const { error } = await getSupabaseAdmin().from("clients").update({
+  const admin = getSupabaseAdmin();
+  const { data: existing, error: existingError } = await admin.from("clients").select("slug").eq("id", clientId).maybeSingle();
+  if (existingError || !existing) throw existingError ?? new Error("Customer not found.");
+  const slug = existing.slug || await uniqueCustomerSlug(admin, businessName, clientId);
+  const { error } = await admin.from("clients").update({
+    slug,
     business_name: businessName,
     trade,
     owner_name: ownerName,

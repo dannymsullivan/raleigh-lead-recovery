@@ -10,6 +10,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Client } from "@/lib/types";
 import { createOrResetTestBusinessAction } from "./test-business/actions";
 import { retryTransientCredentialError } from "@/lib/retry";
+import { customerCrmPath } from "@/lib/customer-slug";
 
 export const dynamic = "force-dynamic";
 
@@ -140,12 +141,12 @@ export default async function AdminPage({ searchParams }: PageProps) {
               <h2 className="mt-3 text-3xl font-black tracking-[-0.05em]">Test Mabel with real customer data.</h2>
               <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">Creates a protected HVAC customer, campaign, and lead. Calls can only go to the configured test owner phone.</p>
             </div>
-            {testClient ? <Link className="inline-flex h-12 items-center justify-center gap-2 bg-black px-5 text-sm font-black text-white" href={`/admin/customers/${testClient.id}`}>Open test CRM <ExternalLink className="h-4 w-4" /></Link> : <form action={createOrResetTestBusinessAction} className="grid gap-3 sm:grid-cols-[180px_180px_220px_auto]"><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="business_name" defaultValue="Oak City Home Services" aria-label="Test business name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="owner_name" defaultValue="Daniel" aria-label="Test owner name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="test_phone" type="tel" placeholder="Your test phone" aria-label="Test phone" required /><button className="h-12 bg-black px-5 text-sm font-black text-white" type="submit">Create test business</button></form>}
+            {testClient ? <Link className="inline-flex h-12 items-center justify-center gap-2 bg-black px-5 text-sm font-black text-white" href={customerCrmPath(testClient)}>Open test CRM <ExternalLink className="h-4 w-4" /></Link> : <form action={createOrResetTestBusinessAction} className="grid gap-3 sm:grid-cols-[180px_180px_220px_auto]"><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="business_name" defaultValue="Oak City Home Services" aria-label="Test business name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="owner_name" defaultValue="Daniel" aria-label="Test owner name" /><input className="h-12 border-2 border-black bg-white px-3 text-sm font-semibold" name="test_phone" type="tel" placeholder="Your test phone" aria-label="Test phone" required /><button className="h-12 bg-black px-5 text-sm font-black text-white" type="submit">Create test business</button></form>}
           </div>
         </section>
       </div>
 
-      <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-8 sm:px-8">
         <section className="min-w-0">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
@@ -161,7 +162,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
             <div className="rounded border border-neutral-200 bg-white p-5 text-sm text-neutral-600">No clients yet. Add the demo client or run the seed script.</div>
           ) : (
             <div className="overflow-x-auto border-2 border-black bg-white">
-              <table className="w-full min-w-[1120px] text-left text-sm">
+              <table className="w-full min-w-[1000px] text-left text-sm">
                 <thead className="border-b-2 border-black bg-[#f4f1e8] font-mono text-[9px] uppercase tracking-[0.12em] text-black/50">
                   <tr>
                     <th className="px-4 py-3 font-bold">Business</th>
@@ -193,7 +194,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                         </Link>
                       </td>
                       <td className="px-4 py-3 align-top">
-                        <Link className="mb-3 inline-flex items-center gap-1 text-xs font-black underline decoration-2 underline-offset-4" href={`/admin/customers/${client.id}`}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
+                        <Link className="mb-3 inline-flex items-center gap-2 border-2 border-black bg-black px-3 py-2 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
                         <details className="w-[300px]">
                           <summary className="cursor-pointer text-xs font-black underline decoration-2 underline-offset-4">Edit customer</summary>
                           <form action={updateClientAction.bind(null, client.id)} className="mt-4 grid gap-3 border-2 border-black bg-[#f4f1e8] p-4">
@@ -219,35 +220,30 @@ export default async function AdminPage({ searchParams }: PageProps) {
           )}
         </section>
 
-        <section className="rounded border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex items-center gap-2">
-            <Plus className="h-5 w-5 text-red-700" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Add client</h2>
-          </div>
-
-          {error === "client" ? <p className="mb-4 text-sm text-red-700">Business, trade, owner, and phone are required.</p> : null}
-
-          <form action={addClientAction} className="grid gap-3">
-            <Field label="Business name" name="business_name" required />
-            <Field label="Trade" name="trade" placeholder="plumbing" required />
-            <Field label="Owner name" name="owner_name" required />
-            <Field label="Owner phone" name="owner_phone" placeholder="+19195550123" required />
-            <Field label="Owner email" name="owner_email" type="email" />
-            <div className="grid gap-3 sm:grid-cols-2">
+        <details className="border-2 border-black bg-white" open={error === "client"}>
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-5 py-5 sm:px-6">
+            <span className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center bg-black text-white"><Plus className="h-4 w-4" aria-hidden="true" /></span><span><span className="block font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">Manual setup</span><span className="mt-1 block text-lg font-black">Add a customer</span></span></span>
+            <span className="text-xs font-black text-black/50">Open form</span>
+          </summary>
+          <div className="border-t-2 border-black p-5 sm:p-6">
+            {error === "client" ? <p className="mb-5 border-2 border-black bg-[#d8ff57] p-3 text-sm font-black">Business, trade, owner, and phone are required.</p> : null}
+            <form action={addClientAction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <Field label="Business name" name="business_name" required />
+              <Field label="Trade" name="trade" placeholder="plumbing" required />
+              <Field label="Owner name" name="owner_name" required />
+              <Field label="Owner phone" name="owner_phone" placeholder="+19195550123" required />
+              <Field label="Owner email" name="owner_email" type="email" />
               <Field label="Pilot start" name="pilot_start" type="date" />
               <Field label="Pilot end" name="pilot_end" type="date" />
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Avg job value" name="avg_job_value" type="number" placeholder="500" />
-              <Field label="Close rate" name="close_rate" type="number" step="0.01" placeholder="0.4" />
-            </div>
-            <Field label="Vapi assistant ID" name="vapi_assistant_id" />
-            <Field label="Vapi phone number ID" name="vapi_phone_number_id" />
-            <button className="mt-2 rounded bg-neutral-950 px-4 py-2 font-medium text-white" type="submit">
-              Add client
-            </button>
-          </form>
-        </section>
+              <div className="grid grid-cols-2 gap-3"><Field label="Avg job value" name="avg_job_value" type="number" placeholder="500" /><Field label="Close rate" name="close_rate" type="number" step="0.01" placeholder="0.4" /></div>
+              <details className="sm:col-span-2 xl:col-span-4">
+                <summary className="cursor-pointer text-xs font-black text-black/50 underline decoration-2 underline-offset-4">Advanced connection IDs</summary>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2"><Field label="Vapi assistant ID" name="vapi_assistant_id" /><Field label="Vapi phone number ID" name="vapi_phone_number_id" /></div>
+              </details>
+              <button className="h-12 bg-black px-5 text-sm font-black text-white sm:col-span-2 xl:col-span-1" type="submit">Add customer</button>
+            </form>
+          </div>
+        </details>
       </div>
     </main>
   );
@@ -273,7 +269,7 @@ function OperationsOverview({
           </p>
         </div>
         <div className="border-2 border-black bg-black px-5 py-4 text-white lg:text-right">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Conservative cost / activated trial</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Estimated usage / activated trial</p>
           <p className="mt-2 text-4xl font-black tabular-nums tracking-[-0.06em]">{formatUsd(forecast.perTrial.total)}</p>
           <p className="mt-1 text-xs font-bold text-white/55">{forecast.assumptions.callsPerTrial} calls · {formatMinutes(forecast.assumptions.minutesPerTrial)} · {forecast.assumptions.trialDays} days</p>
         </div>
@@ -321,12 +317,12 @@ function OperationsOverview({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Trial runway</p>
-                <h3 className="mt-1 text-xl font-black tracking-[-0.035em]">What free HVAC trials cost</h3>
+                <h3 className="mt-1 text-xl font-black tracking-[-0.035em]">What a test trial may cost</h3>
               </div>
               <Activity className="h-5 w-5" aria-hidden="true" />
             </div>
             <p className="mt-3 text-xs font-semibold leading-5 text-black/50">
-              Includes {formatUsd(forecast.assumptions.fixedMonthlyBaseline, 0)}/month for production Vercel + Supabase, plus one verification, a prorated phone number, voice AI, model allowance, transport, and owner alerts.
+              Planning estimate for a {forecast.assumptions.trialDays}-day test trial with {forecast.assumptions.callsPerTrial} calls averaging {forecast.assumptions.averageCallMinutes} minutes. The configured {formatUsd(forecast.assumptions.fixedMonthlyBaseline, 0)} shared platform baseline is spread across each cohort; A2P registration and carrier-specific surcharges are excluded.
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -334,9 +330,9 @@ function OperationsOverview({
               <thead className="border-b border-black/20 bg-[#f4f1e8] font-mono text-[9px] uppercase tracking-[0.12em] text-black/50">
                 <tr>
                   <th className="px-5 py-3 font-bold">Trials</th>
-                  <th className="px-5 py-3 font-bold">Usage cost</th>
-                  <th className="px-5 py-3 font-bold">+ platform baseline</th>
-                  <th className="px-5 py-3 font-bold">Per trial</th>
+                  <th className="px-5 py-3 font-bold">Estimated usage</th>
+                  <th className="px-5 py-3 font-bold">With shared baseline</th>
+                  <th className="px-5 py-3 font-bold">Estimated / trial</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/15">
@@ -356,7 +352,7 @@ function OperationsOverview({
             <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-xs sm:grid-cols-3">
               <CostRecipe label="Vapi" value={forecast.perTrial.voiceAi} />
               <CostRecipe label="Model/STT/TTS" value={forecast.perTrial.modelAllowance} />
-              <CostRecipe label="Voice transport" value={forecast.perTrial.voiceTransport} />
+              <CostRecipe label="Outbound voice transport" value={forecast.perTrial.voiceTransport} />
               <CostRecipe label="Owner alerts" value={forecast.perTrial.ownerAlerts} />
               <CostRecipe label="Signup code" value={forecast.perTrial.signupVerification} />
               <CostRecipe label="Phone number" value={forecast.perTrial.phoneNumber} />
