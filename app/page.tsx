@@ -10,8 +10,10 @@ import {
   MessageSquareText,
   PhoneCall,
   Play,
+  RefreshCw,
   ShieldCheck,
   Sparkles,
+  TimerReset,
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
 import { LeadStory } from "./components/lead-story";
@@ -31,6 +33,14 @@ const faqs = [
   {
     q: "Does Mabel replace our CRM or sales team?",
     a: "No. Mabel works a controlled list and sends interested, qualified homeowners back into the process your team already uses.",
+  },
+  {
+    q: "Do we have to give you access to our whole CRM?",
+    a: "No. The pilot can start with a CSV containing only 25 approved leads and the context Mabel needs. If the test works, an ongoing program can use a scoped CRM view or webhook instead of broad account access.",
+  },
+  {
+    q: "What if our team contacted a lead yesterday?",
+    a: "That lead should not be called. Before connected automation goes live, we define the recent-activity window and the events that pause outreach. The integration rechecks for calls, emails, appointments, status changes, manual holds, and opt-outs before each dial.",
   },
   {
     q: "Does Mabel know what each lead originally asked about?",
@@ -207,6 +217,37 @@ export default function LandingPage() {
             <p>Your team receives the scheduled time, contact details, call summary, and a link to the complete conversation in the dashboard.</p>
           </article>
         </div>
+      </section>
+
+      <section className="recovery-autopilot page-shell" aria-labelledby="autopilot-heading">
+        <div className="recovery-autopilot-heading">
+          <p className="eyebrow">Start simple. Automate when ready.</p>
+          <h2 id="autopilot-heading">Let the CRM decide when Mabel calls.</h2>
+          <p>
+            The pilot needs only one approved CSV—not access to your whole system. If it earns the right to continue, we connect a limited CRM view or webhook and agree on exactly when an inactive lead becomes eligible.
+          </p>
+        </div>
+        <div className="recovery-autopilot-grid">
+          <article>
+            <TimerReset aria-hidden="true" />
+            <span>01</span>
+            <h3>A lead becomes eligible.</h3>
+            <p>Your rules can require a specific stage, source, and period with no activity before a lead enters Mabel&apos;s queue.</p>
+          </article>
+          <article>
+            <RefreshCw aria-hidden="true" />
+            <span>02</span>
+            <h3>Activity is checked again.</h3>
+            <p>Before dialing, recent calls, emails, appointments, status changes, manual holds, and opt-outs cause the call to be skipped.</p>
+          </article>
+          <article>
+            <ShieldCheck aria-hidden="true" />
+            <span>03</span>
+            <h3>Every outcome comes back.</h3>
+            <p>Attempts, summaries, dispositions, appointments, and opt-outs appear in the dashboard and can sync back to the CRM.</p>
+          </article>
+        </div>
+        <p className="recovery-autopilot-note"><strong>Pilot:</strong> 25 approved rows in a CSV. <strong>Ongoing:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
       </section>
 
       <section className="recovery-pilot" id="pilot">

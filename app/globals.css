@@ -1289,6 +1289,97 @@ body {
   line-height: 1.65;
 }
 
+.recovery-autopilot {
+  padding-block: 110px;
+  border-top: 1px solid var(--line);
+}
+
+.recovery-autopilot-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.7fr);
+  gap: clamp(45px, 9vw, 135px);
+  align-items: end;
+}
+
+.recovery-autopilot-heading .eyebrow {
+  grid-column: 1 / -1;
+  margin-bottom: -8px;
+}
+
+.recovery-autopilot-heading h2 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(3rem, 5.2vw, 5rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.recovery-autopilot-heading > p:last-child {
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.recovery-autopilot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 72px;
+  border-top: 1px solid #cfd0c7;
+  border-left: 1px solid #cfd0c7;
+}
+
+.recovery-autopilot-grid article {
+  position: relative;
+  min-height: 300px;
+  padding: 31px;
+  border-right: 1px solid #cfd0c7;
+  border-bottom: 1px solid #cfd0c7;
+  background: rgb(255 255 255 / 48%);
+}
+
+.recovery-autopilot-grid article > svg {
+  width: 29px;
+  height: 29px;
+  margin-bottom: 76px;
+  stroke-width: 1.6;
+}
+
+.recovery-autopilot-grid article > span {
+  position: absolute;
+  top: 32px;
+  right: 30px;
+  color: #9a9d95;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.recovery-autopilot-grid h3 {
+  margin-bottom: 11px;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.recovery-autopilot-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.recovery-autopilot-note {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.recovery-autopilot-note strong {
+  color: var(--ink);
+}
+
 .recovery-pilot {
   overflow: hidden;
   padding-block: 110px;
@@ -1492,6 +1583,7 @@ body {
   .recovery-hero,
   .recovery-section-heading,
   .recovery-booking-heading,
+  .recovery-autopilot-heading,
   .recovery-process,
   .recovery-pilot-grid {
     grid-template-columns: 1fr;
@@ -1540,6 +1632,10 @@ body {
   }
 
   .recovery-booking-heading .eyebrow {
+    grid-column: auto;
+  }
+
+  .recovery-autopilot-heading .eyebrow {
     grid-column: auto;
   }
 
@@ -1637,6 +1733,27 @@ body {
   }
 
   .recovery-booking-grid svg {
+    margin-bottom: 55px;
+  }
+
+  .recovery-autopilot {
+    padding-block: 78px;
+  }
+
+  .recovery-autopilot-heading h2 {
+    font-size: clamp(2.9rem, 13vw, 4.15rem);
+  }
+
+  .recovery-autopilot-grid {
+    grid-template-columns: 1fr;
+    margin-top: 54px;
+  }
+
+  .recovery-autopilot-grid article {
+    min-height: 245px;
+  }
+
+  .recovery-autopilot-grid article > svg {
     margin-bottom: 55px;
   }
 

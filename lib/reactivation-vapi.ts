@@ -50,23 +50,43 @@ export async function queueReactivationContactCall(
   const { data: suppressed } = await admin.from("suppression_entries").select("id").eq("client_id", client.id).eq("phone_e164", contact.phone_e164).maybeSingle();
   if (suppressed) throw new Error("This phone number is suppressed.");
 
+  // Claim the contact immediately before dialing. The status/attempt predicates
+  // prevent overlapping cron runs from placing the same call twice, while the
+  // owner-contact check gives CRM syncs and manual dashboard updates a final veto.
+  const now = new Date().toISOString();
+  const { data: claimedContact, error: claimError } = await admin
+    .from("reactivation_contacts")
+    .update({ status: "calling", attempt_count: contact.attempt_count + 1, last_attempt_at: now })
+    .eq("id", contact.id)
+    .eq("client_id", client.id)
+    .eq("campaign_id", campaign.id)
+    .eq("attempt_count", contact.attempt_count)
+    .in("status", ["queued", "no_answer", "failed"])
+    .is("owner_contacted_at", null)
+    .select("id")
+    .maybeSingle();
+  if (claimError) throw claimError;
+  if (!claimedContact) throw new Error("Contact is no longer eligible.");
+
   const { data: attempt, error: insertError } = await admin.from("reactivation_attempts").insert({
     client_id: client.id,
     campaign_id: campaign.id,
     contact_id: contact.id,
     status: "queued"
   }).select("id").single();
-  if (insertError) throw insertError;
+  if (insertError) {
+    await admin.from("reactivation_contacts").update({ status: "failed", outcome: "attempt_create_failed" }).eq("id", contact.id).eq("status", "calling");
+    throw insertError;
+  }
 
   try {
     const call = await createVapiCall(client, campaign, contact);
     await admin.from("reactivation_attempts").update({ vapi_call_id: call.id, status: "in_progress" }).eq("id", attempt.id);
-    await admin.from("reactivation_contacts").update({ status: "calling", attempt_count: contact.attempt_count + 1, last_attempt_at: new Date().toISOString() }).eq("id", contact.id);
     return { callId: call.id, attemptId: attempt.id as string };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown Vapi error";
     await admin.from("reactivation_attempts").update({ status: "failed", error: message.slice(0, 500) }).eq("id", attempt.id);
-    await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed", attempt_count: contact.attempt_count + 1 }).eq("id", contact.id);
+    await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed" }).eq("id", contact.id).eq("status", "calling");
     throw error;
   }
 }
@@ -115,6 +135,9 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
       const message = error instanceof Error ? error.message : "Unknown Vapi error";
       if (message === "This phone number is suppressed.") {
         await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
+      } else if (message === "Contact is no longer eligible.") {
+        // A rep, CRM sync, or overlapping batch changed this record after the
+        // queue query. Skipping is the safe and expected outcome.
       } else {
         failed += 1;
       }
