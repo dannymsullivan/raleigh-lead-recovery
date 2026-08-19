@@ -703,7 +703,7 @@ body {
   font-weight: 700;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
   .hero {
     grid-template-columns: 1fr;
     gap: 52px;
@@ -1443,7 +1443,52 @@ body {
   margin-inline: auto;
 }
 
-@media (max-width: 900px) {
+/* Keep the editorial scale, but give 13–14" laptop viewports more breathing room. */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .page-shell {
+    width: min(1120px, calc(100% - 64px));
+  }
+
+  .recovery-hero {
+    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+    gap: clamp(28px, 3.5vw, 46px);
+    min-height: 700px;
+    padding-block: 64px 76px;
+  }
+
+  .recovery-hero-copy {
+    padding-bottom: 12px;
+  }
+
+  .recovery-hero h1 {
+    max-width: 570px;
+    font-size: clamp(4.15rem, 6.7vw, 5.4rem);
+    line-height: 0.89;
+  }
+
+  .recovery-hero h1 em {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .recovery-hero .hero-intro {
+    font-size: 1rem;
+    line-height: 1.62;
+  }
+
+  .audio-section {
+    grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+    gap: 42px;
+    padding-block: 64px;
+  }
+
+  .audio-copy h2 {
+    font-size: clamp(3rem, 4.8vw, 4rem);
+    line-height: 1;
+  }
+}
+
+@media (max-width: 1023px) {
   .recovery-hero,
   .recovery-section-heading,
   .recovery-booking-heading,
