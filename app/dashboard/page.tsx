@@ -55,6 +55,13 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </div>
       </header>
 
+      <nav className="flex overflow-x-auto border-b-2 border-black bg-white px-3 lg:hidden" aria-label="Dashboard navigation">
+        <Link className="flex h-12 flex-none items-center gap-2 border-b-4 border-black px-3 text-xs font-black" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
+        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Reactivation</Link>
+        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Report</Link>
+        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Settings</Link>
+      </nav>
+
       <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[230px_1fr]">
         <aside className="hidden min-h-[calc(100vh-82px)] border-r-2 border-black p-5 lg:flex lg:flex-col">
           <nav className="grid gap-1 text-sm font-extrabold">
@@ -74,12 +81,12 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <MabelStatus status={client.provisioning_status ?? "pending"} />
           </div>
 
-          <div className="mt-9 grid border-l-2 border-t-2 border-black sm:grid-cols-2 xl:grid-cols-5">
+          <div className="mt-9 grid grid-cols-2 border-l-2 border-t-2 border-black xl:grid-cols-5">
             <Metric label="New leads" value={String(newLeads)} detail="need a callback" />
             <Metric label="Contacted" value={String(contacted)} detail="follow-up started" />
             <Metric label="Booked" value={String(booked.length)} detail="marked won" />
             <Metric label="Booked value" value={formatCurrency(bookedRevenue)} detail="owner confirmed" />
-            <Metric label="Pipeline caught" value={formatCurrency(report.estimatedJobValueCaptured)} detail="estimated" />
+            <Metric label="Pipeline caught" value={formatCurrency(report.estimatedJobValueCaptured)} detail="estimated" mobileWide />
           </div>
 
           <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_340px]">
@@ -146,7 +153,7 @@ function ChecklistItem({ done, label }: { done: boolean; label: string }) { retu
 function MabelStatus({ status }: { status: Client["provisioning_status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Mabel is ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : "Setting Mabel up"}</div>; }
 function StatusBadge({ status }: { status: string }) { const labels: Record<string, string> = { new: "New lead", contacted: "Contacted", booked: "Booked", lost: "Lost", spam: "Spam" }; return <span className={`border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${status === "booked" ? "bg-black text-white" : "bg-white"}`}>{labels[status] ?? status}</span>; }
 function EmptyCalls() { return <div className="grid min-h-72 place-items-center p-8 text-center"><div className="max-w-sm"><PhoneCall className="mx-auto h-10 w-10" strokeWidth={1.5} /><h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">The board is ready.</h3><p className="mt-3 text-sm leading-6 text-black/55">Your first test call will appear here with a summary, urgency, callback details, and recording.</p></div></div>; }
-function Metric({ label, value, detail }: { label: string; value: string; detail: string }) { return <div className="border-b-2 border-r-2 border-black bg-white p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-black/45">{label}</p><p className="mt-4 text-3xl font-black tracking-[-0.055em]">{value}</p><p className="mt-2 text-xs font-semibold text-black/40">{detail}</p></div>; }
+function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b-2 border-r-2 border-black bg-white p-4 sm:p-5 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45 sm:text-[10px] sm:tracking-[0.14em]">{label}</p><p className="mt-3 text-2xl font-black tracking-[-0.055em] sm:mt-4 sm:text-3xl">{value}</p><p className="mt-1.5 text-[11px] font-semibold text-black/40 sm:mt-2 sm:text-xs">{detail}</p></div>; }
 function SmallStat({ label, value }: { label: string; value: string }) { return <div><p className="text-2xl font-black">{value}</p><p className="mt-1 text-[10px] font-bold uppercase text-black/40">{label}</p></div>; }
 function daypart(): string { const hour = new Date().getHours(); return hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"; }
 function trialDaysLeft(value: string): number { const date = value.includes("T") ? new Date(value) : new Date(`${value}T23:59:59`); return Math.max(0, Math.ceil((date.getTime() - Date.now()) / 86_400_000)); }

@@ -81,12 +81,12 @@ export function DemoDashboard() {
             </div>
           </div>
 
-          <div className="mt-9 grid border-l-2 border-t-2 border-black sm:grid-cols-2 xl:grid-cols-5">
+          <div className="mt-9 grid grid-cols-2 border-l-2 border-t-2 border-black xl:grid-cols-5">
             <Metric icon={Database} label="Leads loaded" value={String(demoCampaign.listSize)} detail="approved records" />
             <Metric icon={PhoneCall} label="Attempts" value={String(demoCampaign.attempted)} detail={`${demoCampaignProgress()}% of list`} />
             <Metric icon={Users} label="Conversations" value={String(demoCampaign.connected)} detail="meaningful connects" />
             <Metric icon={CalendarCheck} label="Booked" value={String(demoCampaign.booked)} detail="appointments" accent />
-            <Metric icon={CircleDollarSign} label="Est. pipeline" value={formatDemoCurrency(demoCampaign.estimatedPipeline)} detail="illustrative only" />
+            <Metric icon={CircleDollarSign} label="Est. pipeline" value={formatDemoCurrency(demoCampaign.estimatedPipeline)} detail="illustrative only" mobileWide />
           </div>
 
           <div className="mt-7 grid gap-6 2xl:grid-cols-[minmax(0,1fr)_360px]">
@@ -152,8 +152,8 @@ export function DemoDashboard() {
   );
 }
 
-function Metric({ icon: Icon, label, value, detail, accent = false }: { icon: typeof Database; label: string; value: string; detail: string; accent?: boolean }) {
-  return <div className={`border-b-2 border-r-2 border-black p-5 ${accent ? "bg-[#d8ff57]" : "bg-white"}`}><div className="flex items-center justify-between"><p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">{label}</p><Icon className="h-4 w-4" /></div><p className="mt-5 text-3xl font-black tracking-[-0.055em]">{value}</p><p className="mt-2 text-xs font-semibold text-black/45">{detail}</p></div>;
+function Metric({ icon: Icon, label, value, detail, accent = false, mobileWide = false }: { icon: typeof Database; label: string; value: string; detail: string; accent?: boolean; mobileWide?: boolean }) {
+  return <div className={`border-b-2 border-r-2 border-black p-4 sm:p-5 ${mobileWide ? "col-span-2 xl:col-span-1" : ""} ${accent ? "bg-[#d8ff57]" : "bg-white"}`}><div className="flex items-center justify-between"><p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/45 sm:text-[9px] sm:tracking-[0.14em]">{label}</p><Icon className="h-4 w-4" /></div><p className="mt-4 text-2xl font-black tracking-[-0.055em] sm:mt-5 sm:text-3xl">{value}</p><p className="mt-1.5 text-[11px] font-semibold text-black/45 sm:mt-2 sm:text-xs">{detail}</p></div>;
 }
 
 function FunnelRow({ label, value, max, accent = false, dark = false }: { label: string; value: number; max: number; accent?: boolean; dark?: boolean }) {
@@ -168,8 +168,8 @@ function CampaignDetail({ label, value, icon: Icon }: { label: string; value: st
 function DemoLeadRow({ lead }: { lead: DemoLead }) {
   return (
     <details className="group border-b-2 border-black last:border-b-0">
-      <summary className="grid cursor-pointer list-none gap-5 p-5 hover:bg-[#f4f1e8] sm:grid-cols-[minmax(0,1fr)_170px_150px_20px] sm:items-center">
-        <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><StatusBadge status={lead.status} /><span className="font-mono text-[9px] font-bold uppercase text-black/35">{lead.ageDays} days old · {lead.attempts} attempt{lead.attempts === 1 ? "" : "s"}</span></div><h3 className="mt-3 text-lg font-black">{lead.name} <span className="ml-2 text-sm text-black/35">{lead.phone}</span></h3><p className="mt-1 text-xs font-bold text-black/45">{lead.source}</p></div>
+      <summary className="grid grid-cols-2 cursor-pointer list-none gap-5 p-5 hover:bg-[#f4f1e8] sm:grid-cols-[minmax(0,1fr)_170px_150px_20px] sm:items-center">
+        <div className="col-span-2 min-w-0 sm:col-span-1"><div className="flex flex-wrap items-center gap-2"><StatusBadge status={lead.status} /><span className="font-mono text-[9px] font-bold uppercase text-black/35">{lead.ageDays} days old · {lead.attempts} attempt{lead.attempts === 1 ? "" : "s"}</span></div><h3 className="mt-3 text-lg font-black">{lead.name} <span className="ml-2 text-sm text-black/35">{lead.phone}</span></h3><p className="mt-1 text-xs font-bold text-black/45">{lead.source}</p></div>
         <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/35">Outcome</p><p className="mt-1 text-sm font-black">{lead.outcome}</p></div>
         <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/35">Opportunity</p><p className="mt-1 text-sm font-black">{lead.value ? formatDemoCurrency(lead.value) : "—"}</p><p className="mt-1 text-[10px] font-bold text-black/35">{lead.lastContact}</p></div>
         <ChevronDown className="hidden h-4 w-4 transition-transform group-open:rotate-180 sm:block" />
