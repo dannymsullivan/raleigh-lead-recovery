@@ -5,11 +5,9 @@ import {
   CalendarCheck,
   Check,
   Database,
-  Headphones,
   MailCheck,
   MessageSquareText,
   PhoneCall,
-  Play,
   RefreshCw,
   ShieldCheck,
   Sparkles,
@@ -23,10 +21,6 @@ import { contactEmail } from "@/lib/contact";
 const pilotHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
   "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
-
-const demoCallUrl =
-  process.env.NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL?.trim() ||
-  "/mabel-lead-recovery-demo.mp3";
 
 const integrationTools = [
   { name: "ServiceTitan", mark: "ST" },
@@ -115,38 +109,6 @@ export default function LandingPage() {
         </div>
 
         <LeadStory />
-      </section>
-
-      <section className="audio-section page-shell" aria-labelledby="hear-mabel">
-        <div className="audio-copy">
-          <p className="eyebrow">Meet Mabel</p>
-          <h2 id="hear-mabel">Hear an old lead become a live opportunity.</h2>
-          <p>
-            This short home-service scenario shows how Mabel reopens the conversation, confirms current interest, and gives the team a useful next step.
-          </p>
-        </div>
-        <div className="audio-player">
-          <div className="audio-icon" aria-hidden="true"><Headphones /></div>
-          <div className="audio-player-body">
-            <div className="audio-meta">
-              <div>
-                <strong>{demoCallUrl ? "Mabel lead reactivation demo" : "Demo recording coming next"}</strong>
-                <span>{demoCallUrl ? "Recorded with permission" : "Mabel is configured and ready in Vapi"}</span>
-              </div>
-              {demoCallUrl ? <span className="audio-length">Recorded demo</span> : null}
-            </div>
-            {demoCallUrl ? (
-              <audio controls preload="metadata" src={demoCallUrl} data-analytics-event="demo_audio_played" data-analytics-location="meet_mabel">
-                <a href={demoCallUrl}>Open the Mabel demo recording</a>
-              </audio>
-            ) : (
-              <Link className="audio-call-link" href="/demo">
-                <span className="play-dot"><Play aria-hidden="true" /></span>
-                Preview what the customer receives
-              </Link>
-            )}
-          </div>
-        </div>
       </section>
 
       <DemoCallForm bookingUrl={pilotHref} />
