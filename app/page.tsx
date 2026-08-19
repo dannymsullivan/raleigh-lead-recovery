@@ -17,9 +17,9 @@ import { BrandMark } from "./components/brand-mark";
 import { LeadStory } from "./components/lead-story";
 import { contactEmail } from "@/lib/contact";
 
-const pilotHref = `mailto:${contactEmail}?subject=${encodeURIComponent("Lead recovery pilot")}&body=${encodeURIComponent(
-  "Hi Danny,\n\nI'd like to talk about reactivating old leads for our service business.\n\nCompany:\nApproximate number of old leads:\nCRM (if known):\n\nThanks,"
-)}`;
+const pilotHref =
+  process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
+  "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
 const demoCallUrl = process.env.NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL?.trim();
 
@@ -61,8 +61,8 @@ export default function LandingPage() {
             <a href="#pilot">The pilot</a>
             <Link href="/demo">Live demo</Link>
             <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href={pilotHref}>
-              Discuss a pilot <ArrowRight aria-hidden="true" />
+            <a className="button button-dark button-small" href={pilotHref} target="_blank" rel="noreferrer">
+              Book a fit call <ArrowRight aria-hidden="true" />
             </a>
           </div>
         </nav>
@@ -70,18 +70,18 @@ export default function LandingPage() {
 
       <section className="recovery-hero page-shell">
         <div className="recovery-hero-copy">
-          <p className="eyebrow"><span /> Lead recovery for Raleigh service businesses</p>
+          <p className="eyebrow"><span /> Lead recovery for North Carolina service businesses</p>
           <h1>We turn dead leads into <em>new business.</em></h1>
           <p className="hero-intro">
             You already paid to generate the leads. Mabel follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
           </p>
           <div className="hero-actions">
-            <a className="button button-dark" href={pilotHref}>
-              Discuss a recovery pilot <ArrowRight aria-hidden="true" />
+            <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer">
+              Book a 15-minute fit call <ArrowRight aria-hidden="true" />
             </a>
-            <Link className="text-link" href="/demo">Explore the dashboard</Link>
+            <a className="text-link" href="#hear-mabel">Hear Mabel recover a lead</a>
           </div>
-          <p className="microcopy">Start with 250–500 eligible old leads · No new ad spend · No CRM replacement</p>
+          <p className="microcopy">25 eligible old leads · 14 days · No setup fee</p>
         </div>
 
         <LeadStory />
@@ -121,9 +121,9 @@ export default function LandingPage() {
 
       <section className="recovery-proof-strip" aria-label="Pilot benefits">
         <div className="page-shell recovery-proof-grid">
-          <div><strong>250–500</strong><span>old leads in a controlled pilot</span></div>
-          <div><strong>$0</strong><span>in additional lead-generation spend</span></div>
-          <div><strong>One view</strong><span>from call attempt to qualified opportunity</span></div>
+          <div><strong>25</strong><span>eligible old leads in one controlled test</span></div>
+          <div><strong>14 days</strong><span>to run and review the test</span></div>
+          <div><strong>$0 setup</strong><span>with no CRM replacement required</span></div>
         </div>
       </section>
 
@@ -165,7 +165,7 @@ export default function LandingPage() {
         <ol className="process-list recovery-process-list">
           <li>
             <span>01</span>
-            <div><h3>Choose the right segment.</h3><p>We start with 250–500 eligible leads from an agreed source and time period—not your entire database.</p></div>
+            <div><h3>Choose the right segment.</h3><p>We start with 25 eligible leads from an agreed source and time period—not your entire database.</p></div>
           </li>
           <li>
             <span>02</span>
@@ -217,8 +217,8 @@ export default function LandingPage() {
             <p>
               No platform migration. No long contract. We define a small eligible list, agree on what counts as qualified, and show you the complete outcome.
             </p>
-            <a className="button button-accent" href={pilotHref}>
-              Map out my pilot <ArrowRight aria-hidden="true" />
+            <a className="button button-accent" href={pilotHref} target="_blank" rel="noreferrer">
+              Book my 15-minute fit call <ArrowRight aria-hidden="true" />
             </a>
           </div>
           <div className="recovery-pilot-card">
@@ -227,7 +227,8 @@ export default function LandingPage() {
               <span className="pilot-status"><i /> Pilot ready</span>
             </div>
             <ul>
-              <li><Check aria-hidden="true" /><span><strong>250–500 eligible leads</strong> from one agreed segment</span></li>
+              <li><Check aria-hidden="true" /><span><strong>25 eligible old leads</strong> from one agreed segment</span></li>
+              <li><Check aria-hidden="true" /><span><strong>14-day test</strong> with no setup fee</span></li>
               <li><Check aria-hidden="true" /><span><strong>Customer-approved conversation</strong> and handoff rules</span></li>
               <li><Check aria-hidden="true" /><span><strong>Calendar and notifications</strong> configured around your workflow</span></li>
               <li><Check aria-hidden="true" /><span><strong>Recorded dispositions</strong> for every attempted lead</span></li>
@@ -260,7 +261,7 @@ export default function LandingPage() {
           <h2>Built and supported in Raleigh.</h2>
           <p>I&apos;ll scope the list with you, tune Mabel to your sales process, and review the calls before a campaign scales.</p>
         </div>
-        <a className="text-link" href={pilotHref}>Talk with Danny <ArrowRight aria-hidden="true" /></a>
+        <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer">Book time with Danny <ArrowRight aria-hidden="true" /></a>
       </section>
 
       <section className="final-cta recovery-final page-shell">
@@ -268,7 +269,7 @@ export default function LandingPage() {
         <h2>Let&apos;s find out who&apos;s still interested.</h2>
         <p>Start with a controlled sample of leads already sitting in your CRM.</p>
         <div className="hero-actions centered-actions">
-          <a className="button button-dark" href={pilotHref}>Discuss a recovery pilot <ArrowRight aria-hidden="true" /></a>
+          <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer">Book my 15-minute fit call <ArrowRight aria-hidden="true" /></a>
         </div>
       </section>
 
