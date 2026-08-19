@@ -1519,6 +1519,77 @@ body {
   letter-spacing: 0.02em;
 }
 
+.recovery-use-cases {
+  padding-block: 110px;
+  border-top: 1px solid var(--line);
+}
+
+.recovery-use-cases-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.55fr);
+  gap: clamp(45px, 9vw, 135px);
+  align-items: end;
+}
+
+.recovery-use-cases-heading .eyebrow {
+  grid-column: 1 / -1;
+  margin-bottom: -8px;
+}
+
+.recovery-use-cases-heading h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(3rem, 5.2vw, 5rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.recovery-use-cases-heading > p:last-child {
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.recovery-use-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 68px;
+  border-top: 1px solid #cfd0c7;
+  border-left: 1px solid #cfd0c7;
+}
+
+.recovery-use-cases-grid article {
+  min-height: 270px;
+  padding: 27px;
+  border-right: 1px solid #cfd0c7;
+  border-bottom: 1px solid #cfd0c7;
+  background: rgb(255 255 255 / 48%);
+}
+
+.recovery-use-cases-grid span {
+  display: block;
+  margin-bottom: 82px;
+  color: #858980;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.recovery-use-cases-grid h3 {
+  margin: 0 0 11px;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.recovery-use-cases-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
 .recovery-pilot {
   overflow: hidden;
   padding-block: 110px;
@@ -1724,6 +1795,7 @@ body {
   .recovery-booking-heading,
   .recovery-autopilot-heading,
   .recovery-integrations-heading,
+  .recovery-use-cases-heading,
   .recovery-process,
   .recovery-pilot-grid {
     grid-template-columns: 1fr;
@@ -1929,6 +2001,27 @@ body {
     margin-left: 0;
   }
 
+  .recovery-use-cases {
+    padding-block: 78px;
+  }
+
+  .recovery-use-cases-heading h2 {
+    font-size: clamp(2.9rem, 13vw, 4.15rem);
+  }
+
+  .recovery-use-cases-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 54px;
+  }
+
+  .recovery-use-cases-grid article {
+    min-height: 245px;
+  }
+
+  .recovery-use-cases-grid span {
+    margin-bottom: 58px;
+  }
+
   .recovery-pilot {
     padding-block: 82px;
   }
@@ -1948,6 +2041,16 @@ body {
 
   .recovery-final h2 {
     font-size: clamp(3.1rem, 14vw, 4.45rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .recovery-use-cases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recovery-use-cases-grid article {
+    min-height: 220px;
   }
 }
 

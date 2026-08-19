@@ -34,6 +34,26 @@ const stories = [
     reply: "Yes, I’ve been meaning to schedule that. Do you have anything next week?",
     outcome: "Tune-up requested",
   },
+  {
+    label: "Limo quote",
+    age: "Inquiry age · 23 days",
+    name: "Erica W.",
+    source: "Wedding transportation quote",
+    status: "Open quote",
+    opener: "Hi Erica, this is Mabel calling for Triangle Executive Limo about the wedding transportation quote you requested for October. Are you still looking for a vehicle?",
+    reply: "Yes. We finalized the guest count and I’m ready to look at the options again.",
+    outcome: "Quote follow-up",
+  },
+  {
+    label: "Seller lead",
+    age: "Inquiry age · 48 days",
+    name: "Carlos B.",
+    source: "Property seller inquiry",
+    status: "Went quiet",
+    opener: "Hi Carlos, this is Mabel calling for Oak City Property Group about your earlier property inquiry. Are you still open to talking through your options?",
+    reply: "Yes. My timing changed, and I’d like someone to call me this week.",
+    outcome: "Seller follow-up",
+  },
 ];
 
 export function LeadStory() {

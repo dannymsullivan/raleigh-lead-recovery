@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     q: "Does Mabel replace our CRM or sales team?",
-    a: "No. Mabel works a controlled list and sends interested, qualified homeowners back into the process your team already uses.",
+    a: "No. Mabel works a controlled list and sends interested, qualified prospects and past customers back into the process your team already uses.",
   },
   {
     q: "Do we have to give you access to our whole CRM?",
@@ -99,10 +99,10 @@ export default function LandingPage() {
 
       <section className="recovery-hero page-shell">
         <div className="recovery-hero-copy">
-          <p className="eyebrow"><span /> Lead recovery for North Carolina service businesses</p>
+          <p className="eyebrow"><span /> Lead recovery for growing North Carolina businesses</p>
           <h1>We turn dead leads into <em>new business.</em></h1>
           <p className="hero-intro">
-            You already paid to generate the leads. Mabel follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
+            You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team.
           </p>
           <div className="hero-actions">
             <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="hero">
@@ -161,7 +161,7 @@ export default function LandingPage() {
           <p className="eyebrow">The overlooked pipeline</p>
           <h2>Your next customer may already be sitting in your CRM.</h2>
           <p>
-            Most service businesses keep buying new leads while hundreds of earlier inquiries quietly age out. Some customers reached out before they were ready. Some paused to compare options. Mabel gives them a helpful way to reconnect when the timing is better.
+            Most growing businesses keep buying new leads while hundreds of earlier inquiries quietly age out. Some prospects reached out before they were ready. Some paused to compare options. Mabel gives them a helpful way to reconnect when the timing is better.
           </p>
         </div>
         <div className="recovery-problem-cards">
@@ -175,7 +175,7 @@ export default function LandingPage() {
             <PhoneCall aria-hidden="true" />
             <p className="card-number">02</p>
             <h3>Timing may have changed</h3>
-            <p>A homeowner who wasn&apos;t ready then may be ready to move forward now.</p>
+            <p>A prospect who wasn&apos;t ready then may be ready to move forward now.</p>
           </article>
           <article>
             <Sparkles aria-hidden="true" />
@@ -202,7 +202,7 @@ export default function LandingPage() {
           </li>
           <li>
             <span>03</span>
-            <div><h3>Your team gets the live ones.</h3><p>Interested homeowners are booked, transferred, or routed to a rep with the context needed to take over.</p></div>
+            <div><h3>Your team gets the live ones.</h3><p>Interested prospects are booked, transferred, or routed to a rep with the context needed to take over.</p></div>
           </li>
           <li>
             <span>04</span>
@@ -271,7 +271,7 @@ export default function LandingPage() {
           <div className="recovery-integrations-heading">
             <div>
               <p className="eyebrow">Your stack stays in place.</p>
-              <h3 id="integration-heading">Built to work with the tools service businesses already use.</h3>
+              <h3 id="integration-heading">Built to work with the tools growing businesses already use.</h3>
             </div>
             <p>We connect through an available API, webhook, Zapier or Make workflow, or an approved export—depending on the platform and the customer&apos;s permissions.</p>
           </div>
@@ -290,6 +290,20 @@ export default function LandingPage() {
             <span>Scoped CSV</span>
             <strong>Mabel</strong>
           </div>
+        </div>
+      </section>
+
+      <section className="recovery-use-cases page-shell" aria-labelledby="use-cases-heading">
+        <div className="recovery-use-cases-heading">
+          <p className="eyebrow">A good fit wherever follow-up creates revenue.</p>
+          <h2 id="use-cases-heading">Different industries. The same expensive problem.</h2>
+          <p>Mabel is most useful when inquiries arrive with intent, the decision takes time, and a helpful follow-up can restart the conversation.</p>
+        </div>
+        <div className="recovery-use-cases-grid">
+          <article><span>01</span><h3>Home services</h3><p>Revisit estimates, unsold replacements, missed inquiries, and recurring maintenance such as annual HVAC tune-ups.</p></article>
+          <article><span>02</span><h3>Limo &amp; transportation</h3><p>Follow up on wedding, airport, corporate, and event quotes after dates, passenger counts, or plans become clearer.</p></article>
+          <article><span>03</span><h3>Real estate</h3><p>Reconnect with older buyer, seller, open-house, and valuation leads when their timing or motivation changes.</p></article>
+          <article><span>04</span><h3>Real estate investing</h3><p>Re-engage property owners and seller leads, confirm current interest, and route motivated conversations to the acquisition team.</p></article>
         </div>
       </section>
 
