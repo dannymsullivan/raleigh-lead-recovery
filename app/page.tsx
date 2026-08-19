@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
 import { LeadStory } from "./components/lead-story";
+import { DemoCallForm } from "./components/demo-call-form";
 import { contactEmail } from "@/lib/contact";
 
 const pilotHref =
@@ -88,7 +89,7 @@ export default function LandingPage() {
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <a href="#pilot">The pilot</a>
-            <Link href="/demo" data-analytics-event="demo_dashboard_opened" data-analytics-location="header">Live demo</Link>
+            <a href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">Try Mabel</a>
             <Link href="/login">Sign in</Link>
             <a className="button button-dark button-small" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="header">
               Book a fit call <ArrowRight aria-hidden="true" />
@@ -147,6 +148,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <DemoCallForm />
 
       <section className="recovery-proof-strip" aria-label="Pilot benefits">
         <div className="page-shell recovery-proof-grid">

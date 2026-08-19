@@ -11,6 +11,7 @@ import { sendTwilioSms } from "@/lib/sms";
 import { processVapiWebhook } from "@/lib/webhook";
 import { processReactivationReport } from "@/lib/reactivation-handler";
 import { extractReactivationReport } from "@/lib/reactivation-webhook";
+import { extractPublicDemoCallEvent, processPublicDemoCallEvent } from "@/lib/public-demo-webhook";
 
 export const runtime = "nodejs";
 
@@ -29,6 +30,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const reactivation = extractReactivationReport(payload);
   if (reactivation) {
     const result = await processReactivationReport(reactivation, payload, sendTwilioSms);
+    return NextResponse.json({ ok: true, result });
+  }
+
+  const publicDemo = extractPublicDemoCallEvent(payload);
+  if (publicDemo) {
+    const result = await processPublicDemoCallEvent(publicDemo);
     return NextResponse.json({ ok: true, result });
   }
 
