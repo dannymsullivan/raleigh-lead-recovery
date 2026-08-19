@@ -45,6 +45,10 @@ const faqs = [
     a: "That lead should not be called. Before connected automation goes live, we define the recent-activity window and the events that pause outreach. The integration rechecks for calls, emails, appointments, status changes, manual holds, and opt-outs before each dial.",
   },
   {
+    q: "Can Mabel remind past customers about recurring service?",
+    a: "Yes. Once the recovery workflow is working, the same eligibility and no-double-call controls can support timely reminders such as annual HVAC tune-ups. We define the due date, exclusions, approved message, and handoff before it runs.",
+  },
+  {
     q: "Does Mabel know what each lead originally asked about?",
     a: "Yes. You choose the approved context Mabel receives, such as the service requested, when the inquiry came in, and useful prior notes. She uses it to pick up naturally, avoid repeating questions you already answered, and ask relevant follow-ups without exposing internal notes or sensitive information.",
   },
