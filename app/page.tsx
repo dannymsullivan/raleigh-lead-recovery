@@ -89,10 +89,10 @@ export default function LandingPage() {
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <a href="#pilot">The pilot</a>
-            <a href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">Try Mabel</a>
+            <Link href="/demo" data-analytics-event="demo_dashboard_opened" data-analytics-location="header">Live results</Link>
             <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="header">
-              Book a fit call <ArrowRight aria-hidden="true" />
+            <a className="button button-dark button-small" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
+              Try Mabel <ArrowRight aria-hidden="true" />
             </a>
           </div>
         </nav>
@@ -106,10 +106,10 @@ export default function LandingPage() {
             You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team.
           </p>
           <div className="hero-actions">
-            <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="hero">
-              Book a 15-minute fit call <ArrowRight aria-hidden="true" />
+            <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="hero">
+              Try Mabel on your phone <ArrowRight aria-hidden="true" />
             </a>
-            <a className="text-link" href="#hear-mabel">Hear Mabel recover a lead</a>
+            <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="hero">Or book a 15-minute fit call</a>
           </div>
           <p className="microcopy">25 eligible old leads · 14 days · No setup fee</p>
         </div>
@@ -149,7 +149,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <DemoCallForm />
+      <DemoCallForm bookingUrl={pilotHref} />
 
       <section className="recovery-proof-strip" aria-label="Pilot benefits">
         <div className="page-shell recovery-proof-grid">
@@ -366,11 +366,12 @@ export default function LandingPage() {
       </section>
 
       <section className="final-cta recovery-final page-shell">
-        <p className="eyebrow">The leads are already there</p>
-        <h2>Let&apos;s find out who&apos;s still interested.</h2>
-        <p>Start with a controlled sample of leads already sitting in your CRM.</p>
+        <p className="eyebrow">Hear it for yourself</p>
+        <h2>Try Mabel before you share a single lead.</h2>
+        <p>Experience the call on your own phone, then decide whether it belongs in your follow-up process.</p>
         <div className="hero-actions centered-actions">
-          <a className="button button-dark" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="final_cta">Book my 15-minute fit call <ArrowRight aria-hidden="true" /></a>
+          <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel on my phone <ArrowRight aria-hidden="true" /></a>
+          <a className="text-link" href={pilotHref} target="_blank" rel="noreferrer" data-analytics-event="fit_call_clicked" data-analytics-location="final_cta">Or book a 15-minute fit call</a>
         </div>
       </section>
 

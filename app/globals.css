@@ -684,6 +684,86 @@ body {
 .demo-call-status.error { color: #a12a20; }
 .demo-call-status svg { width: 16px; height: 16px; }
 
+.demo-call-form-success {
+  min-height: 560px;
+  align-content: center;
+  background:
+    linear-gradient(rgb(216 255 87 / 14%), rgb(216 255 87 / 14%)),
+    white;
+}
+
+.demo-call-next-step {
+  display: grid;
+  justify-items: start;
+  padding: clamp(10px, 3vw, 25px);
+}
+
+.demo-call-success-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.demo-call-success-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.demo-call-next-step .eyebrow {
+  margin-bottom: 13px;
+  color: #607500;
+}
+
+.demo-call-next-step h3 {
+  max-width: 470px;
+  margin-bottom: 18px;
+  font-family: "Iowan Old Style", "Baskerville", Georgia, serif;
+  font-size: clamp(2.25rem, 4vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.demo-call-next-step > p:not(.eyebrow) {
+  max-width: 470px;
+  margin-bottom: 28px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.demo-call-next-step .demo-call-submit {
+  width: 100%;
+  padding-inline: 20px;
+  text-decoration: none;
+}
+
+.demo-call-next-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 15px;
+  color: #666a60;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.demo-call-next-note svg {
+  width: 15px;
+  height: 15px;
+  padding: 2px;
+  border-radius: 50%;
+  background: #718b00;
+  color: white;
+}
+
 .play-dot {
   display: grid;
   width: 30px;

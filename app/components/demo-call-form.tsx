@@ -8,7 +8,7 @@ import { PUBLIC_DEMO_CONSENT_TEXT } from "@/lib/public-demo-call";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
-export function DemoCallForm() {
+export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
   const [state, setState] = useState<FormState>("idle");
   const [message, setMessage] = useState("");
 
@@ -61,7 +61,26 @@ export function DemoCallForm() {
         </div>
       </div>
 
-      <form className="demo-call-form" onSubmit={submit}>
+      <form className={`demo-call-form ${state === "success" ? "demo-call-form-success" : ""}`} onSubmit={submit}>
+        {state === "success" ? (
+          <div className="demo-call-next-step">
+            <span className="demo-call-success-icon"><PhoneIncoming aria-hidden="true" /></span>
+            <p className="eyebrow">Mabel is calling now</p>
+            <h3>That&apos;s the experience your leads would receive.</h3>
+            <p>{message} When you&apos;re ready, we can map this to your lead source, sales process, and handoff rules.</p>
+            <a
+              className="demo-call-submit"
+              href={bookingUrl}
+              target="_blank"
+              rel="noreferrer"
+              data-analytics-event="post_demo_fit_call_clicked"
+              data-analytics-location="homepage_live_demo_success"
+            >
+              Book a 15-minute setup call <ArrowRight aria-hidden="true" />
+            </a>
+            <span className="demo-call-next-note"><Check aria-hidden="true" /> No CRM access or lead list needed for the first conversation.</span>
+          </div>
+        ) : <>
         <div className="demo-call-form-heading">
           <span>01</span>
           <div><p>Try Mabel now</p><strong>Live calls: weekdays, noon–7 PM ET</strong></div>
@@ -90,8 +109,9 @@ export function DemoCallForm() {
           {state === "submitting" ? <><LoaderCircle className="demo-call-spinner" aria-hidden="true" /> Starting call…</> : <>Call me as the lead <ArrowRight aria-hidden="true" /></>}
         </button>
         <p className={`demo-call-status ${state}`} aria-live="polite">
-          {state === "success" ? <Check aria-hidden="true" /> : null}{message}
+          {message}
         </p>
+        </>}
       </form>
     </section>
   );
