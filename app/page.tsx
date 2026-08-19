@@ -83,7 +83,6 @@ export default function LandingPage() {
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <a href="#pilot">The pilot</a>
-            <Link href="/demo" data-analytics-event="demo_dashboard_opened" data-analytics-location="header">Live results</Link>
             <Link href="/login">Sign in</Link>
             <a className="button button-dark button-small" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
               Try Mabel <ArrowRight aria-hidden="true" />
@@ -176,6 +175,36 @@ export default function LandingPage() {
         </ol>
       </section>
 
+      <section className="recovery-dashboard page-shell" aria-labelledby="dashboard-heading">
+        <div className="recovery-dashboard-heading">
+          <div>
+            <p className="eyebrow">Calls are only half the product.</p>
+            <h2 id="dashboard-heading">See every call. Track every recovered opportunity.</h2>
+          </div>
+          <div>
+            <p>The dashboard turns conversations into something your team can manage: outcomes, summaries, recordings, appointments, opt-outs, and estimated pipeline in one view.</p>
+          </div>
+        </div>
+
+        <figure className="recovery-dashboard-window">
+          <div className="recovery-dashboard-preview">
+            <Image
+              src="/mabel-dashboard-preview.png"
+              alt="Mabel lead recovery dashboard showing leads loaded, call attempts, conversations, appointments booked, estimated pipeline, campaign funnel, and launch checks"
+              width={1293}
+              height={1028}
+              sizes="(max-width: 1160px) calc(100vw - 40px), 1120px"
+            />
+          </div>
+          <div className="recovery-dashboard-sync">
+            <Database aria-hidden="true" />
+            <div><strong>Your CRM can stay the system of record.</strong><span>Mabel&apos;s outcomes, notes, appointments, and opt-outs can flow back through an available API, webhook, Zapier or Make workflow, or an approved export.</span></div>
+            <span className="recovery-dashboard-sync-badge">Two-way workflow</span>
+          </div>
+          <figcaption>Illustrative dashboard data. Actual campaign results vary by list quality, age, offer, and follow-up.</figcaption>
+        </figure>
+      </section>
+
       <section className="recovery-booking page-shell" aria-labelledby="booking-handoff">
         <div className="recovery-booking-heading">
           <p className="eyebrow">From conversation to calendar</p>
@@ -232,7 +261,7 @@ export default function LandingPage() {
           </article>
         </div>
         <p className="recovery-autopilot-note"><strong>Pilot:</strong> 25 approved rows in a CSV. <strong>Ongoing:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
-        <div className="recovery-integrations" aria-labelledby="integration-heading">
+        <div className="recovery-integrations" id="crm-connections" aria-labelledby="integration-heading">
           <div className="recovery-integrations-heading">
             <div>
               <p className="eyebrow">Your stack stays in place.</p>
