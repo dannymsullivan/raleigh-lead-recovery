@@ -4,13 +4,12 @@ import { DemoCallForm } from "../components/demo-call-form";
 
 export const metadata: Metadata = {
   title: "Try Mabel Live | Raleigh Lead Recovery",
-  description: "Hear Mabel follow up with a lead in a personalized live phone demo for your business.",
+  description: "Choose your industry and hear Mabel follow up with a lead in a personalized live phone demo.",
   robots: { index: false, follow: false },
 };
 
-const bookingUrl =
-  process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
-  "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
+const bookingUrl = process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim()
+  || "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
 export default function DemoPage() {
   return (
@@ -18,10 +17,10 @@ export default function DemoPage() {
       <header className="site-header recovery-header">
         <div className="page-shell nav-row">
           <BrandMark />
-          <p className="handout-demo-label"><span /> Live phone demo</p>
+          <p className="handout-demo-label"><span /> Industry-tuned live demo</p>
         </div>
       </header>
-      <DemoCallForm bookingUrl={bookingUrl} analyticsLocation="print_handout_demo" handout />
+      <DemoCallForm bookingUrl={bookingUrl} analyticsLocation="print_handout_demo" handout initialDemoType="home_services" />
     </main>
   );
 }

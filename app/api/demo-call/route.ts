@@ -68,7 +68,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   let requestId: string | null = null;
   try {
     const apiKey = requiredEnv("VAPI_API_KEY");
-    const assistantId = requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID");
+    const verticalAssistantId = {
+      general: undefined,
+      hvac: process.env.VAPI_HVAC_DEMO_ASSISTANT_ID?.trim(),
+      plumbing: process.env.VAPI_PLUMBING_DEMO_ASSISTANT_ID?.trim(),
+      roofing: process.env.VAPI_ROOFING_DEMO_ASSISTANT_ID?.trim(),
+      real_estate: process.env.VAPI_REAL_ESTATE_DEMO_ASSISTANT_ID?.trim(),
+      home_services: process.env.VAPI_HOME_SERVICES_DEMO_ASSISTANT_ID?.trim(),
+      events: process.env.VAPI_EVENTS_DEMO_ASSISTANT_ID?.trim()
+    }[input.demoType];
+    const assistantId = verticalAssistantId || requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID");
     const phoneNumberId = requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID");
     const hashSecret = process.env.DEMO_CALL_HASH_SECRET?.trim() || requiredEnv("VAPI_WEBHOOK_SECRET");
     admin = getSupabaseAdmin();
