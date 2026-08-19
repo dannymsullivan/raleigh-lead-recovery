@@ -14,7 +14,6 @@ import {
   TimerReset,
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
-import { LeadStory } from "./components/lead-story";
 import { DemoCallForm } from "./components/demo-call-form";
 import { contactEmail } from "@/lib/contact";
 
@@ -84,30 +83,12 @@ export default function LandingPage() {
             <a href="#how-it-works">How it works</a>
             <a href="#pilot">The pilot</a>
             <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
+            <a className="button button-dark button-small" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
               Try Mabel <ArrowRight aria-hidden="true" />
             </a>
           </div>
         </nav>
       </header>
-
-      <section className="recovery-hero page-shell">
-        <div className="recovery-hero-copy">
-          <p className="eyebrow"><span /> Lead recovery for growing North Carolina businesses</p>
-          <h1>We turn dead leads into <em>new business.</em></h1>
-          <p className="hero-intro">
-            You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team.
-          </p>
-          <div className="hero-actions">
-            <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="hero">
-              Try Mabel on your phone <ArrowRight aria-hidden="true" />
-            </a>
-          </div>
-          <p className="microcopy">25 eligible old leads · 14 days · No setup fee</p>
-        </div>
-
-        <LeadStory />
-      </section>
 
       <DemoCallForm bookingUrl={pilotHref} />
 
@@ -308,7 +289,7 @@ export default function LandingPage() {
             <p>
               No platform migration. No long contract. We define a small eligible list, agree on what counts as qualified, and show you the complete outcome.
             </p>
-            <a className="button button-accent" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="pilot">
+            <a className="button button-accent" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="pilot">
               Try Mabel on my phone <ArrowRight aria-hidden="true" />
             </a>
           </div>
@@ -352,7 +333,7 @@ export default function LandingPage() {
           <h2>Built and supported in Raleigh.</h2>
           <p>I&apos;ll scope the list with you, tune Mabel to your sales process, and review the calls before a campaign scales.</p>
         </div>
-        <a className="text-link" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="founder">Try Mabel on your phone <ArrowRight aria-hidden="true" /></a>
+        <a className="text-link" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="founder">Try Mabel on your phone <ArrowRight aria-hidden="true" /></a>
       </section>
 
       <section className="final-cta recovery-final page-shell">
@@ -360,7 +341,7 @@ export default function LandingPage() {
         <h2>Try Mabel before you share a single lead.</h2>
         <p>Experience the call on your own phone, then decide whether it belongs in your follow-up process.</p>
         <div className="hero-actions centered-actions">
-          <a className="button button-dark" href="#try-mabel" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel on my phone <ArrowRight aria-hidden="true" /></a>
+          <a className="button button-dark" href="#try-mabel-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try Mabel on my phone <ArrowRight aria-hidden="true" /></a>
         </div>
       </section>
 

@@ -20,7 +20,7 @@ I’m building an AI calling assistant that follows up with older leads and iden
 
 I’m asking a few Raleigh business owners to try the experience on their own phone and tell me what sounds natural—or awkward.
 
-https://www.raleighleadrecovery.com/#try-mabel
+https://www.raleighleadrecovery.com/#try-mabel-form
 
 No CRM access or lead list needed. I’d genuinely appreciate your reaction.
 
@@ -36,7 +36,7 @@ One thing I should have made clearer: the test calls only your phone. You enter 
 
 It takes about a minute. I’m mainly trying to learn whether the conversation feels natural enough to represent a real business.
 
-https://www.raleighleadrecovery.com/#try-mabel
+https://www.raleighleadrecovery.com/#try-mabel-form
 
 Danny
 
@@ -51,7 +51,7 @@ The call is only one part of what I’m testing. Mabel also records each outcome
 But the first question is simpler: would you be comfortable having her follow up with one of your older leads?
 
 You can hear it on your own phone here:
-https://www.raleighleadrecovery.com/#try-mabel
+https://www.raleighleadrecovery.com/#try-mabel-form
 
 Danny
 
@@ -65,7 +65,7 @@ Last note from me. I’m keeping the test open while I gather feedback from loca
 
 If you try Mabel, even a reply like “felt natural” or “too robotic” would be genuinely useful.
 
-https://www.raleighleadrecovery.com/#try-mabel
+https://www.raleighleadrecovery.com/#try-mabel-form
 
 Either way, I won’t keep filling your inbox.
 

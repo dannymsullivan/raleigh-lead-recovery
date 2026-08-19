@@ -48,12 +48,12 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
   return (
     <section className="demo-call-section page-shell" id="try-mabel" aria-labelledby="try-mabel-heading">
       <div className="demo-call-copy">
-        <p className="eyebrow"><span /> Live, personalized demo</p>
-        <h2 id="try-mabel-heading">Put yourself in the lead&apos;s shoes.</h2>
-        <p>Enter the business Mabel should represent. She&apos;ll call you back as though you asked that business for a quote a few weeks ago—so you can hear the real experience before sharing any leads.</p>
+        <p className="eyebrow"><span /> Lead recovery for growing North Carolina businesses</p>
+        <h1 id="try-mabel-heading">Turn old leads into <em>new business.</em></h1>
+        <p>You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Try the real experience on your own phone before sharing a lead.</p>
         <div className="demo-call-expectation">
           <PhoneIncoming aria-hidden="true" />
-          <div><strong>Your phone rings.</strong><span>Mabel uses your name and business name in a one-time demo conversation.</span></div>
+          <div><strong>Hear the real conversation.</strong><span>Mabel uses your name and business name in a one-time personalized call.</span></div>
         </div>
         <div className="demo-call-expectation">
           <ShieldCheck aria-hidden="true" />
@@ -61,7 +61,7 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
         </div>
       </div>
 
-      <form className={`demo-call-form ${state === "success" ? "demo-call-form-success" : ""}`} onSubmit={submit}>
+      <form className={`demo-call-form ${state === "success" ? "demo-call-form-success" : ""}`} id="try-mabel-form" onSubmit={submit}>
         {state === "success" ? (
           <div className="demo-call-next-step">
             <span className="demo-call-success-icon"><PhoneIncoming aria-hidden="true" /></span>
