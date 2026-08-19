@@ -8,7 +8,7 @@ import { PUBLIC_DEMO_CONSENT_TEXT } from "@/lib/public-demo-call";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
-export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
+export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_demo", handout = false }: { bookingUrl: string; analyticsLocation?: string; handout?: boolean }) {
   const [state, setState] = useState<FormState>("idle");
   const [message, setMessage] = useState("");
 
@@ -18,7 +18,7 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
     const data = new FormData(form);
     setState("submitting");
     setMessage("");
-    posthog.capture("demo_call_submitted", { location: "homepage_live_demo" });
+    posthog.capture("demo_call_submitted", { location: analyticsLocation });
 
     try {
       const response = await fetch("/api/demo-call", {
@@ -36,21 +36,21 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
       if (!response.ok || !result.ok) throw new Error(result.error || "The demo call could not be started.");
       setState("success");
       setMessage(result.message || "Mabel is calling now. It may take up to a minute.");
-      posthog.capture("demo_call_started", { location: "homepage_live_demo" });
+      posthog.capture("demo_call_started", { location: analyticsLocation });
       form.reset();
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "The demo call could not be started.");
-      posthog.capture("demo_call_failed", { location: "homepage_live_demo" });
+      posthog.capture("demo_call_failed", { location: analyticsLocation });
     }
   }
 
   return (
-    <section className="demo-call-section page-shell" id="try-mabel" aria-labelledby="try-mabel-heading">
+    <section className={`demo-call-section page-shell ${handout ? "demo-call-section-handout" : ""}`} id="try-mabel" aria-labelledby="try-mabel-heading">
       <div className="demo-call-copy">
-        <p className="eyebrow"><span /> Lead recovery for growing North Carolina businesses</p>
-        <h1 id="try-mabel-heading">Turn old leads into <em>new business.</em></h1>
-        <p>You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Try the real experience on your own phone before sharing a lead.</p>
+        <p className="eyebrow"><span /> {handout ? "A live, personalized phone demo" : "Lead recovery for growing North Carolina businesses"}</p>
+        <h1 id="try-mabel-heading">{handout ? <>Hear Mabel call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
+        <p>{handout ? "Enter your business and phone number. Mabel will call as if you were an old lead, so you can hear the real customer experience for yourself." : "You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
         <div className="demo-call-expectation">
           <PhoneIncoming aria-hidden="true" />
           <div><strong>Hear the real conversation.</strong><span>Mabel uses your name and business name in a one-time personalized call.</span></div>
@@ -79,7 +79,7 @@ export function DemoCallForm({ bookingUrl }: { bookingUrl: string }) {
               target="_blank"
               rel="noreferrer"
               data-analytics-event="post_demo_fit_call_clicked"
-              data-analytics-location="homepage_live_demo_success"
+              data-analytics-location={`${analyticsLocation}_success`}
             >
               Book a 15-minute setup call <ArrowRight aria-hidden="true" />
             </a>
