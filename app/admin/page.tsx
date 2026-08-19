@@ -11,6 +11,7 @@ import type { Client } from "@/lib/types";
 import { createOrResetTestBusinessAction } from "./test-business/actions";
 import { retryTransientCredentialError } from "@/lib/retry";
 import { customerCrmPath } from "@/lib/customer-slug";
+import { isClientDeletionLocked } from "@/lib/client-deletion";
 
 export const dynamic = "force-dynamic";
 
@@ -196,7 +197,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       <td className="px-4 py-3 align-top">
                         <div className="mb-3 flex flex-wrap items-center gap-2">
                           <Link className="inline-flex min-h-10 items-center gap-2 border-2 border-black bg-black px-3 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
-                          {client.vapi_assistant_id || client.vapi_phone_number_id ? (
+                          {isClientDeletionLocked(client) ? (
                             <span className="inline-flex min-h-10 items-center border-2 border-black/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">Demo protected</span>
                           ) : (
                             <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete" confirmMessage={`Delete ${client.business_name} and all of its call history? This cannot be undone.`} />

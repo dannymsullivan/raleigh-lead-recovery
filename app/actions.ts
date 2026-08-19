@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { adminCookie, createAdminSessionToken, verifyAdminPassword, verifyAdminSessionToken } from "@/lib/admin";
+import { isClientDeletionLocked } from "@/lib/client-deletion";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
@@ -133,13 +134,13 @@ export async function deleteClientAction(clientId: string): Promise<void> {
   await requireAdminSession();
   const admin = getSupabaseAdmin();
   const { data: client, error: loadError } = await admin.from("clients")
-    .select("id,vapi_assistant_id,vapi_phone_number_id")
+    .select("id,is_test_account,vapi_assistant_id,vapi_phone_number_id")
     .eq("id", clientId)
     .maybeSingle();
 
   if (loadError) throw loadError;
   if (!client) redirect("/admin?error=client-missing");
-  if (client.vapi_assistant_id || client.vapi_phone_number_id) redirect("/admin?error=client-connected");
+  if (isClientDeletionLocked(client)) redirect("/admin?error=client-connected");
 
   const { error } = await admin.from("clients").delete().eq("id", clientId);
   if (error) throw error;
