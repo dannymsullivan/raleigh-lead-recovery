@@ -27,6 +27,19 @@ const demoCallUrl =
   process.env.NEXT_PUBLIC_REACTIVATION_DEMO_AUDIO_URL?.trim() ||
   "/mabel-lead-recovery-demo.mp3";
 
+const integrationTools = [
+  { name: "ServiceTitan", mark: "ST" },
+  { name: "Housecall Pro", mark: "HCP" },
+  { name: "Jobber", mark: "J" },
+  { name: "HighLevel", mark: "HL" },
+  { name: "HubSpot", mark: "HS" },
+  { name: "Salesforce", mark: "SF" },
+  { name: "QuickBooks", mark: "QB" },
+  { name: "Google Sheets", mark: "GS" },
+  { name: "Zapier", mark: "Z" },
+  { name: "Make", mark: "M" },
+];
+
 const faqs = [
   {
     q: "What counts as an old lead?",
@@ -254,6 +267,30 @@ export default function LandingPage() {
           </article>
         </div>
         <p className="recovery-autopilot-note"><strong>Pilot:</strong> 25 approved rows in a CSV. <strong>Ongoing:</strong> a scoped integration with your inactivity and no-double-call rules.</p>
+        <div className="recovery-integrations" aria-labelledby="integration-heading">
+          <div className="recovery-integrations-heading">
+            <div>
+              <p className="eyebrow">Your stack stays in place.</p>
+              <h3 id="integration-heading">Built to work with the tools service businesses already use.</h3>
+            </div>
+            <p>We connect through an available API, webhook, Zapier or Make workflow, or an approved export—depending on the platform and the customer&apos;s permissions.</p>
+          </div>
+          <ul className="integration-logo-grid" aria-label="Compatible CRM and automation platforms">
+            {integrationTools.map((tool) => (
+              <li key={tool.name}>
+                <span aria-hidden="true">{tool.mark}</span>
+                <strong>{tool.name}</strong>
+              </li>
+            ))}
+          </ul>
+          <div className="integration-connection" aria-label="Connection methods feeding Mabel">
+            <span>Native API where available</span>
+            <span>Webhooks</span>
+            <span>Zapier / Make</span>
+            <span>Scoped CSV</span>
+            <strong>Mabel</strong>
+          </div>
+        </div>
       </section>
 
       <section className="recovery-pilot" id="pilot">
