@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: "Do we have to give you access to our whole CRM?",
-    a: "No. You can start with a small CSV containing only approved leads and the context Mabel needs. A connected workflow can use a scoped CRM view or webhook instead of broad account access.",
+    a: "No. Connect the leads you want Mabel to work through a CSV, CRM view, or webhook. Your CRM can remain the source of truth.",
   },
   {
     q: "What if our team contacted a lead yesterday?",
@@ -128,7 +128,7 @@ export default function LandingPage() {
         <ol className="process-list recovery-process-list">
           <li>
             <span>01</span>
-            <div><h3>Choose the right segment.</h3><p>Start with a small set of approved leads from an agreed source and time period—not your entire database.</p></div>
+            <div><h3>Connect your leads.</h3><p>Choose who Mabel should follow up with and bring over the context she needs for a useful conversation.</p></div>
           </li>
           <li>
             <span>02</span>
