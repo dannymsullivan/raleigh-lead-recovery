@@ -33,8 +33,11 @@
       <tspan x="64" dy="43">Mabel calls you live.</tspan>
     </text>
     <line x1="64" y1="835" x2="456" y2="835" stroke="#11130f" stroke-opacity=".3" stroke-width="3"/>
-    <text x="64" y="890" fill="#11130f" font-family="Arial, sans-serif" font-size="23" font-weight="900">WEEKDAYS · NOON–7 PM ET</text>
+    <text x="64" y="890" fill="#11130f" font-family="Arial, sans-serif" font-size="23" font-weight="900">ONE-MINUTE LIVE PHONE DEMO</text>
     <text x="64" y="945" fill="#3c4038" font-family="Arial, sans-serif" font-size="24" font-weight="700">raleighleadrecovery.com/demo</text>
   </g>
-  <text x="105" y="1135" fill="#d8ff57" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="3">OLD ESTIMATES · NO-DECISIONS · MISSED FOLLOW-UP · SERVICE REMINDERS</text>
+  <text x="105" y="1045" fill="#d8ff57" font-family="Arial, sans-serif" font-size="25" font-weight="900" letter-spacing="3">
+    <tspan x="105" dy="0">OLD ESTIMATES · NO-DECISIONS</tspan>
+    <tspan x="105" dy="48">MISSED FOLLOW-UP · SERVICE REMINDERS</tspan>
+  </text>
 </svg>
