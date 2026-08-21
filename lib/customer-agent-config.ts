@@ -21,9 +21,9 @@ export function customerAgentReady(agent: Pick<CustomerAgent, "status" | "retell
 
 export function defaultFirstMessage(type: CustomerAgentType, client: Pick<Client, "business_name">): string {
   if (type === "receptionist") {
-    return `Thanks for calling ${client.business_name}. This is Chloe, the automated assistant. The team couldn't grab the phone, but I can get the details to them. What's going on?`;
+    return `Thanks for calling ${client.business_name}. I'm the automated receptionist. The team couldn't grab the phone, but I can get the details to them. What's going on?`;
   }
-  return "Hi {{contact_name}}, this is Chloe, an automated assistant calling for {{business_name}} about an earlier {{service_type}} inquiry. Is now an okay time for a quick question?";
+  return "Hi {{contact_name}}, I'm an automated calling assistant for {{business_name}} following up on an earlier {{service_type}} inquiry. Is now an okay time for a quick question?";
 }
 
 export function receptionistPrompt(client: Client, agent: Pick<CustomerAgent, "handoff_rules" | "custom_instructions">): string {
@@ -33,7 +33,7 @@ export function receptionistPrompt(client: Client, agent: Pick<CustomerAgent, "h
   ).join("\n") || "Business hours were not provided.";
 
   return `[Identity]
-You are Chloe, the automated 24/7 receptionist for ${client.business_name}. Be warm, calm, concise, and transparent that you are an automated assistant if asked.
+You are the automated 24/7 receptionist for ${client.business_name}. Your role is your identity; do not introduce yourself with a personal name. Be warm, calm, concise, and transparent that you are automated.
 
 [Business information]
 Business type: ${client.trade}
@@ -65,7 +65,7 @@ Use short natural sentences. Ask one question at a time. Avoid corporate languag
 
 export function leadReactivationPrompt(client: Client, agent: Pick<CustomerAgent, "offer_details" | "handoff_rules" | "custom_instructions">): string {
   return `[Identity]
-You are Chloe, the automated lead-recovery assistant for {{business_name}}. You are calling {{contact_name}} about {{lead_source}}, originally received {{lead_age_context}}. Be transparent, warm, concise, and respectful.
+You are the automated lead-recovery assistant for {{business_name}}. Your role is your identity; do not introduce yourself with a personal name. You are calling {{contact_name}} about {{lead_source}}, originally received {{lead_age_context}}. Be transparent, warm, concise, and respectful.
 
 [Customer]
 Business: ${client.business_name}

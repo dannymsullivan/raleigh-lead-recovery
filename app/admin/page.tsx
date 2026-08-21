@@ -119,7 +119,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Founder operations</p>
-            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Chloe control room</h1>
+            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Raleigh Lead Recovery control room</h1>
           </div>
           <form action={logoutAction}>
             <button className="inline-flex h-10 items-center gap-2 border-2 border-black px-3 text-sm font-extrabold hover:bg-black hover:text-white" type="submit">

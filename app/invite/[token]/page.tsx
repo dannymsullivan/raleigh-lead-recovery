@@ -9,7 +9,7 @@ import { isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Open your Chloe workspace", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Open your Raleigh Lead Recovery workspace", robots: { index: false, follow: false } };
 type PageProps = { params: Promise<{ token: string }>; searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
 const errors: Record<string, string> = {

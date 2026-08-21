@@ -10,7 +10,7 @@ import { AgentManager } from "./agent-manager";
 import { saveCustomerAgentAction } from "./actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Agents | Chloe", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Call flows | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
 export default async function AgentsPage({ searchParams }: PageProps) {

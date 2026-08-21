@@ -87,7 +87,3 @@ export async function sendRetellSms(message: { to: string; body: string; from?: 
     retell_llm_dynamic_variables: { message_body: message.body }
   });
 }
-
-export function assistantDisplayName(): string {
-  return process.env.NEXT_PUBLIC_ASSISTANT_NAME?.trim() || "Chloe";
-}

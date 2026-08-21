@@ -3,8 +3,8 @@ import { BrandMark } from "../components/brand-mark";
 import { DemoCallForm } from "../components/demo-call-form";
 
 export const metadata: Metadata = {
-  title: "Try Chloe on an HVAC Lead | Raleigh Lead Recovery",
-  description: "Hear Chloe follow up on an old HVAC estimate in a personalized live phone demo.",
+  title: "Try Raleigh Lead Recovery on an HVAC Lead",
+  description: "Hear Raleigh Lead Recovery follow up on an old HVAC estimate in a personalized live phone demo.",
   robots: { index: false, follow: false },
 };
 

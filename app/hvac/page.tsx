@@ -24,12 +24,12 @@ const pilotHref =
   "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
 export const metadata: Metadata = {
-  title: "HVAC Tune-Up Reactivation with Chloe | Raleigh Lead Recovery",
-  description: "Chloe helps HVAC companies reconnect with eligible past customers and old leads, offer seasonal tune-ups, and route interested homeowners back to the team.",
+  title: "HVAC Tune-Up Reactivation | Raleigh Lead Recovery",
+  description: "Raleigh Lead Recovery helps HVAC companies reconnect with eligible past customers and old leads, offer seasonal tune-ups, and route interested homeowners back to the team.",
   alternates: { canonical: "/hvac" },
   openGraph: {
     title: "Turn Dormant HVAC Customers Into Booked Tune-Ups",
-    description: "Let Chloe work the eligible list, reopen the conversation, and hand interested homeowners back to your HVAC team.",
+    description: "Let Raleigh Lead Recovery work the eligible list, reopen the conversation, and hand interested homeowners back to your HVAC team.",
     url: "/hvac",
     type: "website",
     images: ["/raleigh-lead-recovery-social.png"],
@@ -42,16 +42,16 @@ const faqs = [
     answer: "We start with a narrow, documented segment your business is permitted to contact—such as past customers who are due for maintenance or prior inquiries with the appropriate consent. Recent activity, opt-outs, and suppressed records stay out.",
   },
   {
-    question: "Does Chloe pretend to be a person?",
+    question: "Does Raleigh Lead Recovery pretend to be a person?",
     answer: "No. The approved conversation clearly identifies the business and uses the disclosures required for the campaign. You review the opening, offer, qualification questions, and handoff before calls begin.",
   },
   {
     question: "Can it work with ServiceTitan or Housecall Pro?",
-    answer: "Start with an approved CSV export. A connected workflow can later move eligible records into Chloe and send outcomes back through an available API, webhook, Zapier, Make, or an approved import/export process.",
+    answer: "Start with an approved CSV export. A connected workflow can later move eligible records into Raleigh Lead Recovery and send outcomes back through an available API, webhook, Zapier, Make, or an approved import/export process.",
   },
   {
     question: "What happens when a homeowner is interested?",
-    answer: "Chloe can collect the preferred timing and alert your team immediately. When calendar booking is connected, she can offer approved availability and complete the appointment handoff during the call.",
+    answer: "Raleigh Lead Recovery can collect the preferred timing and alert your team immediately. When calendar booking is connected, it can offer approved availability and complete the appointment handoff during the call.",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function HvacLandingPage() {
           <BrandMark />
           <div className="hvac-nav-links">
             <a href="#workflow">How it works</a>
-            <a href="#live-demo">Hear Chloe</a>
+            <a href="#live-demo">Try it now</a>
             <Link href="/login">Sign in</Link>
             <a className="hvac-button hvac-button-dark" href={pilotHref} target="_blank" rel="noreferrer">Start a pilot <ArrowRight aria-hidden="true" /></a>
           </div>
@@ -74,7 +74,7 @@ export default function HvacLandingPage() {
         <div className="hvac-hero-copy">
           <p className="hvac-kicker"><span>HVAC REACTIVATION SYSTEM</span><span>RALEIGH, NC</span></p>
           <h1>Your customer list is full of <em>tune-ups</em> waiting to happen.</h1>
-          <p className="hvac-hero-lede">Chloe calls eligible past customers and old HVAC leads with an approved seasonal tune-up offer—then hands the interested homeowners back to your team.</p>
+          <p className="hvac-hero-lede">Raleigh Lead Recovery calls eligible past customers and old HVAC leads with an approved seasonal tune-up offer, then hands interested homeowners back to your team.</p>
           <div className="hvac-hero-actions">
             <a className="hvac-button hvac-button-accent" href="#live-demo">Hear the HVAC call <PhoneCall aria-hidden="true" /></a>
             <a className="hvac-text-link" href={pilotHref} target="_blank" rel="noreferrer">Run a 25-contact pilot <ArrowRight aria-hidden="true" /></a>
@@ -84,7 +84,7 @@ export default function HvacLandingPage() {
 
         <div className="hvac-service-ticket" aria-label="Example HVAC tune-up campaign workflow">
           <div className="hvac-ticket-top">
-            <span>WORK ORDER</span><strong>#MABEL-01</strong><span className="hvac-ticket-status">READY</span>
+            <span>WORK ORDER</span><strong>#RLR-01</strong><span className="hvac-ticket-status">READY</span>
           </div>
           <div className="hvac-thermostat">
             <div className="hvac-dial"><Snowflake aria-hidden="true" /><strong>72°</strong><Sun aria-hidden="true" /></div>
@@ -96,7 +96,7 @@ export default function HvacLandingPage() {
             <div><span>HANDOFF</span><strong>Owner alert + booking</strong></div>
             <div><span>SOURCE</span><strong>Your CRM / CSV</strong></div>
           </div>
-          <div className="hvac-call-strip"><span className="hvac-pulse" /><div><span>MABEL IS CALLING</span><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
+          <div className="hvac-call-strip"><span className="hvac-pulse" /><div><span>RALEIGH LEAD RECOVERY IS CALLING</span><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
           <div className="hvac-ticket-result"><Check aria-hidden="true" /><div><span>INTEREST DETECTED</span><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
         </div>
         <a className="hvac-scroll-cue" href="#problem" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
@@ -125,12 +125,12 @@ export default function HvacLandingPage() {
         <div className="page-shell">
           <div className="hvac-section-heading">
             <div className="hvac-section-number">02</div>
-            <div><p className="eyebrow">The Chloe workflow</p><h2>From dormant record to scheduled conversation.</h2></div>
+            <div><p className="eyebrow">The recovery workflow</p><h2>From dormant record to scheduled conversation.</h2></div>
           </div>
           <ol className="hvac-workflow-grid">
             <li><span>01</span><Database aria-hidden="true" /><h3>Choose the right segment.</h3><p>Export a clean list of eligible past customers or prior inquiries. We remove recent activity, opt-outs, and suppressed records.</p></li>
             <li><span>02</span><ClipboardCheck aria-hidden="true" /><h3>Approve the call plan.</h3><p>Set the tune-up offer, customer context, calling hours, disclosures, qualification questions, and handoff rules.</p></li>
-            <li><span>03</span><PhoneCall aria-hidden="true" /><h3>Chloe works the list.</h3><p>She calls in controlled batches, has a natural HVAC-specific conversation, and records every outcome.</p></li>
+            <li><span>03</span><PhoneCall aria-hidden="true" /><h3>Raleigh Lead Recovery works the list.</h3><p>Calls run in controlled batches with an HVAC-specific conversation and a recorded outcome.</p></li>
             <li><span>04</span><CalendarCheck aria-hidden="true" /><h3>Your team gets the live ones.</h3><p>Interested homeowners are routed with their summary and preferred timing—or booked when calendar access is connected.</p></li>
           </ol>
         </div>
@@ -150,8 +150,8 @@ export default function HvacLandingPage() {
           </ul>
         </div>
         <figure className="hvac-dashboard-frame">
-          <div><span>MABEL / HVAC CAMPAIGN</span><span>LIVE VIEW</span></div>
-          <Image src="/mabel-dashboard-preview.png" alt="Chloe dashboard showing campaign attempts, interested contacts, booked appointments, and recovered pipeline" width={1293} height={1028} sizes="(max-width: 900px) calc(100vw - 40px), 620px" />
+          <div><span>RALEIGH LEAD RECOVERY / HVAC CAMPAIGN</span><span>LIVE VIEW</span></div>
+          <Image src="/lead-recovery-dashboard-preview.png" alt="Lead recovery dashboard showing campaign attempts, interested contacts, booked appointments, and recovered pipeline" width={1293} height={1028} sizes="(max-width: 900px) calc(100vw - 40px), 620px" />
           <figcaption>Illustrative dashboard data. Results depend on list quality, eligibility, timing, and offer.</figcaption>
         </figure>
       </section>
@@ -179,13 +179,13 @@ export default function HvacLandingPage() {
       </section>
 
       <section className="page-shell hvac-faq">
-        <div><p className="eyebrow">Shop-owner questions</p><h2>Before Chloe touches the list.</h2></div>
+        <div><p className="eyebrow">Shop-owner questions</p><h2>Before the first call goes out.</h2></div>
         <div className="hvac-faq-list">{faqs.map((faq) => <details key={faq.question}><summary>{faq.question}<span>+</span></summary><p>{faq.answer}</p></details>)}</div>
       </section>
 
       <section className="page-shell hvac-founder">
         <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={92} height={92} />
-        <div><p className="eyebrow">Built and supported in Raleigh</p><h2>You won&apos;t be handed to a generic onboarding queue.</h2><p>I&apos;ll scope the segment with you, tune Chloe to your shop, and review the calls before the campaign expands.</p></div>
+        <div><p className="eyebrow">Built and supported in Raleigh</p><h2>You won&apos;t be handed to a generic onboarding queue.</h2><p>I&apos;ll scope the segment with you, configure Raleigh Lead Recovery around your shop, and review the calls before the campaign expands.</p></div>
         <a className="hvac-text-link" href={`mailto:${contactEmail}`}>Talk to Danny <ArrowRight /></a>
       </section>
 

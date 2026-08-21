@@ -57,7 +57,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
       const result = await response.json() as { ok?: boolean; message?: string; error?: string };
       if (!response.ok || !result.ok) throw new Error(result.error || "The demo call could not be started.");
       setState("success");
-      setMessage(result.message || "Chloe is calling now. It may take up to a minute.");
+      setMessage(result.message || "Your demo call is starting now. It may take up to a minute.");
       posthog.capture("demo_call_started", { location: analyticsLocation, demo_type: demoType });
       form.reset();
     } catch (error) {
@@ -68,14 +68,14 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
   }
 
   return (
-    <section className={`demo-call-section page-shell ${handout ? "demo-call-section-handout" : ""}`} id="try-mabel" aria-labelledby="try-mabel-heading">
+    <section className={`demo-call-section page-shell ${handout ? "demo-call-section-handout" : ""}`} id="listen-now" aria-labelledby="listen-now-heading">
       <div className="demo-call-copy">
         <p className="eyebrow"><span /> {hvacFocused ? "Live HVAC tune-up demo" : handout ? "A live, industry-tuned phone demo" : "Lead recovery for growing North Carolina businesses"}</p>
-        <h1 id="try-mabel-heading">{hvacFocused ? <>Hear Chloe work an <em>old HVAC lead.</em></> : handout ? <>Hear Chloe call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
-        <p>{hvacFocused ? "Enter your number and play a past HVAC customer who is due for seasonal maintenance. Chloe will call once so you can hear the exact follow-up before using it with an approved list." : handout ? "Choose your business type, then enter your name and number. The right version of Chloe will call as if you were one of that business's old leads." : "You already paid to generate the leads. Chloe follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
+        <h1 id="listen-now-heading">{hvacFocused ? <>Hear one HVAC follow-up—<em>live.</em></> : handout ? <>Hear Raleigh Lead Recovery call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
+        <p>{hvacFocused ? "Enter your number and play a past customer due for seasonal maintenance. Raleigh Lead Recovery will call you once so you can hear the exact conversation." : handout ? "Choose your business type, then enter your name and number. Raleigh Lead Recovery will call as if you were one of that business's old leads." : "You already paid to generate the leads. Raleigh Lead Recovery follows up with old and unresponsive prospects, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
         <div className="demo-call-expectation">
           <PhoneIncoming aria-hidden="true" />
-          <div><strong>{hvacFocused ? "Take the customer seat." : "Hear the real conversation."}</strong><span>{hvacFocused ? "Chloe uses your name in a one-time HVAC maintenance conversation." : "Chloe uses your name, business, and selected industry in a one-time lead follow-up call."}</span></div>
+          <div><strong>{hvacFocused ? "You play the customer." : "Hear the real conversation."}</strong><span>{hvacFocused ? "Answer like a homeowner whose HVAC tune-up is due." : "Raleigh Lead Recovery uses your name, business, and selected industry in a one-time lead follow-up call."}</span></div>
         </div>
         <div className="demo-call-expectation">
           <ShieldCheck aria-hidden="true" />
@@ -83,13 +83,13 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
         </div>
       </div>
 
-      <form className={`demo-call-form ${state === "success" ? "demo-call-form-success" : ""}`} id="try-mabel-form" onSubmit={submit}>
+      <form className={`demo-call-form ${state === "success" ? "demo-call-form-success" : ""}`} id="listen-now-form" onSubmit={submit}>
         {state === "success" ? (
           <div className="demo-call-next-step">
             <span className="demo-call-success-icon"><PhoneIncoming aria-hidden="true" /></span>
             <p className="eyebrow">Your demo is on the way</p>
-            <h3>Like what you hear? Try Chloe on 25 real leads.</h3>
-            <p>{message} The next step is a short setup call to map Chloe to your lead source, sales process, and handoff rules.</p>
+            <h3>Like what you hear? Try it on 25 real leads.</h3>
+            <p>{message} The next step maps Raleigh Lead Recovery to your lead source, sales process, and handoff rules.</p>
             <div className="demo-call-offer" aria-label="Starter trial details">
               <span><strong>25</strong> eligible leads</span>
               <span><strong>14 days</strong> to test</span>
@@ -110,7 +110,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
         ) : <>
         <div className="demo-call-form-heading">
           <span><Footprints aria-hidden="true" /></span>
-          <div><p>{hvacFocused ? "Listen now" : "Try Chloe now"}</p><strong>{hvacFocused ? "One HVAC tune-up follow-up. You play the customer." : "Put yourself in your customer’s shoes."}</strong><small>One-time live phone demo</small></div>
+          <div><p>Try it now</p><strong>{hvacFocused ? "Get one HVAC tune-up call on your phone." : "Put yourself in your customer’s shoes."}</strong><small>One call · No lead list needed</small></div>
         </div>
         {!focusedDemoType ? <fieldset className="demo-type-picker">
           <legend>Choose your business type</legend>
@@ -128,7 +128,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
           <input name="name" type="text" autoComplete="given-name" maxLength={70} required placeholder="Alex" />
         </label>
         <label>
-          Number Chloe should call
+          Number we should call
           <input name="phone" type="tel" autoComplete="tel" inputMode="tel" required placeholder="(919) 555-0123" />
         </label>
         <label className="demo-call-honeypot" aria-hidden="true">
@@ -140,7 +140,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
           <span>{PUBLIC_DEMO_CONSENT_TEXT} See our <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy Policy</Link>.</span>
         </label>
         <button className="demo-call-submit" type="submit" disabled={state === "submitting"}>
-          {state === "submitting" ? <><LoaderCircle className="demo-call-spinner" aria-hidden="true" /> Starting call…</> : <>{hvacFocused ? "Listen now" : "Call me"} <ArrowRight aria-hidden="true" /></>}
+          {state === "submitting" ? <><LoaderCircle className="demo-call-spinner" aria-hidden="true" /> Starting call…</> : <>Try it now <ArrowRight aria-hidden="true" /></>}
         </button>
         <p className={`demo-call-status ${state}`} aria-live="polite">
           {message}

@@ -3,8 +3,8 @@ import { BrandMark } from "../components/brand-mark";
 import { DemoCallForm } from "../components/demo-call-form";
 
 export const metadata: Metadata = {
-  title: "Try Chloe Live | Raleigh Lead Recovery",
-  description: "Choose your industry and hear Chloe follow up with a lead in a personalized live phone demo.",
+  title: "Try Raleigh Lead Recovery Live",
+  description: "Choose your industry and hear Raleigh Lead Recovery follow up with a lead in a personalized live phone demo.",
   robots: { index: false, follow: false },
 };
 

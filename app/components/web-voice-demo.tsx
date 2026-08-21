@@ -6,7 +6,7 @@ import { RetellWebClient } from "retell-client-js-sdk";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
 
-export function WebVoiceDemo({ assistantName = "our AI receptionist", compact = false }: { assistantName?: string; compact?: boolean }) {
+export function WebVoiceDemo({ compact = false }: { compact?: boolean }) {
   const clientRef = useRef<RetellWebClient | null>(null);
   const [state, setState] = useState<DemoState>("idle");
   const [agentTalking, setAgentTalking] = useState(false);
@@ -68,12 +68,12 @@ export function WebVoiceDemo({ assistantName = "our AI receptionist", compact = 
       ) : (
         <button className="button button-dark receptionist-call-button" type="button" onClick={start} disabled={state === "connecting"}>
           {state === "connecting" ? <LoaderCircle className="web-voice-spinner" aria-hidden="true" /> : <Mic aria-hidden="true" />}
-          {state === "connecting" ? "Connecting…" : `Talk to ${assistantName} now`}
+          {state === "connecting" ? "Connecting…" : "Try it now"}
         </button>
       )}
       {!compact ? (
         <p className={`web-voice-status ${state}`} aria-live="polite">
-          {state === "active" ? <><Radio className={agentTalking ? "talking" : ""} aria-hidden="true" /> {agentTalking ? `${assistantName} is speaking` : "Listening—go ahead"}</> : "Live browser demo · Uses your microphone · No phone number"}
+          {state === "active" ? <><Radio className={agentTalking ? "talking" : ""} aria-hidden="true" /> {agentTalking ? "Raleigh Lead Recovery is speaking" : "Listening—go ahead"}</> : "Live browser demo · Uses your microphone · No phone number"}
         </p>
       ) : null}
       {error ? <p className="web-voice-error" role="alert">{error}</p> : null}

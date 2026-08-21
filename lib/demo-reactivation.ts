@@ -13,7 +13,7 @@ export type DemoLead = {
   attempts: number;
   lastContact: string;
   summary: string;
-  transcript: Array<{ speaker: "Chloe" | "Lead"; text: string }>;
+  transcript: Array<{ speaker: "Raleigh Lead Recovery" | "Lead"; text: string }>;
 };
 
 export const demoCampaign = {
@@ -47,9 +47,9 @@ export const demoLeads: DemoLead[] = [
     lastContact: "12 minutes ago",
     summary: "Put the project on hold earlier this year. Ready to revisit it before fall and requested a morning inspection.",
     transcript: [
-      { speaker: "Chloe", text: "Did you ever get that water heater project taken care of?" },
+      { speaker: "Raleigh Lead Recovery", text: "Did you ever get that water heater project taken care of?" },
       { speaker: "Lead", text: "Not yet. We put it off, but we need to revisit it before fall." },
-      { speaker: "Chloe", text: "I can help get an inspection back on the calendar. Is morning or afternoon usually better?" },
+      { speaker: "Raleigh Lead Recovery", text: "I can help get an inspection back on the calendar. Is morning or afternoon usually better?" },
     ],
   },
   {
@@ -66,7 +66,7 @@ export const demoLeads: DemoLead[] = [
     lastContact: "38 minutes ago",
     summary: "The system is acting up again after the project was postponed. Wants a rep to review replacement options before scheduling.",
     transcript: [
-      { speaker: "Chloe", text: "Is the HVAC replacement you discussed with the team still unresolved?" },
+      { speaker: "Raleigh Lead Recovery", text: "Is the HVAC replacement you discussed with the team still unresolved?" },
       { speaker: "Lead", text: "Yes. We put it off, but the system is acting up again and I need someone to look at it." },
     ],
   },
@@ -84,7 +84,7 @@ export const demoLeads: DemoLead[] = [
     lastContact: "1 hour ago",
     summary: "Got busy after requesting an estimate and never scheduled. Confirmed the project is still active and booked an afternoon visit.",
     transcript: [
-      { speaker: "Chloe", text: "Is that home-service project still something you're considering?" },
+      { speaker: "Raleigh Lead Recovery", text: "Is that home-service project still something you're considering?" },
       { speaker: "Lead", text: "It is. I got busy and never scheduled the inspection." },
     ],
   },
@@ -102,7 +102,7 @@ export const demoLeads: DemoLead[] = [
     lastContact: "2 hours ago",
     summary: "Project is real but timing moved. Asked the team to reconnect in early November after another home project is finished.",
     transcript: [
-      { speaker: "Chloe", text: "Is the repair still on your list, or did you already get it handled?" },
+      { speaker: "Raleigh Lead Recovery", text: "Is the repair still on your list, or did you already get it handled?" },
       { speaker: "Lead", text: "Still on the list, just not until later this year." },
     ],
   },
@@ -121,7 +121,7 @@ export const demoLeads: DemoLead[] = [
     summary: "Homeowner completed the project with another contractor. Record closed and suppressed from future campaign attempts.",
     transcript: [
       { speaker: "Lead", text: "We already had it replaced, so we're all set." },
-      { speaker: "Chloe", text: "Understood. I'll close this out so the team doesn't follow up again." },
+      { speaker: "Raleigh Lead Recovery", text: "Understood. I'll close this out so the team doesn't follow up again." },
     ],
   },
   {
