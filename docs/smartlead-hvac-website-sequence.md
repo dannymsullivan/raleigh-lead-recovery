@@ -1,147 +1,102 @@
-# Smartlead sequence — Chloe live-demo feedback
+# Smartlead sequence — HVAC website demo
 
 ## Campaign goal
 
-The email sequence has one job: get a business owner to experience Chloe on their own phone.
-
-The live demo handles the next step. After the call starts, the page offers a 25-lead, 14-day trial and a 15-minute Calendly setup call. Do not introduce the meeting request in the cold emails.
+Get an HVAC owner or operator to hear Raleigh Lead Recovery handle a live HVAC call on the website. The site carries the explanation and free-trial offer; the emails should not ask for a meeting.
 
 ## Campaign settings
 
-- Send as plain text from `danny@meetraleighaiguy.com`.
-- Use the sender name `Danny Sullivan`.
-- Keep every follow-up in the original thread.
+- Campaign: `HVAC | Tune-Up Reactivation | Pilot 01`
+- Send as plain text from Danny Sullivan.
+- Keep all four messages in the original thread.
 - Stop the sequence immediately on any reply.
-- Disable open tracking and link tracking.
-- Include only one direct, unshortened link per email.
-- Use `https://www.raleighleadrecovery.com/demo` in every email.
-- Start at 5 new contacts per weekday and increase only after the mailbox and domain remain healthy.
-- Import only ZeroBounce-verified contacts.
-- For the Raleigh list, send between 10 a.m. and 4:30 p.m. Eastern on weekdays, with randomized spacing between messages. The opt-in demo accepts calls daily from 9 a.m. to 8 p.m. Eastern.
-- Remove bounced, unsubscribed, role-based, and obviously irrelevant contacts before launch.
-- Let Smartlead add the configured unsubscribe footer if required; do not add images, buttons, attachments, or a second CTA.
-
-## Audience alignment
-
-The same sequence can serve HVAC, plumbing, roofing, real estate, general home-service, and event-service businesses because the demo lets the recipient select their industry.
-
-For the strongest first-touch relevance, replace the first question in Email 1 with the matching line when the industry is known:
-
-- **HVAC:** What happens to replacement estimates and tune-up inquiries that do not book the first time?
-- **Plumbing:** What happens to repair and project inquiries that go quiet after the first conversation?
-- **Roofing:** What happens to estimates and inspection leads that never make a decision?
-- **Real estate:** What happens to buyer, seller, and investor leads when the timing is not right the first time?
-- **Home services:** What happens to estimates and inquiries that do not book the first time?
-- **Events:** What happens to event quotes when the customer is not ready to commit the first time?
-
-Do not use a personalized opening unless the industry data is reliable. The generic version is better than an incorrect assumption.
+- Preserve the current first-email subject exactly: `tune-up calls at {{company_name}}`
+- Leave the three follow-up subjects blank so they remain in the same thread.
+- Use one direct URL in each message: `https://www.raleighleadrecovery.com/demo`
+- Send 10 new leads per weekday while deliverability and replies are still being established.
+- Send Monday through Friday in the campaign's Eastern-time window.
+- Import only relevant, verified HVAC contacts.
+- Remove bounced, unsubscribed, role-based, and clearly irrelevant contacts.
+- Do not add images, attachments, a Calendly link, or a second CTA.
 
 ## Email 1 — Day 0
 
-Subject: `old leads`
+Subject: `tune-up calls at {{company_name}}`
 
 Hi {{first_name}},
 
-What happens to older inquiries that do not book the first time?
+Do you have past customers or old estimates that never got a second call?
 
-I'm testing Chloe, an AI calling assistant that follows up, finds out who is still interested, and hands the live opportunities back to the business.
+Raleigh Lead Recovery follows up with HVAC customers, answers questions using the rules you approve, and hands interested homeowners back to your team.
 
-I made a one-minute demo that calls your phone and puts you in the lead's shoes:
+You can hear the live HVAC call here:
 
 https://www.raleighleadrecovery.com/demo
 
-Would you tell me if she sounds natural enough to represent a business like yours?
+Worth a listen?
 
 Danny
-
-If this is not relevant, reply no and I will close the loop.
 
 ## Email 2 — Day 3
 
-Hi {{first_name}},
+A lot of HVAC shops already paid to acquire these customers. The list just sits between busy seasons.
 
-One quick clarification: the demo does not need your CRM, customer data, or lead list.
+The live demo shows how Raleigh Lead Recovery handles a real HVAC conversation—without replacing your people or making up prices or arrival times.
 
-Choose your industry, enter your first name and number, and Chloe calls as if you were an older lead from a fictional local business. It takes about a minute.
+Hear it here:
 
 https://www.raleighleadrecovery.com/demo
 
-Even a reply with “natural” or “not there yet” would genuinely help.
+Would this be useful for {{company_name}}?
 
 Danny
-
-If this is not relevant, reply no and I will close the loop.
 
 ## Email 3 — Day 7
 
-Hi {{first_name}},
+The live call is only one part. In a real setup, you decide who is eligible, what Raleigh Lead Recovery can say, and when a human takes over.
 
-The conversation is only one part of what I'm testing.
+Recent calls, appointments, holds, and opt-outs can stop outreach. Interested homeowners come back with a clear summary.
 
-In a real setup, the business controls which leads are eligible. Recent calls, emails, appointments, holds, and opt-outs can stop a call, while outcomes and booked appointments flow back to the dashboard or CRM.
-
-The phone experience is here:
+See how the call feels:
 
 https://www.raleighleadrecovery.com/demo
 
-Would you trust this approach with a small set of older leads?
+Would you trust this with a small, approved list?
 
 Danny
 
-If this is not relevant, reply no and I will close the loop.
+## Email 4 — Day 13
 
-## Email 4 — Day 12
+I’ll close the loop after this.
 
-Hi {{first_name}},
-
-Last note from me. If older inquiries are sitting untouched, I'd value your blunt reaction to Chloe before I open the test more broadly.
+If old estimates or past customers are sitting untouched, the live HVAC demo takes about a minute:
 
 https://www.raleighleadrecovery.com/demo
 
-If you try it, just reply with what felt natural—or what did not.
-
-Either way, I'll leave it there.
+If it feels useful, you can start free from the site. Either way, I’ll leave it there.
 
 Danny
 
-## Reply handling
+## Why the sequence is structured this way
 
-### Positive or curious
+- Email 1 names the neglected-list problem and gives one low-friction action.
+- Email 2 makes the human-support positioning explicit.
+- Email 3 explains the approved rules, safeguards, and handoff.
+- Email 4 honors the close while pointing to self-serve signup.
+- The strong subject remains unchanged; the body now matches the single live browser demo and current Raleigh Lead Recovery brand.
 
-Thanks, {{first_name}}. The easiest next step is to try the live call first so you can hear the experience from the lead's side:
+## Current rollout
 
-https://www.raleighleadrecovery.com/demo
+- `NC Roofers | Lead Recovery Test | Pilot 01` is paused.
+- The HVAC campaign remains active with 82 leads loaded.
+- Ten leads have started the sequence; 72 are queued.
+- Keep the new-lead limit at 10 per weekday until the campaign generates reply data. The existing 70% open rate is promising, but the first 10 sends are too small a sample to justify increasing volume yet.
 
-If it feels promising, the page will give you the option to book a short setup call afterward.
+## Preflight
 
-### Tried the demo and liked it
-
-Glad it landed. The next step is a short setup call so I can understand your lead source, follow-up rules, and what should happen when someone is interested.
-
-You can pick a time here:
-
-https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call
-
-### Wants details before trying it
-
-The short version: you choose the eligible leads and the context Chloe receives. She follows up, records the outcome, and routes interested people back to your team without replacing your CRM.
-
-The demo uses fictional business context, so a real version would be tuned much more closely to your business and sales process.
-
-### Not interested
-
-Understood. I will not follow up again. Thanks for letting me know.
-
-Then mark the contact as unsubscribed or blocked from future campaigns.
-
-## Pre-launch check
-
-- The sender address is exactly `danny@meetraleighaiguy.com`.
-- The display name is `Danny Sullivan`.
-- All contacts passed ZeroBounce verification.
-- The direct demo URL works on mobile.
-- Open and click tracking are disabled.
-- The sequence stops on reply.
-- Follow-ups remain in the same thread.
-- No email contains a Calendly link.
-- Test-send the complete thread to yourself before activating the campaign.
+- Confirm the demo redirects to the homepage live browser experience.
+- Confirm each message has exactly one website URL.
+- Confirm no message names Mabel, Chloe, or an “AI receptionist.”
+- Confirm only the first email has a subject.
+- Confirm stop-on-reply and opt-out handling remain enabled.
+- Test-send the complete thread before changing the daily lead limit.

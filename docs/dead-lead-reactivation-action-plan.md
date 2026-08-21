@@ -2,6 +2,8 @@
 
 Last updated: 2026-08-19
 
+> Historical planning document. The active go-to-market focus is HVAC, the live demo runs in the browser, and the product is always called Raleigh Lead Recovery. See `docs/smartlead-hvac-website-sequence.md` for the current campaign.
+
 ## The decision
 
 Reposition Raleigh Lead Recovery around one outcome:
@@ -19,8 +21,8 @@ Do not lead with AI infrastructure, automation, or a replacement for the prospec
 The offer is a controlled reactivation pilot:
 
 - The customer supplies 250-500 old leads from an agreed period.
-- Chloe calls only records that pass the customer's consent, suppression, and do-not-call review.
-- Chloe identifies still-interested homeowners, qualifies the opportunity, and books or hands off the next step.
+- Raleigh Lead Recovery calls only records that pass the customer's consent, suppression, and do-not-call review.
+- Raleigh Lead Recovery identifies still-interested homeowners, qualifies the opportunity, and books or hands off the next step.
 - The customer receives a result report: records attempted, connections, conversations, interested leads, qualified opportunities, appointments, opt-outs, and attributable pipeline.
 - No new ad spend and no CRM replacement.
 
@@ -35,10 +37,10 @@ Researched roofing company
         +--> manual founder call or LinkedIn follow-up
         |
         v
-Prospect opts into a Chloe demo call
+Prospect opens the Raleigh Lead Recovery demo
         |
         v
-Chloe calls with an industry-tuned lead scenario
+Raleigh Lead Recovery runs an industry-tuned lead scenario
         |
         v
 Prospect chooses whether to book a 15-minute setup call
@@ -50,7 +52,7 @@ Prospect chooses whether to book a 15-minute setup call
 Measured results + case study + ongoing campaign
 ```
 
-Do **not** use an AI voice to cold-call a scraped prospect list. The first AI sales call should happen only after the recipient requests it through a form, email reply, or another documented opt-in path. Before Chloe calls a customer's old consumer leads, have qualified counsel approve the exact consent, disclosure, DNC/suppression, recording, calling-hours, caller-ID, and record-retention workflow. The customer must contractually confirm that each uploaded list is eligible for the planned outreach. This is a launch gate, not a later cleanup task.
+Do **not** use an automated voice to cold-call a scraped prospect list. Before Raleigh Lead Recovery calls a customer's old consumer leads, have qualified counsel approve the exact consent, disclosure, DNC/suppression, recording, calling-hours, caller-ID, and record-retention workflow. The customer must contractually confirm that each uploaded list is eligible for the planned outreach. This is a launch gate, not a later cleanup task.
 
 ## Workstream 1: lock the offer and proof model
 
@@ -73,7 +75,7 @@ Track the full funnel, but use **qualified appointments per 100 eligible records
 
 ## Workstream 2: reposition the landing page
 
-The page should make one argument and drive one primary action: request a Chloe call.
+The page should make one argument and drive one primary action: try the live browser call.
 
 ### Recommended above-the-fold copy
 
@@ -81,9 +83,9 @@ The page should make one argument and drive one primary action: request a Chloe 
 
 **Headline:** Turn the leads you've already paid for into booked jobs.
 
-**Subheadline:** Chloe follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
+**Subheadline:** Raleigh Lead Recovery follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
 
-**Primary CTA:** Have Chloe Call Me
+**Primary CTA:** Try It Now
 
 **CTA support:** Enter your number and experience the same call your old leads would receive.
 
@@ -95,13 +97,13 @@ The page should make one argument and drive one primary action: request a Chloe 
 
 1. Outcome-led hero and opt-in call form.
 2. The economic problem: the CRM contains leads the company already paid to acquire.
-3. Simple flow: upload eligible old leads → Chloe has conversations → the team receives qualified opportunities.
+3. Simple flow: upload eligible old leads → Raleigh Lead Recovery has conversations → the team receives qualified opportunities.
 4. Pilot offer with clear boundaries and no CRM replacement.
 5. Sample results dashboard labeled as an example until real results exist.
 6. Call recording or interactive demo with explicit AI disclosure.
 7. Objections: list security, brand control, handoff process, opt-outs/compliance, integrations, and pricing.
 8. Founder trust section focused on local implementation and support; remove the Raleigh AI Guy positioning from the main conversion path.
-9. Repeat the `Have Chloe Call Me` CTA.
+9. Repeat the `Try It Now` CTA.
 
 ### Product changes implied by the new page
 
@@ -167,17 +169,17 @@ Score the first list A/B/C. Smartlead receives only verified A and B contacts. T
 
 ## Workstream 4: replace the Smartlead campaign
 
-Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign. The current source copy lives in `docs/smartlead-chloe-feedback-sequence.md`.
+Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign. The current HVAC source copy lives in `docs/smartlead-hvac-website-sequence.md`.
 
 ### Campaign setup
 
-- Campaign name: `Chloe Live Demo — Triangle — V1`
+- Campaign name: `Raleigh Lead Recovery Live Demo — Triangle — V1`
 - Build separate, clearly labeled cohorts for roofing, HVAC, plumbing, real estate, home services, and event services rather than mixing every industry into one untracked list.
 - Use the matching industry opening when the source data is reliable; otherwise use the generic older-inquiries opening.
 - Plain-text emails with no images or attachments and one direct link to the live demo.
 - Four touches on days 0, 3, 7, and 12.
-- One low-friction CTA throughout: experience Chloe on the recipient's own phone and share a reaction.
-- Do not include Calendly in the cold sequence. The demo success state offers the setup call after the recipient has heard Chloe.
+- One low-friction CTA throughout: experience Raleigh Lead Recovery in the browser and share a reaction.
+- Do not include Calendly in the cold sequence. The site offers self-serve signup after the recipient hears the demo.
 - Keep sending-domain health, mailbox volume, reply handling, address/opt-out requirements, and suppression lists intact.
 
 ### Message sequence
@@ -187,7 +189,7 @@ Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve
 3. **Operational trust:** explain eligibility checks, no-double-call controls, dashboard reporting, and CRM sync.
 4. **Close the loop:** make a final request for blunt feedback and end the sequence.
 
-The primary conversion is a completed opt-in demo call, not a meeting. The `/demo` form captures the recipient's explicit request and consent before Chloe calls. A positive reply is the secondary signal. If the call feels promising, the demo page offers a 15-minute setup call and a 25-lead trial.
+The primary conversion is a completed browser demo, not a meeting. A positive reply is the secondary signal. If the call feels promising, the site offers self-serve signup.
 
 ### Campaign metrics
 
@@ -195,13 +197,13 @@ Ignore opens as the main decision signal. Track delivered, total replies, positi
 
 ## Workstream 5: build two separate AI agents
 
-### A. Chloe — opt-in industry demo
+### A. Raleigh Lead Recovery — live industry demo
 
 Purpose: let the prospect experience the conversation from an older lead's point of view. The demo uses fictional business context selected by industry; it does not interrogate the prospect about their business or attempt to close a contract.
 
 Example opening pattern:
 
-> Hi {{first_name}}, this is Chloe calling for {{fictional_business_name}} about the {{prior_inquiry}} you reached out about. Did I catch you at an okay time?
+> Thanks for trying Raleigh Lead Recovery. This is the live service-business demo. What can I help you with today?
 
 The exact follow-up is tuned to HVAC, plumbing, roofing, real estate, home services, or events. It should:
 
@@ -220,7 +222,7 @@ Required behaviors:
 - Do not claim access to a live calendar, CRM, or customer record in the public demo.
 - Let the web page present the trial and Calendly setup call after the call starts.
 
-### B. Chloe — customer lead-reactivation agent
+### B. Raleigh Lead Recovery — customer lead-reactivation flow
 
 Purpose: contact an eligible old lead on behalf of a named roofing company, determine current interest, qualify the project, and execute the customer's approved next step.
 
@@ -281,12 +283,12 @@ Reuse the existing Retell webhook, transcript, recording, Supabase, and dashboar
 ### Days 4-7: conversion assets
 
 - Rewrite the landing page around lead reactivation.
-- Add the `Have Chloe Call Me` consent form.
+- Add the `Try It Now` browser demo.
 - Create the demo-call confirmation and fallback scheduling flow.
 - Create a reactivation-style example report, clearly labeled as sample data.
 - Write and QA Smartlead V1.
 
-**Gate:** five internal testers should understand the offer and successfully request, receive, and complete a Chloe demo call.
+**Gate:** five internal testers should understand the offer and successfully complete the Raleigh Lead Recovery browser demo.
 
 ### Days 8-12: agent and data foundation
 
@@ -308,7 +310,7 @@ Reuse the existing Retell webhook, transcript, recording, Supabase, and dashboar
 
 - Launch the first 25 contacts at low volume.
 - Danny manually handles replies and makes human follow-up calls.
-- Chloe calls only people who explicitly request the demo.
+- Raleigh Lead Recovery calls only contacts who pass the approved campaign eligibility rules.
 - Review call transcripts and objections daily; tune the prompt by version, not ad hoc.
 - Launch the next 25 only after reviewing positive reply and complaint quality.
 
