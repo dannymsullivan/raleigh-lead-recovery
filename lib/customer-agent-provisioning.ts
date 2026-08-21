@@ -11,6 +11,35 @@ type RetellAgentPublisher = {
   retrieve(agentId: string, query: { version: string | number }): Promise<{ version: number }>;
 };
 
+export type ProvisioningIssue = {
+  status: "needs_configuration" | "error";
+  message: string;
+  verificationRequired: boolean;
+};
+
+export function classifyRetellProvisioningError(error: unknown): ProvisioningIssue {
+  const detail = error instanceof Error ? error.message : String(error ?? "");
+  if (/\bkyc\b|identity verification|one-time account verification|complete verification in retell/i.test(detail)) {
+    return {
+      status: "needs_configuration",
+      message: "Retell needs a one-time account verification before it can assign your phone number. Complete verification in Retell, then retry setup here.",
+      verificationRequired: true
+    };
+  }
+  if (/card on file|payment method|billing/i.test(detail)) {
+    return {
+      status: "needs_configuration",
+      message: "Retell needs a payment method before it can assign your phone number. Add one in Retell, then retry setup here.",
+      verificationRequired: false
+    };
+  }
+  return {
+    status: "error",
+    message: "Retell could not complete the phone setup. Retry in a moment. If it keeps failing, contact support.",
+    verificationRequired: false
+  };
+}
+
 export async function publishRetellAgent(
   agentApi: RetellAgentPublisher,
   agentId: string,
@@ -184,6 +213,13 @@ export async function provisionCustomerAgent(clientId: string, type: CustomerAge
     let llmId = agent.retell_llm_id;
     let agentId = agent.retell_agent_id;
     let agentVersion: number;
+    const reusePublishedAgent = Boolean(
+      !options.forceUpdate
+      && agent.status === "needs_configuration"
+      && llmId
+      && agentId
+      && agent.retell_agent_version
+    );
 
     if (!llmId || !agentId) {
       const llm = await retell.llm.create(llmPayload(client, agent));
@@ -191,6 +227,8 @@ export async function provisionCustomerAgent(clientId: string, type: CustomerAge
       const created = await retell.agent.create(voicePayload(client, agent, llmId, llm.version, webhook));
       agentId = created.agent_id;
       agentVersion = created.version;
+    } else if (reusePublishedAgent) {
+      agentVersion = agent.retell_agent_version as number;
     } else {
       const llm = await retell.llm.update(llmId, llmPayload(client, agent));
       const draft = await retell.agent.createVersion(agentId, { base_version: agent.retell_agent_version ?? 0 });
@@ -198,7 +236,18 @@ export async function provisionCustomerAgent(clientId: string, type: CustomerAge
       agentVersion = updated.version;
     }
 
-    await publishRetellAgent(retell.agent, agentId, agentVersion);
+    if (!reusePublishedAgent) await publishRetellAgent(retell.agent, agentId, agentVersion);
+    const { data: stagedAgent, error: stagingError } = await admin.from("customer_agents").update({
+      status: "provisioning",
+      retell_agent_id: agentId,
+      retell_llm_id: llmId,
+      retell_agent_version: agentVersion,
+      voice_id: agent.voice_id?.trim() || process.env.RETELL_VOICE_ID?.trim() || "retell-Cimo",
+      provisioning_error: null
+    }).eq("id", agent.id).eq("client_id", clientId).select("*").single();
+    if (stagingError) throw stagingError;
+    agent = stagedAgent as CustomerAgent;
+
     const { data: sibling } = await admin.from("customer_agents").select("retell_phone_number").eq("client_id", clientId).not("retell_phone_number", "is", null).limit(1).maybeSingle();
     const existingNumber = agent.retell_phone_number || sibling?.retell_phone_number || client.provisioned_phone_number || null;
     const phoneNumber = await bindNumber(retell, client, agent, agentId, existingNumber);
@@ -224,9 +273,19 @@ export async function provisionCustomerAgent(clientId: string, type: CustomerAge
     if (clientUpdateError) throw clientUpdateError;
     return agent;
   } catch (error) {
-    const message = (error instanceof Error ? error.message : "Unknown Retell provisioning error").slice(0, 500);
-    await admin.from("customer_agents").update({ status: "error", provisioning_error: message }).eq("id", agent.id).eq("client_id", clientId);
-    await admin.from("clients").update({ provisioning_status: "error", provisioning_error: message }).eq("id", clientId);
+    console.error("Retell customer-agent provisioning failed", error);
+    const issue = classifyRetellProvisioningError(error);
+    const { data: failedAgent, error: agentUpdateError } = await admin.from("customer_agents").update({
+      status: issue.status,
+      provisioning_error: issue.message
+    }).eq("id", agent.id).eq("client_id", clientId).select("*").single();
+    if (agentUpdateError) throw agentUpdateError;
+    const { error: clientUpdateError } = await admin.from("clients").update({
+      provisioning_status: issue.status,
+      provisioning_error: issue.message
+    }).eq("id", clientId);
+    if (clientUpdateError) throw clientUpdateError;
+    if (issue.status === "needs_configuration") return failedAgent as CustomerAgent;
     throw error;
   }
 }

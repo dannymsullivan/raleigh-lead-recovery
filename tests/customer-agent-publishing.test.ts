@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { publishRetellAgent } from "@/lib/customer-agent-provisioning";
+import { classifyRetellProvisioningError, publishRetellAgent } from "@/lib/customer-agent-provisioning";
 
 describe("customer agent publishing", () => {
   it("accepts Retell's empty-response parse error when the requested version is published", async () => {
@@ -20,5 +20,26 @@ describe("customer agent publishing", () => {
     };
 
     await expect(publishRetellAgent(agentApi, "agent-1", 4)).rejects.toBe(error);
+  });
+});
+
+describe("customer-facing Retell provisioning errors", () => {
+  it("turns a raw KYC response into an actionable configuration state", () => {
+    expect(classifyRetellProvisioningError(new Error("403 No valid KYC, please visit the dashboard"))).toEqual({
+      status: "needs_configuration",
+      message: "Retell needs a one-time account verification before it can assign your phone number. Complete verification in Retell, then retry setup here.",
+      verificationRequired: true
+    });
+  });
+
+  it("does not expose unknown provider errors to customers", () => {
+    const issue = classifyRetellProvisioningError(new Error("internal provider trace abc-123"));
+    expect(issue.status).toBe("error");
+    expect(issue.message).not.toContain("abc-123");
+  });
+
+  it("keeps the verification action visible after the friendly message is stored", () => {
+    const first = classifyRetellProvisioningError(new Error("403 No valid KYC"));
+    expect(classifyRetellProvisioningError(new Error(first.message)).verificationRequired).toBe(true);
   });
 });

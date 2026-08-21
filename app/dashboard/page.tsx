@@ -8,6 +8,7 @@ import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { contactHref } from "@/lib/contact";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
+import { classifyRetellProvisioningError } from "@/lib/customer-agent-provisioning";
 import type { Call, Client, CustomerAgent } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
 import { ProvisioningPoll } from "./provisioning-poll";
@@ -103,7 +104,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
             <aside className="grid content-start gap-6">
               <ActivationCard agent={receptionist} client={client} leadRecovery={leadRecovery} />
-              <div className="border-2 border-black p-5"><div className="flex items-center gap-3"><Clock3 className="h-5 w-5" /><h2 className="font-black">{daysLeft} days left in your trial</h2></div><div className="mt-4 h-2 bg-black/10"><div className="h-full bg-black" style={{ width: `${Math.max(0, Math.min(100, (daysLeft / 14) * 100))}%` }} /></div><p className="mt-3 text-sm leading-6 text-black/55">Trial ends {formatShortDate(client.trial_ends_at ?? client.pilot_end)}. No card on file.</p></div>
+              <div className="border-2 border-black p-5"><div className="flex items-center gap-3"><Clock3 className="h-5 w-5" /><h2 className="font-black">{daysLeft} days left in your trial</h2></div><div className="mt-4 h-2 bg-black/10"><div className="h-full bg-black" style={{ width: `${Math.max(0, Math.min(100, (daysLeft / 14) * 100))}%` }} /></div><p className="mt-3 text-sm leading-6 text-black/55">Trial ends {formatShortDate(client.trial_ends_at ?? client.pilot_end)}. No charge during the trial.</p></div>
               <div className="border-2 border-black bg-white p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">This trial</p><div className="mt-5 grid grid-cols-2 gap-4"><SmallStat label="Calls" value={String(report.totalCalls)} /><SmallStat label="Emergencies" value={String(report.emergenciesCaught)} /><SmallStat label="Answer rate" value={report.totalCalls ? "100%" : "—"} /><SmallStat label="Spam filtered" value={String(calls.filter((call) => call.lead_type === "spam").length)} /></div></div>
             </aside>
           </div>
@@ -143,6 +144,9 @@ function ActivationCard({ client, agent, leadRecovery }: { client: Client; agent
   const ready = status === "ready";
   const leadRecoveryReady = leadRecovery?.status === "ready";
   const provisioningError = agent?.provisioning_error || leadRecovery?.provisioning_error || client.provisioning_error;
+  const verificationRequired = provisioningError
+    ? classifyRetellProvisioningError(new Error(provisioningError)).verificationRequired
+    : false;
   const number = agent?.provisioned_phone_number ?? client.provisioned_phone_number;
   if (status === "draft" || status === "disabled") return <div className="border border-black bg-white p-5"><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">24/7 receptionist</p><h2 className="mt-2 text-xl font-black tracking-[-0.03em]">Inbound coverage is not enabled.</h2><p className="mt-2 text-sm font-semibold leading-6 text-black/50">Set up a dedicated agent and phone number when this business is ready for around-the-clock call capture.</p><Link className="mt-4 inline-flex h-10 items-center bg-black px-4 text-xs font-black text-white" href="/dashboard/agents">Configure receptionist</Link></div>;
   return (
@@ -152,7 +156,7 @@ function ActivationCard({ client, agent, leadRecovery }: { client: Client; agent
       <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.retell_agent_id)} label="24/7 coverage configured" /><ChecklistItem done={leadRecoveryReady} label="Lead recovery configured" /><ChecklistItem done={Boolean(agent?.retell_phone_number)} label="Shared number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
       {ready && !client.forwarding_completed_at ? <><p className="mt-6 border-t border-white/20 pt-5 text-xs font-semibold leading-5 text-white/60">In your phone system, forward unanswered or after-hours calls to the Raleigh Lead Recovery number above. Your existing business number stays the same.</p><form action={markForwardingCompleteAction}><button className="mt-4 w-full bg-white px-4 py-3 text-sm font-black text-black" type="submit">I&apos;ve turned forwarding on</button></form></> : null}
       {ready && client.forwarding_completed_at && !client.test_call_completed_at && number ? <a className="mt-7 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href={`tel:${number}`}><PhoneCall className="h-4 w-4" /> Make the test call</a> : null}
-      {(status === "error" || status === "needs_configuration" || leadRecovery?.status === "error" || leadRecovery?.status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{provisioningError}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry setup</button></form></> : null}
+      {(status === "error" || status === "needs_configuration" || leadRecovery?.status === "error" || leadRecovery?.status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{provisioningError}</p>{verificationRequired ? <a className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href="https://dashboard.retellai.com/phone-numbers" target="_blank" rel="noreferrer">Complete verification in Retell <ArrowUpRight className="h-4 w-4" /></a> : null}<form action={retryProvisioningAction}><button className={`${verificationRequired ? "mt-3 border border-white/30 bg-transparent text-white" : "mt-5 bg-white text-black"} inline-flex w-full items-center justify-center gap-2 px-4 py-3 text-sm font-black`} type="submit"><RotateCcw className="h-4 w-4" /> {verificationRequired ? "I finished verification — retry" : "Retry setup"}</button></form></> : null}
       {ready && client.test_call_completed_at ? <p className="mt-6 flex items-center gap-2 border-t border-white/20 pt-5 text-sm font-black"><Check className="h-4 w-4" /> Live and catching calls</p> : null}
     </div>
   );
