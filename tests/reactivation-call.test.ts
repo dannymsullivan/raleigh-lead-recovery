@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertTestCallAllowed, buildReactivationCallRequest } from "@/lib/reactivation-call";
+import { assertTestCallAllowed, buildReactivationCallRequest, minimalLeadBrief } from "@/lib/reactivation-call";
 import type { Client, ReactivationCampaign, ReactivationContact } from "@/lib/types";
 
 const client = {
@@ -48,6 +48,11 @@ const contact = {
   source: "Website estimate request",
   lead_age_days: 167,
   notes: "Asked about replacing an aging HVAC system, then paused the project.",
+  event_date: "2027-05-22",
+  event_type: "wedding",
+  event_location: "The Raleigh Market",
+  prior_reason: "Needed more information",
+  priority_score: 80,
   status: "queued",
   outcome: null,
   project_type: null,
@@ -78,9 +83,20 @@ describe("reactivation call requests", () => {
         contact_name: "Daniel",
         service_type: "HVAC replacement",
         lead_source: "Website estimate request",
-        lead_age_context: "167 days ago"
+        lead_age_context: "167 days ago",
+        event_type: "Wedding",
+        event_date: "2027-05-22",
+        prior_reason: "Needed more information"
       } }
     });
+  });
+
+  it("sends a compact structured briefing instead of the full imported notes", () => {
+    const brief = minimalLeadBrief(contact);
+    expect(brief.summary).toContain("Event: Wedding");
+    expect(brief.summary).toContain("Date: 2027-05-22");
+    expect(brief.summary).toContain("Prior outcome: Needed more information");
+    expect(brief.summary).not.toContain("aging HVAC system");
   });
 
   it("allows a test account to call its owner phone", () => {

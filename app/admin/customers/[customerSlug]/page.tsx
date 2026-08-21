@@ -8,6 +8,7 @@ import { adminInvitationCookie, customerInvitationPath, isCustomerInvitationToke
 import { customerCrmPath } from "@/lib/customer-slug";
 import { bucketLabel } from "@/lib/lead-import";
 import { assessOpportunityDate, isDateSensitiveService } from "@/lib/lead-eligibility";
+import { eventDateBoundaries, leadSegments, type LeadSegment } from "@/lib/lead-enrichment";
 import { maskPhoneNumber } from "@/lib/phone";
 import { customerAgentReady } from "@/lib/customer-agent-config";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
@@ -54,7 +55,9 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
   const requestedBucket = firstParam(search.lead_bucket);
   const leadBucket = requestedBucket === "all" || leadBuckets.includes(requestedBucket as (typeof leadBuckets)[number]) ? requestedBucket : "eligible";
   const leadStatus = leadStatuses.includes(firstParam(search.lead_status) as (typeof leadStatuses)[number]) ? firstParam(search.lead_status) : "";
+  const leadSegment = leadSegments.some((segment) => segment.key === firstParam(search.lead_segment)) ? firstParam(search.lead_segment) as LeadSegment : "";
   const leadPage = pageNumber(search.lead_page);
+  const dateBoundaries = eventDateBoundaries();
 
   const [{ data: campaignData }, { data: callData }, { data: agentData }] = await Promise.all([
     admin.from("reactivation_campaigns").select("*").eq("client_id", client.id).order("created_at", { ascending: false }),
@@ -69,13 +72,28 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
   const inboundCalls = (callData ?? []) as Call[];
   const { data: pendingInvitationData } = !client.user_id ? await admin.from("customer_workspace_invitations").select("expires_at").eq("client_id", client.id).is("accepted_at", null).is("revoked_at", null).gt("expires_at", new Date().toISOString()).order("created_at", { ascending: false }).limit(1).maybeSingle() : { data: null };
 
-  let contactQuery = admin.from("reactivation_contacts").select("*", { count: "exact" }).eq("client_id", client.id).order("updated_at", { ascending: false });
+  let contactQuery = admin.from("reactivation_contacts").select("*", { count: "exact" }).eq("client_id", client.id);
   if (leadBucket === "eligible") contactQuery = contactQuery.or("import_bucket.is.null,import_bucket.neq.exclude");
   else if (leadBucket !== "all") contactQuery = contactQuery.eq("import_bucket", leadBucket);
   if (leadStatus) contactQuery = contactQuery.eq("status", leadStatus);
+  if (leadSegment === "urgent_14") contactQuery = contactQuery.gt("event_date", dateBoundaries.today).lte("event_date", dateBoundaries.day14);
+  else if (leadSegment === "near_term_30") contactQuery = contactQuery.gt("event_date", dateBoundaries.day14).lte("event_date", dateBoundaries.day30);
+  else if (leadSegment === "planning_90") contactQuery = contactQuery.gt("event_date", dateBoundaries.day30).lte("event_date", dateBoundaries.day90);
+  else if (leadSegment === "long_range") contactQuery = contactQuery.gt("event_date", dateBoundaries.day90);
+  else if (["wedding", "corporate", "birthday"].includes(leadSegment)) contactQuery = contactQuery.eq("event_type", leadSegment);
   const safeSearch = leadSearch.replace(/[%_,()]/g, "").trim();
   if (safeSearch) contactQuery = /\d/.test(safeSearch) ? contactQuery.ilike("phone_e164", `%${safeSearch.replace(/\D/g, "")}%`) : contactQuery.ilike("name", `%${safeSearch}%`);
+  contactQuery = contactQuery.order("priority_score", { ascending: false }).order("event_date", { ascending: true, nullsFirst: false }).order("updated_at", { ascending: false });
   const start = (leadPage - 1) * leadPageSize;
+  const segmentCountQueries = leadSegments.map((segment) => {
+    let query = admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id).or("import_bucket.is.null,import_bucket.neq.exclude");
+    if (segment.key === "urgent_14") query = query.gt("event_date", dateBoundaries.today).lte("event_date", dateBoundaries.day14);
+    else if (segment.key === "near_term_30") query = query.gt("event_date", dateBoundaries.day14).lte("event_date", dateBoundaries.day30);
+    else if (segment.key === "planning_90") query = query.gt("event_date", dateBoundaries.day30).lte("event_date", dateBoundaries.day90);
+    else if (segment.key === "long_range") query = query.gt("event_date", dateBoundaries.day90);
+    else query = query.eq("event_type", segment.key);
+    return query;
+  });
   const results = await Promise.all([
     contactQuery.range(start, start + leadPageSize - 1),
     admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id),
@@ -84,7 +102,8 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
     admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id).in("status", ["interested", "follow_up", "booked"]),
     admin.from("reactivation_contacts").select("estimated_value").eq("client_id", client.id).eq("status", "booked"),
     admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id).or("import_bucket.is.null,import_bucket.neq.exclude"),
-    ...leadBuckets.map((bucket) => admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id).eq("import_bucket", bucket))
+    ...leadBuckets.map((bucket) => admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("client_id", client.id).eq("import_bucket", bucket)),
+    ...segmentCountQueries
   ]);
   const pageResult = results[0];
   const contacts = (pageResult.data ?? []) as ReactivationContact[];
@@ -97,6 +116,7 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
   const eligibleTotal = results[6].count ?? 0;
   const pipeline = bookedRows.reduce((sum, row) => sum + Number(row.estimated_value ?? client.avg_job_value ?? 0), 0);
   const bucketCounts = Object.fromEntries(leadBuckets.map((bucket, index) => [bucket, results[index + 7].count ?? 0]));
+  const segmentCounts = { all: eligibleTotal, ...Object.fromEntries(leadSegments.map((segment, index) => [segment.key, results[index + 7 + leadBuckets.length].count ?? 0])) };
   const contactIds = contacts.map((contact) => contact.id);
   const { data: attemptData } = contactIds.length ? await admin.from("reactivation_attempts").select("*").eq("client_id", client.id).in("contact_id", contactIds).order("created_at", { ascending: false }) : { data: [] };
   const attempts = (attemptData ?? []) as ReactivationAttempt[];
@@ -131,7 +151,7 @@ export default async function CustomerCrmPage({ params, searchParams }: PageProp
         </details>
       </section>
 
-      <section className="scroll-mt-6 mt-4 border border-black bg-white" id="leads"><div className="border-b border-black p-4 sm:p-5"><p className="font-mono text-[10px] font-bold uppercase text-black/45">Lead workspace</p><h2 className="mt-1 text-2xl font-black">Qualified audience</h2><p className="mt-1.5 text-xs font-semibold leading-5 text-black/45">Excluded history stays out of view by default. Search, review, and act on 20 leads at a time.</p>{contactTotal ? <div className="mt-4 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">{contacts.length ? <LeadBulkToolbar action={deleteAdminReactivationLeadsAction.bind(null, client.id, basePath)} formId="admin-lead-bulk-delete" total={contacts.length} /> : <span />}<div className="flex flex-col gap-2 sm:flex-row"><RemoveExcludedLeads action={removeAdminExcludedLeadsAction.bind(null, client.id, basePath)} total={bucketCounts.exclude ?? 0} /><ClearLeadList action={clearAdminReactivationLeadsAction.bind(null, client.id, basePath)} total={contactTotal} /></div></div> : null}</div><LeadFilters basePath={basePath} search={leadSearch} bucket={leadBucket} status={leadStatus} total={filteredTotal} page={leadPage} shown={contacts.length} /><div className="divide-y divide-black/15">{contacts.map((contact) => <AdminLead contact={contact} attempts={attempts.filter((attempt) => attempt.contact_id === contact.id)} clientId={client.id} returnPath={basePath} serviceType={primaryCampaign?.service_type ?? ""} key={contact.id} />)}{!contacts.length ? <p className="p-8 text-center text-sm font-semibold text-black/45">{contactTotal ? "No leads match these filters." : "No leads loaded yet."}</p> : null}</div><LeadPagination basePath={basePath} search={leadSearch} bucket={leadBucket} status={leadStatus} page={leadPage} total={filteredTotal} /></section>
+      <section className="scroll-mt-6 mt-4 border border-black bg-white" id="leads"><div className="border-b border-black p-4 sm:p-5"><p className="font-mono text-[10px] font-bold uppercase text-black/45">Lead workspace</p><h2 className="mt-1 text-2xl font-black">Who should Mabel contact first?</h2><p className="mt-1.5 text-xs font-semibold leading-5 text-black/45">Segment the qualified audience by event timing and type. Rich source data stays here; only the short event briefing is sent to the agent.</p>{contactTotal ? <div className="mt-4 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">{contacts.length ? <LeadBulkToolbar action={deleteAdminReactivationLeadsAction.bind(null, client.id, basePath)} formId="admin-lead-bulk-delete" total={contacts.length} /> : <span />}<div className="flex flex-col gap-2 sm:flex-row"><RemoveExcludedLeads action={removeAdminExcludedLeadsAction.bind(null, client.id, basePath)} total={bucketCounts.exclude ?? 0} /><ClearLeadList action={clearAdminReactivationLeadsAction.bind(null, client.id, basePath)} total={contactTotal} /></div></div> : null}</div><LeadFilters basePath={basePath} search={leadSearch} bucket={leadBucket} status={leadStatus} segment={leadSegment} segmentCounts={segmentCounts} total={filteredTotal} page={leadPage} shown={contacts.length} /><div className="divide-y divide-black/15">{contacts.map((contact) => <AdminLead contact={contact} attempts={attempts.filter((attempt) => attempt.contact_id === contact.id)} clientId={client.id} returnPath={basePath} serviceType={primaryCampaign?.service_type ?? ""} key={contact.id} />)}{!contacts.length ? <p className="p-8 text-center text-sm font-semibold text-black/45">{contactTotal ? "No leads match these filters." : "No leads loaded yet."}</p> : null}</div><LeadPagination basePath={basePath} search={leadSearch} bucket={leadBucket} status={leadStatus} segment={leadSegment} page={leadPage} total={filteredTotal} /></section>
 
       {inboundCalls.length ? <section className="mt-10 border-2 border-black bg-white"><div className="border-b-2 border-black p-5"><p className="font-mono text-[10px] font-bold uppercase text-black/45">Missed-call recovery</p><h2 className="mt-1 text-2xl font-black">Inbound call history</h2></div><div className="overflow-x-auto"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-black/5 font-mono text-[9px] uppercase"><tr><th className="p-4">Caller</th><th className="p-4">Issue</th><th className="p-4">Urgency</th><th className="p-4">Status</th><th className="p-4">Created</th></tr></thead><tbody className="divide-y divide-black/15">{inboundCalls.map((call) => <tr key={call.id}><td className="p-4 font-black">{call.caller_name || maskPhoneNumber(call.caller_number || "Unknown")}</td><td className="p-4 font-semibold text-black/60">{call.issue_description || call.summary || "No summary"}</td><td className="p-4"><Status value={call.urgency} /></td><td className="p-4"><Status value={call.lead_status || "new"} /></td><td className="p-4 text-xs font-semibold text-black/45">{formatDate(call.created_at)}</td></tr>)}</tbody></table></div></section> : null}
     </div>

@@ -1,5 +1,6 @@
 import { normalizeUsPhone } from "./reactivation";
 import { assessOpportunityDate } from "./lead-eligibility";
+import { enrichLead, type LeadEnrichment } from "./lead-enrichment";
 
 export const leadFieldKeys = [
   "external_id",
@@ -48,6 +49,7 @@ export type NormalizedImportedLead = {
   bucketReason: string;
   agentContext: string;
   metadata: Record<string, string>;
+  enrichment: LeadEnrichment;
 };
 
 export type LeadImportAnalysis = {
@@ -260,6 +262,9 @@ export function analyzeLeadRows(headers: string[], rows: string[][], suppliedMap
     bucketCounts[bucketResult.bucket] += 1;
     const inquiredDate = parseDate(inquiredAt);
     const leadAgeDays = inquiredDate ? Math.max(0, Math.floor((now.getTime() - inquiredDate.getTime()) / 86_400_000)) : null;
+    const jobType = valueAt(row, headers, mapping, "job_type");
+    const address = valueAt(row, headers, mapping, "address");
+    const enrichment = enrichLead({ jobType, jobName, jobDate, address, status, closedReason, notes: notesValue, bucket: bucketResult.bucket, leadAgeDays }, now);
     const metadata = Object.fromEntries(headers.map((header, column) => [header, (row[column] ?? "").slice(0, 2000)]).filter(([, value]) => value));
     const agentContext = buildLeadAgentContext({
       company,
@@ -268,10 +273,10 @@ export function analyzeLeadRows(headers: string[], rows: string[][], suppliedMap
       closedReason,
       inquiredAt,
       jobName,
-      jobType: valueAt(row, headers, mapping, "job_type"),
+      jobType,
       jobDate,
       source: source ?? "",
-      address: valueAt(row, headers, mapping, "address"),
+      address,
       notes: notesValue,
       bucketReason: bucketResult.reason
     });
@@ -300,7 +305,8 @@ export function analyzeLeadRows(headers: string[], rows: string[][], suppliedMap
       bucket: bucketResult.bucket,
       bucketReason: bucketResult.reason,
       agentContext,
-      metadata
+      metadata,
+      enrichment
     };
     normalizedRows.push(normalizedLead);
     if (bucketSamples[bucketResult.bucket].length < 25 && (bucketResult.bucket === "exclude" || (phoneE164 && name && !duplicate))) bucketSamples[bucketResult.bucket].push(normalizedLead);

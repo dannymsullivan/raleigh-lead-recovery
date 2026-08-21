@@ -46,7 +46,7 @@ describe("flexible lead imports", () => {
     expect(analysis.duplicateRows).toBe(1);
     expect(analysis.callableBucketCounts.ready_to_reengage).toBe(1);
     expect(analysis.bucketSamples.ready_to_reengage).toHaveLength(1);
-    expect(analysis.rows[0]).toMatchObject({ name: "Maya Lee", phoneE164: "+19195550123", bucket: "ready_to_reengage" });
+    expect(analysis.rows[0]).toMatchObject({ name: "Maya Lee", phoneE164: "+19195550123", bucket: "ready_to_reengage", enrichment: { eventType: "unknown" } });
   });
 
   it("uses deterministic buckets and keeps agent context scoped to useful fields", () => {

@@ -149,6 +149,8 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
     .or("import_bucket.is.null,import_bucket.neq.exclude")
     .lt("attempt_count", campaign.max_attempts)
     .or(`next_attempt_at.is.null,next_attempt_at.lte.${new Date().toISOString()}`)
+    .order("priority_score", { ascending: false })
+    .order("event_date", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true })
     .limit(requestedCapacity);
   if (contactError) throw contactError;

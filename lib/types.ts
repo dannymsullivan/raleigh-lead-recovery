@@ -115,6 +115,12 @@ export type ReactivationContact = {
   notes: string | null;
   import_bucket?: "ready_to_reengage" | "price_sensitive" | "timing_or_capacity" | "lost_elsewhere" | "disrupted" | "review" | "exclude" | null;
   import_metadata?: Record<string, string>;
+  event_date?: string | null;
+  event_type?: "wedding" | "corporate" | "school" | "birthday" | "fundraiser" | "community" | "private_event" | "other" | "unknown" | null;
+  event_location?: string | null;
+  prior_reason?: string | null;
+  priority_score?: number | null;
+  enrichment_version?: string | null;
   status: ReactivationContactStatus;
   outcome: string | null;
   project_type: string | null;

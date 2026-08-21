@@ -284,7 +284,13 @@ async function importMappedLeadsForClient(campaignId: string, clientId: string, 
       lead_age_days: lead.leadAgeDays,
       notes: lead.agentContext || lead.notes,
       import_bucket: lead.bucket,
-      import_metadata: lead.metadata
+      import_metadata: lead.metadata,
+      event_date: lead.enrichment.eventDate,
+      event_type: lead.enrichment.eventType,
+      event_location: lead.enrichment.eventLocation,
+      prior_reason: lead.enrichment.priorReason,
+      priority_score: lead.enrichment.priorityScore,
+      enrichment_version: "deterministic_v1"
     }));
     const { error } = await admin.from("reactivation_contacts").upsert(batch, { onConflict: "campaign_id,phone_e164", ignoreDuplicates: false });
     if (error) { await removeLeadUpload(uploadPath, clientId, campaignId); redirect(errorPath("import")); }

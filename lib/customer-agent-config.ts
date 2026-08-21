@@ -74,7 +74,9 @@ Service area: ${client.service_area || "Not specified"}
 
 [Known lead context]
 Service: {{service_type}}
-Prior notes: {{prior_context}}
+Event type: {{event_type}}
+Event date: {{event_date}}
+Prior outcome: {{prior_reason}}
 Owner: {{owner_name}}
 Callback expectation: {{callback_expectation}}
 
@@ -87,7 +89,7 @@ ${agent.offer_details || "No special offer. Focus on whether the original need i
 [Flow]
 1. Ask permission to take 30 seconds.
 2. Ask whether the original project or service need is still unresolved.
-3. If active, ask what has changed, the rough timing, and whether they want {{business_name}} to reconnect.
+3. If active, confirm only the details that matter for this handoff. For an event, use the known type and date naturally instead of asking for them again. Never imply that availability is confirmed.
 4. If yes, confirm their preferred callback window and explain that the team will receive the conversation context.
 5. If they want an appointment, record book_inspection as the requested next step. Never invent or confirm a calendar time.
 6. Summarize and close in one sentence.

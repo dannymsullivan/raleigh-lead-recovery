@@ -8,6 +8,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { customerAgentReady } from "@/lib/customer-agent-config";
 import { bucketLabel } from "@/lib/lead-import";
 import { assessOpportunityDate, isDateSensitiveService } from "@/lib/lead-eligibility";
+import { eventDateBoundaries, leadSegments, type LeadSegment } from "@/lib/lead-enrichment";
 import type { Client, CustomerAgent, ReactivationAttempt, ReactivationCampaign, ReactivationContact } from "@/lib/types";
 import { recordingPlaybackPath } from "@/lib/vapi-recording";
 import { createReactivationCampaignAction, launchReactivationCampaignAction, pauseReactivationCampaignAction, resumeReactivationCampaignAction, updateReactivationLeadAction } from "./actions";
@@ -39,7 +40,9 @@ export default async function ReactivationDashboardPage({ searchParams }: PagePr
   const requestedBucket = firstParam(search.lead_bucket);
   const leadBucket = requestedBucket === "all" || leadBuckets.includes(requestedBucket as (typeof leadBuckets)[number]) ? requestedBucket : "eligible";
   const leadStatus = leadStatuses.includes(firstParam(search.lead_status) as (typeof leadStatuses)[number]) ? firstParam(search.lead_status) : "";
+  const leadSegment = leadSegments.some((segment) => segment.key === firstParam(search.lead_segment)) ? firstParam(search.lead_segment) as LeadSegment : "";
   const leadPage = pageNumber(search.lead_page);
+  const dateBoundaries = eventDateBoundaries();
 
   let contacts: ReactivationContact[] = [];
   let attempts: ReactivationAttempt[] = [];
@@ -51,23 +54,41 @@ export default async function ReactivationDashboardPage({ searchParams }: PagePr
   let bookedTotal = 0;
   let eligibleTotal = 0;
   let pipeline = 0;
+  let segmentCounts: Record<string, number> = { all: 0 };
   if (campaign) {
-    let contactQuery = admin.from("reactivation_contacts").select("*", { count: "exact" }).eq("campaign_id", campaign.id).order("updated_at", { ascending: false });
+    let contactQuery = admin.from("reactivation_contacts").select("*", { count: "exact" }).eq("campaign_id", campaign.id);
     if (leadBucket === "eligible") contactQuery = contactQuery.or("import_bucket.is.null,import_bucket.neq.exclude");
     else if (leadBucket !== "all") contactQuery = contactQuery.eq("import_bucket", leadBucket);
     if (leadStatus) contactQuery = contactQuery.eq("status", leadStatus);
+    if (leadSegment === "urgent_14") contactQuery = contactQuery.gt("event_date", dateBoundaries.today).lte("event_date", dateBoundaries.day14);
+    else if (leadSegment === "near_term_30") contactQuery = contactQuery.gt("event_date", dateBoundaries.day14).lte("event_date", dateBoundaries.day30);
+    else if (leadSegment === "planning_90") contactQuery = contactQuery.gt("event_date", dateBoundaries.day30).lte("event_date", dateBoundaries.day90);
+    else if (leadSegment === "long_range") contactQuery = contactQuery.gt("event_date", dateBoundaries.day90);
+    else if (["wedding", "corporate", "birthday"].includes(leadSegment)) contactQuery = contactQuery.eq("event_type", leadSegment);
     const safeSearch = leadSearch.replace(/[%_,()]/g, "").trim();
     if (safeSearch) contactQuery = /\d/.test(safeSearch) ? contactQuery.ilike("phone_e164", `%${safeSearch.replace(/\D/g, "")}%`) : contactQuery.ilike("name", `%${safeSearch}%`);
+    contactQuery = contactQuery.order("priority_score", { ascending: false }).order("event_date", { ascending: true, nullsFirst: false }).order("updated_at", { ascending: false });
     const start = (leadPage - 1) * leadPageSize;
-    const [pageResult, totalResult, attemptResult, contactedResult, interestedResult, bookedResult, eligibleResult] = await Promise.all([
+    const segmentCountQueries = leadSegments.map((segment) => {
+      let query = admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).or("import_bucket.is.null,import_bucket.neq.exclude");
+      if (segment.key === "urgent_14") query = query.gt("event_date", dateBoundaries.today).lte("event_date", dateBoundaries.day14);
+      else if (segment.key === "near_term_30") query = query.gt("event_date", dateBoundaries.day14).lte("event_date", dateBoundaries.day30);
+      else if (segment.key === "planning_90") query = query.gt("event_date", dateBoundaries.day30).lte("event_date", dateBoundaries.day90);
+      else if (segment.key === "long_range") query = query.gt("event_date", dateBoundaries.day90);
+      else query = query.eq("event_type", segment.key);
+      return query;
+    });
+    const results = await Promise.all([
       contactQuery.range(start, start + leadPageSize - 1),
       admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id),
       admin.from("reactivation_attempts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id),
       admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).in("status", ["interested", "follow_up", "booked", "contacted", "not_interested", "completed_project", "wrong_number", "do_not_call"]),
       admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).in("status", ["interested", "follow_up", "booked"]),
       admin.from("reactivation_contacts").select("estimated_value").eq("campaign_id", campaign.id).eq("status", "booked"),
-      admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).or("import_bucket.is.null,import_bucket.neq.exclude")
+      admin.from("reactivation_contacts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).or("import_bucket.is.null,import_bucket.neq.exclude"),
+      ...segmentCountQueries
     ]);
+    const [pageResult, totalResult, attemptResult, contactedResult, interestedResult, bookedResult, eligibleResult] = results;
     contacts = (pageResult.data ?? []) as ReactivationContact[];
     filteredContactTotal = pageResult.count ?? 0;
     contactTotal = totalResult.count ?? 0;
@@ -77,6 +98,7 @@ export default async function ReactivationDashboardPage({ searchParams }: PagePr
     const bookedRows = (bookedResult.data ?? []) as Array<{ estimated_value: number | null }>;
     bookedTotal = bookedRows.length;
     eligibleTotal = eligibleResult.count ?? 0;
+    segmentCounts = { all: eligibleTotal, ...Object.fromEntries(leadSegments.map((segment, index) => [segment.key, results[index + 7].count ?? 0])) };
     pipeline = bookedRows.reduce((sum, contact) => sum + Number(contact.estimated_value ?? 0), 0);
     const ids = contacts.map((contact) => contact.id);
     if (ids.length) {
@@ -114,7 +136,7 @@ export default async function ReactivationDashboardPage({ searchParams }: PagePr
             {contactTotal ? <details className="border-2 border-black bg-white"><summary className="cursor-pointer list-none p-5 text-sm font-black">Add more leads <span className="ml-2 font-mono text-[9px] uppercase text-black/40">{contactTotal.toLocaleString()} currently loaded</span></summary><div className="border-t-2 border-black"><LeadImporter compact dateSensitive={isDateSensitiveService(campaign.service_type)} campaignId={campaign.id} /></div></details> : <LeadImporter dateSensitive={isDateSensitiveService(campaign.service_type)} campaignId={campaign.id} />}
           </section>
 
-          <section className="scroll-mt-6 mt-8 border border-black bg-white" id="leads"><div className="border-b border-black p-4 sm:p-5"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Lead workspace</p><h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">Every lead, easy to find.</h2><p className="mt-1.5 text-xs font-semibold text-black/45">Interested leads stay highlighted, and the full audience remains searchable without loading thousands of cards.</p></div><span className="bg-[#d8ff57] px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase">{interestedTotal.toLocaleString()} interested</span></div></div><LeadFilters basePath="/dashboard/reactivation" search={leadSearch} bucket={leadBucket} status={leadStatus} total={filteredContactTotal} page={leadPage} shown={contacts.length} /><div className="divide-y divide-black/15">{contacts.map((contact) => <LeadCard contact={contact} attempts={attempts.filter((attempt) => attempt.contact_id === contact.id)} serviceType={campaign.service_type} priority={contact.status === "interested"} key={contact.id} />)}{!contacts.length ? <p className="p-8 text-center text-sm font-semibold text-black/45">{contactTotal ? "No leads match these filters." : "Upload the first eligible spreadsheet to populate this campaign."}</p> : null}</div><LeadPagination basePath="/dashboard/reactivation" search={leadSearch} bucket={leadBucket} status={leadStatus} page={leadPage} total={filteredContactTotal} /></section>
+          <section className="scroll-mt-6 mt-8 border border-black bg-white" id="leads"><div className="border-b border-black p-4 sm:p-5"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Lead workspace</p><h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">Who should Mabel contact first?</h2><p className="mt-1.5 text-xs font-semibold text-black/45">Use event timing and type to build a focused audience. Each call receives only the relevant event briefing.</p></div><span className="bg-[#d8ff57] px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase">{interestedTotal.toLocaleString()} interested</span></div></div><LeadFilters basePath="/dashboard/reactivation" search={leadSearch} bucket={leadBucket} status={leadStatus} segment={leadSegment} segmentCounts={segmentCounts} total={filteredContactTotal} page={leadPage} shown={contacts.length} /><div className="divide-y divide-black/15">{contacts.map((contact) => <LeadCard contact={contact} attempts={attempts.filter((attempt) => attempt.contact_id === contact.id)} serviceType={campaign.service_type} priority={contact.status === "interested"} key={contact.id} />)}{!contacts.length ? <p className="p-8 text-center text-sm font-semibold text-black/45">{contactTotal ? "No leads match these filters." : "Upload the first eligible spreadsheet to populate this campaign."}</p> : null}</div><LeadPagination basePath="/dashboard/reactivation" search={leadSearch} bucket={leadBucket} status={leadStatus} segment={leadSegment} page={leadPage} total={filteredContactTotal} /></section>
         </>}
       </div>
     </main>

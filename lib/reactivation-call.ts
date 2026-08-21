@@ -1,4 +1,6 @@
 import { normalizePhoneNumber } from "./phone";
+import { inferEventType, isoDate, leadEventTypeLabel } from "./lead-enrichment";
+import { opportunityDateFromContext } from "./lead-eligibility";
 import type { Client, ReactivationCampaign, ReactivationContact } from "./types";
 
 type CallIdentifiers = {
@@ -20,10 +22,40 @@ export type ReactivationCallRequest = {
       lead_source: string;
       lead_age_context: string;
       prior_context: string;
+      event_type: string;
+      event_date: string;
+      prior_reason: string;
       callback_expectation: string;
     };
   };
 };
+
+function metadataValue(metadata: Record<string, string> | undefined, ...keys: string[]): string | null {
+  const wanted = new Set(keys.map((key) => key.toLowerCase().replace(/[^a-z0-9]+/g, "_")));
+  for (const [key, value] of Object.entries(metadata ?? {})) {
+    if (wanted.has(key.toLowerCase().replace(/[^a-z0-9]+/g, "_")) && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+export function minimalLeadBrief(contact: ReactivationContact): {
+  eventType: string;
+  eventDate: string;
+  priorReason: string;
+  summary: string;
+} {
+  const metadata = contact.import_metadata;
+  const eventDate = isoDate(contact.event_date || opportunityDateFromContext(metadata, contact.notes));
+  const inferredType = contact.event_type || inferEventType(
+    metadataValue(metadata, "job_type", "event_type", "service_type"),
+    metadataValue(metadata, "job_name", "event_name")
+  );
+  const eventType = inferredType === "unknown" || inferredType === "other" ? "event type not specified" : leadEventTypeLabel(inferredType);
+  const rawPriorReason = contact.prior_reason || metadataValue(metadata, "closed_reason", "lost_reason", "status");
+  const priorReason = rawPriorReason?.replace(/\s+/g, " ").trim().slice(0, 240) || "prior outcome not specified";
+  const parts = [eventType !== "event type not specified" ? `Event: ${eventType}` : "", eventDate ? `Date: ${eventDate}` : "", priorReason !== "prior outcome not specified" ? `Prior outcome: ${priorReason}` : ""].filter(Boolean);
+  return { eventType, eventDate: eventDate || "date not specified", priorReason, summary: parts.join(" · ").slice(0, 500) || "No additional structured context was provided." };
+}
 
 export function assertTestCallAllowed(client: Client, contact: ReactivationContact): void {
   if (!client.is_test_account) return;
@@ -44,6 +76,7 @@ export function buildReactivationCallRequest(
   identifiers: CallIdentifiers
 ): ReactivationCallRequest {
   assertTestCallAllowed(client, contact);
+  const brief = minimalLeadBrief(contact);
   return {
     assistantId: identifiers.assistantId,
     phoneNumberId: identifiers.phoneNumberId,
@@ -57,7 +90,10 @@ export function buildReactivationCallRequest(
         service_type: campaign.service_type || client.trade,
         lead_source: contact.source || "a previous inquiry",
         lead_age_context: contact.lead_age_days ? `${contact.lead_age_days} days ago` : "some time ago",
-        prior_context: contact.notes || "No additional context was provided.",
+        prior_context: brief.summary,
+        event_type: brief.eventType,
+        event_date: brief.eventDate,
+        prior_reason: brief.priorReason,
         callback_expectation: client.callback_window || "as soon as possible"
       }
     }
