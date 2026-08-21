@@ -113,14 +113,14 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               <div className="mt-8 border-2 border-black bg-white p-5">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">What happens next</p>
                 <div className="mt-4 grid gap-3 text-sm font-bold sm:grid-cols-3">
-                  <p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Workspace opens</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Import eligible leads</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Review before launch</p>
+                  <p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Call flows build</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Your number is assigned</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Make a test call</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-10 flex items-center justify-between border-t-2 border-black pt-6">
               {step > 1 ? <button className="inline-flex h-12 items-center gap-2 px-2 text-sm font-black" type="button" onClick={previousStep}><ArrowLeft className="h-4 w-4" /> Back</button> : <span />}
-              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">Build my call flow <ArrowRight className="h-4 w-4" /></button>}
+              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">Build my call flows <ArrowRight className="h-4 w-4" /></button>}
             </div>
           </form>
         </div>

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import { provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
+import { provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
 
@@ -53,7 +53,7 @@ export async function saveCallNotesAction(callId: string, formData: FormData): P
 
 export async function retryProvisioningAction(): Promise<void> {
   const { clientId } = await currentWorkspace();
-  await provisionCustomerAgent(clientId, "receptionist");
+  await provisionCustomerAgents(clientId);
   revalidatePath("/dashboard");
 }
 
@@ -120,7 +120,15 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
     consented_at: consentedAt,
     revoked_at: null
   }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
-  for (const agentType of readyAgentTypes) after(() => provisionCustomerAgent(clientId, agentType, { forceUpdate: true }));
+  if (readyAgentTypes.length) {
+    after(async () => {
+      try {
+        await provisionCustomerAgents(clientId, { forceUpdate: true });
+      } catch (provisioningError) {
+        console.error("Customer call-flow synchronization failed", provisioningError);
+      }
+    });
+  }
   revalidatePath("/dashboard");
   redirect("/dashboard/settings?saved=1");
 }

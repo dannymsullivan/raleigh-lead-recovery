@@ -8,7 +8,7 @@ export function AgentManager({ client, agents, action, compact = false }: { clie
   const byType = new Map(agents.map((agent) => [agent.agent_type, agent]));
   return <section className={compact ? "mt-6" : ""} id="agents">
     <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-      <div><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">Customer agents</p><h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">One business, separate jobs.</h2><p className="mt-1.5 max-w-3xl text-xs font-semibold leading-5 text-black/50">Business rules live here and keep each assistant synchronized. Lead recovery and inbound reception remain independently configurable.</p></div>
+      <div><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">Your call flows</p><h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">One business, separate jobs.</h2><p className="mt-1.5 max-w-3xl text-xs font-semibold leading-5 text-black/50">Business rules live here and keep each call flow synchronized. Lead recovery and inbound coverage remain independently configurable.</p></div>
       <span className="font-mono text-[9px] font-bold uppercase text-black/40">{agents.filter(customerAgentReady).length} of 2 ready</span>
     </div>
     <div className="mt-4 grid items-start gap-3 lg:grid-cols-2">
@@ -35,7 +35,7 @@ function AgentCard({ client, agent, type, action }: { client: Client; agent: Cus
       <FieldArea label="Additional guardrails" name="custom_instructions" rows={3} defaultValue={agent?.custom_instructions || ""} placeholder="What should this agent always say, never say, or do differently for this business?" />
       {type === "receptionist" && !ready ? <label className="flex items-start gap-3 border border-black bg-white p-3 text-[11px] font-semibold leading-4"><input className="mt-0.5 h-4 w-4 flex-none accent-black" name="enable_confirmation" type="checkbox" required /><span>Enable this 24/7 receptionist and provision a dedicated inbound phone number for {client.business_name}.</span></label> : null}
       {agent?.provisioning_error ? <p className="border-l-4 border-[#c33124] bg-white p-3 text-xs font-semibold leading-5">{agent.provisioning_error}</p> : null}
-      <div className="flex items-center justify-between gap-3"><p className="text-[10px] font-semibold text-black/40">Saving updates the live assistant automatically.</p><button className="h-10 flex-none bg-black px-4 text-xs font-black text-white" type="submit">{ready ? "Save & sync" : `Set up ${details.label}`}</button></div>
+      <div className="flex items-center justify-between gap-3"><p className="text-[10px] font-semibold text-black/40">Saving updates the live call flow automatically.</p><button className="h-10 flex-none bg-black px-4 text-xs font-black text-white" type="submit">{ready ? "Save & sync" : `Set up ${details.label}`}</button></div>
     </form>
   </details>;
 }

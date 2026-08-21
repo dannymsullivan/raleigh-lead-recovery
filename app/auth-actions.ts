@@ -9,7 +9,7 @@ import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
-import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
+import { ensureDefaultCustomerAgent, provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
 import { pendingEmailCookie, pendingInvitationCookie, pendingModeCookie } from "@/lib/auth-email";
 
 function value(formData: FormData, key: string): string {
@@ -194,7 +194,7 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     .maybeSingle();
   if (campaignLookupError) redirect("/onboarding?error=save");
   const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
-  const receptionistAgent = await ensureDefaultCustomerAgent(client.id, "receptionist");
+  await ensureDefaultCustomerAgent(client.id, "receptionist");
   if (!existingCampaign) {
     const { error: campaignError } = await admin.from("reactivation_campaigns").insert({
       client_id: client.id,
@@ -212,7 +212,13 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     const { error: campaignAgentError } = await admin.from("reactivation_campaigns").update({ agent_id: leadAgent.id }).eq("id", existingCampaign.id).eq("client_id", client.id).is("agent_id", null);
     if (campaignAgentError) redirect("/onboarding?error=save");
   }
-  after(() => provisionCustomerAgent(client.id, receptionistAgent.agent_type));
+  after(async () => {
+    try {
+      await provisionCustomerAgents(client.id);
+    } catch (provisioningError) {
+      console.error("Customer call-flow provisioning failed", provisioningError);
+    }
+  });
   redirect("/dashboard?welcome=1");
 }
 

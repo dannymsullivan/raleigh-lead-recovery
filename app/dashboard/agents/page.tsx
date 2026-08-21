@@ -30,7 +30,7 @@ export default async function AgentsPage({ searchParams }: PageProps) {
   return <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
     <header className="border-b border-black"><div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-8"><BrandMark /><Link className="inline-flex h-10 items-center gap-2 text-sm font-black" href="/dashboard/reactivation"><ArrowLeft className="h-4 w-4" /> Dashboard</Link></div></header>
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-11">
-      <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Agent workspace</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">AI assistants for {client.business_name}.</h1><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/55">Choose the job, tune the conversation, and save. Your live assistant stays synchronized behind the scenes.</p></div>
+      <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Call-flow workspace</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Raleigh Lead Recovery for {client.business_name}.</h1><p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/55">Choose the job, tune the conversation, and save. Your live call flows stay synchronized behind the scenes.</p></div>
       {saved ? <p className="mt-6 border border-black bg-[#d8ff57] p-3 text-sm font-black">Agent saved and synchronized.</p> : null}
       {error ? <p className="mt-6 border border-black bg-black p-3 text-sm font-black text-white">{agentError(error)}</p> : null}
       <div className="mt-8"><AgentManager action={saveCustomerAgentAction} agents={(agentData ?? []) as CustomerAgent[]} client={client} /></div>
@@ -42,7 +42,7 @@ function agentError(error: string): string {
   const messages: Record<string, string> = {
     agent_confirmation: "Confirm that you want to provision a dedicated inbound phone number.",
     agent_save: "The agent settings could not be saved.",
-    agent_provision: "The settings were saved, but assistant provisioning needs attention.",
+    agent_provision: "The settings were saved, but call-flow provisioning needs attention.",
     agent_type: "That agent type is not supported."
   };
   return messages[error] || "The agent could not be updated.";

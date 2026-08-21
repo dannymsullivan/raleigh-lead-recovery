@@ -112,6 +112,36 @@ export async function ensureDefaultCustomerAgents(clientId: string): Promise<Cus
   return Promise.all([ensureDefaultCustomerAgent(clientId, "lead_reactivation"), ensureDefaultCustomerAgent(clientId, "receptionist")]);
 }
 
+export async function provisionCustomerAgents(clientId: string, options: { forceUpdate?: boolean } = {}): Promise<CustomerAgent[]> {
+  const admin = getSupabaseAdmin();
+  const provisioned: CustomerAgent[] = [];
+  const attemptedAt = new Date().toISOString();
+  const { error: startingError } = await admin.from("clients").update({
+    provisioning_status: "provisioning",
+    provisioning_error: null,
+    last_provision_attempt_at: attemptedAt
+  }).eq("id", clientId);
+  if (startingError) throw startingError;
+
+  // Provision inbound first so it purchases the shared number. The outbound
+  // agent then binds to that same number instead of racing to buy another one.
+  for (const type of ["receptionist", "lead_reactivation"] as const) {
+    provisioned.push(await provisionCustomerAgent(clientId, type, options));
+  }
+
+  const incomplete = provisioned.find((agent) => agent.status !== "ready");
+  const { error: completedError } = await admin.from("clients").update(incomplete ? {
+    provisioning_status: incomplete.status === "needs_configuration" ? "needs_configuration" : "error",
+    provisioning_error: incomplete.provisioning_error || "One or more call flows need attention."
+  } : {
+    provisioning_status: "ready",
+    provisioning_error: null
+  }).eq("id", clientId);
+  if (completedError) throw completedError;
+
+  return provisioned;
+}
+
 export async function provisionCustomerAgent(clientId: string, type: CustomerAgentType, options: { forceUpdate?: boolean } = {}): Promise<CustomerAgent> {
   const admin = getSupabaseAdmin();
   let agent = await ensureDefaultCustomerAgent(clientId, type);

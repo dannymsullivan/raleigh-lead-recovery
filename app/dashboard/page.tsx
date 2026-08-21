@@ -28,12 +28,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (!clientData) redirect("/signup?error=workspace");
   const client = clientData as Client;
   if (!client.onboarding_completed_at) redirect("/onboarding");
-  const [{ data: callData }, { data: receptionistData }] = await Promise.all([
+  const [{ data: callData }, { data: agentData }] = await Promise.all([
     admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50),
-    admin.from("customer_agents").select("*").eq("client_id", client.id).eq("agent_type", "receptionist").eq("is_default", true).maybeSingle()
+    admin.from("customer_agents").select("*").eq("client_id", client.id).eq("is_default", true)
   ]);
   const calls = (callData ?? []) as Call[];
-  const receptionist = receptionistData as CustomerAgent | null;
+  const agents = (agentData ?? []) as CustomerAgent[];
+  const receptionist = agents.find((agent) => agent.agent_type === "receptionist") ?? null;
+  const leadRecovery = agents.find((agent) => agent.agent_type === "lead_reactivation") ?? null;
   const report = buildReportModel(client, calls);
   const search = (await searchParams) ?? {};
   const welcome = search.welcome === "1";
@@ -42,7 +44,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const booked = calls.filter((call) => call.lead_status === "booked");
   const bookedRevenue = booked.reduce((sum, call) => sum + Number(call.booked_value ?? 0), 0);
   const daysLeft = trialDaysLeft(client.trial_ends_at ?? client.pilot_end);
-  const provisioningActive = receptionist?.status === "provisioning";
+  const provisioningActive = client.provisioning_status === "pending" || client.provisioning_status === "provisioning" || agents.some((agent) => agent.status === "provisioning");
 
   return (
     <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
@@ -78,7 +80,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </aside>
 
         <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">
-          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building your call flow and getting your number ready now.</p></div> : null}
+          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building both call flows and getting your number ready now.</p></div> : null}
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
@@ -100,7 +102,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             </section>
 
             <aside className="grid content-start gap-6">
-              <ActivationCard agent={receptionist} client={client} />
+              <ActivationCard agent={receptionist} client={client} leadRecovery={leadRecovery} />
               <div className="border-2 border-black p-5"><div className="flex items-center gap-3"><Clock3 className="h-5 w-5" /><h2 className="font-black">{daysLeft} days left in your trial</h2></div><div className="mt-4 h-2 bg-black/10"><div className="h-full bg-black" style={{ width: `${Math.max(0, Math.min(100, (daysLeft / 14) * 100))}%` }} /></div><p className="mt-3 text-sm leading-6 text-black/55">Trial ends {formatShortDate(client.trial_ends_at ?? client.pilot_end)}. No card on file.</p></div>
               <div className="border-2 border-black bg-white p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">This trial</p><div className="mt-5 grid grid-cols-2 gap-4"><SmallStat label="Calls" value={String(report.totalCalls)} /><SmallStat label="Emergencies" value={String(report.emergenciesCaught)} /><SmallStat label="Answer rate" value={report.totalCalls ? "100%" : "—"} /><SmallStat label="Spam filtered" value={String(calls.filter((call) => call.lead_type === "spam").length)} /></div></div>
             </aside>
@@ -136,19 +138,21 @@ function LeadCard({ call }: { call: ReturnType<typeof buildReportModel>["calls"]
   );
 }
 
-function ActivationCard({ client, agent }: { client: Client; agent: CustomerAgent | null }) {
+function ActivationCard({ client, agent, leadRecovery }: { client: Client; agent: CustomerAgent | null; leadRecovery: CustomerAgent | null }) {
   const status = agent?.status ?? "draft";
   const ready = status === "ready";
+  const leadRecoveryReady = leadRecovery?.status === "ready";
+  const provisioningError = agent?.provisioning_error || leadRecovery?.provisioning_error || client.provisioning_error;
   const number = agent?.provisioned_phone_number ?? client.provisioned_phone_number;
   if (status === "draft" || status === "disabled") return <div className="border border-black bg-white p-5"><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">24/7 receptionist</p><h2 className="mt-2 text-xl font-black tracking-[-0.03em]">Inbound coverage is not enabled.</h2><p className="mt-2 text-sm font-semibold leading-6 text-black/50">Set up a dedicated agent and phone number when this business is ready for around-the-clock call capture.</p><Link className="mt-4 inline-flex h-10 items-center bg-black px-4 text-xs font-black text-white" href="/dashboard/agents">Configure receptionist</Link></div>;
   return (
     <div className="border-2 border-black bg-black p-6 text-white">
       <Sparkles className="h-6 w-6" /><p className="mt-7 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Go-live checklist</p><h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">{ready ? "Your Raleigh Lead Recovery number is ready." : status === "error" || status === "needs_configuration" ? "Provisioning needs attention." : "Building your call setup…"}</h2>
       {number ? <a className="mt-5 block text-3xl font-black tracking-[-0.04em]" href={`tel:${number}`}>{formatPhone(number)}</a> : null}
-      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.retell_agent_id)} label="Call flow configured" /><ChecklistItem done={Boolean(agent?.retell_phone_number)} label="Number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
+      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.retell_agent_id)} label="24/7 coverage configured" /><ChecklistItem done={leadRecoveryReady} label="Lead recovery configured" /><ChecklistItem done={Boolean(agent?.retell_phone_number)} label="Shared number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
       {ready && !client.forwarding_completed_at ? <><p className="mt-6 border-t border-white/20 pt-5 text-xs font-semibold leading-5 text-white/60">In your phone system, forward unanswered or after-hours calls to the Raleigh Lead Recovery number above. Your existing business number stays the same.</p><form action={markForwardingCompleteAction}><button className="mt-4 w-full bg-white px-4 py-3 text-sm font-black text-black" type="submit">I&apos;ve turned forwarding on</button></form></> : null}
       {ready && client.forwarding_completed_at && !client.test_call_completed_at && number ? <a className="mt-7 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href={`tel:${number}`}><PhoneCall className="h-4 w-4" /> Make the test call</a> : null}
-      {(status === "error" || status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{agent?.provisioning_error || client.provisioning_error}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry provisioning</button></form></> : null}
+      {(status === "error" || status === "needs_configuration" || leadRecovery?.status === "error" || leadRecovery?.status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{provisioningError}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry setup</button></form></> : null}
       {ready && client.test_call_completed_at ? <p className="mt-6 flex items-center gap-2 border-t border-white/20 pt-5 text-sm font-black"><Check className="h-4 w-4" /> Live and catching calls</p> : null}
     </div>
   );
