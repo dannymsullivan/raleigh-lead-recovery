@@ -3,6 +3,7 @@ node_modules/
 out/
 dist/
 coverage/
+outputs/
 supabase/.temp/
 .env
 .env*.local
@@ -10,6 +11,8 @@ supabase/.temp/
 .gstack/
 *.tsbuildinfo
 npm-debug.log*
+.DS_Store
+artifacts/*.csv
 .vercel
 .env*
 !.env.example

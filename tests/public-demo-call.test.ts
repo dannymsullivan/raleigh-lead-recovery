@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildPublicDemoCallRequest, isPublicDemoCallingWindow, parsePublicDemoCallInput } from "@/lib/public-demo-call";
+import { buildPublicDemoCallRequest, hasElevatedPublicDemoLimit, isPublicDemoCallingWindow, parsePublicDemoCallInput } from "@/lib/public-demo-call";
 
 describe("public Mabel demo calls", () => {
   it("validates and normalizes a consented request", () => {
@@ -14,6 +14,13 @@ describe("public Mabel demo calls", () => {
   it("requires consent and a valid North American number", () => {
     expect(() => parsePublicDemoCallInput({ name: "Alex", businessName: "Acme", phone: "919-555-0123", consent: false })).toThrow("consent_required");
     expect(() => parsePublicDemoCallInput({ name: "Alex", businessName: "Acme", phone: "+44 20 7946 0958", consent: true })).toThrow("phone_invalid");
+  });
+
+  it("gives only the two owner-controlled test numbers an elevated finite limit", () => {
+    expect(hasElevatedPublicDemoLimit("+18455481569")).toBe(true);
+    expect(hasElevatedPublicDemoLimit("+18137869188")).toBe(true);
+    expect(hasElevatedPublicDemoLimit("+19195550123")).toBe(false);
+    expect(hasElevatedPublicDemoLimit("845-548-1569")).toBe(false);
   });
 
   it("injects the visitor's name and business into the live assistant", () => {

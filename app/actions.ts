@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { adminCookie, createAdminSessionToken, verifyAdminPassword, verifyAdminSessionToken } from "@/lib/admin";
 import { isClientDeletionLocked } from "@/lib/client-deletion";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
+import { adminInvitationCookie, createCustomerInvitationToken, customerInvitationExpiresAt, hashCustomerInvitationToken } from "@/lib/customer-invitations";
+import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -21,11 +23,37 @@ async function requireAdminSession(): Promise<void> {
   }
 }
 
+async function createWorkspaceInvitation(clientId: string): Promise<string> {
+  const admin = getSupabaseAdmin();
+  const token = createCustomerInvitationToken();
+  const now = new Date().toISOString();
+  const { error: revokeError } = await admin.from("customer_workspace_invitations").update({ revoked_at: now }).eq("client_id", clientId).is("accepted_at", null).is("revoked_at", null);
+  if (revokeError) throw revokeError;
+  const { error } = await admin.from("customer_workspace_invitations").insert({
+    client_id: clientId,
+    token_hash: hashCustomerInvitationToken(token),
+    expires_at: customerInvitationExpiresAt()
+  });
+  if (error) throw error;
+  return token;
+}
+
+async function rememberAdminInvitation(clientId: string, token: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(adminInvitationCookie, encodeURIComponent(JSON.stringify({ clientId, token })), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/admin/customers",
+    maxAge: 10 * 60
+  });
+}
+
 export async function loginAction(formData: FormData): Promise<void> {
   const password = formString(formData, "password");
 
   if (!verifyAdminPassword(password)) {
-    redirect("/?error=login");
+    redirect("/admin?error=login");
   }
 
   const cookieStore = await cookies();
@@ -52,7 +80,8 @@ export async function addClientAction(formData: FormData): Promise<void> {
   const businessName = formString(formData, "business_name");
   const trade = formString(formData, "trade");
   const ownerName = formString(formData, "owner_name");
-  const ownerPhone = formString(formData, "owner_phone");
+  const rawOwnerPhone = formString(formData, "owner_phone");
+  const ownerPhone = normalizePhoneNumber(rawOwnerPhone) || rawOwnerPhone;
 
   if (!businessName || !trade || !ownerName || !ownerPhone) {
     redirect("/admin?error=client");
@@ -66,7 +95,7 @@ export async function addClientAction(formData: FormData): Promise<void> {
 
   const supabase = getSupabaseAdmin();
   const slug = await uniqueCustomerSlug(supabase, businessName);
-  const { error } = await supabase.from("clients").insert({
+  const { data: client, error } = await supabase.from("clients").insert({
     slug,
     business_name: businessName,
     trade,
@@ -78,15 +107,43 @@ export async function addClientAction(formData: FormData): Promise<void> {
     avg_job_value: Number.isFinite(avgJobValue) ? avgJobValue : 500,
     close_rate: Number.isFinite(closeRate) ? closeRate : 0.4,
     vapi_assistant_id: formString(formData, "vapi_assistant_id") || null,
-    vapi_phone_number_id: formString(formData, "vapi_phone_number_id") || null
-  });
+    vapi_phone_number_id: formString(formData, "vapi_phone_number_id") || null,
+    product_mode: "reactivation"
+  }).select("id").single();
 
   if (error) {
     throw error;
   }
 
+  const { error: campaignError } = await supabase.from("reactivation_campaigns").insert({
+    client_id: client.id,
+    name: `${businessName} lead recovery`.slice(0, 160),
+    service_type: trade.slice(0, 100) || "general service",
+    calling_timezone: "America/New_York",
+    calling_window_start: "09:00",
+    calling_window_end: "18:00",
+    max_attempts: 2,
+    daily_limit: 25
+  });
+  if (campaignError) throw campaignError;
+
+  const invitationToken = await createWorkspaceInvitation(client.id);
+  await rememberAdminInvitation(client.id, invitationToken);
+
   revalidatePath("/admin");
-  redirect("/admin?created=1");
+  redirect(`/admin/customers/${slug}?created=1#customer-access`);
+}
+
+export async function createCustomerInvitationAction(clientId: string, returnPath: string): Promise<void> {
+  await requireAdminSession();
+  const admin = getSupabaseAdmin();
+  const { data: client, error } = await admin.from("clients").select("id,user_id").eq("id", clientId).maybeSingle();
+  if (error || !client) redirect(`${returnPath}?error=customer_access`);
+  if (client.user_id) redirect(`${returnPath}?error=customer_access_active#customer-access`);
+  const token = await createWorkspaceInvitation(clientId);
+  await rememberAdminInvitation(clientId, token);
+  revalidatePath(returnPath);
+  redirect(`${returnPath}?invitation=1#customer-access`);
 }
 
 const accountStatuses = new Set(["onboarding", "trialing", "active", "past_due", "canceled"]);
@@ -98,7 +155,8 @@ export async function updateClientAction(clientId: string, formData: FormData): 
   const businessName = formString(formData, "business_name");
   const trade = formString(formData, "trade");
   const ownerName = formString(formData, "owner_name");
-  const ownerPhone = formString(formData, "owner_phone");
+  const rawOwnerPhone = formString(formData, "owner_phone");
+  const ownerPhone = normalizePhoneNumber(rawOwnerPhone) || rawOwnerPhone;
   if (!businessName || !trade || !ownerName || !ownerPhone) redirect("/admin?error=client-update");
 
   const accountStatus = formString(formData, "account_status");

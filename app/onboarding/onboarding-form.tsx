@@ -120,7 +120,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
 
             <div className="mt-10 flex items-center justify-between border-t-2 border-black pt-6">
               {step > 1 ? <button className="inline-flex h-12 items-center gap-2 px-2 text-sm font-black" type="button" onClick={previousStep}><ArrowLeft className="h-4 w-4" /> Back</button> : <span />}
-              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">Start my 14-day trial <ArrowRight className="h-4 w-4" /></button>}
+              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">Load my leads <ArrowRight className="h-4 w-4" /></button>}
             </div>
           </form>
         </div>

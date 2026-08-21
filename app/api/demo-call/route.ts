@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import {
   buildPublicDemoCallRequest,
   isPublicDemoCallingWindow,
+  hasElevatedPublicDemoLimit,
   parsePublicDemoCallInput,
   PUBLIC_DEMO_CONSENT_TEXT,
   PUBLIC_DEMO_CONSENT_VERSION
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const phoneNumberId = requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID");
     const hashSecret = process.env.DEMO_CALL_HASH_SECRET?.trim() || requiredEnv("VAPI_WEBHOOK_SECRET");
     admin = getSupabaseAdmin();
-    const { data, error } = await admin.rpc("create_public_demo_call_request", {
+    const { data, error } = await admin.rpc("create_public_demo_call_request_v2", {
       p_name: input.name,
       p_business_name: input.businessName,
       p_phone_e164: input.phoneE164,
@@ -89,7 +90,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       p_ip_hash: fingerprint(clientIp(request), hashSecret),
       p_consent_version: PUBLIC_DEMO_CONSENT_VERSION,
       p_consent_text: PUBLIC_DEMO_CONSENT_TEXT,
-      p_user_agent: request.headers.get("user-agent") || "unknown"
+      p_user_agent: request.headers.get("user-agent") || "unknown",
+      p_bypass_rate_limits: hasElevatedPublicDemoLimit(input.phoneE164)
     });
     if (error) {
       if (error.message.includes("rate_limit")) {

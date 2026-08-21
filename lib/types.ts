@@ -79,12 +79,17 @@ export type ReactivationContact = {
   id: string;
   client_id: string;
   campaign_id: string;
+  external_id?: string | null;
+  company?: string | null;
+  brand?: string | null;
   name: string;
   phone_e164: string;
   email: string | null;
   source: string | null;
   lead_age_days: number | null;
   notes: string | null;
+  import_bucket?: "ready_to_reengage" | "price_sensitive" | "timing_or_capacity" | "lost_elsewhere" | "disrupted" | "review" | "exclude" | null;
+  import_metadata?: Record<string, string>;
   status: ReactivationContactStatus;
   outcome: string | null;
   project_type: string | null;

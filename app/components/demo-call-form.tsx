@@ -27,10 +27,11 @@ const demoBusinessNames: Record<DemoType, string> = {
   events: "Oak City Events"
 };
 
-export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_demo", handout = false, initialDemoType = "general" }: { bookingUrl: string; analyticsLocation?: string; handout?: boolean; initialDemoType?: DemoType }) {
+export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_demo", handout = false, initialDemoType = "general", focusedDemoType }: { bookingUrl: string; analyticsLocation?: string; handout?: boolean; initialDemoType?: DemoType; focusedDemoType?: DemoType }) {
   const [state, setState] = useState<FormState>("idle");
   const [message, setMessage] = useState("");
-  const [demoType, setDemoType] = useState<DemoType>(initialDemoType);
+  const [demoType, setDemoType] = useState<DemoType>(focusedDemoType ?? initialDemoType);
+  const hvacFocused = focusedDemoType === "hvac";
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,12 +70,12 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
   return (
     <section className={`demo-call-section page-shell ${handout ? "demo-call-section-handout" : ""}`} id="try-mabel" aria-labelledby="try-mabel-heading">
       <div className="demo-call-copy">
-        <p className="eyebrow"><span /> {handout ? "A live, industry-tuned phone demo" : "Lead recovery for growing North Carolina businesses"}</p>
-        <h1 id="try-mabel-heading">{handout ? <>Hear Mabel call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
-        <p>{handout ? "Choose your business type, then enter your name and number. The right version of Mabel will call as if you were one of that business's old leads." : "You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
+        <p className="eyebrow"><span /> {hvacFocused ? "Live HVAC tune-up demo" : handout ? "A live, industry-tuned phone demo" : "Lead recovery for growing North Carolina businesses"}</p>
+        <h1 id="try-mabel-heading">{hvacFocused ? <>Hear Mabel reopen a <em>tune-up conversation.</em></> : handout ? <>Hear Mabel call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
+        <p>{hvacFocused ? "Enter your number and Mabel will call as if you were a past HVAC customer due for seasonal maintenance. Hear the exact experience before using it with an approved list." : handout ? "Choose your business type, then enter your name and number. The right version of Mabel will call as if you were one of that business's old leads." : "You already paid to generate the leads. Mabel follows up with old and unresponsive prospects and past customers, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
         <div className="demo-call-expectation">
           <PhoneIncoming aria-hidden="true" />
-          <div><strong>Hear the real conversation.</strong><span>Mabel uses your name, business, and selected industry in a one-time lead follow-up call.</span></div>
+          <div><strong>{hvacFocused ? "Take the customer seat." : "Hear the real conversation."}</strong><span>{hvacFocused ? "Mabel uses your name in a one-time HVAC maintenance conversation." : "Mabel uses your name, business, and selected industry in a one-time lead follow-up call."}</span></div>
         </div>
         <div className="demo-call-expectation">
           <ShieldCheck aria-hidden="true" />
@@ -109,9 +110,9 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
         ) : <>
         <div className="demo-call-form-heading">
           <span><Footprints aria-hidden="true" /></span>
-          <div><p>Try Mabel now</p><strong>Put yourself in your customer&apos;s shoes.</strong><small>One-time live phone demo</small></div>
+          <div><p>{hvacFocused ? "Try the HVAC call" : "Try Mabel now"}</p><strong>{hvacFocused ? "Hear the tune-up conversation yourself." : "Put yourself in your customer’s shoes."}</strong><small>One-time live phone demo</small></div>
         </div>
-        <fieldset className="demo-type-picker">
+        {!focusedDemoType ? <fieldset className="demo-type-picker">
           <legend>Choose your business type</legend>
           <div className="demo-type-options">
             {demoOptions.map((option) => (
@@ -121,7 +122,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
               </label>
             ))}
           </div>
-        </fieldset>
+        </fieldset> : null}
         <label>
           First name
           <input name="name" type="text" autoComplete="given-name" maxLength={70} required placeholder="Alex" />

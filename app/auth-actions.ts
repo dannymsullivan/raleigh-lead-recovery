@@ -7,16 +7,18 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { alertConsentText, messagingConsentVersion, verificationConsentText } from "@/lib/messaging-consent";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
+import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
 
 const pendingPhoneCookie = "mabel_pending_phone";
 const pendingModeCookie = "mabel_pending_auth_mode";
+const pendingInvitationCookie = "mabel_pending_customer_invitation";
 
 function value(formData: FormData, key: string): string {
   const entry = formData.get(key);
   return typeof entry === "string" ? entry.trim() : "";
 }
 
-async function rememberPendingPhone(phone: string, mode: "signup" | "login"): Promise<void> {
+async function rememberPendingPhone(phone: string, mode: "signup" | "login" | "invite", invitationToken?: string): Promise<void> {
   const cookieStore = await cookies();
   const options = {
     httpOnly: true,
@@ -27,6 +29,44 @@ async function rememberPendingPhone(phone: string, mode: "signup" | "login"): Pr
   };
   cookieStore.set(pendingPhoneCookie, phone, options);
   cookieStore.set(pendingModeCookie, mode, options);
+  if (invitationToken) cookieStore.set(pendingInvitationCookie, invitationToken, options);
+  else cookieStore.delete(pendingInvitationCookie);
+}
+
+export async function requestInviteCodeAction(invitationToken: string, formData: FormData): Promise<void> {
+  if (!isSupabaseAuthConfigured()) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=configuration`);
+  if (!isCustomerInvitationToken(invitationToken)) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=invalid`);
+
+  const phone = normalizePhoneNumber(value(formData, "phone"));
+  if (!phone) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=phone`);
+  if (formData.get("sms_consent") !== "on") redirect(`/invite/${encodeURIComponent(invitationToken)}?error=consent`);
+
+  const admin = getSupabaseAdmin();
+  const now = new Date().toISOString();
+  const { data: invitation } = await admin.from("customer_workspace_invitations").select("id,client_id").eq("token_hash", hashCustomerInvitationToken(invitationToken)).is("accepted_at", null).is("revoked_at", null).gt("expires_at", now).maybeSingle();
+  if (!invitation) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=invalid`);
+  const { data: client } = await admin.from("clients").select("id,user_id,owner_name").eq("id", invitation.client_id).maybeSingle();
+  if (!client || client.user_id) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=claimed`);
+
+  const { error: consentError } = await admin.from("messaging_consents").insert({
+    client_id: client.id,
+    phone_e164: phone,
+    purpose: "verification",
+    consent_version: messagingConsentVersion,
+    consent_text: verificationConsentText,
+    source: "customer_invitation",
+    consented_at: now
+  });
+  if (consentError) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=sms`);
+
+  const supabase = await getSupabaseAuth();
+  const { error } = await supabase.auth.signInWithOtp({
+    phone,
+    options: { shouldCreateUser: true, data: { owner_name: client.owner_name, invited_client_id: client.id } }
+  });
+  if (error) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=sms`);
+  await rememberPendingPhone(phone, "invite", invitationToken);
+  redirect("/verify?source=invite");
 }
 
 export async function requestSignupCodeAction(formData: FormData): Promise<void> {
@@ -99,17 +139,19 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
   const cookieStore = await cookies();
   const phone = cookieStore.get(pendingPhoneCookie)?.value;
   const mode = cookieStore.get(pendingModeCookie)?.value;
+  const invitationToken = cookieStore.get(pendingInvitationCookie)?.value;
   const token = value(formData, "code").replace(/\D/g, "");
 
-  if (!phone || (mode !== "signup" && mode !== "login")) redirect("/signup?error=expired");
+  if (!phone || (mode !== "signup" && mode !== "login" && mode !== "invite")) redirect("/signup?error=expired");
   if (token.length < 4 || token.length > 10) redirect("/verify?error=code");
 
   const supabase = await getSupabaseAuth();
   const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
-  if (error || !data.user || !data.session) redirect("/verify?error=code");
+  if (error || !data.user || !data.session) redirect(`/verify?error=code${mode === "invite" ? "&source=invite" : ""}`);
 
   cookieStore.delete(pendingPhoneCookie);
   cookieStore.delete(pendingModeCookie);
+  cookieStore.delete(pendingInvitationCookie);
 
   const admin = getSupabaseAdmin();
   if (mode === "login") {
@@ -126,6 +168,42 @@ export async function verifyPhoneCodeAction(formData: FormData): Promise<void> {
       revoked_at: null
     }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
     redirect("/dashboard");
+  }
+
+  if (mode === "invite") {
+    if (!invitationToken || !isCustomerInvitationToken(invitationToken)) redirect("/login?error=invitation");
+    const now = new Date().toISOString();
+    const invitationHash = hashCustomerInvitationToken(invitationToken);
+    const { data: invitation } = await admin.from("customer_workspace_invitations").select("id,client_id").eq("token_hash", invitationHash).is("accepted_at", null).is("revoked_at", null).gt("expires_at", now).maybeSingle();
+    if (!invitation) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=invalid`);
+    const [{ data: targetClient }, { data: existingClient }] = await Promise.all([
+      admin.from("clients").select("id,user_id,product_mode,onboarding_completed_at").eq("id", invitation.client_id).maybeSingle(),
+      admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle()
+    ]);
+    if (!targetClient || (targetClient.user_id && targetClient.user_id !== data.user.id) || (existingClient && existingClient.id !== targetClient.id)) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=account`);
+
+    if (!targetClient.user_id) {
+      const update: Record<string, unknown> = { user_id: data.user.id };
+      if (targetClient.product_mode === "reactivation" && !targetClient.onboarding_completed_at) update.onboarding_completed_at = now;
+      const { data: linkedClient, error: linkError } = await admin.from("clients").update(update).eq("id", targetClient.id).is("user_id", null).select("id").maybeSingle();
+      if (linkError || !linkedClient) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=account`);
+    }
+
+    const { error: acceptError } = await admin.from("customer_workspace_invitations").update({ accepted_at: now, accepted_user_id: data.user.id }).eq("id", invitation.id).is("accepted_at", null);
+    if (acceptError) redirect(`/invite/${encodeURIComponent(invitationToken)}?error=account`);
+    await admin.from("customer_workspace_invitations").update({ revoked_at: now }).eq("client_id", targetClient.id).neq("id", invitation.id).is("accepted_at", null).is("revoked_at", null);
+    await admin.from("messaging_consents").upsert({
+      client_id: targetClient.id,
+      user_id: data.user.id,
+      phone_e164: phone,
+      purpose: "verification",
+      consent_version: messagingConsentVersion,
+      consent_text: verificationConsentText,
+      source: "customer_invitation",
+      consented_at: now,
+      revoked_at: null
+    }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
+    redirect(targetClient.product_mode === "reactivation" ? "/dashboard/reactivation?invited=1" : "/onboarding?invited=1");
   }
 
   const ownerName = typeof data.user.user_metadata.owner_name === "string"
@@ -252,6 +330,26 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     consented_at: trialStartedAt.toISOString(),
     revoked_at: null
   }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
+  const { data: existingCampaign, error: campaignLookupError } = await admin
+    .from("reactivation_campaigns")
+    .select("id")
+    .eq("client_id", client.id)
+    .limit(1)
+    .maybeSingle();
+  if (campaignLookupError) redirect("/onboarding?error=save");
+  if (!existingCampaign) {
+    const { error: campaignError } = await admin.from("reactivation_campaigns").insert({
+      client_id: client.id,
+      name: `${businessName} lead recovery`.slice(0, 160),
+      service_type: trade.slice(0, 100),
+      calling_timezone: value(formData, "timezone") || "America/New_York",
+      calling_window_start: "09:00",
+      calling_window_end: "18:00",
+      max_attempts: 2,
+      daily_limit: 25
+    });
+    if (campaignError) redirect("/onboarding?error=save");
+  }
   redirect("/dashboard/reactivation?welcome=1");
 }
 

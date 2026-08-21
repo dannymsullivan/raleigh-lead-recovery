@@ -11,7 +11,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
 
   return (
     <AuthShell eyebrow="Welcome back" title="Open your recovery board." description="Sign in to see the conversations, qualified leads, and next steps Mabel recovered for your team.">
-      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : error === "phone" ? "We could not text that number. Check it or create an account first." : "That email and password did not match."}</p> : null}
+      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : error === "phone" ? "We could not text that number. Check it or create an account first." : error === "invitation" ? "That customer access link is invalid or expired. Ask for a fresh link." : "We could not sign you in."}</p> : null}
       <form action={requestLoginCodeAction} className="grid gap-5">
         <AuthField label="Mobile number" name="phone" type="tel" placeholder="(919) 555-0123" autoComplete="tel" />
         <p className="text-xs font-semibold leading-5 text-black/55">By selecting “Text me a code,” you request a one-time account-access text from Raleigh Lead Recovery. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. See our <Link className="font-black text-black underline" href="/terms">Terms</Link> and <Link className="font-black text-black underline" href="/privacy">Privacy Policy</Link>.</p>
@@ -20,8 +20,8 @@ export default async function LoginPage({ searchParams }: PageProps) {
         </button>
       </form>
       <div className="mt-6 border-2 border-black bg-[#d8ff57] p-4">
-        <p className="text-sm font-black">Want to look around first?</p>
-        <Link className="mt-2 inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4" href="/demo">Explore the sample dashboard <ArrowRight className="h-4 w-4" /></Link>
+        <p className="text-sm font-black">Want to hear Mabel first?</p>
+        <Link className="mt-2 inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4" href="/demo">Try Mabel on your phone <ArrowRight className="h-4 w-4" /></Link>
       </div>
       <p className="mt-7 text-sm font-semibold text-black/55">New here? <Link className="font-extrabold text-black underline decoration-2 underline-offset-4" href="/signup">Start free</Link></p>
     </AuthShell>

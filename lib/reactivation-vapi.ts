@@ -3,8 +3,13 @@ import "server-only";
 import { getSupabaseAdmin } from "./supabase-server";
 import { buildReactivationCallRequest } from "./reactivation-call";
 import type { Client, ReactivationCampaign, ReactivationContact } from "./types";
+import { assessOpportunityDate } from "./lead-eligibility";
 
 type VapiCall = { id: string; status?: string };
+
+class ReactivationAttemptCreatedError extends Error {
+  readonly attemptCreated = true;
+}
 
 function requiredEnv(key: string): string {
   const value = process.env[key]?.trim();
@@ -47,6 +52,8 @@ export async function queueReactivationContactCall(
   contact: ReactivationContact
 ): Promise<{ callId: string; attemptId: string }> {
   const admin = getSupabaseAdmin();
+  const dateEligibility = assessOpportunityDate({ serviceType: campaign.service_type, metadata: contact.import_metadata, notes: contact.notes });
+  if (!dateEligibility.eligible) throw new Error("Contact opportunity date is not eligible.");
   const { data: suppressed } = await admin.from("suppression_entries").select("id").eq("client_id", client.id).eq("phone_e164", contact.phone_e164).maybeSingle();
   if (suppressed) throw new Error("This phone number is suppressed.");
 
@@ -62,6 +69,7 @@ export async function queueReactivationContactCall(
     .eq("campaign_id", campaign.id)
     .eq("attempt_count", contact.attempt_count)
     .in("status", ["queued", "no_answer", "failed"])
+    .or("import_bucket.is.null,import_bucket.neq.exclude")
     .is("owner_contacted_at", null)
     .select("id")
     .maybeSingle();
@@ -87,7 +95,7 @@ export async function queueReactivationContactCall(
     const message = error instanceof Error ? error.message : "Unknown Vapi error";
     await admin.from("reactivation_attempts").update({ status: "failed", error: message.slice(0, 500) }).eq("id", attempt.id);
     await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed" }).eq("id", contact.id).eq("status", "calling");
-    throw error;
+    throw new ReactivationAttemptCreatedError(message);
   }
 }
 
@@ -106,41 +114,63 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
   const { data: clientData, error: clientError } = await admin.from("clients").select("*").eq("id", campaign.client_id).single();
   if (clientError) throw clientError;
   const client = clientData as Client;
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
-  const { count } = await admin.from("reactivation_attempts").select("id", { count: "exact", head: true }).eq("campaign_id", campaign.id).gte("created_at", today.toISOString());
-  const remainingToday = Math.max(0, campaign.daily_limit - (count ?? 0));
-  const limit = Math.min(Math.max(1, requestedLimit), 50, remainingToday);
-  if (!limit) return { queued: 0, failed: 0, skipped: "daily_limit_reached" };
-
+  const requestedCapacity = Math.min(Math.max(1, requestedLimit), 50);
   const { data: contactData, error: contactError } = await admin
     .from("reactivation_contacts")
     .select("*")
     .eq("campaign_id", campaign.id)
     .in("status", ["queued", "no_answer", "failed"])
+    .or("import_bucket.is.null,import_bucket.neq.exclude")
     .lt("attempt_count", campaign.max_attempts)
     .or(`next_attempt_at.is.null,next_attempt_at.lte.${new Date().toISOString()}`)
     .order("created_at", { ascending: true })
-    .limit(limit);
+    .limit(requestedCapacity);
   if (contactError) throw contactError;
-  const contacts = (contactData ?? []) as ReactivationContact[];
+  const candidates = (contactData ?? []) as ReactivationContact[];
+  if (!candidates.length) return { queued: 0, failed: 0, skipped: "no_contacts_ready" };
+
+  const { data: reservedCapacity, error: capacityError } = await admin.rpc("reserve_reactivation_daily_capacity", {
+    p_campaign_id: campaign.id,
+    p_requested: candidates.length
+  });
+  if (capacityError) throw capacityError;
+  const limit = Math.max(0, Number(reservedCapacity) || 0);
+  if (!limit) return { queued: 0, failed: 0, skipped: "daily_limit_reached" };
+
+  const contacts = candidates.slice(0, limit);
   let queued = 0;
   let failed = 0;
+  let usedReservations = 0;
 
-  for (const contact of contacts) {
-    try {
-      await queueReactivationContactCall(client, campaign, contact);
-      queued += 1;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown Vapi error";
-      if (message === "This phone number is suppressed.") {
-        await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
-      } else if (message === "Contact is no longer eligible.") {
-        // A rep, CRM sync, or overlapping batch changed this record after the
-        // queue query. Skipping is the safe and expected outcome.
-      } else {
-        failed += 1;
+  try {
+    for (const contact of contacts) {
+      try {
+        await queueReactivationContactCall(client, campaign, contact);
+        usedReservations += 1;
+        queued += 1;
+      } catch (error) {
+        if (error instanceof ReactivationAttemptCreatedError) usedReservations += 1;
+        const message = error instanceof Error ? error.message : "Unknown Vapi error";
+        if (message === "This phone number is suppressed.") {
+          await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
+        } else if (message === "Contact opportunity date is not eligible.") {
+          await admin.from("reactivation_contacts").update({ status: "completed_project", outcome: "date_ineligible", import_bucket: "exclude" }).eq("id", contact.id);
+        } else if (message === "Contact is no longer eligible.") {
+          // A rep, CRM sync, or overlapping batch changed this record after the
+          // queue query. Skipping is the safe and expected outcome.
+        } else {
+          failed += 1;
+        }
       }
+    }
+  } finally {
+    const unusedReservations = limit - usedReservations;
+    if (unusedReservations > 0) {
+      const { error: releaseError } = await admin.rpc("release_reactivation_daily_capacity", {
+        p_campaign_id: campaign.id,
+        p_unused: unusedReservations
+      });
+      if (releaseError) throw releaseError;
     }
   }
   return { queued, failed, skipped: null };

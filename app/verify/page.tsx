@@ -10,10 +10,11 @@ type PageProps = { searchParams?: Promise<Record<string, string | string[] | und
 export default async function VerifyPage({ searchParams }: PageProps) {
   const search = (await searchParams) ?? {};
   const hasError = search.error === "code";
+  const invited = search.source === "invite";
   const phone = (await cookies()).get("mabel_pending_phone")?.value;
 
   return (
-    <AuthShell eyebrow="Check your phone" title="Enter your verification code." description={phone ? `We sent it to ${maskPhoneNumber(phone)}. Next, you’ll add your business number.` : "Request a new code to continue."}>
+    <AuthShell eyebrow="Check your phone" title="Enter your verification code." description={phone ? invited ? `We sent it to ${maskPhoneNumber(phone)}. Verification opens your existing customer workspace.` : `We sent it to ${maskPhoneNumber(phone)}. Next, you’ll add your business number.` : "Request a new code to continue."}>
       {hasError ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">That code is incorrect or expired. Try again or request a new one.</p> : null}
       {phone ? (
         <form action={verifyPhoneCodeAction} className="grid gap-5">
@@ -23,7 +24,7 @@ export default async function VerifyPage({ searchParams }: PageProps) {
           </button>
         </form>
       ) : null}
-      <p className="mt-7 text-sm font-semibold text-black/55"><Link className="font-extrabold text-black underline decoration-2 underline-offset-4" href="/signup">Request a new code</Link></p>
+      {!invited ? <p className="mt-7 text-sm font-semibold text-black/55"><Link className="font-extrabold text-black underline decoration-2 underline-offset-4" href="/signup">Request a new code</Link></p> : <p className="mt-7 text-sm font-semibold text-black/55">If the code expires, reopen the customer access link to request another.</p>}
     </AuthShell>
   );
 }

@@ -6,6 +6,10 @@ function adminSecret(): string | null {
   return process.env.ADMIN_PASSWORD || null;
 }
 
+export function isLocalAdminBypassEnabled(environment: Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV" | "ADMIN_LOCAL_BYPASS">> = process.env): boolean {
+  return environment.NODE_ENV === "development" && environment.ADMIN_LOCAL_BYPASS !== "false";
+}
+
 function sign(timestamp: string, secret: string): string {
   return createHmac("sha256", secret).update(timestamp).digest("hex");
 }
@@ -22,6 +26,7 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 export function verifyAdminPassword(password: string): boolean {
+  if (isLocalAdminBypassEnabled()) return true;
   const secret = adminSecret();
   return Boolean(secret && safeEqual(password, secret));
 }
@@ -37,6 +42,7 @@ export function createAdminSessionToken(now = new Date()): string {
 }
 
 export function verifyAdminSessionToken(token: string | undefined): boolean {
+  if (isLocalAdminBypassEnabled()) return true;
   const secret = adminSecret();
   if (!secret || !token) {
     return false;
