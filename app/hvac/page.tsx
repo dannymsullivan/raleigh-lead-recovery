@@ -16,7 +16,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
-import { DemoCallForm } from "../components/demo-call-form";
+import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
 const pilotHref =
@@ -157,7 +157,12 @@ export default function HvacLandingPage() {
       </section>
 
       <div className="hvac-demo-wrap" id="live-demo">
-        <DemoCallForm bookingUrl={pilotHref} analyticsLocation="hvac_landing" focusedDemoType="hvac" />
+        <div className="page-shell hvac-single-demo">
+          <p className="eyebrow"><span /> Live HVAC browser demo</p>
+          <h2>Play the homeowner. Hear the call live.</h2>
+          <p>Ask a real HVAC question and hear how Raleigh Lead Recovery gathers the details, checks urgency, and prepares the handoff.</p>
+          <WebVoiceDemo />
+        </div>
       </div>
 
       <section className="hvac-pilot">

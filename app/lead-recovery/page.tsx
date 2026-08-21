@@ -14,7 +14,7 @@ import {
   TimerReset,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
-import { DemoCallForm } from "../components/demo-call-form";
+import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
@@ -41,10 +41,6 @@ export const metadata: Metadata = {
     images: ["/raleigh-lead-recovery-social.png"],
   },
 };
-
-const pilotHref =
-  process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
-  "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
 const faqs = [
   {
@@ -89,7 +85,14 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <DemoCallForm bookingUrl={pilotHref} focusedDemoType="hvac" />
+      <section className="recovery-single-demo page-shell" id="listen-now-form">
+        <div>
+          <p className="eyebrow"><span /> One live demo</p>
+          <h1>Hear Raleigh Lead Recovery handle an HVAC call.</h1>
+          <p>Use the browser demo to hear the voice, pacing, safety rules, and handoff quality. Lead-recovery campaigns use the same approved guardrails with a different call flow.</p>
+        </div>
+        <WebVoiceDemo />
+      </section>
 
       <section className="recovery-problem page-shell">
         <div className="recovery-section-heading">

@@ -263,11 +263,11 @@ export default function HomePage() {
       <section className="maker-section page-shell receptionist-maker">
         <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={80} height={80} />
         <div>
-          <p className="eyebrow">Set up with a real person</p>
+          <p className="eyebrow">Self-serve, with real support</p>
           <h2>Built and supported in Raleigh.</h2>
-          <p>Set it up yourself, or bring me in to shape the call rules and test the experience before it answers a customer.</p>
+          <p>Start the free trial and build the call flow yourself. If you want a second set of eyes, I&apos;m here to help you tune it before it answers a customer.</p>
         </div>
-        <a className="text-link" href={bookingHref} target="_blank" rel="noreferrer">Talk through your call flow <ArrowRight aria-hidden="true" /></a>
+        <Link className="text-link" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
       </section>
 
       <section className="receptionist-final page-shell">

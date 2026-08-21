@@ -6,6 +6,24 @@ import { getRetellClient } from "./retell";
 import { getSupabaseAdmin } from "./supabase-server";
 import type { Client, CustomerAgent, CustomerAgentType } from "./types";
 
+type RetellAgentPublisher = {
+  publish(agentId: string, body: { version: number; version_description?: string }): Promise<unknown>;
+  retrieve(agentId: string, query: { version: string | number }): Promise<{ version: number }>;
+};
+
+export async function publishRetellAgent(
+  agentApi: RetellAgentPublisher,
+  agentId: string,
+  version: number
+): Promise<void> {
+  try {
+    await agentApi.publish(agentId, { version, version_description: "Published from customer workspace" });
+  } catch (error) {
+    const published = await agentApi.retrieve(agentId, { version: "latest_published" });
+    if (published.version !== version) throw error;
+  }
+}
+
 const receptionistAnalysis = [
   { type: "string" as const, name: "caller_name", description: "Caller's name." },
   { type: "string" as const, name: "callback_number", description: "Best callback number." },
@@ -180,7 +198,7 @@ export async function provisionCustomerAgent(clientId: string, type: CustomerAge
       agentVersion = updated.version;
     }
 
-    await retell.agent.publish(agentId, { version: agentVersion, version_description: "Published from customer workspace" });
+    await publishRetellAgent(retell.agent, agentId, agentVersion);
     const { data: sibling } = await admin.from("customer_agents").select("retell_phone_number").eq("client_id", clientId).not("retell_phone_number", "is", null).limit(1).maybeSingle();
     const existingNumber = agent.retell_phone_number || sibling?.retell_phone_number || client.provisioned_phone_number || null;
     const phoneNumber = await bindNumber(retell, client, agent, agentId, existingNumber);

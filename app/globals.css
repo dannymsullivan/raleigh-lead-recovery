@@ -443,6 +443,37 @@ body {
   border-top: 1px solid var(--line);
 }
 
+.recovery-single-demo,
+.hvac-single-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(44px, 8vw, 120px);
+  align-items: end;
+  padding-block: clamp(78px, 9vw, 120px);
+}
+
+.recovery-single-demo h1,
+.hvac-single-demo h2 {
+  max-width: 820px;
+  margin: 18px 0 20px;
+  font-size: clamp(3.2rem, 5.7vw, 5.8rem);
+  letter-spacing: -.068em;
+  line-height: .91;
+  text-wrap: balance;
+}
+
+.recovery-single-demo > div > p:last-child,
+.hvac-single-demo > p {
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.hvac-single-demo {
+  color: var(--ink);
+}
+
 .receptionist-two-jobs {
   padding-block: 110px;
   background: var(--ink);
@@ -714,7 +745,9 @@ body {
   .receptionist-hero,
   .receptionist-process,
   .receptionist-two-jobs-grid,
-  .receptionist-guardrails {
+  .receptionist-guardrails,
+  .recovery-single-demo,
+  .hvac-single-demo {
     grid-template-columns: 1fr;
   }
 
