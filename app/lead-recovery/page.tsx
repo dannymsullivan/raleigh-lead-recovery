@@ -46,19 +46,6 @@ const pilotHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
   "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
 
-const integrationTools = [
-  { name: "ServiceTitan", mark: "ST" },
-  { name: "Housecall Pro", mark: "HCP" },
-  { name: "Jobber", mark: "J" },
-  { name: "HighLevel", mark: "HL" },
-  { name: "HubSpot", mark: "HS" },
-  { name: "Salesforce", mark: "SF" },
-  { name: "QuickBooks", mark: "QB" },
-  { name: "Google Sheets", mark: "GS" },
-  { name: "Zapier", mark: "Z" },
-  { name: "Make", mark: "M" },
-];
-
 const faqs = [
   {
     q: "What counts as an old lead?",
@@ -77,24 +64,12 @@ const faqs = [
     a: "That lead should not be called. Before connected automation goes live, we define the recent-activity window and the events that pause outreach. The integration rechecks for calls, emails, appointments, status changes, manual holds, and opt-outs before each dial.",
   },
   {
-    q: "Can Raleigh Lead Recovery remind past customers about recurring service?",
-    a: "Yes. Once the recovery workflow is working, the same eligibility and no-double-call controls can support timely reminders such as annual HVAC tune-ups. We define the due date, exclusions, approved message, and handoff before it runs.",
-  },
-  {
-    q: "Does Raleigh Lead Recovery know what each lead originally asked about?",
-    a: "Yes. You choose the approved context Raleigh Lead Recovery receives, such as the service requested, when the inquiry came in, and useful prior notes. That context keeps the call from repeating questions or exposing internal notes and sensitive information.",
-  },
-  {
     q: "What happens when someone is interested?",
     a: "When calendar booking is connected, Raleigh Lead Recovery can offer approved open times, book the selected appointment, and send the customer an email confirmation. It can also text the right person on your team with the call summary and appointment details.",
   },
   {
     q: "How do you protect our list and our reputation?",
     a: "Every campaign starts with eligibility, suppression, calling-window, disclosure, and brand-rule checks. Opt-outs are recorded immediately, and you approve the conversation before launch.",
-  },
-  {
-    q: "What can we track?",
-    a: "A clear funnel from eligible records and call attempts through conversations, qualified opportunities, appointments, opt-outs, and customer-confirmed pipeline.",
   },
 ];
 
@@ -103,7 +78,7 @@ export default function LandingPage() {
     <main className="landing-page recovery-page">
       <header className="site-header recovery-header">
         <nav className="page-shell nav-row" aria-label="Primary navigation">
-          <BrandMark accent="#ff6547" />
+          <BrandMark accent="#d8ff57" />
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <Link href="/login">Sign in</Link>
@@ -227,9 +202,9 @@ export default function LandingPage() {
       <section className="recovery-autopilot page-shell" aria-labelledby="autopilot-heading">
         <div className="recovery-autopilot-heading">
           <p className="eyebrow">Start simple. Automate when ready.</p>
-          <h2 id="autopilot-heading">Your CRM decides who gets called.</h2>
+          <h2 id="autopilot-heading">Call only the leads you approve.</h2>
           <p>
-            Start with an approved CSV. When you&apos;re ready, connect a CRM view or webhook and define exactly when an inactive lead becomes eligible.
+            Start with an approved CSV. Connect your CRM later if you want eligibility and recent activity checked automatically.
           </p>
         </div>
         <div className="recovery-autopilot-grid">
@@ -252,24 +227,7 @@ export default function LandingPage() {
             <p>Attempts, summaries, appointments, and opt-outs appear in the dashboard and can sync back to your CRM.</p>
           </article>
         </div>
-        <div className="recovery-integrations" id="crm-connections" aria-labelledby="integration-heading">
-          <div className="recovery-integrations-heading">
-            <div>
-              <p className="eyebrow">Works with your stack.</p>
-              <h3 id="integration-heading">Keep the tools you already use.</h3>
-            </div>
-            <p>Your CRM stays the source of truth while Raleigh Lead Recovery follows the eligibility and activity rules you approve.</p>
-          </div>
-          <ul className="integration-logo-grid" aria-label="Compatible CRM and automation platforms">
-            {integrationTools.map((tool) => (
-              <li key={tool.name}>
-                <span aria-hidden="true">{tool.mark}</span>
-                <strong>{tool.name}</strong>
-              </li>
-            ))}
-          </ul>
-          <p className="integration-methods">Connect through an available API, webhook, Zapier, Make, or an approved CSV.</p>
-        </div>
+        <p className="recovery-connection-note"><strong>Keep your CRM.</strong> Raleigh Lead Recovery can start with a CSV, then connect through an available API, webhook, Zapier, or Make workflow when you&apos;re ready.</p>
       </section>
 
       <section className="faq-section page-shell recovery-faq">
@@ -292,7 +250,7 @@ export default function LandingPage() {
         <div>
           <p className="eyebrow">A real person is behind this</p>
           <h2>Built and supported in Raleigh.</h2>
-          <p>I&apos;ll scope the list with you, configure Raleigh Lead Recovery around your sales process, and review the calls before a campaign scales.</p>
+          <p>Set it up yourself, or bring me in to scope the list, shape the call rules, and review the first conversations before a campaign scales.</p>
         </div>
         <a className="text-link" href="#listen-now-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="founder">Try it now <ArrowRight aria-hidden="true" /></a>
       </section>

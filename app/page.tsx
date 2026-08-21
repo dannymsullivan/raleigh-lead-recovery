@@ -62,12 +62,12 @@ export default function HomePage() {
     <main className="landing-page receptionist-page">
       <header className="site-header receptionist-header">
         <nav className="page-shell nav-row" aria-label="Primary navigation">
-          <BrandMark accent="#ff6547" />
+          <BrandMark accent="#d8ff57" />
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <Link href="/lead-recovery">Lead recovery</Link>
             <Link href="/login">Sign in</Link>
-            <Link className="button button-dark button-small" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
+            <a className="button button-dark button-small" href="#talk-now">Try it now <ArrowRight aria-hidden="true" /></a>
           </div>
         </nav>
       </header>
@@ -77,7 +77,7 @@ export default function HomePage() {
           <p className="eyebrow"><span /> Local call coverage for Raleigh service businesses</p>
           <h1>Miss the call. <em>Not the job.</em></h1>
           <p className="receptionist-hero-intro">
-            Raleigh Lead Recovery answers when you cannot, captures what the customer needs, and sends your team a useful handoff.
+            Raleigh Lead Recovery answers when you can&apos;t, captures what the customer needs, and sends your team a useful handoff.
           </p>
           <div className="receptionist-hero-actions" id="talk-now">
             <WebVoiceDemo />
@@ -131,7 +131,7 @@ export default function HomePage() {
             <Wrench aria-hidden="true" />
             <span>01</span>
             <h3>You&apos;re with a customer.</h3>
-            <p>Raleigh Lead Recovery picks up the call you cannot interrupt the job to answer.</p>
+            <p>The job stays on track, and the caller still gets an answer.</p>
           </article>
           <article>
             <Moon aria-hidden="true" />
@@ -151,8 +151,8 @@ export default function HomePage() {
       <section className="receptionist-process page-shell" id="how-it-works">
         <div className="receptionist-process-heading">
           <p className="eyebrow">Self-serve setup</p>
-          <h2>Set it up. Try it live. Turn it on.</h2>
-          <p>Add the business basics, hear the call flow yourself, then forward the calls you want covered. Do it yourself or ask for help at any step.</p>
+          <h2><span>Set it up.</span><span>Try it live.</span><span>Turn it on.</span></h2>
+          <p>Add the essentials, test a real call, then forward only the calls you want covered. Set it up yourself or ask for help.</p>
         </div>
         <ol>
           <li>
@@ -175,7 +175,7 @@ export default function HomePage() {
           <div className="receptionist-two-jobs-copy">
             <p className="eyebrow">One system. Two clear jobs.</p>
             <h2>Answer new demand. Recover the demand you already earned.</h2>
-            <p>Inbound call coverage and lead recovery stay separate, with their own phone workflows, instructions, and controls.</p>
+            <p>Use call coverage, lead recovery, or both. Each follows its own rules, so one workflow never gets in the other&apos;s way.</p>
           </div>
           <div className="receptionist-job-cards">
             <article className="active">
@@ -198,7 +198,7 @@ export default function HomePage() {
         <div className="receptionist-section-heading">
           <p className="eyebrow">Simple monthly plans</p>
           <h2>One caught job can cover the month.</h2>
-          <p>Start with the calls that would have reached voicemail. Add lead recovery when you&apos;re ready to work the demand already sitting in your CRM.</p>
+          <p>Start with missed calls. Add lead recovery when you&apos;re ready to work the demand already sitting in your CRM.</p>
         </div>
         <div className="receptionist-pricing-grid">
           <article>
@@ -206,21 +206,21 @@ export default function HomePage() {
             <h3>24/7 Call Coverage</h3>
             <strong><span>$499</span> / month</strong>
             <ul>{["Answers every call", "Business-specific knowledge", "Lead qualification", "Appointment scheduling", "Call transfers", "Call summaries", "SMS follow-up", "Dashboard"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
-            <Link className="button button-dark" href="/signup">Set up Raleigh Lead Recovery <ArrowRight aria-hidden="true" /></Link>
+            <Link className="button button-dark" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
           <article className="featured">
             <p className="eyebrow">Answer + grow</p>
             <h3>Call Coverage + Lead Recovery</h3>
             <strong><span>$999</span> / month</strong>
             <ul>{["Everything in Call Coverage", "Calls missed leads", "Calls old estimates", "Re-engages dormant customers", "Books appointments", "Campaign reporting"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
-            <Link className="button button-light" href="/signup">Build your growth system <ArrowRight aria-hidden="true" /></Link>
+            <Link className="button button-light" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
           <article>
             <p className="eyebrow">Custom operations</p>
             <h3>Managed Automations</h3>
             <strong><span>Custom</span></strong>
             <ul>{["CRM integrations", "Custom campaigns", "Calendar workflows", "Reporting automations", "Ongoing optimization"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
-            <a className="button button-dark" href={bookingHref} target="_blank" rel="noreferrer">Talk through the workflow <ArrowRight aria-hidden="true" /></a>
+            <a className="button button-dark" href={bookingHref} target="_blank" rel="noreferrer">Talk to us <ArrowRight aria-hidden="true" /></a>
           </article>
         </div>
       </section>
@@ -257,7 +257,7 @@ export default function HomePage() {
         <div>
           <p className="eyebrow">Set up with a real person</p>
           <h2>Built and supported in Raleigh.</h2>
-          <p>I&apos;ll learn how your business handles calls, configure Raleigh Lead Recovery around those rules, and test the experience with you before it answers a customer.</p>
+          <p>Set it up yourself, or bring me in to shape the call rules and test the experience before it answers a customer.</p>
         </div>
         <a className="text-link" href={bookingHref} target="_blank" rel="noreferrer">Talk through your call flow <ArrowRight aria-hidden="true" /></a>
       </section>
@@ -271,7 +271,7 @@ export default function HomePage() {
 
       <footer className="site-footer">
         <div className="page-shell footer-row">
-          <div><BrandMark inverted accent="#ff6547" /><p>© 2026 Raleigh Lead Recovery</p></div>
+          <div><BrandMark inverted accent="#d8ff57" /><p>© 2026 Raleigh Lead Recovery</p></div>
           <nav aria-label="Footer navigation"><Link href="/lead-recovery">Lead recovery</Link><Link href="/blog">Writing</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
         </div>
       </footer>
