@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function BrandMark({ inverted = false }: { inverted?: boolean }) {
+export function BrandMark({ inverted = false, accent = "#d8ff57" }: { inverted?: boolean; accent?: string }) {
   return (
     <Link className="group inline-flex items-center gap-3" href="/" aria-label="Raleigh Lead Recovery home">
       <span className="grid h-10 w-10 place-items-center transition-transform duration-200 group-hover:-translate-y-0.5">
@@ -11,8 +11,8 @@ export function BrandMark({ inverted = false }: { inverted?: boolean }) {
             width="44"
             height="44"
             rx="10"
-            fill="#d8ff57"
-            stroke={inverted ? "#d8ff57" : "#11130f"}
+            fill={accent}
+            stroke={inverted ? accent : "#11130f"}
             strokeWidth="2"
           />
           <path
@@ -28,7 +28,7 @@ export function BrandMark({ inverted = false }: { inverted?: boolean }) {
       <span className="text-sm font-black leading-[1.02] tracking-[-0.035em]">
         Raleigh Lead
         <br />
-        <span className={inverted ? "text-[#d8ff57]" : "text-black"}>Recovery</span>
+        <span className={inverted ? undefined : "text-black"} style={inverted ? { color: accent } : undefined}>Recovery</span>
       </span>
     </Link>
   );

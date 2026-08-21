@@ -693,6 +693,360 @@ body {
   }
 }
 
+/* Receptionist hero: a single, high-contrast call action and a live-call illustration. */
+.receptionist-page {
+  --accent: #ff6547;
+  background:
+    radial-gradient(circle at 78% 4%, rgb(255 101 71 / 10%), transparent 22%),
+    var(--paper);
+}
+
+.receptionist-page .eyebrow > span {
+  background: #ff6547;
+  box-shadow: 0 0 0 5px rgb(255 101 71 / 13%);
+}
+
+.receptionist-header .button-dark,
+.receptionist-call-button {
+  background: #ff6547;
+  color: #13140f;
+}
+
+.receptionist-header .button-dark:hover,
+.receptionist-call-button:hover {
+  background: #ff7a60;
+}
+
+.receptionist-hero {
+  grid-template-columns: minmax(0, .92fr) minmax(470px, .88fr);
+  gap: clamp(58px, 7vw, 104px);
+  min-height: 690px;
+  padding-block: 74px 88px;
+}
+
+.receptionist-hero-copy h1 {
+  max-width: 720px;
+  margin-bottom: 28px;
+  font-size: clamp(4.15rem, 6.55vw, 6.55rem);
+  letter-spacing: -.072em;
+  line-height: .9;
+}
+
+.receptionist-hero-copy h1 em {
+  display: block;
+  margin-top: .06em;
+  color: #ee4f31;
+  font-style: italic;
+}
+
+.receptionist-hero-intro {
+  max-width: 610px;
+}
+
+.receptionist-call-button {
+  min-width: 205px;
+  border: 1px solid #13140f;
+  box-shadow: 5px 5px 0 #13140f;
+}
+
+.receptionist-call-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #13140f;
+}
+
+.receptionist-call-visual {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #090a08;
+  border-radius: 22px;
+  background:
+    linear-gradient(rgb(255 255 255 / 3%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 3%) 1px, transparent 1px),
+    #171913;
+  background-size: 28px 28px;
+  color: white;
+  box-shadow: 18px 18px 0 rgb(255 101 71 / 22%);
+  isolation: isolate;
+}
+
+.receptionist-call-visual::after {
+  position: absolute;
+  z-index: -1;
+  width: 330px;
+  height: 330px;
+  top: -170px;
+  right: -120px;
+  border-radius: 50%;
+  background: #ff6547;
+  filter: blur(3px);
+  opacity: .75;
+  content: "";
+}
+
+.receptionist-call-visual-top {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 23px;
+  border-bottom: 1px solid rgb(255 255 255 / 14%);
+  color: rgb(255 255 255 / 67%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .58rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.receptionist-call-visual-top span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.receptionist-call-visual-top i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff6547;
+  box-shadow: 0 0 0 6px rgb(255 101 71 / 15%);
+  animation: receptionist-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes receptionist-pulse {
+  0%, 100% { transform: scale(.9); opacity: .7; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.receptionist-signal-stage {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 27px 28px 24px;
+}
+
+.receptionist-signal {
+  position: relative;
+  display: grid;
+  width: 138px;
+  height: 138px;
+  place-items: center;
+}
+
+.receptionist-signal-ring {
+  position: absolute;
+  border: 1px solid rgb(255 101 71 / 38%);
+  border-radius: 50%;
+}
+
+.receptionist-signal-ring.ring-one {
+  inset: 0;
+  animation: signal-ring 2.8s ease-out infinite;
+}
+
+.receptionist-signal-ring.ring-two {
+  inset: 17px;
+  animation: signal-ring 2.8s .7s ease-out infinite;
+}
+
+@keyframes signal-ring {
+  0% { transform: scale(.8); opacity: .25; }
+  50% { opacity: 1; }
+  100% { transform: scale(1.1); opacity: .1; }
+}
+
+.receptionist-signal-core {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ff6547;
+  color: #11120e;
+  box-shadow: 0 0 45px rgb(255 101 71 / 36%);
+}
+
+.receptionist-signal-core svg {
+  width: 29px;
+  height: 29px;
+  stroke-width: 1.8;
+}
+
+.receptionist-signal-stage > div:last-child p {
+  margin-bottom: 7px;
+  color: #ff896f;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .58rem;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.receptionist-signal-stage > div:last-child strong {
+  display: block;
+  max-width: 250px;
+  font-size: 1.16rem;
+  letter-spacing: -.025em;
+  line-height: 1.2;
+}
+
+.receptionist-transcript {
+  display: grid;
+  gap: 11px;
+  padding: 0 28px 26px;
+}
+
+.receptionist-transcript > div {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 15px 17px;
+  border-radius: 11px;
+}
+
+.receptionist-transcript .caller-line {
+  margin-right: 34px;
+  background: #2a2d25;
+}
+
+.receptionist-transcript .mabel-line {
+  margin-left: 34px;
+  background: #fff;
+  color: #171913;
+}
+
+.receptionist-transcript span {
+  padding-top: 2px;
+  color: rgb(255 255 255 / 47%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .53rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.receptionist-transcript .mabel-line span {
+  color: #e65034;
+}
+
+.receptionist-transcript p {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.receptionist-captured {
+  padding: 18px 28px 22px;
+  border-top: 1px solid rgb(255 255 255 / 14%);
+}
+
+.receptionist-captured > p {
+  margin-bottom: 11px;
+  color: rgb(255 255 255 / 44%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .52rem;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.receptionist-captured > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.receptionist-captured span {
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  padding: 7px 10px;
+  color: rgb(255 255 255 / 78%);
+  font-size: .59rem;
+  font-weight: 760;
+}
+
+.receptionist-job-cards article.active {
+  background: #ff6547;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receptionist-call-visual-top i,
+  .receptionist-signal-ring {
+    animation: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .receptionist-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .receptionist-call-visual {
+    width: min(620px, 100%);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .receptionist-hero-copy h1 {
+    font-size: clamp(3.35rem, 16vw, 4.7rem);
+  }
+
+  .receptionist-call-button {
+    width: 100%;
+  }
+
+  .receptionist-signal-stage {
+    grid-template-columns: 100px 1fr;
+    gap: 15px;
+    padding-inline: 19px;
+  }
+
+  .receptionist-signal {
+    width: 96px;
+    height: 96px;
+  }
+
+  .receptionist-signal-ring.ring-two {
+    inset: 12px;
+  }
+
+  .receptionist-signal-core {
+    width: 54px;
+    height: 54px;
+  }
+
+  .receptionist-signal-core svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .receptionist-transcript {
+    padding-inline: 19px;
+  }
+
+  .receptionist-transcript > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .receptionist-transcript .caller-line {
+    margin-right: 16px;
+  }
+
+  .receptionist-transcript .mabel-line {
+    margin-left: 16px;
+  }
+
+  .receptionist-captured {
+    padding-inline: 19px;
+  }
+}
+
 .landing-page {
   --ink: #151713;
   --muted: #676b61;
@@ -4351,6 +4705,29 @@ details > summary {
 
 .product-ui .shadow-\[6px_6px_0_\#000\],
 .product-ui .shadow-\[8px_8px_0_\#000\] { box-shadow: 0 12px 30px rgb(21 23 19 / 0.14); }
+
+.receptionist-page .receptionist-call-button {
+  border: 1px solid #13140f;
+  background: #ff6547;
+  color: #13140f;
+  box-shadow: 5px 5px 0 #13140f;
+}
+
+.receptionist-page .receptionist-call-button:hover {
+  background: #ff7a60;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #13140f;
+}
+
+.receptionist-final-number {
+  margin-top: 18px !important;
+  color: #83877e !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .58rem !important;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .product-ui button,

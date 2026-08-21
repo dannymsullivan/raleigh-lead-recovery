@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BellRing,
-  Check,
   Clock3,
   Headphones,
   MessageSquareText,
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
     "Mabel answers missed and after-hours calls, captures what the customer needs, and gives your team the context to follow up—24/7.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "When You’re on the Job, Mabel’s on the Phone",
+    title: "Every Call Answered—Even When You Can’t | Mabel",
     description:
       "A 24/7 AI receptionist that answers inbound calls, captures the job, and sends your team a useful handoff.",
     url: "/",
@@ -65,13 +64,13 @@ export default function HomePage() {
     <main className="landing-page receptionist-page">
       <header className="site-header receptionist-header">
         <nav className="page-shell nav-row" aria-label="Primary navigation">
-          <BrandMark />
+          <BrandMark accent="#ff6547" />
           <div className="nav-links">
             <a href="#how-it-works">How it works</a>
             <Link href="/lead-recovery">Lead recovery</Link>
             <Link href="/login">Sign in</Link>
             <a className="button button-dark button-small" href={demoPhoneHref}>
-              Call Mabel <Phone aria-hidden="true" />
+              Call Mabel now <Phone aria-hidden="true" />
             </a>
           </div>
         </nav>
@@ -79,36 +78,42 @@ export default function HomePage() {
 
       <section className="receptionist-hero page-shell">
         <div className="receptionist-hero-copy">
-          <p className="eyebrow"><span /> 24/7 AI receptionist for service businesses</p>
-          <h1>When you&apos;re on the job, <em>Mabel&apos;s on the phone.</em></h1>
+          <p className="eyebrow"><span /> Meet Mabel · Your 24/7 AI receptionist</p>
+          <h1>Every call answered. <em>Even when you can&apos;t.</em></h1>
           <p className="receptionist-hero-intro">
-            Mabel answers the calls your team can&apos;t, learns the business information you approve, captures what every customer needs, and gives your team a useful next step—day or night.
+            Mabel picks up missed and after-hours calls, answers questions using the business information you approve, captures what the customer needs, and sends your team the handoff.
           </p>
           <div className="receptionist-hero-actions">
             <a className="button button-dark receptionist-call-button" href={demoPhoneHref}>
-              <PhoneCall aria-hidden="true" /> Call {demoPhoneDisplay}
+              <PhoneCall aria-hidden="true" /> Call Mabel now
             </a>
-            <a className="text-link" href="#hear-mabel">See what to ask <ArrowRight aria-hidden="true" /></a>
           </div>
-          <p className="receptionist-microcopy">Live demo · No form · About two minutes</p>
+          <p className="receptionist-microcopy">Live demo · {demoPhoneDisplay} · No form</p>
         </div>
 
-        <div className="receptionist-live-card" id="hear-mabel">
-          <div className="receptionist-live-topline">
-            <span><i /> Mabel is answering</span>
-            <span>24 / 7</span>
+        <div className="receptionist-call-visual" id="hear-mabel" aria-label="Illustration of Mabel answering an after-hours HVAC call">
+          <div className="receptionist-call-visual-top">
+            <span><i /> Live call</span>
+            <span>11:47 PM</span>
           </div>
-          <div className="receptionist-phone-stage">
-            <div className="receptionist-avatar"><Headphones aria-hidden="true" /></div>
-            <p className="eyebrow">Live inbound demo</p>
-            <h2>Ask about Mabel—or become the customer.</h2>
-            <p>Ask how the product works, or choose HVAC, plumbing, or pest control and give Mabel a real customer scenario.</p>
-            <a href={demoPhoneHref}>{demoPhoneDisplay}<Phone aria-hidden="true" /></a>
+          <div className="receptionist-signal-stage">
+            <div className="receptionist-signal" aria-hidden="true">
+              <span className="receptionist-signal-ring ring-one" />
+              <span className="receptionist-signal-ring ring-two" />
+              <span className="receptionist-signal-core"><Headphones /></span>
+            </div>
+            <div>
+              <p>Mabel is answering</p>
+              <strong>Oak City Heating &amp; Air</strong>
+            </div>
           </div>
-          <div className="receptionist-call-details">
-            <span><Check aria-hidden="true" /> Answers product questions</span>
-            <span><Check aria-hidden="true" /> One question at a time</span>
-            <span><Check aria-hidden="true" /> No invented pricing</span>
+          <div className="receptionist-transcript">
+            <div className="caller-line"><span>Caller</span><p>Our AC just stopped and the house is getting hot.</p></div>
+            <div className="mabel-line"><span>Mabel</span><p>I can help get this to the team. First, is anyone in immediate danger?</p></div>
+          </div>
+          <div className="receptionist-captured">
+            <p>Captured automatically</p>
+            <div><span>HVAC</span><span>Urgent</span><span>Callback requested</span></div>
           </div>
         </div>
       </section>
@@ -184,7 +189,7 @@ export default function HomePage() {
               <div><Headphones aria-hidden="true" /><span>Inbound</span></div>
               <h3>24/7 Receptionist</h3>
               <p>Answers missed and after-hours calls, captures the need, and routes the next step.</p>
-              <a href={demoPhoneHref}>Call Mabel <ArrowRight aria-hidden="true" /></a>
+              <a href={demoPhoneHref}>Call Mabel now <ArrowRight aria-hidden="true" /></a>
             </article>
             <article>
               <div><Sparkles aria-hidden="true" /><span>Outbound</span></div>
@@ -237,12 +242,13 @@ export default function HomePage() {
         <p className="eyebrow">Skip the pitch</p>
         <h2>Call Mabel.</h2>
         <p>Ask how the product works, or choose HVAC, plumbing, or pest control and test the customer experience.</p>
-        <a className="button button-dark" href={demoPhoneHref}><PhoneCall aria-hidden="true" /> {demoPhoneDisplay}</a>
+        <a className="button button-dark receptionist-call-button" href={demoPhoneHref}><PhoneCall aria-hidden="true" /> Call Mabel now</a>
+        <p className="receptionist-final-number">{demoPhoneDisplay} · Live demo · No form</p>
       </section>
 
       <footer className="site-footer">
         <div className="page-shell footer-row">
-          <div><BrandMark inverted /><p>© 2026 Raleigh Lead Recovery</p></div>
+          <div><BrandMark inverted accent="#ff6547" /><p>© 2026 Raleigh Lead Recovery</p></div>
           <nav aria-label="Footer navigation"><Link href="/lead-recovery">Lead recovery</Link><Link href="/blog">Writing</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
         </div>
       </footer>
