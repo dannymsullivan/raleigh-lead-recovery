@@ -3,28 +3,19 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.raleighleadrecovery.com"),
-  title: "Raleigh Lead Recovery | Turn Old Leads Into New Business",
-  description: "Mabel reactivates old and unresponsive leads, qualifies the people who are still interested, and sends real opportunities back to your team.",
+  title: "Mabel | 24/7 AI Receptionist and Lead Recovery",
+  description: "Mabel answers missed and after-hours calls, captures what the customer needs, and helps service businesses recover qualified past leads.",
   openGraph: {
-    title: "Raleigh Lead Recovery | Turn Old Leads Into New Business",
-    description: "Mabel re-engages past prospects, qualifies interest, and returns live opportunities to your team.",
+    title: "Mabel | 24/7 AI Receptionist and Lead Recovery",
+    description: "Answer new demand and recover the demand you already earned with Mabel.",
     type: "website",
     url: "/",
-    siteName: "Raleigh Lead Recovery",
-    images: [
-      {
-        url: "/raleigh-lead-recovery-social.png",
-        width: 1200,
-        height: 630,
-        alt: "Raleigh Lead Recovery turns old leads into new business",
-      },
-    ],
+    siteName: "Mabel by Raleigh Lead Recovery",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Raleigh Lead Recovery | Turn Old Leads Into New Business",
-    description: "Mabel re-engages past prospects, qualifies interest, and returns live opportunities to your team.",
-    images: ["/raleigh-lead-recovery-social.png"],
+    title: "Mabel | 24/7 AI Receptionist and Lead Recovery",
+    description: "Answer new demand and recover the demand you already earned with Mabel.",
   },
 };
 

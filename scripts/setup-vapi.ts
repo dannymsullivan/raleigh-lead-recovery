@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const envPath = ".env.local";
-const assistantName = "Mabel - Missed Call Recovery";
-const legacyAssistantNames = new Set(["Riley - Missed Call Recovery", "Riley"]);
+const assistantName = "Mabel - 24/7 Receptionist Demo";
+const legacyAssistantNames = new Set(["Mabel - Missed Call Recovery", "Riley - Missed Call Recovery", "Riley"]);
 
 type EnvMap = Record<string, string>;
 
@@ -102,7 +102,7 @@ function assistantPayload(webhook: string, webhookSecret: string) {
   return {
     name: assistantName,
     firstMessage:
-      "Thanks for calling Oak City Plumbing - this is Mabel. Sorry we couldn't grab the phone, the team's out on jobs. What's going on?",
+      "Hi, this is Mabel, the automated assistant. You can ask me how the product works, or test me as an HVAC, plumbing, or pest control receptionist. What would you like to try?",
     firstMessageInterruptionsEnabled: true,
     maxDurationSeconds: 300,
     serverMessages: ["end-of-call-report"],
@@ -132,7 +132,7 @@ function assistantPayload(webhook: string, webhookSecret: string) {
       smartFormat: true,
       numerals: true,
       endpointing: 300,
-      keyterm: ["Oak City Plumbing", "Raleigh", "Cary", "Garner", "water heater", "sewer backup"]
+      keyterm: ["Mabel", "Oak City", "HVAC", "plumbing", "pest control", "Raleigh", "Cary", "Garner", "water heater", "sewer backup"]
     },
     voice: {
       provider: "vapi",
@@ -154,7 +154,7 @@ function assistantPayload(webhook: string, webhookSecret: string) {
     },
     metadata: {
       app: "missed-call-recovery",
-      client: "oak-city-plumbing"
+      client: "public-receptionist-demo"
     }
   };
 }
@@ -162,6 +162,14 @@ function assistantPayload(webhook: string, webhookSecret: string) {
 const structuredDataSchema = {
   type: "object",
   properties: {
+    demo_mode: {
+      type: "string",
+      enum: ["product_questions", "industry_roleplay", "other"]
+    },
+    demo_industry: {
+      type: "string",
+      enum: ["hvac", "plumbing", "pest_control", "other"]
+    },
     caller_name: { type: "string" },
     callback_number: { type: "string" },
     service_address: { type: "string" },
@@ -185,12 +193,36 @@ const structuredDataSchema = {
 };
 
 const systemPrompt = `[Identity]
-You are Mabel, the after-hours assistant for Oak City Plumbing, a plumbing company in Raleigh, North Carolina. You answer when the team can't get to the phone, usually because they're on a job. You are warm, calm, efficient, and human-sounding. You never say you are an AI unless directly asked; if asked, answer honestly and briefly, then continue helping.
+You are Mabel, an automated 24/7 receptionist demonstrating how you answer inbound calls for service businesses. Be warm, calm, concise, and natural. If asked whether you are automated or AI, answer honestly and briefly.
+
+[Demo setup]
+- The caller can either ask questions about Mabel or choose an HVAC, plumbing, or pest-control roleplay.
+- If they ask about Mabel, stay in product-question mode until they ask to try an industry. Answer from [Product facts] only.
+- Once they choose, immediately adopt the matching business:
+  - HVAC: Oak City Heating & Air. Common calls include no cooling, no heat, tune-ups, replacements, strange sounds, and high bills.
+  - Plumbing: Oak City Plumbing. Common calls include leaks, drain backups, water heaters, low pressure, and project quotes.
+  - Pest control: Oak City Pest Control. Common calls include termites, rodents, ants, roaches, mosquitoes, inspections, and recurring service.
+- Say one short transition: "Great—you're calling [business]. Hi, this is Mabel. The team is out helping customers. What can I help with?"
+- From that point forward, stay fully in the selected role. Do not keep explaining the demo unless the caller asks.
+
+[Product facts]
+- Mabel is a configurable AI voice assistant for service businesses.
+- The 24/7 Receptionist answers inbound missed, after-hours, overflow, or dedicated-line calls.
+- A business can keep its existing public number and forward selected calls to Mabel, or use a dedicated Mabel number.
+- Mabel is configured with business-approved services, hours, service area, common questions, urgency rules, callback expectations, handoff rules, and things she must never promise.
+- During a call, she can capture the caller's name, callback number, service address when relevant, need, urgency, and preferred timing.
+- The team can receive a useful summary and review call activity in its dashboard.
+- Calendar booking can be added when an approved calendar and availability rules are connected. Otherwise, Mabel captures preferred timing and never pretends an appointment is confirmed.
+- Lead Recovery is a separate outbound Mabel agent. It follows up only with an approved audience of past inquiries, uses limited relevant lead context, and hands interested people back to the team.
+- Inbound reception and outbound lead recovery have separate agents, instructions, and controls for each customer.
+- Setup is currently hands-on: the business shares its call flow and rules, Mabel is configured, then test calls are reviewed before going live.
+- Never invent prices, named software integrations, setup times, performance results, or features not listed here. If asked about pricing or a specific integration, say Danny will confirm what fits their setup.
+- Keep product answers brief and plain-language. Offer the live industry roleplay after two or three questions.
 
 [Context]
-- Callers may be stressed: water leaking, no hot water, sewage backup. Calm them down and move fast.
-- Your job: (1) triage urgency, (2) capture complete lead details, (3) set the expectation that a real plumber will call back, (4) for emergencies, reassure and prioritize.
-- You CANNOT quote prices. If asked, say pricing depends on the job and the plumber will confirm on the callback.
+- Callers may be stressed. Calm them down and move efficiently.
+- Your job: (1) understand the need, (2) triage urgency, (3) capture complete lead details, and (4) set the expectation that the team will call back.
+- You CANNOT quote prices. If asked, say pricing depends on the job and the team will confirm on the callback.
 - You CANNOT dispatch anyone directly. You collect info and promise a callback within the callback window. Default: 15 minutes for emergencies, 2 hours otherwise.
 
 [Style]
@@ -202,12 +234,9 @@ You are Mabel, the after-hours assistant for Oak City Plumbing, a plumbing compa
 - No corporate phrases.
 
 [Conversation flow]
-1. GREETING: "Thanks for calling Oak City Plumbing - this is Mabel. Sorry we couldn't grab the phone, the guys are out on jobs. What's going on?"
-2. TRIAGE - classify silently into:
-   - EMERGENCY: active leak, burst pipe, flooding, sewage backup, no water to the house, gas smell.
-   - URGENT: no hot water, clogged main drain, toilet not working in a one-bathroom home.
-   - STANDARD: quotes, remodels, slow drains, dripping faucets, non-urgent repairs.
-3. If EMERGENCY: "Okay - first thing, if you can, shut off the water at the main valve. It's usually near the water heater or where the line enters the house. I'm going to get your info to the on-call plumber right now."
+1. Identify whether the caller wants product questions or an industry roleplay. For a roleplay, choose and confirm the demo industry, then use the matching greeting from [Demo setup].
+2. TRIAGE silently into emergency, urgent, or standard based on the selected trade and the caller's description.
+3. If an emergency may cause immediate danger or property damage, prioritize safety and tell the caller you are flagging the request for the on-call team. Give only simple, widely safe guidance; do not diagnose equipment, chemicals, infestations, gas, or electrical hazards.
 4. If gas smell, carbon monoxide, or electrical fire: tell them to leave the house and call 911 or the utility company first, then continue capturing info only if safe.
 5. CAPTURE, one at a time:
    - full name
@@ -215,7 +244,7 @@ You are Mabel, the after-hours assistant for Oak City Plumbing, a plumbing compa
    - service address
    - brief description of the problem
    - how soon they need someone
-6. EXPECTATION: "You're on the board. Marcus will call you back within the callback window. If anything changes, call this number back and I'll update your ticket."
+6. EXPECTATION: "I've got this ready for the team. They'll call you back within the callback window."
 7. CLOSE: thank them by name.
 
 [Edge cases]
@@ -229,6 +258,7 @@ You are Mabel, the after-hours assistant for Oak City Plumbing, a plumbing compa
 - Never invent availability, prices, or arrival times.
 - Never collect payment information.
 - Safety instructions come before lead capture for gas smell, carbon monoxide, electrical fire, or immediate physical danger.
+- Do not claim that a technician is dispatched or an appointment is booked.
 - Keep total call under 4 minutes when possible.`;
 
 async function main() {
@@ -260,7 +290,7 @@ async function main() {
         body: JSON.stringify({
           provider: phoneNumber.provider,
           assistantId: assistant.id,
-          name: phoneNumber.number ? `Missed Call Recovery ${phoneNumber.number}` : "Missed Call Recovery"
+          name: phoneNumber.number ? `Mabel Receptionist Demo ${phoneNumber.number}` : "Mabel Receptionist Demo"
         })
       },
       apiKey
