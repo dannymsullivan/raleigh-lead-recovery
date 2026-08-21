@@ -31,6 +31,20 @@ export async function findClientByVapiIds(ids: {
 }): Promise<Client | null> {
   const supabase = getSupabaseAdmin();
 
+  if (ids.assistantId || ids.phoneNumberId) {
+    let agentQuery = supabase.from("customer_agents").select("client_id").limit(1);
+    agentQuery = ids.assistantId
+      ? agentQuery.eq("vapi_assistant_id", ids.assistantId)
+      : agentQuery.eq("vapi_phone_number_id", ids.phoneNumberId!).eq("agent_type", "receptionist");
+    const { data: agent, error: agentError } = await agentQuery.maybeSingle();
+    if (agentError) throw agentError;
+    if (agent) {
+      const { data: customer, error: customerError } = await supabase.from("clients").select("*").eq("id", agent.client_id).maybeSingle();
+      if (customerError) throw customerError;
+      if (customer) return customer as Client;
+    }
+  }
+
   if (ids.assistantId) {
     const { data, error } = await supabase
       .from("clients")

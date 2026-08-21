@@ -3,12 +3,14 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { adminCookie, createAdminSessionToken, verifyAdminPassword, verifyAdminSessionToken } from "@/lib/admin";
 import { isClientDeletionLocked } from "@/lib/client-deletion";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { adminInvitationCookie, createCustomerInvitationToken, customerInvitationExpiresAt, hashCustomerInvitationToken } from "@/lib/customer-invitations";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 
 function formString(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -115,8 +117,11 @@ export async function addClientAction(formData: FormData): Promise<void> {
     throw error;
   }
 
+  const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
+  await ensureDefaultCustomerAgent(client.id, "receptionist");
   const { error: campaignError } = await supabase.from("reactivation_campaigns").insert({
     client_id: client.id,
+    agent_id: leadAgent.id,
     name: `${businessName} lead recovery`.slice(0, 160),
     service_type: trade.slice(0, 100) || "general service",
     calling_timezone: "America/New_York",
@@ -129,6 +134,7 @@ export async function addClientAction(formData: FormData): Promise<void> {
 
   const invitationToken = await createWorkspaceInvitation(client.id);
   await rememberAdminInvitation(client.id, invitationToken);
+  after(() => provisionCustomerAgent(client.id, "lead_reactivation"));
 
   revalidatePath("/admin");
   redirect(`/admin/customers/${slug}?created=1#customer-access`);

@@ -55,9 +55,34 @@ export type Client = {
   created_at: string;
 };
 
+export type CustomerAgentType = "receptionist" | "lead_reactivation";
+export type CustomerAgentStatus = "draft" | "provisioning" | "ready" | "needs_configuration" | "error" | "disabled";
+
+export type CustomerAgent = {
+  id: string;
+  client_id: string;
+  agent_type: CustomerAgentType;
+  name: string;
+  is_default: boolean;
+  status: CustomerAgentStatus;
+  vapi_assistant_id: string | null;
+  vapi_phone_number_id: string | null;
+  provisioned_phone_number: string | null;
+  voice_id: string;
+  first_message: string | null;
+  offer_details: string | null;
+  handoff_rules: string | null;
+  custom_instructions: string | null;
+  provisioning_error: string | null;
+  last_provision_attempt_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type ReactivationCampaign = {
   id: string;
   client_id: string;
+  agent_id?: string | null;
   name: string;
   status: "draft" | "ready" | "running" | "paused" | "completed";
   service_type: string;

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowUpRight, Check, ChevronRight, Clock3, Headphones, LogOut, PhoneCall, RotateCcw, Settings2, Sparkles } from "lucide-react";
+import { ArrowUpRight, Bot, Check, ChevronRight, Clock3, Headphones, LogOut, PhoneCall, RotateCcw, Settings2, Sparkles } from "lucide-react";
 import { logoutCustomerAction } from "../auth-actions";
 import { BrandMark } from "../components/brand-mark";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { contactHref } from "@/lib/contact";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
-import type { Call, Client } from "@/lib/types";
+import type { Call, Client, CustomerAgent } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
 import { ProvisioningPoll } from "./provisioning-poll";
 import { recordingPlaybackPath } from "@/lib/vapi-recording";
@@ -28,10 +28,12 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (!clientData) redirect("/signup?error=workspace");
   const client = clientData as Client;
   if (!client.onboarding_completed_at) redirect("/onboarding");
-  if (client.product_mode === "reactivation") redirect("/dashboard/reactivation");
-
-  const { data: callData } = await admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50);
+  const [{ data: callData }, { data: receptionistData }] = await Promise.all([
+    admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50),
+    admin.from("customer_agents").select("*").eq("client_id", client.id).eq("agent_type", "receptionist").eq("is_default", true).maybeSingle()
+  ]);
   const calls = (callData ?? []) as Call[];
+  const receptionist = receptionistData as CustomerAgent | null;
   const report = buildReportModel(client, calls);
   const search = (await searchParams) ?? {};
   const welcome = search.welcome === "1";
@@ -40,7 +42,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const booked = calls.filter((call) => call.lead_status === "booked");
   const bookedRevenue = booked.reduce((sum, call) => sum + Number(call.booked_value ?? 0), 0);
   const daysLeft = trialDaysLeft(client.trial_ends_at ?? client.pilot_end);
-  const provisioningActive = client.provisioning_status === "pending" || client.provisioning_status === "provisioning";
+  const provisioningActive = receptionist?.status === "provisioning";
 
   return (
     <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
@@ -58,6 +60,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       <nav className="flex overflow-x-auto border-b-2 border-black bg-white px-3 lg:hidden" aria-label="Dashboard navigation">
         <Link className="flex h-12 flex-none items-center gap-2 border-b-4 border-black px-3 text-xs font-black" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Reactivation</Link>
+        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Report</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Settings</Link>
       </nav>
@@ -66,6 +69,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         <aside className="hidden min-h-[calc(100vh-82px)] border-r-2 border-black p-5 lg:flex lg:flex-col">
           <nav className="grid gap-1 text-sm font-extrabold">
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Lead reactivation</Link>
+            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
             <Link className="flex items-center gap-3 bg-black px-3 py-3 text-white" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Full report</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Mabel settings</Link>
@@ -78,7 +82,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
-            <MabelStatus status={client.provisioning_status ?? "pending"} />
+            <MabelStatus status={receptionist?.status ?? "draft"} />
           </div>
 
           <div className="mt-6 grid grid-cols-2 border-l border-t border-black xl:grid-cols-5">
@@ -96,7 +100,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             </section>
 
             <aside className="grid content-start gap-6">
-              <ActivationCard client={client} />
+              <ActivationCard agent={receptionist} client={client} />
               <div className="border-2 border-black p-5"><div className="flex items-center gap-3"><Clock3 className="h-5 w-5" /><h2 className="font-black">{daysLeft} days left in your trial</h2></div><div className="mt-4 h-2 bg-black/10"><div className="h-full bg-black" style={{ width: `${Math.max(0, Math.min(100, (daysLeft / 14) * 100))}%` }} /></div><p className="mt-3 text-sm leading-6 text-black/55">Trial ends {formatShortDate(client.trial_ends_at ?? client.pilot_end)}. No card on file.</p></div>
               <div className="border-2 border-black bg-white p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">This trial</p><div className="mt-5 grid grid-cols-2 gap-4"><SmallStat label="Calls" value={String(report.totalCalls)} /><SmallStat label="Emergencies" value={String(report.emergenciesCaught)} /><SmallStat label="Answer rate" value={report.totalCalls ? "100%" : "—"} /><SmallStat label="Spam filtered" value={String(calls.filter((call) => call.lead_type === "spam").length)} /></div></div>
             </aside>
@@ -132,25 +136,26 @@ function LeadCard({ call }: { call: ReturnType<typeof buildReportModel>["calls"]
   );
 }
 
-function ActivationCard({ client }: { client: Client }) {
-  const status = client.provisioning_status ?? "pending";
+function ActivationCard({ client, agent }: { client: Client; agent: CustomerAgent | null }) {
+  const status = agent?.status ?? "draft";
   const ready = status === "ready";
-  const number = client.provisioned_phone_number;
+  const number = agent?.provisioned_phone_number ?? client.provisioned_phone_number;
+  if (status === "draft" || status === "disabled") return <div className="border border-black bg-white p-5"><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">24/7 receptionist</p><h2 className="mt-2 text-xl font-black tracking-[-0.03em]">Inbound coverage is not enabled.</h2><p className="mt-2 text-sm font-semibold leading-6 text-black/50">Set up a dedicated agent and phone number when this business is ready for around-the-clock call capture.</p><Link className="mt-4 inline-flex h-10 items-center bg-black px-4 text-xs font-black text-white" href="/dashboard/agents">Configure receptionist</Link></div>;
   return (
     <div className="border-2 border-black bg-black p-6 text-white">
       <Sparkles className="h-6 w-6" /><p className="mt-7 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Go-live checklist</p><h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">{ready ? "Your Mabel number is ready." : status === "error" || status === "needs_configuration" ? "Provisioning needs attention." : "Building your call setup…"}</h2>
       {number ? <a className="mt-5 block text-3xl font-black tracking-[-0.04em]" href={`tel:${number}`}>{formatPhone(number)}</a> : null}
-      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(client.vapi_assistant_id)} label="Mabel configured" /><ChecklistItem done={Boolean(client.vapi_phone_number_id)} label="Number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
+      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.vapi_assistant_id)} label="Mabel configured" /><ChecklistItem done={Boolean(agent?.vapi_phone_number_id)} label="Number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
       {ready && !client.forwarding_completed_at ? <form action={markForwardingCompleteAction}><button className="mt-7 w-full bg-white px-4 py-3 text-sm font-black text-black" type="submit">I turned forwarding on</button></form> : null}
       {ready && client.forwarding_completed_at && !client.test_call_completed_at && number ? <a className="mt-7 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href={`tel:${number}`}><PhoneCall className="h-4 w-4" /> Make the test call</a> : null}
-      {(status === "error" || status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{client.provisioning_error}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry provisioning</button></form></> : null}
+      {(status === "error" || status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{agent?.provisioning_error || client.provisioning_error}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry provisioning</button></form></> : null}
       {ready && client.test_call_completed_at ? <p className="mt-6 flex items-center gap-2 border-t border-white/20 pt-5 text-sm font-black"><Check className="h-4 w-4" /> Live and catching calls</p> : null}
     </div>
   );
 }
 
 function ChecklistItem({ done, label }: { done: boolean; label: string }) { return <li className="flex items-center gap-3"><span className={`grid h-5 w-5 place-items-center rounded-full border ${done ? "bg-white text-black" : "border-white/35"}`}>{done ? <Check className="h-3 w-3" /> : null}</span>{label}</li>; }
-function MabelStatus({ status }: { status: Client["provisioning_status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Mabel is ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : "Setting Mabel up"}</div>; }
+function MabelStatus({ status }: { status: CustomerAgent["status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Receptionist ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : status === "draft" || status === "disabled" ? "Receptionist not enabled" : "Setting Mabel up"}</div>; }
 function StatusBadge({ status }: { status: string }) { const labels: Record<string, string> = { new: "New lead", contacted: "Contacted", booked: "Booked", lost: "Lost", spam: "Spam" }; return <span className={`border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${status === "booked" ? "bg-black text-white" : "bg-white"}`}>{labels[status] ?? status}</span>; }
 function EmptyCalls() { return <div className="grid min-h-72 place-items-center p-8 text-center"><div className="max-w-sm"><PhoneCall className="mx-auto h-10 w-10" strokeWidth={1.5} /><h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">The board is ready.</h3><p className="mt-3 text-sm leading-6 text-black/55">Your first test call will appear here with a summary, urgency, callback details, and recording.</p></div></div>; }
 function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }

@@ -69,6 +69,18 @@ async function main() {
     throw clientError;
   }
 
+  for (const agent of [
+    { agent_type: "receptionist", name: "Mabel 24/7 Receptionist", status: "ready", vapi_assistant_id: demoVapiAssistantId, vapi_phone_number_id: demoVapiPhoneNumberId },
+    { agent_type: "lead_reactivation", name: "Mabel Lead Recovery", status: "draft", vapi_assistant_id: null, vapi_phone_number_id: process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID || null }
+  ]) {
+    const { data: existingAgent, error: agentLookupError } = await supabase.from("customer_agents").select("id").eq("client_id", clientId).eq("agent_type", agent.agent_type).eq("is_default", true).maybeSingle();
+    if (agentLookupError) throw agentLookupError;
+    const result = existingAgent
+      ? await supabase.from("customer_agents").update(agent).eq("id", existingAgent.id)
+      : await supabase.from("customer_agents").insert({ client_id: clientId, is_default: true, ...agent });
+    if (result.error) throw result.error;
+  }
+
   const { error: cleanupError } = await supabase
     .from("calls")
     .delete()

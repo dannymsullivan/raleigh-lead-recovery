@@ -90,6 +90,10 @@ Use a white panel and quiet dashed drop zone. Lime marks the upload icon and sel
 
 Use a collapsed summary at least 64px high. Expose telephony connection status and an operational summary without opening it. The expanded state must explain the boundary: Mabel controls schedule, pacing, eligibility, and suppression; Vapi places approved calls with the selected customer and lead context.
 
+### Customer agents
+
+Represent each use case as a separate compact `<details>` card inside one customer workspace. The closed state shows job, readiness, and assigned number; the open state owns the greeting, offer, handoff rules, and guardrails. Use a two-column, `items-start` grid at desktop widths and one column on mobile. Customer-specific behavior is configured in Mabel and synchronized to Vapi—the Vapi identifiers remain implementation detail.
+
 ### Destructive cleanup
 
 Nest destructive operations under `<details>`, require explicit confirmation, and state the exact scope. Full-list deletion uses destructive red. Removing excluded imports is neutral because it preserves the qualified audience and suppression list.

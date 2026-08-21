@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
-import { provisionClientWorkspace } from "@/lib/provisioning";
+import { provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
 
@@ -52,8 +52,8 @@ export async function saveCallNotesAction(callId: string, formData: FormData): P
 }
 
 export async function retryProvisioningAction(): Promise<void> {
-  const { userId } = await currentWorkspace();
-  await provisionClientWorkspace(userId);
+  const { clientId } = await currentWorkspace();
+  await provisionCustomerAgent(clientId, "receptionist");
   revalidatePath("/dashboard");
 }
 
@@ -88,6 +88,9 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
 
   const admin = getSupabaseAdmin();
   const consentedAt = new Date().toISOString();
+  const { data: readyAgentRows } = await admin.from("customer_agents").select("agent_type").eq("client_id", clientId).eq("status", "ready");
+  const readyAgentTypes = (readyAgentRows ?? []).map((agent) => agent.agent_type).filter((type): type is "receptionist" | "lead_reactivation" => type === "receptionist" || type === "lead_reactivation");
+  const receptionistActive = readyAgentTypes.includes("receptionist");
   const { error } = await admin.from("clients").update({
     business_name: businessName,
     owner_phone: ownerPhone,
@@ -102,8 +105,7 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
     alert_phone: alertPhone,
     alert_sms_consent_at: consentedAt,
     alert_sms_consent_phone: alertPhone,
-    provisioning_status: "provisioning",
-    provisioning_error: null
+    ...(receptionistActive ? { provisioning_status: "provisioning", provisioning_error: null } : {})
   }).eq("id", clientId);
 
   if (error) redirect("/dashboard/settings?error=save");
@@ -118,7 +120,7 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
     consented_at: consentedAt,
     revoked_at: null
   }, { onConflict: "user_id,phone_e164,purpose,consent_version" });
-  after(() => provisionClientWorkspace(userId, { forceAssistantUpdate: true }));
+  for (const agentType of readyAgentTypes) after(() => provisionCustomerAgent(clientId, agentType, { forceUpdate: true }));
   revalidatePath("/dashboard");
   redirect("/dashboard/settings?saved=1");
 }

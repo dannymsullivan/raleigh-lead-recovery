@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { customerCrmPath, uniqueCustomerSlug } from "@/lib/customer-slug";
 import { normalizePhoneNumber } from "@/lib/phone";
-import { queueReactivationContactCall, reactivationTelephonyReady } from "@/lib/reactivation-vapi";
+import { queueReactivationContactCall, reactivationCampaignTelephonyReady } from "@/lib/reactivation-vapi";
+import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Client, ReactivationCampaign, ReactivationContact } from "@/lib/types";
 
@@ -31,8 +32,6 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
   pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 365);
   const businessName = value(formData, "business_name") || "Oak City Home Services";
   const ownerName = value(formData, "owner_name") || "Daniel";
-  const assistantId = process.env.VAPI_OUTBOUND_ASSISTANT_ID?.trim() || null;
-  const phoneNumberId = process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID?.trim() || null;
 
   const { data: existing, error: existingError } = await admin.from("clients").select("id,slug").eq("is_test_account", true).order("created_at").limit(1).maybeSingle();
   if (existingError) throw existingError;
@@ -55,14 +54,14 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
     trial_started_at: new Date().toISOString(),
     trial_ends_at: pilotEnd.toISOString(),
     account_status: "active",
-    provisioning_status: assistantId && phoneNumberId ? "ready" : "needs_configuration",
+    provisioning_status: "pending",
     product_mode: "reactivation",
     pilot_start: today.toISOString().slice(0, 10),
     pilot_end: pilotEnd.toISOString().slice(0, 10),
     avg_job_value: 1800,
     close_rate: 0.4,
-    vapi_assistant_id: assistantId,
-    vapi_phone_number_id: phoneNumberId,
+    vapi_assistant_id: null,
+    vapi_phone_number_id: null,
     is_test_account: true
   };
 
@@ -71,11 +70,15 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
     : await admin.from("clients").insert(clientValues).select("*").single();
   if (clientResult.error) throw clientResult.error;
   const client = clientResult.data as Client;
+  const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
+  await ensureDefaultCustomerAgent(client.id, "receptionist");
+  await provisionCustomerAgent(client.id, "lead_reactivation", { forceUpdate: true });
 
   const { data: existingCampaign, error: campaignLoadError } = await admin.from("reactivation_campaigns").select("*").eq("client_id", client.id).eq("name", "QA — HVAC lead recovery").limit(1).maybeSingle();
   if (campaignLoadError) throw campaignLoadError;
   const campaignValues = {
     client_id: client.id,
+    agent_id: leadAgent.id,
     name: "QA — HVAC lead recovery",
     status: "ready",
     service_type: "HVAC replacement",
@@ -117,7 +120,6 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
 export async function placeTestBusinessCallAction(clientId: string, crmPath: string, contactId: string): Promise<void> {
   await requireAdmin();
   if (!crmPath.startsWith("/admin/customers/")) redirect("/admin?error=client-path");
-  if (!reactivationTelephonyReady()) redirect(`${crmPath}?error=telephony`);
   const admin = getSupabaseAdmin();
   const [{ data: clientData }, { data: contactData }] = await Promise.all([
     admin.from("clients").select("*").eq("id", clientId).eq("is_test_account", true).maybeSingle(),
@@ -127,6 +129,7 @@ export async function placeTestBusinessCallAction(clientId: string, crmPath: str
   const contact = contactData as ReactivationContact;
   const { data: campaignData } = await admin.from("reactivation_campaigns").select("*").eq("id", contact.campaign_id).eq("client_id", clientId).maybeSingle();
   if (!campaignData) redirect(`${crmPath}?error=test-record`);
+  if (!await reactivationCampaignTelephonyReady(campaignData.id, clientId)) redirect(`${crmPath}?error=agent_not_ready`);
 
   try {
     await queueReactivationContactCall(clientData as Client, campaignData as ReactivationCampaign, contact);

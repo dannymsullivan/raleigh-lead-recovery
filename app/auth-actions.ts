@@ -2,12 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { after } from "next/server";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { alertConsentText, messagingConsentVersion, verificationConsentText } from "@/lib/messaging-consent";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
+import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 
 const pendingPhoneCookie = "mabel_pending_phone";
 const pendingModeCookie = "mabel_pending_auth_mode";
@@ -337,9 +339,12 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     .limit(1)
     .maybeSingle();
   if (campaignLookupError) redirect("/onboarding?error=save");
+  const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
+  await ensureDefaultCustomerAgent(client.id, "receptionist");
   if (!existingCampaign) {
     const { error: campaignError } = await admin.from("reactivation_campaigns").insert({
       client_id: client.id,
+      agent_id: leadAgent.id,
       name: `${businessName} lead recovery`.slice(0, 160),
       service_type: trade.slice(0, 100),
       calling_timezone: value(formData, "timezone") || "America/New_York",
@@ -349,7 +354,11 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
       daily_limit: 25
     });
     if (campaignError) redirect("/onboarding?error=save");
+  } else {
+    const { error: campaignAgentError } = await admin.from("reactivation_campaigns").update({ agent_id: leadAgent.id }).eq("id", existingCampaign.id).eq("client_id", client.id).is("agent_id", null);
+    if (campaignAgentError) redirect("/onboarding?error=save");
   }
+  after(() => provisionCustomerAgent(client.id, "lead_reactivation"));
   redirect("/dashboard/reactivation?welcome=1");
 }
 

@@ -11,8 +11,9 @@ import { parseLeadCsv } from "@/lib/reactivation";
 import { analyzeLeadRows, inferLeadColumnMapping, leadFieldKeys, type LeadBucket, type LeadColumnMapping, type NormalizedImportedLead } from "@/lib/lead-import";
 import { parseLeadSpreadsheet } from "@/lib/lead-spreadsheet-server";
 import { createLeadUploadTicket, readLeadUpload, removeLeadUpload, type LeadUploadTicket } from "@/lib/lead-upload-server";
-import { reactivationTelephonyReady, runReactivationBatch } from "@/lib/reactivation-vapi";
+import { reactivationCampaignTelephonyReady, runReactivationBatch } from "@/lib/reactivation-vapi";
 import { assessOpportunityDate, isDateSensitiveService } from "@/lib/lead-eligibility";
+import { ensureDefaultCustomerAgent } from "@/lib/customer-agent-provisioning";
 
 async function workspace(): Promise<{ userId: string; clientId: string }> {
   if (!isSupabaseAuthConfigured()) redirect("/login?error=configuration");
@@ -42,8 +43,10 @@ export async function createReactivationCampaignAction(formData: FormData): Prom
   if (!name) redirect("/dashboard/reactivation?error=campaign_name");
   const maxAttempts = Math.min(5, Math.max(1, Number(value(formData, "max_attempts")) || 2));
   const dailyLimit = Math.min(500, Math.max(1, Number(value(formData, "daily_limit")) || 25));
+  const agent = await ensureDefaultCustomerAgent(clientId, "lead_reactivation");
   const { error } = await getSupabaseAdmin().from("reactivation_campaigns").insert({
     client_id: clientId,
+    agent_id: agent.id,
     name: name.slice(0, 160),
     service_type: value(formData, "service_type").slice(0, 100) || "general service",
     calling_timezone: value(formData, "calling_timezone") || "America/New_York",
@@ -63,8 +66,10 @@ export async function createAdminCampaignAction(clientId: string, returnPath: st
   if (!name) redirect(`${returnPath}?error=campaign_name`);
   const maxAttempts = Math.min(5, Math.max(1, Number(value(formData, "max_attempts")) || 2));
   const dailyLimit = Math.min(500, Math.max(1, Number(value(formData, "daily_limit")) || 25));
+  const agent = await ensureDefaultCustomerAgent(clientId, "lead_reactivation");
   const { error } = await getSupabaseAdmin().from("reactivation_campaigns").insert({
     client_id: clientId,
+    agent_id: agent.id,
     name: name.slice(0, 160),
     service_type: value(formData, "service_type").slice(0, 100) || "general service",
     calling_timezone: value(formData, "calling_timezone") || "America/New_York",
@@ -344,7 +349,7 @@ export async function reclassifyAdminEventLeadsAction(clientId: string, campaign
 }
 
 async function launchCampaignForClient(campaignId: string, clientId: string, returnPath: string): Promise<void> {
-  if (!reactivationTelephonyReady()) redirect(`${returnPath}?error=telephony`);
+  if (!await reactivationCampaignTelephonyReady(campaignId, clientId)) redirect(`${returnPath}?error=agent_not_ready`);
   const admin = getSupabaseAdmin();
   const { data: campaign } = await admin.from("reactivation_campaigns").select("id,eligibility_attested_at,service_type").eq("id", campaignId).eq("client_id", clientId).maybeSingle();
   if (!campaign?.eligibility_attested_at) redirect(`${returnPath}?error=attestation`);
@@ -385,7 +390,7 @@ export async function pauseReactivationCampaignAction(campaignId: string): Promi
 
 export async function resumeReactivationCampaignAction(campaignId: string): Promise<void> {
   const { clientId } = await workspace();
-  if (!reactivationTelephonyReady()) redirect("/dashboard/reactivation?error=telephony");
+  if (!await reactivationCampaignTelephonyReady(campaignId, clientId)) redirect("/dashboard/reactivation?error=agent_not_ready");
   return setCampaignStatus(campaignId, clientId, "running", "/dashboard/reactivation");
 }
 
@@ -396,7 +401,7 @@ export async function pauseAdminCampaignAction(clientId: string, campaignId: str
 
 export async function resumeAdminCampaignAction(clientId: string, campaignId: string, returnPath: string): Promise<void> {
   await requireAdminClient(clientId);
-  if (!reactivationTelephonyReady()) redirect(`${returnPath}?error=telephony`);
+  if (!await reactivationCampaignTelephonyReady(campaignId, clientId)) redirect(`${returnPath}?error=agent_not_ready`);
   return setCampaignStatus(campaignId, clientId, "running", returnPath);
 }
 

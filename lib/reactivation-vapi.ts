@@ -2,7 +2,7 @@ import "server-only";
 
 import { getSupabaseAdmin } from "./supabase-server";
 import { buildReactivationCallRequest } from "./reactivation-call";
-import type { Client, ReactivationCampaign, ReactivationContact } from "./types";
+import type { Client, CustomerAgent, ReactivationCampaign, ReactivationContact } from "./types";
 import { assessOpportunityDate } from "./lead-eligibility";
 
 type VapiCall = { id: string; status?: string };
@@ -17,8 +17,29 @@ function requiredEnv(key: string): string {
   return value;
 }
 
-export function reactivationTelephonyReady(): boolean {
-  return Boolean(process.env.VAPI_API_KEY?.trim() && process.env.VAPI_OUTBOUND_ASSISTANT_ID?.trim() && process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID?.trim());
+type ReactivationIdentifiers = { assistantId: string; phoneNumberId: string };
+
+async function reactivationIdentifiers(campaign: ReactivationCampaign): Promise<ReactivationIdentifiers> {
+  if (campaign.agent_id) {
+    const { data, error } = await getSupabaseAdmin().from("customer_agents").select("*").eq("id", campaign.agent_id).eq("client_id", campaign.client_id).eq("agent_type", "lead_reactivation").maybeSingle();
+    if (error) throw error;
+    const agent = data as CustomerAgent | null;
+    if (!agent || agent.status !== "ready" || !agent.vapi_assistant_id || !agent.vapi_phone_number_id) throw new Error("Customer lead-recovery agent is not ready.");
+    return { assistantId: agent.vapi_assistant_id, phoneNumberId: agent.vapi_phone_number_id };
+  }
+  return { assistantId: requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID"), phoneNumberId: requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID") };
+}
+
+export async function reactivationCampaignTelephonyReady(campaignId: string, clientId: string): Promise<boolean> {
+  if (!process.env.VAPI_API_KEY?.trim()) return false;
+  const { data, error } = await getSupabaseAdmin().from("reactivation_campaigns").select("*").eq("id", campaignId).eq("client_id", clientId).maybeSingle();
+  if (error || !data) return false;
+  try {
+    await reactivationIdentifiers(data as ReactivationCampaign);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function localTime(timezone: string, date = new Date()): string {
@@ -33,14 +54,12 @@ export function isWithinCallingWindow(campaign: Pick<ReactivationCampaign, "call
   return now >= campaign.calling_window_start.slice(0, 5) && now < campaign.calling_window_end.slice(0, 5);
 }
 
-async function createVapiCall(client: Client, campaign: ReactivationCampaign, contact: ReactivationContact): Promise<VapiCall> {
+async function createVapiCall(client: Client, campaign: ReactivationCampaign, contact: ReactivationContact, identifiers: ReactivationIdentifiers): Promise<VapiCall> {
   const apiKey = requiredEnv("VAPI_API_KEY");
-  const assistantId = requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID");
-  const phoneNumberId = requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID");
   const response = await fetch("https://api.vapi.ai/call", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify(buildReactivationCallRequest(client, campaign, contact, { assistantId, phoneNumberId }))
+    body: JSON.stringify(buildReactivationCallRequest(client, campaign, contact, identifiers))
   });
   if (!response.ok) throw new Error(`Vapi call failed (${response.status}): ${(await response.text()).slice(0, 500)}`);
   return (await response.json()) as VapiCall;
@@ -49,7 +68,8 @@ async function createVapiCall(client: Client, campaign: ReactivationCampaign, co
 export async function queueReactivationContactCall(
   client: Client,
   campaign: ReactivationCampaign,
-  contact: ReactivationContact
+  contact: ReactivationContact,
+  identifiers?: ReactivationIdentifiers
 ): Promise<{ callId: string; attemptId: string }> {
   const admin = getSupabaseAdmin();
   const dateEligibility = assessOpportunityDate({ serviceType: campaign.service_type, metadata: contact.import_metadata, notes: contact.notes });
@@ -88,7 +108,7 @@ export async function queueReactivationContactCall(
   }
 
   try {
-    const call = await createVapiCall(client, campaign, contact);
+    const call = await createVapiCall(client, campaign, contact, identifiers ?? await reactivationIdentifiers(campaign));
     await admin.from("reactivation_attempts").update({ vapi_call_id: call.id, status: "in_progress" }).eq("id", attempt.id);
     return { callId: call.id, attemptId: attempt.id as string };
   } catch (error) {
@@ -100,7 +120,7 @@ export async function queueReactivationContactCall(
 }
 
 export async function runReactivationBatch(campaignId: string, clientId?: string, requestedLimit = 5): Promise<{ queued: number; failed: number; skipped: string | null }> {
-  if (!reactivationTelephonyReady()) return { queued: 0, failed: 0, skipped: "telephony_not_configured" };
+  if (!process.env.VAPI_API_KEY?.trim()) return { queued: 0, failed: 0, skipped: "telephony_not_configured" };
   const admin = getSupabaseAdmin();
   let campaignQuery = admin.from("reactivation_campaigns").select("*").eq("id", campaignId);
   if (clientId) campaignQuery = campaignQuery.eq("client_id", clientId);
@@ -114,6 +134,12 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
   const { data: clientData, error: clientError } = await admin.from("clients").select("*").eq("id", campaign.client_id).single();
   if (clientError) throw clientError;
   const client = clientData as Client;
+  let identifiers: ReactivationIdentifiers;
+  try {
+    identifiers = await reactivationIdentifiers(campaign);
+  } catch {
+    return { queued: 0, failed: 0, skipped: "customer_agent_not_ready" };
+  }
   const requestedCapacity = Math.min(Math.max(1, requestedLimit), 50);
   const { data: contactData, error: contactError } = await admin
     .from("reactivation_contacts")
@@ -145,7 +171,7 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
   try {
     for (const contact of contacts) {
       try {
-        await queueReactivationContactCall(client, campaign, contact);
+        await queueReactivationContactCall(client, campaign, contact, identifiers);
         usedReservations += 1;
         queued += 1;
       } catch (error) {
