@@ -86,7 +86,7 @@ export function LeadImporter({ campaignId, previewAction, importAction, uploadAc
   }
 
   return (
-    <form action={submitImport} className={`border-2 border-black ${compact ? "bg-white" : "bg-[#d8ff57]"}`} ref={formRef}>
+    <form action={submitImport} className="border border-black bg-white" ref={formRef}>
       <input name="column_mapping" type="hidden" value={JSON.stringify(mapping)} />
       <input name="included_buckets" type="hidden" value={JSON.stringify(includedBuckets)} />
       <input name="upload_path" type="hidden" value={uploadPath} />
@@ -94,11 +94,11 @@ export function LeadImporter({ campaignId, previewAction, importAction, uploadAc
       <div className={compact ? "p-5" : "p-6 sm:p-7"}>
         <div className="flex items-start justify-between gap-4">
           <div><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">{compact ? "Audience" : "Step one"}</p><h2 className={`${compact ? "text-2xl" : "text-3xl"} mt-2 font-black tracking-[-0.05em]`}>{compact ? "Add or replace leads" : "Load your leads."}</h2></div>
-          <span className="grid h-11 w-11 place-items-center border-2 border-black bg-white"><FileSpreadsheet className="h-5 w-5" /></span>
+          <span className="grid h-10 w-10 place-items-center border border-black bg-[#d8ff57]"><FileSpreadsheet className="h-4 w-4" /></span>
         </div>
         <p className="mt-4 text-sm font-semibold leading-6 text-black/60">{compact ? "Upload another spreadsheet to update this campaign audience." : "Upload the spreadsheet you already have. Mabel will map it, clean it, and show what is usable before anything is imported."}</p>
 
-        <label className="mt-6 grid cursor-pointer place-items-center border-2 border-dashed border-black bg-white px-5 py-7 text-center transition hover:shadow-[5px_5px_0_#000]">
+        <label className="mt-5 grid cursor-pointer place-items-center border border-dashed border-black bg-[#faf9f5] px-5 py-6 text-center transition hover:border-black hover:bg-white">
           <Upload className="h-6 w-6" />
           <span className="mt-3 text-sm font-black">Choose CSV or XLSX</span>
           <span className="mt-1 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/40">Up to 10 MB · 25,000 rows</span>

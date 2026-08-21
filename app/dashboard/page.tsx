@@ -43,7 +43,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const provisioningActive = client.provisioning_status === "pending" || client.provisioning_status === "provisioning";
 
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
+    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
       <ProvisioningPoll active={provisioningActive} />
       <header className="border-b-2 border-black bg-[#f4f1e8]">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
@@ -77,11 +77,11 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building Mabel and getting your number ready now.</p></div> : null}
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <div><p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-3 text-4xl font-black tracking-[-0.05em] sm:text-5xl">Good {daypart()}. Here’s the board.</h1></div>
+            <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
             <MabelStatus status={client.provisioning_status ?? "pending"} />
           </div>
 
-          <div className="mt-9 grid grid-cols-2 border-l-2 border-t-2 border-black xl:grid-cols-5">
+          <div className="mt-6 grid grid-cols-2 border-l border-t border-black xl:grid-cols-5">
             <Metric label="New leads" value={String(newLeads)} detail="need a callback" />
             <Metric label="Contacted" value={String(contacted)} detail="follow-up started" />
             <Metric label="Booked" value={String(booked.length)} detail="marked won" />
@@ -89,7 +89,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <Metric label="Pipeline caught" value={formatCurrency(report.estimatedJobValueCaptured)} detail="estimated" mobileWide />
           </div>
 
-          <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_340px]">
+          <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_320px]">
             <section className="border-2 border-black bg-white">
               <div className="flex flex-col gap-4 border-b-2 border-black p-5 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-black tracking-[-0.03em]">Lead inbox</h2><p className="mt-1 text-xs font-semibold text-black/45">Call back, add context, and mark the outcome.</p></div><div className="flex gap-2 font-mono text-[9px] font-bold uppercase"><span className="bg-black px-2 py-1 text-white">{newLeads} new</span><span className="border border-black px-2 py-1">{calls.length} total</span></div></div>
               {report.calls.length ? <div className="divide-y-2 divide-black">{report.calls.map((call) => <LeadCard call={call} key={call.id} />)}</div> : <EmptyCalls />}
@@ -153,7 +153,7 @@ function ChecklistItem({ done, label }: { done: boolean; label: string }) { retu
 function MabelStatus({ status }: { status: Client["provisioning_status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Mabel is ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : "Setting Mabel up"}</div>; }
 function StatusBadge({ status }: { status: string }) { const labels: Record<string, string> = { new: "New lead", contacted: "Contacted", booked: "Booked", lost: "Lost", spam: "Spam" }; return <span className={`border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${status === "booked" ? "bg-black text-white" : "bg-white"}`}>{labels[status] ?? status}</span>; }
 function EmptyCalls() { return <div className="grid min-h-72 place-items-center p-8 text-center"><div className="max-w-sm"><PhoneCall className="mx-auto h-10 w-10" strokeWidth={1.5} /><h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">The board is ready.</h3><p className="mt-3 text-sm leading-6 text-black/55">Your first test call will appear here with a summary, urgency, callback details, and recording.</p></div></div>; }
-function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b-2 border-r-2 border-black bg-white p-4 sm:p-5 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45 sm:text-[10px] sm:tracking-[0.14em]">{label}</p><p className="mt-3 text-2xl font-black tracking-[-0.055em] sm:mt-4 sm:text-3xl">{value}</p><p className="mt-1.5 text-[11px] font-semibold text-black/40 sm:mt-2 sm:text-xs">{detail}</p></div>; }
+function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }
 function SmallStat({ label, value }: { label: string; value: string }) { return <div><p className="text-2xl font-black">{value}</p><p className="mt-1 text-[10px] font-bold uppercase text-black/40">{label}</p></div>; }
 function daypart(): string { const hour = new Date().getHours(); return hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"; }
 function trialDaysLeft(value: string): number { const date = value.includes("T") ? new Date(value) : new Date(`${value}T23:59:59`); return Math.max(0, Math.ceil((date.getTime() - Date.now()) / 86_400_000)); }

@@ -114,7 +114,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   const integrations = buildIntegrationStatuses(process.env, !loadError, clients);
 
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
+    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
       <header className="border-b-2 border-black bg-[#f4f1e8]">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
           <div>

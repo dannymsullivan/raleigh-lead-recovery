@@ -25,11 +25,11 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   const search = (await searchParams) ?? {};
 
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
+    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
       <header className="border-b-2 border-black"><div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5 sm:px-8"><BrandMark /><Link className="inline-flex items-center gap-2 text-sm font-black" href="/dashboard"><ArrowLeft className="h-4 w-4" /> Back to dashboard</Link></div></header>
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="grid gap-8 lg:grid-cols-[0.55fr_1fr]">
-          <aside><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Mabel settings</p><h1 className="mt-4 text-5xl font-black leading-[0.92] tracking-[-0.06em]">The business changes. Mabel keeps up.</h1><p className="mt-6 text-sm font-semibold leading-6 text-black/55">Saving updates your live assistant. New calls use the new hours, services, and rules immediately after provisioning finishes.</p>
+          <aside><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Mabel settings</p><h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.045em]">The business changes. Mabel keeps up.</h1><p className="mt-3 text-sm font-semibold leading-6 text-black/55">Saving updates your live assistant. New calls use the new hours, services, and rules immediately after provisioning finishes.</p>
             <div className="mt-8 border-2 border-black bg-white p-5"><p className="text-sm font-black">Current status</p><p className="mt-2 flex items-center gap-2 text-sm font-semibold text-black/55"><span className={`h-2.5 w-2.5 rounded-full ${client.provisioning_status === "ready" ? "bg-black" : "border-2 border-black"}`} /> {client.provisioning_status === "ready" ? "Mabel is live" : "Configuration updating"}</p>{client.provisioned_phone_number ? <p className="mt-4 text-xl font-black">{client.provisioned_phone_number}</p> : null}</div>
           </aside>
 
@@ -62,5 +62,5 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   );
 }
 
-function SettingsSection({ number, title, children }: { number: string; title: string; children: React.ReactNode }) { return <section className="border-2 border-black bg-[#ebe7dc] p-5 sm:p-7"><div className="mb-6 flex items-center gap-3 border-b-2 border-black pb-4"><span className="font-mono text-[10px] font-bold">{number}</span><h2 className="text-xl font-black tracking-[-0.03em]">{title}</h2></div>{children}</section>; }
+function SettingsSection({ number, title, children }: { number: string; title: string; children: React.ReactNode }) { return <section className="border border-black bg-white p-5"><div className="mb-5 flex items-center gap-3 border-b border-black pb-3"><span className="font-mono text-[9px] font-bold text-black/45">{number}</span><h2 className="text-lg font-black tracking-[-0.025em]">{title}</h2></div>{children}</section>; }
 function Field({ label, name, defaultValue, type = "text", required = false }: { label: string; name: string; defaultValue: string; type?: string; required?: boolean }) { return <label className="block text-sm font-black">{label}<input className="mt-2 h-13 w-full border-2 border-black bg-white px-3 font-semibold" name={name} defaultValue={defaultValue} type={type} required={required} /></label>; }

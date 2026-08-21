@@ -3620,3 +3620,67 @@ details > summary {
   .hvac-footer > div { grid-template-columns: 1fr; }
   .hvac-footer nav { flex-wrap: wrap; }
 }
+
+/* Product workspace: the warm site identity, tuned for repeated daily use. */
+.product-ui {
+  --product-canvas: #f7f5ef;
+  --product-surface: #ffffff;
+  --product-surface-muted: #f1efe8;
+  --product-ink: #151713;
+  --product-muted: #676b61;
+  --product-line: #d9d8d0;
+  --product-line-strong: #b9bbb2;
+  --product-accent: #d8ff57;
+  background: var(--product-canvas);
+  color: var(--product-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.product-ui header,
+.product-ui nav { border-color: var(--product-line-strong); }
+.product-ui .border-2 { border-width: 1px; }
+.product-ui .border-b-2 { border-bottom-width: 1px; }
+.product-ui .border-t-2 { border-top-width: 1px; }
+.product-ui .border-l-2 { border-left-width: 1px; }
+.product-ui .border-r-2 { border-right-width: 1px; }
+.product-ui .divide-y-2 > :not(:last-child) { border-bottom-width: 1px; }
+.product-ui .border-black { border-color: var(--product-line-strong); }
+.product-ui .divide-black > :not(:last-child) { border-color: var(--product-line); }
+
+.product-ui input:not([type="checkbox"]):not([type="radio"]),
+.product-ui select,
+.product-ui textarea {
+  border-color: var(--product-line-strong);
+  border-radius: 4px;
+  background-color: var(--product-surface);
+  box-shadow: 0 1px 1px rgb(21 23 19 / 0.03);
+}
+
+.product-ui button,
+.product-ui a,
+.product-ui summary {
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 100ms ease;
+}
+
+.product-ui button:active,
+.product-ui a:active,
+.product-ui summary:active { transform: scale(0.98); }
+
+.product-ui button:focus-visible,
+.product-ui a:focus-visible,
+.product-ui input:focus-visible,
+.product-ui select:focus-visible,
+.product-ui textarea:focus-visible,
+.product-ui summary:focus-visible {
+  outline: 2px solid var(--product-ink);
+  outline-offset: 2px;
+}
+
+.product-ui .shadow-\[6px_6px_0_\#000\],
+.product-ui .shadow-\[8px_8px_0_\#000\] { box-shadow: 0 12px 30px rgb(21 23 19 / 0.14); }
+
+@media (prefers-reduced-motion: reduce) {
+  .product-ui button,
+  .product-ui a,
+  .product-ui summary { transition: none; }
+}

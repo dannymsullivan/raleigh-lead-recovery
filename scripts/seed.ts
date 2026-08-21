@@ -8,8 +8,12 @@ if (existsSync(".env.local")) {
     }
 
     const index = line.indexOf("=");
-    const key = line.slice(0, index);
-    const value = line.slice(index + 1);
+    if (index < 1) continue;
+    const key = line.slice(0, index).trim();
+    const rawValue = line.slice(index + 1).trim();
+    const value = ((rawValue.startsWith('"') && rawValue.endsWith('"')) || (rawValue.startsWith("'") && rawValue.endsWith("'")))
+      ? rawValue.slice(1, -1)
+      : rawValue;
     process.env[key] ??= value;
   }
 }

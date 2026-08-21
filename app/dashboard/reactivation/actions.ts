@@ -466,3 +466,19 @@ export async function clearAdminReactivationLeadsAction(clientId: string, return
   revalidatePath(returnPath);
   redirect(`${returnPath}?cleared_leads=${count ?? 0}`);
 }
+
+export async function removeAdminExcludedLeadsAction(clientId: string, returnPath: string, formData: FormData): Promise<void> {
+  await requireAdminClient(clientId);
+  if (value(formData, "remove_excluded_confirmation") !== "on") redirect(`${returnPath}?error=remove_excluded_confirmation`);
+
+  const admin = getSupabaseAdmin();
+  const { count, error } = await admin
+    .from("reactivation_contacts")
+    .delete({ count: "exact" })
+    .eq("client_id", clientId)
+    .eq("import_bucket", "exclude");
+  if (error) redirect(`${returnPath}?error=remove_excluded`);
+
+  revalidatePath(returnPath);
+  redirect(`${returnPath}?removed_excluded=${count ?? 0}#leads`);
+}
