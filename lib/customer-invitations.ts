@@ -3,7 +3,7 @@ import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 
 export const customerInvitationLifetimeDays = 7;
-export const adminInvitationCookie = "mabel_admin_invitation";
+export const adminInvitationCookie = "rlr_admin_invitation";
 
 export function createCustomerInvitationToken(): string {
   return randomBytes(32).toString("base64url");

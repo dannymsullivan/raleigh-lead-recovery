@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LoaderCircle, Mic, PhoneOff, Radio } from "lucide-react";
+import { LoaderCircle, PhoneOff, Radio } from "lucide-react";
 import { RetellWebClient } from "retell-client-js-sdk";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
@@ -67,7 +67,11 @@ export function WebVoiceDemo({ compact = false }: { compact?: boolean }) {
         </button>
       ) : (
         <button className="button button-dark receptionist-call-button" type="button" onClick={start} disabled={state === "connecting"}>
-          {state === "connecting" ? <LoaderCircle className="web-voice-spinner" aria-hidden="true" /> : <Mic aria-hidden="true" />}
+          {state === "connecting" ? <LoaderCircle className="web-voice-spinner" aria-hidden="true" /> : (
+            <span className="web-voice-waveform" aria-hidden="true">
+              <span /><span /><span /><span /><span />
+            </span>
+          )}
           {state === "connecting" ? "Connecting…" : "Try it now"}
         </button>
       )}

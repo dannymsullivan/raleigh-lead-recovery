@@ -2,6 +2,22 @@
 
 .web-voice-demo { display: grid; justify-items: start; gap: .65rem; }
 .web-voice-demo .button:disabled { cursor: wait; opacity: .7; }
+.web-voice-demo .receptionist-call-button:not(.web-voice-stop) { position: relative; isolation: isolate; }
+.web-voice-demo .receptionist-call-button:not(.web-voice-stop)::before {
+  position: absolute;
+  z-index: -1;
+  inset: -7px;
+  border: 2px solid #718b00;
+  border-radius: inherit;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  animation: web-voice-ring 1.8s ease-out infinite;
+}
+.web-voice-waveform { display: inline-flex; width: 1.35rem; height: 1.1rem; align-items: center; justify-content: center; gap: 2px; }
+.web-voice-waveform span { width: 2px; height: 35%; border-radius: 2px; background: currentColor; animation: web-voice-bar .9s ease-in-out infinite alternate; transform-origin: center; }
+.web-voice-waveform span:nth-child(2), .web-voice-waveform span:nth-child(4) { height: 68%; animation-delay: -.45s; }
+.web-voice-waveform span:nth-child(3) { height: 100%; animation-delay: -.7s; }
 .web-voice-status { display: inline-flex; align-items: center; gap: .45rem; margin: 0; color: color-mix(in srgb, currentColor 62%, transparent); font: 700 .68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; }
 .web-voice-status svg { width: .85rem; height: .85rem; }
 .web-voice-status.active { color: #477a00; }
@@ -10,6 +26,13 @@
 .web-voice-spinner { animation: web-voice-spin .8s linear infinite; }
 @keyframes web-voice-spin { to { transform: rotate(360deg); } }
 @keyframes web-voice-pulse { to { transform: scale(1.25); opacity: .45; } }
+@keyframes web-voice-bar { to { transform: scaleY(.35); opacity: .62; } }
+@keyframes web-voice-ring { 35% { opacity: .42; } 100% { inset: -17px; opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .web-voice-demo .receptionist-call-button::before,
+  .web-voice-waveform span { animation: none; }
+}
 
 :root {
   color-scheme: light;
@@ -415,6 +438,11 @@ body {
   line-height: 1.7;
 }
 
+.receptionist-human {
+  padding-block: 108px;
+  border-top: 1px solid var(--line);
+}
+
 .receptionist-two-jobs {
   padding-block: 110px;
   background: var(--ink);
@@ -816,6 +844,7 @@ body {
   }
 
   .receptionist-process,
+  .receptionist-human,
   .receptionist-two-jobs,
   .receptionist-pricing,
   .receptionist-guardrails {

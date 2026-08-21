@@ -18,7 +18,8 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
   const formRef = useRef<HTMLFormElement>(null);
 
   function nextStep() {
-    if (step === 1 && !formRef.current?.reportValidity()) return;
+    const activeStep = formRef.current?.querySelector(`[data-onboarding-step="${step}"]`) ?? null;
+    if (!reportStepValidity(activeStep)) return;
     setStep((current) => Math.min(3, current + 1));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -62,7 +63,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
           {error ? <p className="mb-7 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "missing" ? "Add the required business details before finishing setup." : error === "consent" ? "Confirm permission to send transactional lead alerts to the alert number." : "We could not save the workspace. Please try again."}</p> : null}
 
           <form action={completeOnboardingAction} ref={formRef}>
-            <div className={step === 1 ? "block" : "hidden"}>
+            <div className={step === 1 ? "block" : "hidden"} data-onboarding-step="1">
               <StepHeading eyebrow="Step 1 of 3" title="First, who are we answering for?" body="This is how Raleigh Lead Recovery introduces the business and how we identify your workspace." />
               <div className="mt-9 grid gap-5 sm:grid-cols-2">
                 <Field label="Business name" name="business_name" defaultValue={client.business_name === "New workspace" ? "" : client.business_name} autoComplete="organization" required />
@@ -74,7 +75,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               </div>
             </div>
 
-            <div className={step === 2 ? "block" : "hidden"}>
+            <div className={step === 2 ? "block" : "hidden"} data-onboarding-step="2">
               <StepHeading eyebrow="Step 2 of 3" title="What should Raleigh Lead Recovery know?" body="Plain English is perfect. This becomes the starting point for customer conversations." />
               <div className="mt-9 grid gap-6">
                 <label className="block text-sm font-black">Your services <span className="font-semibold text-black/40">· one per line or separated by commas</span>
@@ -86,7 +87,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               </div>
             </div>
 
-            <div className={step === 3 ? "block" : "hidden"}>
+            <div className={step === 3 ? "block" : "hidden"} data-onboarding-step="3">
               <StepHeading eyebrow="Step 3 of 3" title="When are you open—and what can’t wait?" body="Raleigh Lead Recovery uses this to set honest expectations and flag the calls that need attention now." />
               <div className="mt-9 border-l-2 border-t-2 border-black">
                 {days.map((day, index) => <HourRow day={day} weekend={index > 4} key={day} />)}
@@ -127,6 +128,14 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
       </section>
     </div>
   );
+}
+
+export function reportStepValidity(container: ParentNode | null): boolean {
+  if (!container) return false;
+  const controls = Array.from(container.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>("input, textarea, select"));
+  const invalid = controls.find((control) => !control.checkValidity());
+  invalid?.reportValidity();
+  return !invalid;
 }
 
 function StepHeading({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {

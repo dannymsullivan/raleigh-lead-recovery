@@ -75,7 +75,7 @@ export default function HomePage() {
       <section className="receptionist-hero page-shell">
         <div className="receptionist-hero-copy">
           <p className="eyebrow"><span /> Local call coverage for Raleigh service businesses</p>
-          <h1>Miss the call. <em>Not the job.</em></h1>
+          <h1>Never miss a <em>call again.</em></h1>
           <p className="receptionist-hero-intro">
             Raleigh Lead Recovery answers when you can&apos;t, captures what the customer needs, and sends your team a useful handoff.
           </p>
@@ -168,6 +168,14 @@ export default function HomePage() {
             <div><h3>Forward the calls you choose.</h3><p>Keep your existing number. Cover missed calls, after-hours calls, overflow, or every inbound call.</p></div>
           </li>
         </ol>
+      </section>
+
+      <section className="receptionist-human page-shell">
+        <div className="receptionist-section-heading">
+          <p className="eyebrow">Built for the people doing the work</p>
+          <h2>Handle the interruption. Keep the human touch.</h2>
+          <p>Nothing replaces your team&apos;s judgment, empathy, or customer relationships. Raleigh Lead Recovery handles routine intake and captures the context, so your people can respond prepared and spend more time doing the work only people can do.</p>
+        </div>
       </section>
 
       <section className="receptionist-two-jobs">

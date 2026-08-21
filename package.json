@@ -10,7 +10,8 @@
     "lint": "eslint app lib scripts tests",
     "test": "vitest run",
     "test:watch": "vitest",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "sync:public-demo": "tsx scripts/sync-public-demo-agent.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",

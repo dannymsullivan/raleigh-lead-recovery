@@ -6,9 +6,9 @@
   </defs>
   <rect width="1875" height="1275" fill="#f4f1e8"/>
   <rect width="1875" height="1275" fill="url(#grid)"/>
-  <text x="105" y="115" fill="#596057" font-family="Arial, sans-serif" font-size="24" font-weight="900" letter-spacing="4">AI LEAD RECOVERY FOR GROWING BUSINESSES</text>
+  <text x="105" y="115" fill="#596057" font-family="Arial, sans-serif" font-size="24" font-weight="900" letter-spacing="4">RALEIGH LEAD RECOVERY FOR SERVICE BUSINESSES</text>
   <text x="105" y="265" fill="#11130f" font-family="Georgia, serif" font-size="98" font-weight="700" letter-spacing="-5">
-    <tspan x="105" dy="0">Mabel finds the people</tspan>
+    <tspan x="105" dy="0">Find the people</tspan>
     <tspan x="105" dy="100">who are still interested.</tspan>
   </text>
   <g transform="translate(105 525)" font-family="Arial, sans-serif">
@@ -19,8 +19,8 @@
     </g>
     <g transform="translate(0 145)">
       <circle cx="28" cy="28" r="28" fill="#d8ff57"/><text x="28" y="37" text-anchor="middle" fill="#11130f" font-size="23" font-weight="900">2</text>
-      <text x="82" y="20" fill="#11130f" font-size="30" font-weight="900">Mabel follows up naturally.</text>
-      <text x="82" y="57" fill="#666b63" font-size="23" font-weight="600">She qualifies interest and handles objections.</text>
+      <text x="82" y="20" fill="#11130f" font-size="30" font-weight="900">Follow up naturally.</text>
+      <text x="82" y="57" fill="#666b63" font-size="23" font-weight="600">Qualify interest and handle common objections.</text>
     </g>
     <g transform="translate(0 290)">
       <circle cx="28" cy="28" r="28" fill="#d8ff57"/><text x="28" y="37" text-anchor="middle" fill="#11130f" font-size="23" font-weight="900">3</text>
@@ -40,5 +40,5 @@
   </g>
   <line x1="105" y1="1115" x2="1765" y2="1115" stroke="#11130f" stroke-width="3"/>
   <text x="105" y="1180" fill="#11130f" font-family="Arial, sans-serif" font-size="27" font-weight="900">DANNY SULLIVAN · RALEIGH, NORTH CAROLINA</text>
-  <text x="1765" y="1180" text-anchor="end" fill="#596057" font-family="Arial, sans-serif" font-size="27" font-weight="700">danny@meetraleighaiguy.com</text>
+  <text x="1765" y="1180" text-anchor="end" fill="#596057" font-family="Arial, sans-serif" font-size="27" font-weight="700">danny@raleighleadrecovery.com</text>
 </svg>
