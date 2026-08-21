@@ -34,8 +34,8 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 
 const clientId = "11111111-1111-4111-8111-111111111111";
 const demoOwnerPhone = process.env.DEMO_OWNER_PHONE || process.env.OWNER_PHONE || "+19195550123";
-const demoVapiAssistantId = process.env.VAPI_ASSISTANT_ID || "asst_demo_riley";
-const demoVapiPhoneNumberId = process.env.VAPI_PHONE_NUMBER_ID || "pn_demo_raleigh";
+const demoRetellAgentId = process.env.RETELL_DEMO_AGENT_ID || null;
+const demoRetellPhoneNumber = process.env.RETELL_DEMO_PHONE_NUMBER || null;
 const now = new Date();
 
 function daysAgo(days: number, hour: number, minute: number): string {
@@ -59,8 +59,8 @@ async function main() {
       pilot_end: now.toISOString().slice(0, 10),
       avg_job_value: 650,
       close_rate: 0.42,
-      vapi_assistant_id: demoVapiAssistantId,
-      vapi_phone_number_id: demoVapiPhoneNumberId
+      provisioned_phone_number: demoRetellPhoneNumber,
+      number_provider: demoRetellPhoneNumber ? "retell" : null
     },
     { onConflict: "id" }
   );
@@ -70,8 +70,8 @@ async function main() {
   }
 
   for (const agent of [
-    { agent_type: "receptionist", name: "Mabel 24/7 Receptionist", status: "ready", vapi_assistant_id: demoVapiAssistantId, vapi_phone_number_id: demoVapiPhoneNumberId },
-    { agent_type: "lead_reactivation", name: "Mabel Lead Recovery", status: "draft", vapi_assistant_id: null, vapi_phone_number_id: process.env.VAPI_OUTBOUND_PHONE_NUMBER_ID || null }
+    { agent_type: "receptionist", name: "24/7 Receptionist", status: demoRetellAgentId && demoRetellPhoneNumber ? "ready" : "draft", retell_agent_id: demoRetellAgentId, retell_phone_number: demoRetellPhoneNumber },
+    { agent_type: "lead_reactivation", name: "Lead Recovery", status: "draft", retell_agent_id: null, retell_phone_number: demoRetellPhoneNumber }
   ]) {
     const { data: existingAgent, error: agentLookupError } = await supabase.from("customer_agents").select("id").eq("client_id", clientId).eq("agent_type", agent.agent_type).eq("is_default", true).maybeSingle();
     if (agentLookupError) throw agentLookupError;
@@ -85,7 +85,7 @@ async function main() {
     .from("calls")
     .delete()
     .eq("client_id", clientId)
-    .or("vapi_call_id.like.demo-%,vapi_call_id.like.synthetic-%,caller_name.eq.Test Caller");
+    .or("retell_call_id.like.demo-%,retell_call_id.like.synthetic-%,caller_name.eq.Test Caller");
 
   if (cleanupError) {
     throw cleanupError;
@@ -105,7 +105,7 @@ async function main() {
     call("demo-011", 6, 9, 36, "Helen Brooks", "+19195551012", "59 Mordecai Dr, Raleigh, NC", "Garbage disposal replacement", "standard", "new_job", "300_800", "This week", "2 hours")
   ];
 
-  const { error: callsError } = await supabase.from("calls").upsert(calls, { onConflict: "vapi_call_id" });
+  const { error: callsError } = await supabase.from("calls").upsert(calls, { onConflict: "retell_call_id" });
   if (callsError) {
     throw callsError;
   }
@@ -133,7 +133,7 @@ function call(
   const createdAt = daysAgo(days, hour, minute);
   return {
     client_id: clientId,
-    vapi_call_id: id,
+    retell_call_id: id,
     caller_number: callbackNumber,
     caller_name: callerName,
     callback_number: callbackNumber,
@@ -144,11 +144,11 @@ function call(
     estimated_value_band: valueBand,
     requested_timing: requestedTiming,
     callback_promised_by: callbackPromisedBy,
-    summary: `${callerName} called about: ${issue}. Mabel captured callback details and set a ${callbackPromisedBy ?? "normal"} callback expectation.`,
-    transcript: `Mabel: Thanks for calling Oak City Plumbing. What's going on?\nCaller: ${issue}.\nMabel: Got it. I will get this to Marcus and have him call you back.`,
+    summary: `${callerName} called about: ${issue}. Chloe captured callback details and set a ${callbackPromisedBy ?? "normal"} callback expectation.`,
+    transcript: `Chloe: Thanks for calling Oak City Plumbing. What's going on?\nCaller: ${issue}.\nChloe: Got it. I will get this to Marcus and have him call you back.`,
     recording_url: null,
     duration_seconds: urgency === "emergency" ? 154 : 108,
-    raw_payload: { seed: true, vapi_call_id: id },
+    raw_payload: { seed: true, retell_call_id: id },
     created_at: createdAt,
     updated_at: createdAt
   };

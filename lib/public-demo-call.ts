@@ -4,7 +4,7 @@ type JsonRecord = Record<string, unknown>;
 export type DemoType = "general" | "hvac" | "plumbing" | "roofing" | "real_estate" | "home_services" | "events";
 
 export const PUBLIC_DEMO_CONSENT_VERSION = "demo-call-v1-2026-08-19";
-export const PUBLIC_DEMO_CONSENT_TEXT = "I confirm I control this number or am authorized to use it. I request one automated demo call from Mabel and consent to the call being recorded and transcribed for demonstration and quality purposes. Consent is not a condition of purchase.";
+export const PUBLIC_DEMO_CONSENT_TEXT = "I confirm I control this number or am authorized to use it. I request one automated demo call from Chloe and consent to the call being recorded and transcribed for demonstration and quality purposes. Consent is not a condition of purchase.";
 
 const ELEVATED_PUBLIC_DEMO_NUMBERS = new Set([
   "+18455481569",
@@ -23,12 +23,12 @@ export type PublicDemoCallInput = {
 };
 
 export type PublicDemoCallRequest = {
-  assistantId: string;
-  phoneNumberId: string;
-  customer: { number: string; name: string };
+  from_number: string;
+  to_number: string;
+  override_agent_id: string;
+  override_agent_version: "latest_published";
   metadata: { app: "public-demo"; requestId: string; variant: DemoType };
-  assistantOverrides: {
-    variableValues: {
+  retell_llm_dynamic_variables: {
       business_name: string;
       owner_name: string;
       contact_name: string;
@@ -37,7 +37,6 @@ export type PublicDemoCallRequest = {
       lead_age_context: string;
       prior_context: string;
       callback_expectation: string;
-    };
   };
 };
 
@@ -74,7 +73,7 @@ export function isPublicDemoCallingWindow(date = new Date()): boolean {
 
 export function buildPublicDemoCallRequest(
   input: PublicDemoCallInput,
-  identifiers: { assistantId: string; phoneNumberId: string; requestId: string }
+  identifiers: { agentId: string; phoneNumber: string; requestId: string }
 ): PublicDemoCallRequest {
   const scenario = {
     general: {
@@ -114,12 +113,12 @@ export function buildPublicDemoCallRequest(
     }
   }[input.demoType];
   return {
-    assistantId: identifiers.assistantId,
-    phoneNumberId: identifiers.phoneNumberId,
-    customer: { number: input.phoneE164, name: input.name },
+    from_number: identifiers.phoneNumber,
+    to_number: input.phoneE164,
+    override_agent_id: identifiers.agentId,
+    override_agent_version: "latest_published",
     metadata: { app: "public-demo", requestId: identifiers.requestId, variant: input.demoType },
-    assistantOverrides: {
-      variableValues: {
+    retell_llm_dynamic_variables: {
         business_name: input.businessName,
         owner_name: `${input.businessName} team`,
         contact_name: input.name,
@@ -128,7 +127,6 @@ export function buildPublicDemoCallRequest(
         lead_age_context: "a few weeks ago",
         prior_context: scenario.priorContext,
         callback_expectation: "during normal business hours"
-      }
     }
   };
 }

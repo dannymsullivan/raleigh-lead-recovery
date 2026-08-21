@@ -33,7 +33,7 @@ export default function BlogIndexPage() {
       <section className="border-b-2 border-black">
         <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.12fr_0.88fr]">
           <div className="px-5 py-20 sm:px-8 sm:py-28 lg:border-r-2 lg:border-black lg:pr-16">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Mabel field notes · Raleigh, NC</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Chloe field notes · Raleigh, NC</p>
             <h1 className="mt-8 max-w-4xl text-[clamp(4.3rem,10vw,7.8rem)] font-black leading-[0.81] tracking-[-0.075em]">
               Better calls.<br />Better jobs.
             </h1>
@@ -123,7 +123,7 @@ export default function BlogIndexPage() {
         <div className="mx-auto grid max-w-6xl gap-8 border-2 border-black bg-[#f4f1e8] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Have a missed-call question?</p>
-            <h2 className="mt-5 max-w-3xl text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-6xl">Send it to the person building Mabel.</h2>
+            <h2 className="mt-5 max-w-3xl text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-6xl">Send it to the person building Chloe.</h2>
           </div>
           <a className="inline-flex h-14 items-center justify-center gap-3 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-1" href={contactHref}>
             <Mail className="h-4 w-4" aria-hidden="true" /> {contactEmail}

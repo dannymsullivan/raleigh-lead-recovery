@@ -6,24 +6,24 @@ export const agentTypeDetails: Record<CustomerAgentType, { label: string; descri
   lead_reactivation: {
     label: "Lead recovery",
     description: "Calls qualified past inquiries, captures current intent, and hands interested people back to the team.",
-    defaultName: "Mabel Lead Recovery"
+    defaultName: "Lead Recovery"
   },
   receptionist: {
     label: "24/7 receptionist",
     description: "Answers inbound calls, captures the reason for calling, and routes a useful summary to the team.",
-    defaultName: "Mabel 24/7 Receptionist"
+    defaultName: "24/7 Receptionist"
   }
 };
 
-export function customerAgentReady(agent: Pick<CustomerAgent, "status" | "vapi_assistant_id" | "vapi_phone_number_id"> | null | undefined): boolean {
-  return Boolean(agent?.status === "ready" && agent.vapi_assistant_id && agent.vapi_phone_number_id);
+export function customerAgentReady(agent: Pick<CustomerAgent, "status" | "retell_agent_id" | "retell_phone_number"> | null | undefined): boolean {
+  return Boolean(agent?.status === "ready" && agent.retell_agent_id && agent.retell_phone_number);
 }
 
 export function defaultFirstMessage(type: CustomerAgentType, client: Pick<Client, "business_name">): string {
   if (type === "receptionist") {
-    return `Thanks for calling ${client.business_name}. This is Mabel, the automated assistant. The team couldn't grab the phone, but I can get the details to them. What's going on?`;
+    return `Thanks for calling ${client.business_name}. This is Chloe, the automated assistant. The team couldn't grab the phone, but I can get the details to them. What's going on?`;
   }
-  return "Hi {{contact_name}}, this is Mabel, an automated assistant calling for {{business_name}} about an earlier {{service_type}} inquiry. Is now an okay time for a quick question?";
+  return "Hi {{contact_name}}, this is Chloe, an automated assistant calling for {{business_name}} about an earlier {{service_type}} inquiry. Is now an okay time for a quick question?";
 }
 
 export function receptionistPrompt(client: Client, agent: Pick<CustomerAgent, "handoff_rules" | "custom_instructions">): string {
@@ -33,7 +33,7 @@ export function receptionistPrompt(client: Client, agent: Pick<CustomerAgent, "h
   ).join("\n") || "Business hours were not provided.";
 
   return `[Identity]
-You are Mabel, the automated 24/7 receptionist for ${client.business_name}. Be warm, calm, concise, and transparent that you are an automated assistant if asked.
+You are Chloe, the automated 24/7 receptionist for ${client.business_name}. Be warm, calm, concise, and transparent that you are an automated assistant if asked.
 
 [Business information]
 Business type: ${client.trade}
@@ -65,7 +65,7 @@ Use short natural sentences. Ask one question at a time. Avoid corporate languag
 
 export function leadReactivationPrompt(client: Client, agent: Pick<CustomerAgent, "offer_details" | "handoff_rules" | "custom_instructions">): string {
   return `[Identity]
-You are Mabel, the automated lead-recovery assistant for {{business_name}}. You are calling {{contact_name}} about {{lead_source}}, originally received {{lead_age_context}}. Be transparent, warm, concise, and respectful.
+You are Chloe, the automated lead-recovery assistant for {{business_name}}. You are calling {{contact_name}} about {{lead_source}}, originally received {{lead_age_context}}. Be transparent, warm, concise, and respectful.
 
 [Customer]
 Business: ${client.business_name}

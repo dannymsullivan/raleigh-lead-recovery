@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1450" height="850" viewBox="0 0 1450 850">
+  <rect width="1450" height="850" fill="#d8ff57"/>
+  <g transform="translate(88 88)">
+    <rect x="0" y="0" width="76" height="76" rx="17" fill="#151713"/>
+    <path d="M23 56V20h16c10 0 16 5 16 13 0 8-6 13-16 13H23m16 0 17 11" fill="none" stroke="#d8ff57" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+    <text x="101" y="48" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="28" font-weight="800" letter-spacing="-1">RALEIGH LEAD RECOVERY</text>
+  </g>
+
+  <text x="88" y="308" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="78" font-weight="700" letter-spacing="-3">Hear Mabel recover</text>
+  <text x="88" y="390" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="78" font-weight="700" letter-spacing="-3">a lead—live.</text>
+  <text x="88" y="492" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="30" font-weight="700">Scan to try the demo on your phone.</text>
+  <text x="88" y="555" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="24" font-weight="600">No signup. Pick your industry. Mabel calls you.</text>
+
+  <rect x="956" y="150" width="406" height="406" rx="22" fill="#ffffff" stroke="#151713" stroke-width="4"/>
+  <image href="qr-demo.png" x="986" y="180" width="346" height="346" preserveAspectRatio="xMidYMid meet"/>
+  <text x="1159" y="613" text-anchor="middle" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" letter-spacing="1">TRY MABEL</text>
+
+  <line x1="88" y1="690" x2="1362" y2="690" stroke="#151713" stroke-width="3"/>
+  <text x="88" y="757" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="27" font-weight="800">raleighleadrecovery.com/demo</text>
+</svg>

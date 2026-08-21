@@ -14,13 +14,13 @@ Keep the current missed-call product working, but do not make it the primary hom
 
 ## What Raleigh Lead Recovery is selling
 
-Do not lead with AI, Vapi, automation, or a replacement for the prospect's CRM.
+Do not lead with AI infrastructure, automation, or a replacement for the prospect's CRM.
 
 The offer is a controlled reactivation pilot:
 
 - The customer supplies 250-500 old leads from an agreed period.
-- Mabel calls only records that pass the customer's consent, suppression, and do-not-call review.
-- Mabel identifies still-interested homeowners, qualifies the opportunity, and books or hands off the next step.
+- Chloe calls only records that pass the customer's consent, suppression, and do-not-call review.
+- Chloe identifies still-interested homeowners, qualifies the opportunity, and books or hands off the next step.
 - The customer receives a result report: records attempted, connections, conversations, interested leads, qualified opportunities, appointments, opt-outs, and attributable pipeline.
 - No new ad spend and no CRM replacement.
 
@@ -35,10 +35,10 @@ Researched roofing company
         +--> manual founder call or LinkedIn follow-up
         |
         v
-Prospect opts into a Mabel demo call
+Prospect opts into a Chloe demo call
         |
         v
-Mabel calls with an industry-tuned lead scenario
+Chloe calls with an industry-tuned lead scenario
         |
         v
 Prospect chooses whether to book a 15-minute setup call
@@ -50,7 +50,7 @@ Prospect chooses whether to book a 15-minute setup call
 Measured results + case study + ongoing campaign
 ```
 
-Do **not** use an AI voice to cold-call a scraped prospect list. The first AI sales call should happen only after the recipient requests it through a form, email reply, or another documented opt-in path. Before Mabel calls a customer's old consumer leads, have qualified counsel approve the exact consent, disclosure, DNC/suppression, recording, calling-hours, caller-ID, and record-retention workflow. The customer must contractually confirm that each uploaded list is eligible for the planned outreach. This is a launch gate, not a later cleanup task.
+Do **not** use an AI voice to cold-call a scraped prospect list. The first AI sales call should happen only after the recipient requests it through a form, email reply, or another documented opt-in path. Before Chloe calls a customer's old consumer leads, have qualified counsel approve the exact consent, disclosure, DNC/suppression, recording, calling-hours, caller-ID, and record-retention workflow. The customer must contractually confirm that each uploaded list is eligible for the planned outreach. This is a launch gate, not a later cleanup task.
 
 ## Workstream 1: lock the offer and proof model
 
@@ -73,7 +73,7 @@ Track the full funnel, but use **qualified appointments per 100 eligible records
 
 ## Workstream 2: reposition the landing page
 
-The page should make one argument and drive one primary action: request a Mabel call.
+The page should make one argument and drive one primary action: request a Chloe call.
 
 ### Recommended above-the-fold copy
 
@@ -81,9 +81,9 @@ The page should make one argument and drive one primary action: request a Mabel 
 
 **Headline:** Turn the leads you've already paid for into booked jobs.
 
-**Subheadline:** Mabel follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
+**Subheadline:** Chloe follows up with old and unresponsive homeowners, finds the ones who are still interested, and sends qualified opportunities back to your team.
 
-**Primary CTA:** Have Mabel Call Me
+**Primary CTA:** Have Chloe Call Me
 
 **CTA support:** Enter your number and experience the same call your old leads would receive.
 
@@ -95,13 +95,13 @@ The page should make one argument and drive one primary action: request a Mabel 
 
 1. Outcome-led hero and opt-in call form.
 2. The economic problem: the CRM contains leads the company already paid to acquire.
-3. Simple flow: upload eligible old leads → Mabel has conversations → the team receives qualified opportunities.
+3. Simple flow: upload eligible old leads → Chloe has conversations → the team receives qualified opportunities.
 4. Pilot offer with clear boundaries and no CRM replacement.
 5. Sample results dashboard labeled as an example until real results exist.
 6. Call recording or interactive demo with explicit AI disclosure.
 7. Objections: list security, brand control, handoff process, opt-outs/compliance, integrations, and pricing.
 8. Founder trust section focused on local implementation and support; remove the Raleigh AI Guy positioning from the main conversion path.
-9. Repeat the `Have Mabel Call Me` CTA.
+9. Repeat the `Have Chloe Call Me` CTA.
 
 ### Product changes implied by the new page
 
@@ -167,17 +167,17 @@ Score the first list A/B/C. Smartlead receives only verified A and B contacts. T
 
 ## Workstream 4: replace the Smartlead campaign
 
-Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign. The current source copy lives in `docs/smartlead-mabel-feedback-sequence.md`.
+Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve its performance history and suppression list, then create a new Raleigh Lead Recovery campaign. The current source copy lives in `docs/smartlead-chloe-feedback-sequence.md`.
 
 ### Campaign setup
 
-- Campaign name: `Mabel Live Demo — Triangle — V1`
+- Campaign name: `Chloe Live Demo — Triangle — V1`
 - Build separate, clearly labeled cohorts for roofing, HVAC, plumbing, real estate, home services, and event services rather than mixing every industry into one untracked list.
 - Use the matching industry opening when the source data is reliable; otherwise use the generic older-inquiries opening.
 - Plain-text emails with no images or attachments and one direct link to the live demo.
 - Four touches on days 0, 3, 7, and 12.
-- One low-friction CTA throughout: experience Mabel on the recipient's own phone and share a reaction.
-- Do not include Calendly in the cold sequence. The demo success state offers the setup call after the recipient has heard Mabel.
+- One low-friction CTA throughout: experience Chloe on the recipient's own phone and share a reaction.
+- Do not include Calendly in the cold sequence. The demo success state offers the setup call after the recipient has heard Chloe.
 - Keep sending-domain health, mailbox volume, reply handling, address/opt-out requirements, and suppression lists intact.
 
 ### Message sequence
@@ -187,7 +187,7 @@ Do not overwrite the existing Raleigh AI Guy campaign. Pause it, export/preserve
 3. **Operational trust:** explain eligibility checks, no-double-call controls, dashboard reporting, and CRM sync.
 4. **Close the loop:** make a final request for blunt feedback and end the sequence.
 
-The primary conversion is a completed opt-in demo call, not a meeting. The `/demo` form captures the recipient's explicit request and consent before Mabel calls. A positive reply is the secondary signal. If the call feels promising, the demo page offers a 15-minute setup call and a 25-lead trial.
+The primary conversion is a completed opt-in demo call, not a meeting. The `/demo` form captures the recipient's explicit request and consent before Chloe calls. A positive reply is the secondary signal. If the call feels promising, the demo page offers a 15-minute setup call and a 25-lead trial.
 
 ### Campaign metrics
 
@@ -195,13 +195,13 @@ Ignore opens as the main decision signal. Track delivered, total replies, positi
 
 ## Workstream 5: build two separate AI agents
 
-### A. Mabel — opt-in industry demo
+### A. Chloe — opt-in industry demo
 
 Purpose: let the prospect experience the conversation from an older lead's point of view. The demo uses fictional business context selected by industry; it does not interrogate the prospect about their business or attempt to close a contract.
 
 Example opening pattern:
 
-> Hi {{first_name}}, this is Mabel calling for {{fictional_business_name}} about the {{prior_inquiry}} you reached out about. Did I catch you at an okay time?
+> Hi {{first_name}}, this is Chloe calling for {{fictional_business_name}} about the {{prior_inquiry}} you reached out about. Did I catch you at an okay time?
 
 The exact follow-up is tuned to HVAC, plumbing, roofing, real estate, home services, or events. It should:
 
@@ -220,7 +220,7 @@ Required behaviors:
 - Do not claim access to a live calendar, CRM, or customer record in the public demo.
 - Let the web page present the trial and Calendly setup call after the call starts.
 
-### B. Mabel — customer lead-reactivation agent
+### B. Chloe — customer lead-reactivation agent
 
 Purpose: contact an eligible old lead on behalf of a named roofing company, determine current interest, qualify the project, and execute the customer's approved next step.
 
@@ -245,20 +245,20 @@ Every opt-out must immediately suppress future attempts across the campaign. Rec
 
 ## Workstream 6: technical implementation
 
-Reuse the existing Vapi webhook, transcript, recording, Supabase, and dashboard foundations, but model reactivation as a separate campaign domain rather than pretending each outbound attempt is an inbound missed call.
+Reuse the existing Retell webhook, transcript, recording, Supabase, and dashboard foundations, but model reactivation as a separate campaign domain rather than pretending each outbound attempt is an inbound missed call.
 
 ### New core records
 
 - `campaigns`: customer, purpose, status, limits, schedule, script version.
 - `campaign_contacts`: source record, eligibility attestation, consent/suppression state, personalization fields, disposition.
-- `call_attempts`: Vapi call ID, attempt number, timestamps, outcome, cost, recording/transcript references.
+- `call_attempts`: Retell call ID, attempt number, timestamps, outcome, cost, recording/transcript references.
 - `appointments`: contact, booked time, calendar destination, confirmation status.
 - `suppression_entries`: phone/email, reason, source, timestamp, scope.
 - `demo_call_requests`: prospect consent text/version, phone, timestamp, IP/source, status.
 
 ### Integrations and controls
 
-- Vapi outbound API or campaigns for approved demo and customer calls.
+- Retell outbound calls for approved demo and customer calls.
 - Calendar booking plus optional live transfer.
 - Smartlead reply/webhook handling or a manual consent queue for V1.
 - Per-campaign calling windows and timezone checks.
@@ -281,12 +281,12 @@ Reuse the existing Vapi webhook, transcript, recording, Supabase, and dashboard 
 ### Days 4-7: conversion assets
 
 - Rewrite the landing page around lead reactivation.
-- Add the `Have Mabel Call Me` consent form.
+- Add the `Have Chloe Call Me` consent form.
 - Create the demo-call confirmation and fallback scheduling flow.
 - Create a reactivation-style example report, clearly labeled as sample data.
 - Write and QA Smartlead V1.
 
-**Gate:** five internal testers should understand the offer and successfully request, receive, and complete a Mabel demo call.
+**Gate:** five internal testers should understand the offer and successfully request, receive, and complete a Chloe demo call.
 
 ### Days 8-12: agent and data foundation
 
@@ -308,7 +308,7 @@ Reuse the existing Vapi webhook, transcript, recording, Supabase, and dashboard 
 
 - Launch the first 25 contacts at low volume.
 - Danny manually handles replies and makes human follow-up calls.
-- Mabel calls only people who explicitly request the demo.
+- Chloe calls only people who explicitly request the demo.
 - Review call transcripts and objections daily; tune the prompt by version, not ad hoc.
 - Launch the next 25 only after reviewing positive reply and complaint quality.
 
@@ -325,7 +325,7 @@ Reuse the existing Vapi webhook, transcript, recording, Supabase, and dashboard 
 - **Danny:** niche/offer approval, legal review relationship, sales calls, pricing, design-partner close, and customer-specific business rules.
 - **Raleigh Lead Recovery app:** consent capture, demo-call triggering, campaign records, suppression, call logs, appointments, and result reporting.
 - **Smartlead:** prospect email sequencing and reply generation—not proof of phone consent by itself unless the reply explicitly requests the call and is logged.
-- **Vapi:** real-time conversation and outbound call execution after the app authorizes an eligible call.
+- **Retell:** real-time conversation and outbound call execution after the app authorizes an eligible call.
 
 ## What not to do yet
 

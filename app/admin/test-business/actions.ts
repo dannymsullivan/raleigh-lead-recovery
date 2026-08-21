@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { customerCrmPath, uniqueCustomerSlug } from "@/lib/customer-slug";
 import { normalizePhoneNumber } from "@/lib/phone";
-import { queueReactivationContactCall, reactivationCampaignTelephonyReady } from "@/lib/reactivation-vapi";
+import { queueReactivationContactCall, reactivationCampaignTelephonyReady } from "@/lib/reactivation-retell";
 import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { Client, ReactivationCampaign, ReactivationContact } from "@/lib/types";
@@ -60,8 +60,6 @@ export async function createOrResetTestBusinessAction(formData: FormData): Promi
     pilot_end: pilotEnd.toISOString().slice(0, 10),
     avg_job_value: 1800,
     close_rate: 0.4,
-    vapi_assistant_id: null,
-    vapi_phone_number_id: null,
     is_test_account: true
   };
 

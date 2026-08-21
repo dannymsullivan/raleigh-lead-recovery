@@ -4,17 +4,17 @@ import { opportunityDateFromContext } from "./lead-eligibility";
 import type { Client, ReactivationCampaign, ReactivationContact } from "./types";
 
 type CallIdentifiers = {
-  assistantId: string;
-  phoneNumberId: string;
+  agentId: string;
+  phoneNumber: string;
 };
 
 export type ReactivationCallRequest = {
-  assistantId: string;
-  phoneNumberId: string;
-  customer: { number: string; name: string; email?: string };
+  from_number: string;
+  to_number: string;
+  override_agent_id: string;
+  override_agent_version: "latest_published";
   metadata: { app: "lead-reactivation"; clientId: string; campaignId: string; contactId: string };
-  assistantOverrides: {
-    variableValues: {
+  retell_llm_dynamic_variables: {
       business_name: string;
       owner_name: string;
       contact_name: string;
@@ -26,7 +26,6 @@ export type ReactivationCallRequest = {
       event_date: string;
       prior_reason: string;
       callback_expectation: string;
-    };
   };
 };
 
@@ -78,12 +77,12 @@ export function buildReactivationCallRequest(
   assertTestCallAllowed(client, contact);
   const brief = minimalLeadBrief(contact);
   return {
-    assistantId: identifiers.assistantId,
-    phoneNumberId: identifiers.phoneNumberId,
-    customer: { number: contact.phone_e164, name: contact.name, email: contact.email ?? undefined },
+    from_number: identifiers.phoneNumber,
+    to_number: contact.phone_e164,
+    override_agent_id: identifiers.agentId,
+    override_agent_version: "latest_published",
     metadata: { app: "lead-reactivation", clientId: client.id, campaignId: campaign.id, contactId: contact.id },
-    assistantOverrides: {
-      variableValues: {
+    retell_llm_dynamic_variables: {
         business_name: client.business_name,
         owner_name: client.owner_name,
         contact_name: contact.name,
@@ -95,7 +94,6 @@ export function buildReactivationCallRequest(
         event_date: brief.eventDate,
         prior_reason: brief.priorReason,
         callback_expectation: client.callback_window || "as soon as possible"
-      }
     }
   };
 }

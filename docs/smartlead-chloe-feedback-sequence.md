@@ -1,8 +1,8 @@
-# Smartlead sequence — Mabel live-demo feedback
+# Smartlead sequence — Chloe live-demo feedback
 
 ## Campaign goal
 
-The email sequence has one job: get a business owner to experience Mabel on their own phone.
+The email sequence has one job: get a business owner to experience Chloe on their own phone.
 
 The live demo handles the next step. After the call starts, the page offers a 25-lead, 14-day trial and a 15-minute Calendly setup call. Do not introduce the meeting request in the cold emails.
 
@@ -44,7 +44,7 @@ Hi {{first_name}},
 
 What happens to older inquiries that do not book the first time?
 
-I'm testing Mabel, an AI calling assistant that follows up, finds out who is still interested, and hands the live opportunities back to the business.
+I'm testing Chloe, an AI calling assistant that follows up, finds out who is still interested, and hands the live opportunities back to the business.
 
 I made a one-minute demo that calls your phone and puts you in the lead's shoes:
 
@@ -62,7 +62,7 @@ Hi {{first_name}},
 
 One quick clarification: the demo does not need your CRM, customer data, or lead list.
 
-Choose your industry, enter your first name and number, and Mabel calls as if you were an older lead from a fictional local business. It takes about a minute.
+Choose your industry, enter your first name and number, and Chloe calls as if you were an older lead from a fictional local business. It takes about a minute.
 
 https://www.raleighleadrecovery.com/demo
 
@@ -94,7 +94,7 @@ If this is not relevant, reply no and I will close the loop.
 
 Hi {{first_name}},
 
-Last note from me. If older inquiries are sitting untouched, I'd value your blunt reaction to Mabel before I open the test more broadly.
+Last note from me. If older inquiries are sitting untouched, I'd value your blunt reaction to Chloe before I open the test more broadly.
 
 https://www.raleighleadrecovery.com/demo
 
@@ -124,7 +124,7 @@ https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call
 
 ### Wants details before trying it
 
-The short version: you choose the eligible leads and the context Mabel receives. She follows up, records the outcome, and routes interested people back to your team without replacing your CRM.
+The short version: you choose the eligible leads and the context Chloe receives. She follows up, records the outcome, and routes interested people back to your team without replacing your CRM.
 
 The demo uses fictional business context, so a real version would be tuned much more closely to your business and sales process.
 

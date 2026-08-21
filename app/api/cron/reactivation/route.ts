@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { runReactivationBatch } from "@/lib/reactivation-vapi";
+import { runReactivationBatch } from "@/lib/reactivation-retell";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";

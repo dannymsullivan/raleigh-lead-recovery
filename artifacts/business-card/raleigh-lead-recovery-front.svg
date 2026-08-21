@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1450" height="850" viewBox="0 0 1450 850">
+  <rect width="1450" height="850" fill="#f7f5ef"/>
+  <rect x="0" y="0" width="34" height="850" fill="#d8ff57"/>
+  <g transform="translate(88 84)">
+    <rect x="0" y="0" width="104" height="104" rx="22" fill="#d8ff57" stroke="#151713" stroke-width="5"/>
+    <path d="M31 76V27h22c14 0 22 7 22 18 0 11-8 18-22 18H31m22 0 23 15" fill="none" stroke="#151713" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+    <text x="132" y="40" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="34" font-weight="800" letter-spacing="-1.4">RALEIGH LEAD</text>
+    <text x="132" y="82" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="34" font-weight="800" letter-spacing="-1.4">RECOVERY</text>
+  </g>
+
+  <text x="88" y="365" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="82" font-weight="700" letter-spacing="-3.2">Turn old leads into</text>
+  <text x="88" y="450" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="82" font-weight="700" letter-spacing="-3.2">new business.</text>
+
+  <line x1="88" y1="560" x2="1362" y2="560" stroke="#151713" stroke-width="3"/>
+
+  <text x="88" y="645" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="34" font-weight="800">Danny Sullivan</text>
+  <text x="88" y="690" fill="#676b61" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="25" font-weight="600" letter-spacing="1.4">FOUNDER · RALEIGH, NC</text>
+
+  <text x="1362" y="642" text-anchor="end" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="28" font-weight="700">danny@raleighleadrecovery.com</text>
+  <text x="1362" y="690" text-anchor="end" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="28" font-weight="700">raleighleadrecovery.com</text>
+</svg>

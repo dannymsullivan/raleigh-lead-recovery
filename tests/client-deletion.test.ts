@@ -6,12 +6,11 @@ describe("isClientDeletionLocked", () => {
     expect(isClientDeletionLocked({ is_test_account: true })).toBe(true);
   });
 
-  it("protects real connected Vapi resources", () => {
-    expect(isClientDeletionLocked({ vapi_assistant_id: "cae15f41-b125-48a6-89fa-b65a7172a59a" })).toBe(true);
+  it("protects a customer with a provisioned Retell number", () => {
+    expect(isClientDeletionLocked({ provisioned_phone_number: "+19195550123" })).toBe(true);
   });
 
-  it("allows ordinary and legacy seeded customers to be removed", () => {
+  it("allows an ordinary unprovisioned customer to be removed", () => {
     expect(isClientDeletionLocked({})).toBe(false);
-    expect(isClientDeletionLocked({ vapi_assistant_id: "asst_demo_riley", vapi_phone_number_id: "pn_demo_raleigh" })).toBe(false);
   });
 });

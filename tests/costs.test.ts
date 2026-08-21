@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildCostDashboard } from "@/lib/costs";
 import type { Call, Client } from "@/lib/types";
 
-function client(id: string, name: string, phoneNumberId: string | null): Client {
+function client(id: string, name: string, phoneNumber: string | null): Client {
   return {
     id,
     business_name: name,
@@ -14,8 +14,7 @@ function client(id: string, name: string, phoneNumberId: string | null): Client 
     pilot_end: "2026-08-31",
     avg_job_value: 500,
     close_rate: 0.4,
-    vapi_assistant_id: null,
-    vapi_phone_number_id: phoneNumberId,
+    provisioned_phone_number: phoneNumber,
     created_at: "2026-08-01T00:00:00Z"
   };
 }
@@ -24,10 +23,9 @@ afterEach(() => vi.unstubAllEnvs());
 
 describe("customer cost allocation", () => {
   it("shows every customer even before they place a call", () => {
-    vi.stubEnv("TWILIO_FROM_NUMBER", "");
     vi.stubEnv("COST_PHONE_NUMBER_MONTHLY", "1.15");
     const dashboard = buildCostDashboard(
-      [client("one", "Zim Zoom", "phone-one"), client("two", "New Customer", null)],
+      [client("one", "Zim Zoom", "+19195550123"), client("two", "New Customer", null)],
       [],
       new Date("2026-08-20T12:00:00Z")
     );
@@ -37,8 +35,6 @@ describe("customer cost allocation", () => {
   });
 
   it("combines inbound and reactivation usage under the correct customer", () => {
-    vi.stubEnv("TWILIO_FROM_NUMBER", "");
-    vi.stubEnv("COST_VAPI_INCLUDED_MINUTES", "0");
     const customers = [client("one", "Zim Zoom", null), client("two", "Other", null)];
     const inbound = [{
       client_id: "one",
@@ -50,7 +46,7 @@ describe("customer cost allocation", () => {
     }] as Call[];
     const attempts = [{
       client_id: "one",
-      vapi_call_id: "outbound-one",
+      retell_call_id: "outbound-one",
       status: "completed",
       outcome: "interested",
       duration_seconds: 180,

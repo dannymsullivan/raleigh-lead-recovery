@@ -13,8 +13,6 @@ const client: Client = {
   pilot_end: "2026-07-08",
   avg_job_value: 650,
   close_rate: 0.5,
-  vapi_assistant_id: "asst_1",
-  vapi_phone_number_id: "pn_1",
   created_at: "2026-07-01T00:00:00.000Z"
 };
 
@@ -22,7 +20,7 @@ function baseCall(overrides: Partial<Call>): Call {
   return {
     id: "call-1",
     client_id: client.id,
-    vapi_call_id: "vapi-1",
+    retell_call_id: "retell-1",
     caller_number: "+19195554821",
     caller_name: "Tanya",
     callback_number: "+19195554821",
@@ -61,10 +59,10 @@ describe("report value math", () => {
 
   it("builds aggregate stats from the call list", () => {
     const report = buildReportModel(client, [
-      baseCall({ id: "1", vapi_call_id: "1", urgency: "emergency", lead_type: "new_job", estimated_value_band: "over_2000" }),
-      baseCall({ id: "2", vapi_call_id: "2", urgency: "urgent", lead_type: "existing_customer", estimated_value_band: "under_300" }),
-      baseCall({ id: "3", vapi_call_id: "3", urgency: "standard", lead_type: "complaint", estimated_value_band: "over_2000" }),
-      baseCall({ id: "4", vapi_call_id: "4", urgency: "spam", lead_type: "spam", estimated_value_band: "over_2000" })
+      baseCall({ id: "1", retell_call_id: "1", urgency: "emergency", lead_type: "new_job", estimated_value_band: "over_2000" }),
+      baseCall({ id: "2", retell_call_id: "2", urgency: "urgent", lead_type: "existing_customer", estimated_value_band: "under_300" }),
+      baseCall({ id: "3", retell_call_id: "3", urgency: "standard", lead_type: "complaint", estimated_value_band: "over_2000" }),
+      baseCall({ id: "4", retell_call_id: "4", urgency: "spam", lead_type: "spam", estimated_value_band: "over_2000" })
     ]);
 
     expect(report.totalCalls).toBe(4);

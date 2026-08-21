@@ -11,7 +11,7 @@ import { parseLeadCsv } from "@/lib/reactivation";
 import { analyzeLeadRows, inferLeadColumnMapping, leadFieldKeys, type LeadBucket, type LeadColumnMapping, type NormalizedImportedLead } from "@/lib/lead-import";
 import { parseLeadSpreadsheet } from "@/lib/lead-spreadsheet-server";
 import { createLeadUploadTicket, readLeadUpload, removeLeadUpload, type LeadUploadTicket } from "@/lib/lead-upload-server";
-import { reactivationCampaignTelephonyReady, runReactivationBatch } from "@/lib/reactivation-vapi";
+import { reactivationCampaignTelephonyReady, runReactivationBatch } from "@/lib/reactivation-retell";
 import { assessOpportunityDate, isDateSensitiveService } from "@/lib/lead-eligibility";
 import { ensureDefaultCustomerAgent } from "@/lib/customer-agent-provisioning";
 

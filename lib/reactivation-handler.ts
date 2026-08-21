@@ -11,7 +11,7 @@ export async function processReactivationReport(
   rawPayload: unknown,
   sendSms: (message: { to: string; body: string }) => Promise<void>
 ): Promise<{ status: string; alert: string }> {
-  if (report.eventType !== "end-of-call-report") return { status: "ignored", alert: "skipped" };
+  if (report.eventType !== "call_analyzed") return { status: "ignored", alert: "skipped" };
   if (!report.callId || !report.clientId || !report.campaignId || !report.contactId) return { status: "invalid", alert: "skipped" };
   const admin = getSupabaseAdmin();
   const [{ data: contactData }, { data: clientData }, { data: campaignData }] = await Promise.all([
@@ -31,7 +31,7 @@ export async function processReactivationReport(
     client_id: report.clientId,
     campaign_id: report.campaignId,
     contact_id: report.contactId,
-    vapi_call_id: report.callId,
+    retell_call_id: report.callId,
     status: "completed",
     outcome: report.outcome,
     summary: report.summary,
@@ -41,7 +41,7 @@ export async function processReactivationReport(
     structured_data: report.structuredData,
     raw_payload: rawPayload,
     error: report.outcome === "failed" ? "Call ended without a recognized outcome" : null
-  }, { onConflict: "vapi_call_id" }).select("id,owner_alert_sent_at").single();
+  }, { onConflict: "retell_call_id" }).select("id,owner_alert_sent_at").single();
   if (attemptError) throw attemptError;
 
   const { error: contactError } = await admin.from("reactivation_contacts").update({
@@ -56,7 +56,7 @@ export async function processReactivationReport(
   if (contactError) throw contactError;
 
   if (report.optOut) {
-    await admin.from("suppression_entries").upsert({ client_id: report.clientId, phone_e164: contact.phone_e164, reason: "opt_out", source: "mabel_call" }, { onConflict: "client_id,phone_e164" });
+    await admin.from("suppression_entries").upsert({ client_id: report.clientId, phone_e164: contact.phone_e164, reason: "opt_out", source: "retell_call" }, { onConflict: "client_id,phone_e164" });
   }
   if (report.outcome === "interested_now" && report.nextStep === "book_inspection") {
     await admin.from("reactivation_appointments").upsert({ client_id: report.clientId, campaign_id: report.campaignId, contact_id: report.contactId, requested_window: report.requestedTiming, status: "requested" }, { onConflict: "contact_id" });

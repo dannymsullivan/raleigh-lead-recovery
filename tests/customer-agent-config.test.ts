@@ -17,8 +17,6 @@ const client = {
   pilot_end: "2026-08-30",
   avg_job_value: 900,
   close_rate: 0.4,
-  vapi_assistant_id: null,
-  vapi_phone_number_id: null,
   created_at: "2026-08-01T00:00:00Z"
 } satisfies Client;
 
@@ -45,8 +43,8 @@ describe("customer agent configuration", () => {
   });
 
   it("requires a ready assistant and phone number", () => {
-    expect(customerAgentReady({ status: "ready", vapi_assistant_id: "asst-1", vapi_phone_number_id: "phone-1" })).toBe(true);
-    expect(customerAgentReady({ status: "draft", vapi_assistant_id: "asst-1", vapi_phone_number_id: "phone-1" })).toBe(false);
-    expect(customerAgentReady({ status: "ready", vapi_assistant_id: "asst-1", vapi_phone_number_id: null })).toBe(false);
+    expect(customerAgentReady({ status: "ready", retell_agent_id: "agent-1", retell_phone_number: "+19195550123" })).toBe(true);
+    expect(customerAgentReady({ status: "draft", retell_agent_id: "agent-1", retell_phone_number: "+19195550123" })).toBe(false);
+    expect(customerAgentReady({ status: "ready", retell_agent_id: "agent-1", retell_phone_number: null })).toBe(false);
   });
 });

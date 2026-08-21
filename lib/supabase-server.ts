@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { Call, Client, ExtractedVapiCall } from "./types";
+import type { Call, Client, ExtractedRetellCall } from "./types";
 
 function getSupabaseKey(): string {
   const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -25,17 +25,17 @@ export function getSupabaseAdmin(): SupabaseClient {
   });
 }
 
-export async function findClientByVapiIds(ids: {
-  assistantId: string | null;
-  phoneNumberId: string | null;
+export async function findClientByRetellIds(ids: {
+  agentId: string | null;
+  phoneNumber: string | null;
 }): Promise<Client | null> {
   const supabase = getSupabaseAdmin();
 
-  if (ids.assistantId || ids.phoneNumberId) {
+  if (ids.agentId || ids.phoneNumber) {
     let agentQuery = supabase.from("customer_agents").select("client_id").limit(1);
-    agentQuery = ids.assistantId
-      ? agentQuery.eq("vapi_assistant_id", ids.assistantId)
-      : agentQuery.eq("vapi_phone_number_id", ids.phoneNumberId!).eq("agent_type", "receptionist");
+    agentQuery = ids.agentId
+      ? agentQuery.eq("retell_agent_id", ids.agentId)
+      : agentQuery.eq("retell_phone_number", ids.phoneNumber!).eq("agent_type", "receptionist");
     const { data: agent, error: agentError } = await agentQuery.maybeSingle();
     if (agentError) throw agentError;
     if (agent) {
@@ -45,49 +45,17 @@ export async function findClientByVapiIds(ids: {
     }
   }
 
-  if (ids.assistantId) {
-    const { data, error } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("vapi_assistant_id", ids.assistantId)
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-    if (data) {
-      return data as Client;
-    }
-  }
-
-  if (ids.phoneNumberId) {
-    const { data, error } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("vapi_phone_number_id", ids.phoneNumberId)
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-    if (data) {
-      return data as Client;
-    }
-  }
-
   return null;
 }
 
 export async function upsertCall(
   clientId: string,
-  call: ExtractedVapiCall,
+  call: ExtractedRetellCall,
   rawPayload: unknown,
   now: Date
 ): Promise<Call> {
-  if (!call.vapiCallId) {
-    throw new Error("Cannot upsert a Vapi call without vapiCallId");
+  if (!call.retellCallId) {
+    throw new Error("Cannot upsert a Retell call without retellCallId");
   }
 
   const supabase = getSupabaseAdmin();
@@ -96,7 +64,7 @@ export async function upsertCall(
     .upsert(
       {
         client_id: clientId,
-        vapi_call_id: call.vapiCallId,
+        retell_call_id: call.retellCallId,
         caller_number: call.callerNumber,
         caller_name: call.callerName,
         callback_number: call.callbackNumber ?? call.callerNumber,
@@ -114,7 +82,7 @@ export async function upsertCall(
         raw_payload: rawPayload,
         updated_at: now.toISOString()
       },
-      { onConflict: "vapi_call_id" }
+      { onConflict: "retell_call_id" }
     )
     .select("*")
     .single();
@@ -136,7 +104,7 @@ export async function upsertCall(
   return data as Call;
 }
 
-export async function claimSmsSend(vapiCallId: string, now: Date): Promise<boolean> {
+export async function claimSmsSend(retellCallId: string, now: Date): Promise<boolean> {
   const supabase = getSupabaseAdmin();
   const staleBefore = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
   const { data, error } = await supabase
@@ -146,7 +114,7 @@ export async function claimSmsSend(vapiCallId: string, now: Date): Promise<boole
       sms_error: null,
       updated_at: now.toISOString()
     })
-    .eq("vapi_call_id", vapiCallId)
+    .eq("retell_call_id", retellCallId)
     .is("sms_sent_at", null)
     .or(`sms_send_in_progress_at.is.null,sms_send_in_progress_at.lt.${staleBefore}`)
     .select("id")
@@ -159,7 +127,7 @@ export async function claimSmsSend(vapiCallId: string, now: Date): Promise<boole
   return Boolean(data);
 }
 
-export async function markSmsSent(vapiCallId: string, sentAt: Date): Promise<void> {
+export async function markSmsSent(retellCallId: string, sentAt: Date): Promise<void> {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase
     .from("calls")
@@ -169,14 +137,14 @@ export async function markSmsSent(vapiCallId: string, sentAt: Date): Promise<voi
       sms_error: null,
       updated_at: sentAt.toISOString()
     })
-    .eq("vapi_call_id", vapiCallId);
+    .eq("retell_call_id", retellCallId);
 
   if (error) {
     throw error;
   }
 }
 
-export async function releaseSmsClaim(vapiCallId: string, errorMessage: string): Promise<void> {
+export async function releaseSmsClaim(retellCallId: string, errorMessage: string): Promise<void> {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase
     .from("calls")
@@ -185,7 +153,7 @@ export async function releaseSmsClaim(vapiCallId: string, errorMessage: string):
       sms_error: errorMessage.slice(0, 500),
       updated_at: new Date().toISOString()
     })
-    .eq("vapi_call_id", vapiCallId);
+    .eq("retell_call_id", retellCallId);
 
   if (error) {
     throw error;

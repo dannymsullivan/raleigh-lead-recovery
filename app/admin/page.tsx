@@ -119,7 +119,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Founder operations</p>
-            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Mabel control room</h1>
+            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Chloe control room</h1>
           </div>
           <form action={logoutAction}>
             <button className="inline-flex h-10 items-center gap-2 border-2 border-black px-3 text-sm font-extrabold hover:bg-black hover:text-white" type="submit">
@@ -244,10 +244,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
               <Field label="Pilot start" name="pilot_start" type="date" />
               <Field label="Pilot end" name="pilot_end" type="date" />
               <div className="grid grid-cols-2 gap-3"><Field label="Avg job value" name="avg_job_value" type="number" placeholder="500" /><Field label="Close rate" name="close_rate" type="number" step="0.01" placeholder="0.4" /></div>
-              <details className="sm:col-span-2 xl:col-span-4">
-                <summary className="cursor-pointer text-xs font-black text-black/50 underline decoration-2 underline-offset-4">Advanced connection IDs</summary>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2"><Field label="Vapi assistant ID" name="vapi_assistant_id" /><Field label="Vapi phone number ID" name="vapi_phone_number_id" /></div>
-              </details>
               <button className="h-12 bg-black px-5 text-sm font-black text-white sm:col-span-2 xl:col-span-1" type="submit">Create customer workspace</button>
             </form>
           </div>
@@ -357,7 +353,7 @@ function CostDashboardSection({ dashboard, error }: { dashboard: CostDashboard |
           icon={<PhoneCall className="h-5 w-5" />}
           label="Voice minutes"
           value={formatMinutes(dashboard.totals.minutes)}
-          detail={`${dashboard.rates.vapiIncludedMinutes} Vapi min assumed included`}
+          detail={`Estimated at ${formatUsd(dashboard.rates.retellVoicePerMinute)}/minute`}
         />
         <CostStat
           icon={<MessageSquareText className="h-5 w-5" />}
@@ -465,7 +461,7 @@ function formatShortDate(value: string): string {
 }
 
 function AdminNotice({ created, updated, deleted, error }: { created: string | null; updated: string | null; deleted: string | null; error: string | null }) {
-  const message = deleted ? "Customer deleted." : updated ? "Customer updated." : created ? "Customer added." : error === "client-connected" ? "That customer still has Vapi resources connected. Remove those before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : error === "test-phone" ? "Enter a valid phone number for the protected test business." : "Please complete the required fields.";
+  const message = deleted ? "Customer deleted." : updated ? "Customer updated." : created ? "Customer added." : error === "client-connected" ? "That customer still has a Retell number connected. Remove it before deleting the customer." : error === "client-missing" ? "That customer no longer exists." : error === "test-phone" ? "Enter a valid phone number for the protected test business." : "Please complete the required fields.";
   const isError = Boolean(error);
   return <div className={`border-2 border-black px-4 py-3 text-sm font-black ${isError ? "bg-black text-white" : "bg-white"}`}>{message}</div>;
 }

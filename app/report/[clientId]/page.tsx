@@ -8,7 +8,7 @@ import { loadClientReport } from "@/lib/supabase-server";
 import type { ReportCall } from "@/lib/report";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
-import { recordingPlaybackPath } from "@/lib/vapi-recording";
+import { recordingPlaybackPath } from "@/lib/recording";
 
 export const dynamic = "force-dynamic";
 
@@ -84,7 +84,7 @@ export default async function ReportPage({ params }: PageProps) {
 
         {report.calls.length === 0 ? (
           <div className="rounded border border-neutral-200 bg-white p-6 text-neutral-700">
-            No calls yet. Run the seed script or send a Vapi end-of-call webhook.
+            No calls yet. Run the seed script or complete a Retell call.
           </div>
         ) : (
           <div className="grid gap-3">

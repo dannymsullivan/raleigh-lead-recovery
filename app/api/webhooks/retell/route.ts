@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isValidVapiSecret } from "@/lib/security";
 import {
   claimSmsSend,
-  findClientByVapiIds,
+  findClientByRetellIds,
   markSmsSent,
   releaseSmsClaim,
   upsertCall
 } from "@/lib/supabase-server";
-import { sendTwilioSms } from "@/lib/sms";
-import { processVapiWebhook } from "@/lib/webhook";
+import { sendRetellSms, verifyRetellWebhook } from "@/lib/retell";
+import { processRetellWebhook } from "@/lib/webhook";
 import { processReactivationReport } from "@/lib/reactivation-handler";
 import { extractReactivationReport } from "@/lib/reactivation-webhook";
 import { extractPublicDemoCallEvent, processPublicDemoCallEvent } from "@/lib/public-demo-webhook";
@@ -16,20 +15,24 @@ import { extractPublicDemoCallEvent, processPublicDemoCallEvent } from "@/lib/pu
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  if (!isValidVapiSecret(request.headers.get("x-vapi-secret"))) {
-    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  const rawBody = await request.text();
+  try {
+    if (!(await verifyRetellWebhook(rawBody, request.headers.get("x-retell-signature")))) {
+      return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+    }
+  } catch {
+    return NextResponse.json({ ok: false, error: "webhook_not_configured" }, { status: 503 });
   }
-
   let payload: unknown;
   try {
-    payload = await request.json();
+    payload = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
   const reactivation = extractReactivationReport(payload);
   if (reactivation) {
-    const result = await processReactivationReport(reactivation, payload, sendTwilioSms);
+    const result = await processReactivationReport(reactivation, payload, sendRetellSms);
     return NextResponse.json({ ok: true, result });
   }
 
@@ -39,15 +42,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: true, result });
   }
 
-  const result = await processVapiWebhook(payload, {
+  const result = await processRetellWebhook(payload, {
     store: {
-      findClientByVapiIds,
+      findClientByRetellIds,
       upsertCall,
       claimSmsSend,
       markSmsSent,
       releaseSmsClaim
     },
-    sendOwnerSms: sendTwilioSms,
+    sendOwnerSms: sendRetellSms,
     logger: console
   });
 

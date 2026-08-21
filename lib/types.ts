@@ -50,8 +50,6 @@ export type Client = {
   pilot_end: string;
   avg_job_value: number;
   close_rate: number;
-  vapi_assistant_id: string | null;
-  vapi_phone_number_id: string | null;
   created_at: string;
 };
 
@@ -65,8 +63,10 @@ export type CustomerAgent = {
   name: string;
   is_default: boolean;
   status: CustomerAgentStatus;
-  vapi_assistant_id: string | null;
-  vapi_phone_number_id: string | null;
+  retell_agent_id: string | null;
+  retell_llm_id: string | null;
+  retell_agent_version: number | null;
+  retell_phone_number: string | null;
   provisioned_phone_number: string | null;
   voice_id: string;
   first_message: string | null;
@@ -142,7 +142,7 @@ export type ReactivationAttempt = {
   client_id: string;
   campaign_id: string;
   contact_id: string;
-  vapi_call_id: string | null;
+  retell_call_id: string | null;
   status: "queued" | "in_progress" | "completed" | "failed";
   outcome: string | null;
   summary: string | null;
@@ -159,7 +159,7 @@ export type ReactivationAttempt = {
 export type Call = {
   id: string;
   client_id: string;
-  vapi_call_id: string;
+  retell_call_id: string;
   caller_number: string | null;
   caller_name: string | null;
   callback_number: string | null;
@@ -186,11 +186,11 @@ export type Call = {
   booked_value?: number | null;
 };
 
-export type ExtractedVapiCall = {
+export type ExtractedRetellCall = {
   eventType: string | null;
-  vapiCallId: string | null;
-  assistantId: string | null;
-  phoneNumberId: string | null;
+  retellCallId: string | null;
+  agentId: string | null;
+  phoneNumber: string | null;
   callerNumber: string | null;
   callerName: string | null;
   callbackNumber: string | null;

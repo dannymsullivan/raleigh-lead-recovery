@@ -15,7 +15,7 @@ describe("application URLs", () => {
 
   it("strips paths from configured application URLs", () => {
     expect(getAppOrigin({
-      NEXT_PUBLIC_APP_URL: "https://raleighleadrecovery.com/api/webhooks/vapi"
+      NEXT_PUBLIC_APP_URL: "https://raleighleadrecovery.com/api/webhooks/retell"
     })).toBe("https://raleighleadrecovery.com");
   });
 

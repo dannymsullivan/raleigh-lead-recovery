@@ -2,36 +2,32 @@ import "server-only";
 
 import { getSupabaseAdmin } from "./supabase-server";
 import { buildReactivationCallRequest } from "./reactivation-call";
+import { getRetellClient } from "./retell";
 import type { Client, CustomerAgent, ReactivationCampaign, ReactivationContact } from "./types";
 import { assessOpportunityDate } from "./lead-eligibility";
-
-type VapiCall = { id: string; status?: string };
 
 class ReactivationAttemptCreatedError extends Error {
   readonly attemptCreated = true;
 }
 
-function requiredEnv(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) throw new Error(`Missing ${key}`);
-  return value;
-}
-
-type ReactivationIdentifiers = { assistantId: string; phoneNumberId: string };
+type ReactivationIdentifiers = { agentId: string; phoneNumber: string; agentVersion: number | null };
 
 async function reactivationIdentifiers(campaign: ReactivationCampaign): Promise<ReactivationIdentifiers> {
   if (campaign.agent_id) {
     const { data, error } = await getSupabaseAdmin().from("customer_agents").select("*").eq("id", campaign.agent_id).eq("client_id", campaign.client_id).eq("agent_type", "lead_reactivation").maybeSingle();
     if (error) throw error;
     const agent = data as CustomerAgent | null;
-    if (!agent || agent.status !== "ready" || !agent.vapi_assistant_id || !agent.vapi_phone_number_id) throw new Error("Customer lead-recovery agent is not ready.");
-    return { assistantId: agent.vapi_assistant_id, phoneNumberId: agent.vapi_phone_number_id };
+    if (!agent || agent.status !== "ready" || !agent.retell_agent_id || !agent.retell_phone_number) throw new Error("Customer lead-recovery agent is not ready.");
+    return { agentId: agent.retell_agent_id, phoneNumber: agent.retell_phone_number, agentVersion: agent.retell_agent_version };
   }
-  return { assistantId: requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID"), phoneNumberId: requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID") };
+  const agentId = process.env.RETELL_OUTBOUND_AGENT_ID?.trim();
+  const phoneNumber = process.env.RETELL_OUTBOUND_PHONE_NUMBER?.trim();
+  if (!agentId || !phoneNumber) throw new Error("Lead-recovery agent is not configured.");
+  return { agentId, phoneNumber, agentVersion: null };
 }
 
 export async function reactivationCampaignTelephonyReady(campaignId: string, clientId: string): Promise<boolean> {
-  if (!process.env.VAPI_API_KEY?.trim()) return false;
+  if (!process.env.RETELL_API_KEY?.trim()) return false;
   const { data, error } = await getSupabaseAdmin().from("reactivation_campaigns").select("*").eq("id", campaignId).eq("client_id", clientId).maybeSingle();
   if (error || !data) return false;
   try {
@@ -54,15 +50,8 @@ export function isWithinCallingWindow(campaign: Pick<ReactivationCampaign, "call
   return now >= campaign.calling_window_start.slice(0, 5) && now < campaign.calling_window_end.slice(0, 5);
 }
 
-async function createVapiCall(client: Client, campaign: ReactivationCampaign, contact: ReactivationContact, identifiers: ReactivationIdentifiers): Promise<VapiCall> {
-  const apiKey = requiredEnv("VAPI_API_KEY");
-  const response = await fetch("https://api.vapi.ai/call", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify(buildReactivationCallRequest(client, campaign, contact, identifiers))
-  });
-  if (!response.ok) throw new Error(`Vapi call failed (${response.status}): ${(await response.text()).slice(0, 500)}`);
-  return (await response.json()) as VapiCall;
+async function createRetellCall(client: Client, campaign: ReactivationCampaign, contact: ReactivationContact, identifiers: ReactivationIdentifiers) {
+  return getRetellClient().call.createPhoneCall(buildReactivationCallRequest(client, campaign, contact, identifiers));
 }
 
 export async function queueReactivationContactCall(
@@ -108,11 +97,11 @@ export async function queueReactivationContactCall(
   }
 
   try {
-    const call = await createVapiCall(client, campaign, contact, identifiers ?? await reactivationIdentifiers(campaign));
-    await admin.from("reactivation_attempts").update({ vapi_call_id: call.id, status: "in_progress" }).eq("id", attempt.id);
-    return { callId: call.id, attemptId: attempt.id as string };
+    const call = await createRetellCall(client, campaign, contact, identifiers ?? await reactivationIdentifiers(campaign));
+    await admin.from("reactivation_attempts").update({ retell_call_id: call.call_id, status: "in_progress" }).eq("id", attempt.id);
+    return { callId: call.call_id, attemptId: attempt.id as string };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown Vapi error";
+    const message = error instanceof Error ? error.message : "Unknown Retell error";
     await admin.from("reactivation_attempts").update({ status: "failed", error: message.slice(0, 500) }).eq("id", attempt.id);
     await admin.from("reactivation_contacts").update({ status: "failed", outcome: "call_failed" }).eq("id", contact.id).eq("status", "calling");
     throw new ReactivationAttemptCreatedError(message);
@@ -120,7 +109,7 @@ export async function queueReactivationContactCall(
 }
 
 export async function runReactivationBatch(campaignId: string, clientId?: string, requestedLimit = 5): Promise<{ queued: number; failed: number; skipped: string | null }> {
-  if (!process.env.VAPI_API_KEY?.trim()) return { queued: 0, failed: 0, skipped: "telephony_not_configured" };
+  if (!process.env.RETELL_API_KEY?.trim()) return { queued: 0, failed: 0, skipped: "telephony_not_configured" };
   const admin = getSupabaseAdmin();
   let campaignQuery = admin.from("reactivation_campaigns").select("*").eq("id", campaignId);
   if (clientId) campaignQuery = campaignQuery.eq("client_id", clientId);
@@ -178,7 +167,7 @@ export async function runReactivationBatch(campaignId: string, clientId?: string
         queued += 1;
       } catch (error) {
         if (error instanceof ReactivationAttemptCreatedError) usedReservations += 1;
-        const message = error instanceof Error ? error.message : "Unknown Vapi error";
+        const message = error instanceof Error ? error.message : "Unknown Retell error";
         if (message === "This phone number is suppressed.") {
           await admin.from("reactivation_contacts").update({ status: "do_not_call", outcome: "suppressed" }).eq("id", contact.id);
         } else if (message === "Contact opportunity date is not eligible.") {

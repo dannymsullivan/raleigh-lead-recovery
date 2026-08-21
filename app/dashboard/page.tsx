@@ -11,7 +11,7 @@ import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/repo
 import type { Call, Client, CustomerAgent } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
 import { ProvisioningPoll } from "./provisioning-poll";
-import { recordingPlaybackPath } from "@/lib/vapi-recording";
+import { recordingPlaybackPath } from "@/lib/recording";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard | Raleigh Lead Recovery", robots: { index: false, follow: false } };
@@ -72,17 +72,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
             <Link className="flex items-center gap-3 bg-black px-3 py-3 text-white" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Full report</Link>
-            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Mabel settings</Link>
+            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Chloe settings</Link>
           </nav>
           <div className="mt-auto border-2 border-black bg-white p-4"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p><p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p><a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href={contactHref}>Email support <ChevronRight className="h-3 w-3" /></a></div>
         </aside>
 
         <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">
-          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building Mabel and getting your number ready now.</p></div> : null}
+          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building Chloe and getting your number ready now.</p></div> : null}
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
-            <MabelStatus status={receptionist?.status ?? "draft"} />
+            <ChloeStatus status={receptionist?.status ?? "draft"} />
           </div>
 
           <div className="mt-6 grid grid-cols-2 border-l border-t border-black xl:grid-cols-5">
@@ -143,9 +143,9 @@ function ActivationCard({ client, agent }: { client: Client; agent: CustomerAgen
   if (status === "draft" || status === "disabled") return <div className="border border-black bg-white p-5"><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">24/7 receptionist</p><h2 className="mt-2 text-xl font-black tracking-[-0.03em]">Inbound coverage is not enabled.</h2><p className="mt-2 text-sm font-semibold leading-6 text-black/50">Set up a dedicated agent and phone number when this business is ready for around-the-clock call capture.</p><Link className="mt-4 inline-flex h-10 items-center bg-black px-4 text-xs font-black text-white" href="/dashboard/agents">Configure receptionist</Link></div>;
   return (
     <div className="border-2 border-black bg-black p-6 text-white">
-      <Sparkles className="h-6 w-6" /><p className="mt-7 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Go-live checklist</p><h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">{ready ? "Your Mabel number is ready." : status === "error" || status === "needs_configuration" ? "Provisioning needs attention." : "Building your call setup…"}</h2>
+      <Sparkles className="h-6 w-6" /><p className="mt-7 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Go-live checklist</p><h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">{ready ? "Your Chloe number is ready." : status === "error" || status === "needs_configuration" ? "Provisioning needs attention." : "Building your call setup…"}</h2>
       {number ? <a className="mt-5 block text-3xl font-black tracking-[-0.04em]" href={`tel:${number}`}>{formatPhone(number)}</a> : null}
-      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.vapi_assistant_id)} label="Mabel configured" /><ChecklistItem done={Boolean(agent?.vapi_phone_number_id)} label="Number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
+      <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.retell_agent_id)} label="Assistant configured" /><ChecklistItem done={Boolean(agent?.retell_phone_number)} label="Number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
       {ready && !client.forwarding_completed_at ? <form action={markForwardingCompleteAction}><button className="mt-7 w-full bg-white px-4 py-3 text-sm font-black text-black" type="submit">I turned forwarding on</button></form> : null}
       {ready && client.forwarding_completed_at && !client.test_call_completed_at && number ? <a className="mt-7 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href={`tel:${number}`}><PhoneCall className="h-4 w-4" /> Make the test call</a> : null}
       {(status === "error" || status === "needs_configuration") ? <><p className="mt-4 text-xs leading-5 text-white/55">{agent?.provisioning_error || client.provisioning_error}</p><form action={retryProvisioningAction}><button className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" type="submit"><RotateCcw className="h-4 w-4" /> Retry provisioning</button></form></> : null}
@@ -155,7 +155,7 @@ function ActivationCard({ client, agent }: { client: Client; agent: CustomerAgen
 }
 
 function ChecklistItem({ done, label }: { done: boolean; label: string }) { return <li className="flex items-center gap-3"><span className={`grid h-5 w-5 place-items-center rounded-full border ${done ? "bg-white text-black" : "border-white/35"}`}>{done ? <Check className="h-3 w-3" /> : null}</span>{label}</li>; }
-function MabelStatus({ status }: { status: CustomerAgent["status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Receptionist ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : status === "draft" || status === "disabled" ? "Receptionist not enabled" : "Setting Mabel up"}</div>; }
+function ChloeStatus({ status }: { status: CustomerAgent["status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Receptionist ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : status === "draft" || status === "disabled" ? "Receptionist not enabled" : "Setting Chloe up"}</div>; }
 function StatusBadge({ status }: { status: string }) { const labels: Record<string, string> = { new: "New lead", contacted: "Contacted", booked: "Booked", lost: "Lost", spam: "Spam" }; return <span className={`border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${status === "booked" ? "bg-black text-white" : "bg-white"}`}>{labels[status] ?? status}</span>; }
 function EmptyCalls() { return <div className="grid min-h-72 place-items-center p-8 text-center"><div className="max-w-sm"><PhoneCall className="mx-auto h-10 w-10" strokeWidth={1.5} /><h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">The board is ready.</h3><p className="mt-3 text-sm leading-6 text-black/55">Your first test call will appear here with a summary, urgency, callback details, and recording.</p></div></div>; }
 function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }

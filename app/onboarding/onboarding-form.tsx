@@ -8,8 +8,8 @@ import type { Client } from "@/lib/types";
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 const stepContent = [
-  { icon: BriefcaseBusiness, label: "Your business", description: "The basics Mabel needs to greet callers correctly." },
-  { icon: Database, label: "What you do", description: "Services and coverage, so Mabel can qualify the old leads." },
+  { icon: BriefcaseBusiness, label: "Your business", description: "The basics Chloe needs to greet callers correctly." },
+  { icon: Database, label: "What you do", description: "Services and coverage, so Chloe can qualify callers and leads." },
   { icon: Clock3, label: "Hours & rules", description: "When to answer, what is urgent, and where alerts go." }
 ];
 
@@ -32,7 +32,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
     <div className="mx-auto grid max-w-6xl lg:grid-cols-[300px_1fr]">
       <aside className="border-b-2 border-black px-5 py-8 sm:px-8 lg:min-h-[calc(100vh-82px)] lg:border-b-0 lg:border-r-2 lg:py-12">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Quick setup</p>
-        <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em]">Teach Mabel the business.</h1>
+        <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em]">Teach Chloe the business.</h1>
         <p className="mt-5 text-sm font-semibold leading-6 text-black/55">Three short steps. Nothing technical. You can change all of this later.</p>
 
         <ol className="mt-9 grid gap-3 lg:mt-14">
@@ -63,7 +63,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
 
           <form action={completeOnboardingAction} ref={formRef}>
             <div className={step === 1 ? "block" : "hidden"}>
-              <StepHeading eyebrow="Step 1 of 3" title="First, who are we answering for?" body="This is how Mabel introduces the business and how we identify your workspace." />
+              <StepHeading eyebrow="Step 1 of 3" title="First, who are we answering for?" body="This is how Chloe introduces the business and how we identify your workspace." />
               <div className="mt-9 grid gap-5 sm:grid-cols-2">
                 <Field label="Business name" name="business_name" defaultValue={client.business_name === "New workspace" ? "" : client.business_name} autoComplete="organization" required />
                 <Field label="Your name" name="owner_name" defaultValue={client.owner_name} autoComplete="name" required />
@@ -75,7 +75,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             </div>
 
             <div className={step === 2 ? "block" : "hidden"}>
-              <StepHeading eyebrow="Step 2 of 3" title="What leads should Mabel understand?" body="Plain English is perfect. This becomes the starting point for your reactivation conversations." />
+              <StepHeading eyebrow="Step 2 of 3" title="What should Chloe understand?" body="Plain English is perfect. This becomes the starting point for customer conversations." />
               <div className="mt-9 grid gap-6">
                 <label className="block text-sm font-black">Your services <span className="font-semibold text-black/40">· one per line or separated by commas</span>
                   <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} defaultValue={client.services?.join("\n") ?? ""} />
@@ -87,7 +87,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             </div>
 
             <div className={step === 3 ? "block" : "hidden"}>
-              <StepHeading eyebrow="Step 3 of 3" title="When are you open—and what can’t wait?" body="Mabel uses this to set honest expectations and flag the calls that need attention now." />
+              <StepHeading eyebrow="Step 3 of 3" title="When are you open—and what can’t wait?" body="Chloe uses this to set honest expectations and flag the calls that need attention now." />
               <div className="mt-9 border-l-2 border-t-2 border-black">
                 {days.map((day, index) => <HourRow day={day} weekend={index > 4} key={day} />)}
               </div>

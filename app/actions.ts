@@ -108,8 +108,6 @@ export async function addClientAction(formData: FormData): Promise<void> {
     pilot_end: formString(formData, "pilot_end") || defaultPilotEnd.toISOString().slice(0, 10),
     avg_job_value: Number.isFinite(avgJobValue) ? avgJobValue : 500,
     close_rate: Number.isFinite(closeRate) ? closeRate : 0.4,
-    vapi_assistant_id: formString(formData, "vapi_assistant_id") || null,
-    vapi_phone_number_id: formString(formData, "vapi_phone_number_id") || null,
     product_mode: "reactivation"
   }).select("id").single();
 
@@ -198,7 +196,7 @@ export async function deleteClientAction(clientId: string): Promise<void> {
   await requireAdminSession();
   const admin = getSupabaseAdmin();
   const { data: client, error: loadError } = await admin.from("clients")
-    .select("id,is_test_account,vapi_assistant_id,vapi_phone_number_id")
+    .select("id,is_test_account,provisioned_phone_number")
     .eq("id", clientId)
     .maybeSingle();
 

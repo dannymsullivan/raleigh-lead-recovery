@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+.web-voice-demo { display: grid; justify-items: start; gap: .65rem; }
+.web-voice-demo .button:disabled { cursor: wait; opacity: .7; }
+.web-voice-status { display: inline-flex; align-items: center; gap: .45rem; margin: 0; color: color-mix(in srgb, currentColor 62%, transparent); font: 700 .68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; }
+.web-voice-status svg { width: .85rem; height: .85rem; }
+.web-voice-status.active { color: #477a00; }
+.web-voice-status svg.talking { animation: web-voice-pulse .8s ease-in-out infinite alternate; }
+.web-voice-error { max-width: 32rem; margin: 0; color: #a32216; font-size: .78rem; font-weight: 800; }
+.web-voice-spinner { animation: web-voice-spin .8s linear infinite; }
+@keyframes web-voice-spin { to { transform: rotate(360deg); } }
+@keyframes web-voice-pulse { to { transform: scale(1.25); opacity: .45; } }
+
 :root {
   color-scheme: light;
   --background: #f4f1e8;
@@ -20,7 +31,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Mabel 24/7 receptionist landing page */
+/* Chloe 24/7 receptionist landing page */
 .receptionist-page {
   overflow: hidden;
 }
@@ -408,8 +419,8 @@ body {
 
 .receptionist-two-jobs-grid {
   display: grid;
-  grid-template-columns: .72fr 1.28fr;
-  gap: clamp(65px, 9vw, 130px);
+  grid-template-columns: minmax(420px, .95fr) minmax(0, 1.05fr);
+  gap: clamp(42px, 5vw, 76px);
   align-items: center;
 }
 
@@ -418,10 +429,12 @@ body {
 }
 
 .receptionist-two-jobs-copy h2 {
+  max-width: 620px;
   margin-bottom: 23px;
-  font-size: clamp(3rem, 5vw, 4.85rem);
+  font-size: clamp(3rem, 4.25vw, 4.35rem);
   letter-spacing: -.06em;
   line-height: .94;
+  text-wrap: balance;
 }
 
 .receptionist-two-jobs-copy > p:last-child {
@@ -502,6 +515,88 @@ body {
 
 .receptionist-job-cards a svg {
   width: 14px;
+}
+
+.receptionist-pricing {
+  padding-block: 110px;
+}
+
+.receptionist-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 50px;
+}
+
+.receptionist-pricing .receptionist-section-heading h2 {
+  font-size: clamp(3.1rem, 4.6vw, 4.5rem);
+}
+
+.receptionist-pricing-grid article {
+  display: flex;
+  min-height: 560px;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  padding: 30px;
+}
+
+.receptionist-pricing-grid article.featured {
+  background: var(--ink);
+  color: white;
+}
+
+.receptionist-pricing-grid article.featured .eyebrow,
+.receptionist-pricing-grid article.featured > strong,
+.receptionist-pricing-grid article.featured li {
+  color: rgb(255 255 255 / 72%);
+}
+
+.receptionist-pricing-grid h3 {
+  min-height: 76px;
+  margin: 18px 0 12px;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  letter-spacing: -.045em;
+}
+
+.receptionist-pricing-grid article > strong {
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.receptionist-pricing-grid article > strong span {
+  color: currentColor;
+  font-size: 2.7rem;
+  letter-spacing: -.06em;
+}
+
+.receptionist-pricing-grid ul {
+  display: grid;
+  gap: 12px;
+  margin: 30px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.receptionist-pricing-grid li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.receptionist-pricing-grid li svg {
+  width: 15px;
+  color: #ff6547;
+}
+
+.receptionist-pricing-grid .button {
+  justify-content: center;
+  margin-top: auto;
 }
 
 .receptionist-guardrails {
@@ -602,6 +697,14 @@ body {
   .receptionist-two-jobs-copy {
     max-width: 660px;
   }
+
+  .receptionist-pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .receptionist-pricing-grid article {
+    min-height: 0;
+  }
 }
 
 @media (max-width: 720px) {
@@ -684,6 +787,7 @@ body {
 
   .receptionist-process,
   .receptionist-two-jobs,
+  .receptionist-pricing,
   .receptionist-guardrails {
     padding-block: 84px;
   }
@@ -1054,6 +1158,7 @@ body {
   --surface: #ffffff;
   --line: #d9d8d0;
   --accent: #d8ff57;
+  --lime: #d8ff57;
   min-height: 100vh;
   background: var(--paper);
   color: var(--ink);
@@ -2327,6 +2432,10 @@ body {
 /* Lead-reactivation landing page */
 
 .recovery-page {
+  --accent: #ff6547;
+  --accent-soft: #ffd8cf;
+  --lime: #d8ff57;
+  --lime-soft: #f0f7d8;
   background:
     linear-gradient(rgb(21 23 19 / 2%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(21 23 19 / 2%) 1px, transparent 1px),
@@ -2337,6 +2446,10 @@ body {
 .recovery-header {
   background: rgb(247 245 239 / 88%);
   backdrop-filter: blur(16px);
+}
+
+.recovery-page .demo-call-form {
+  box-shadow: 12px 12px 0 var(--accent-soft);
 }
 
 .recovery-hero {
@@ -2388,7 +2501,7 @@ body {
   border: 1px solid #c8c9bf;
   border-radius: 14px;
   background: rgb(255 255 255 / 58%);
-  box-shadow: 24px 28px 0 #e4e4d9;
+  box-shadow: 24px 28px 0 var(--accent-soft);
 }
 
 .recovery-story-label {
@@ -2472,7 +2585,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 11px 28px;
-  color: #657a08;
+  color: #b43824;
 }
 
 .recovery-connector span {
@@ -2507,7 +2620,7 @@ body {
 }
 
 .mabel-bubble {
-  background: #f0f6dc;
+  background: #fff0ec;
 }
 
 .lead-bubble {
@@ -2524,7 +2637,7 @@ body {
   min-height: 58px;
   padding: 0 20px;
   border-top: 1px solid #dce2c4;
-  background: #f3f9dc;
+  background: var(--lime-soft);
   font-size: 0.7rem;
 }
 
@@ -2665,7 +2778,7 @@ body {
   overflow: hidden;
   border: 2px solid var(--ink);
   background: white;
-  box-shadow: 14px 14px 0 #dfe5c9;
+  box-shadow: 14px 14px 0 var(--accent-soft);
 }
 
 .recovery-dashboard-preview {
@@ -2754,7 +2867,7 @@ body {
 }
 
 .recovery-dashboard-metrics article.accent {
-  background: #f3f9dc;
+  background: var(--lime-soft);
 }
 
 .recovery-dashboard-metrics span,
@@ -3216,7 +3329,7 @@ body {
 }
 
 .integration-logo-grid li:hover {
-  background: rgb(216 255 87 / 28%);
+  background: rgb(255 101 71 / 10%);
 }
 
 .integration-logo-grid li > span {
@@ -3362,7 +3475,7 @@ body {
 }
 
 .button-accent:hover {
-  background: #e4ff88;
+  background: #ff8069;
 }
 
 .recovery-pilot-card {

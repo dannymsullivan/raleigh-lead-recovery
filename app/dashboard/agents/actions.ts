@@ -49,7 +49,7 @@ async function saveAndProvision(clientId: string, type: string, returnPath: stri
     offer_details: type === "lead_reactivation" ? value(formData, "offer_details", 2000) : null,
     handoff_rules: value(formData, "handoff_rules", 2000),
     custom_instructions: value(formData, "custom_instructions", 4000),
-    voice_id: value(formData, "voice_id", 80) || "Savannah"
+    voice_id: process.env.RETELL_VOICE_ID?.trim() || "retell-Cimo"
   }).eq("id", agent.id).eq("client_id", clientId);
   if (error) redirect(`${returnPath}?error=agent_save#agents`);
   try {

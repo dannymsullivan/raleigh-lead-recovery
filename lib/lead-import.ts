@@ -72,7 +72,7 @@ export const leadFieldOptions: Array<{ key: LeadFieldKey; label: string; descrip
   { key: "full_name", label: "Full name", description: "Contact name in one column" },
   { key: "first_name", label: "First name", description: "Used with last name when full name is absent" },
   { key: "last_name", label: "Last name", description: "Used with first name when full name is absent" },
-  { key: "phone", label: "Phone", description: "Required before Mabel can call" },
+  { key: "phone", label: "Phone", description: "Required before Chloe can call" },
   { key: "email", label: "Email", description: "Optional contact email" },
   { key: "status", label: "Lead status", description: "Current or final CRM stage" },
   { key: "status_changed_at", label: "Status changed", description: "When the current stage was set" },

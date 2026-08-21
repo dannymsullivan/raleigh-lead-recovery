@@ -9,7 +9,7 @@ import type { Client } from "@/lib/types";
 import { saveAssistantSettingsAction } from "../actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Mabel settings | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Chloe settings | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
@@ -29,12 +29,12 @@ export default async function SettingsPage({ searchParams }: PageProps) {
       <header className="border-b-2 border-black"><div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5 sm:px-8"><BrandMark /><Link className="inline-flex items-center gap-2 text-sm font-black" href="/dashboard"><ArrowLeft className="h-4 w-4" /> Back to dashboard</Link></div></header>
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="grid gap-8 lg:grid-cols-[0.55fr_1fr]">
-          <aside><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Business profile</p><h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.045em]">The business changes. Every Mabel keeps up.</h1><p className="mt-3 text-sm font-semibold leading-6 text-black/55">These shared facts feed every active agent. Saving synchronizes the new hours, services, and rules to Vapi.</p><Link className="mt-4 inline-flex text-sm font-black underline decoration-2 underline-offset-4" href="/dashboard/agents">Configure individual agents</Link>
+          <aside><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Business profile</p><h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.045em]">One business profile. Every agent stays current.</h1><p className="mt-3 text-sm font-semibold leading-6 text-black/55">These shared facts feed every active agent. Saving synchronizes the new hours, services, and rules automatically.</p><Link className="mt-4 inline-flex text-sm font-black underline decoration-2 underline-offset-4" href="/dashboard/agents">Configure individual agents</Link>
             <div className="mt-8 border border-black bg-white p-5"><p className="text-sm font-black">Business profile</p><p className="mt-2 flex items-center gap-2 text-sm font-semibold text-black/55"><span className="h-2.5 w-2.5 rounded-full bg-[#d8ff57] ring-1 ring-black" /> Ready to sync to active agents</p>{client.provisioned_phone_number ? <p className="mt-4 text-xs font-semibold text-black/45">Receptionist number</p> : null}{client.provisioned_phone_number ? <p className="mt-1 text-xl font-black">{client.provisioned_phone_number}</p> : null}</div>
           </aside>
 
           <form action={saveAssistantSettingsAction} className="grid gap-7">
-            {search.saved === "1" ? <div className="flex items-center gap-3 border-2 border-black bg-black p-4 text-sm font-black text-white"><Check className="h-4 w-4" /> Saved. Mabel is updating now.</div> : null}
+            {search.saved === "1" ? <div className="flex items-center gap-3 border-2 border-black bg-black p-4 text-sm font-black text-white"><Check className="h-4 w-4" /> Saved. Chloe is updating now.</div> : null}
             {search.error ? <div className="border-2 border-black bg-white p-4 text-sm font-black">{search.error === "consent" ? "Confirm permission to send transactional alerts to the alert number." : "We could not save those settings. Check the required fields and try again."}</div> : null}
 
             <SettingsSection number="01" title="Business basics">
@@ -54,7 +54,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               <label className="mt-5 block text-sm font-black">Timezone<select className="mt-2 h-13 w-full border-2 border-black bg-white px-4 font-semibold" name="timezone" defaultValue={client.timezone ?? "America/New_York"}><option value="America/New_York">Eastern Time</option><option value="America/Chicago">Central Time</option><option value="America/Denver">Mountain Time</option><option value="America/Los_Angeles">Pacific Time</option></select></label>
             </SettingsSection>
 
-            <div className="sticky bottom-4 flex justify-end"><button className="inline-flex h-14 items-center gap-2 border-2 border-white bg-black px-7 text-sm font-black text-white shadow-[6px_6px_0_#f4f1e8,6px_6px_0_2px_#000]" type="submit"><Save className="h-4 w-4" /> Save & update Mabel</button></div>
+            <div className="sticky bottom-4 flex justify-end"><button className="inline-flex h-14 items-center gap-2 border-2 border-white bg-black px-7 text-sm font-black text-white shadow-[6px_6px_0_#f4f1e8,6px_6px_0_2px_#000]" type="submit"><Save className="h-4 w-4" /> Save & update Chloe</button></div>
           </form>
         </div>
       </div>

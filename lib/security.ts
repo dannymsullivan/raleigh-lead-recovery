@@ -14,7 +14,3 @@ export function safeCompare(a: string | null | undefined, b: string | null | und
 
   return timingSafeEqual(left, right);
 }
-
-export function isValidVapiSecret(incomingSecret: string | null): boolean {
-  return safeCompare(incomingSecret, process.env.VAPI_WEBHOOK_SECRET);
-}

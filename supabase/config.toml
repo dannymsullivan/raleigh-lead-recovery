@@ -192,8 +192,6 @@ password_requirements = ""
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
 email_sent = 2
-# Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
-sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
 anonymous_users = 30
 # Number of sessions that can be refreshed in a 5 minute interval per IP address.
@@ -249,27 +247,6 @@ otp_expiry = 3600
 # subject = "Your password has been changed"
 # content_path = "./templates/password_changed_notification.html"
 
-[auth.sms]
-# Allow/disallow new user signups via SMS to your project.
-enable_signup = true
-# If enabled, users need to confirm their phone number before signing in.
-enable_confirmations = false
-# Template for sending OTP to users
-template = "Your code is {{ .Code }}"
-# Controls the minimum amount of time that must pass before sending another sms otp.
-max_frequency = "5s"
-
-[auth.hook.send_sms]
-# Production SMS delivery is configured in the hosted Supabase project. Keep the
-# local stack self-contained so development never calls the production webhook.
-enabled = false
-uri = "http://host.docker.internal:3000/api/auth/send-sms"
-secrets = "v1,whsec_bG9jYWwtZGV2LW9ubHktc2VjcmV0LW5vdC1mb3ItcHJvZA=="
-
-# Use pre-defined map of phone number to OTP for testing.
-# [auth.sms.test_otp]
-# 4152127777 = "123456"
-
 # Configure logged in session timeouts.
 # [auth.sessions]
 # Force log out after the specified duration.
@@ -286,14 +263,6 @@ secrets = "v1,whsec_bG9jYWwtZGV2LW9ubHktc2VjcmV0LW5vdC1mb3ItcHJvZA=="
 # [auth.hook.custom_access_token]
 # enabled = true
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
-
-# Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
-[auth.sms.twilio]
-enabled = false
-account_sid = ""
-message_service_sid = ""
-# DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
-auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 
 # Multi-factor-authentication is available to Supabase Pro plan.
 [auth.mfa]

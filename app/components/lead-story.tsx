@@ -10,7 +10,7 @@ const stories = [
     name: "Sarah M.",
     source: "Water heater estimate",
     status: "Cold",
-    opener: "Hi Sarah, this is Mabel calling for Oak City Home Services about the water heater estimate you requested earlier this year. Did you ever get that project taken care of?",
+    opener: "Hi Sarah, this is Chloe calling for Oak City Home Services about the water heater estimate you requested earlier this year. Did you ever get that project taken care of?",
     reply: "Not yet. We put it off, but we need to revisit it before fall.",
     outcome: "Appointment requested",
   },
@@ -20,7 +20,7 @@ const stories = [
     name: "Marcus T.",
     source: "HVAC replacement inquiry",
     status: "Cold",
-    opener: "Hi Marcus, this is Mabel calling for Oak City Home Services. You spoke with the team about replacing your HVAC system earlier this year. Is that project still open?",
+    opener: "Hi Marcus, this is Chloe calling for Oak City Home Services. You spoke with the team about replacing your HVAC system earlier this year. Is that project still open?",
     reply: "Yes. We put it off, but the system is acting up again and I need someone to look at it.",
     outcome: "Qualified follow-up",
   },
@@ -30,7 +30,7 @@ const stories = [
     name: "Linda P.",
     source: "Annual HVAC tune-up",
     status: "Due soon",
-    opener: "Hi Linda, this is Mabel calling for Oak City Home Services. It’s been about a year since your last HVAC tune-up, and the team wanted to help you get ahead of the next season. Would you like to find a time for your annual service?",
+    opener: "Hi Linda, this is Chloe calling for Oak City Home Services. It’s been about a year since your last HVAC tune-up, and the team wanted to help you get ahead of the next season. Would you like to find a time for your annual service?",
     reply: "Yes, I’ve been meaning to schedule that. Do you have anything next week?",
     outcome: "Tune-up requested",
   },
@@ -40,7 +40,7 @@ const stories = [
     name: "Erica W.",
     source: "Wedding transportation quote",
     status: "Open quote",
-    opener: "Hi Erica, this is Mabel calling for Triangle Executive Limo about the wedding transportation quote you requested for October. Are you still looking for a vehicle?",
+    opener: "Hi Erica, this is Chloe calling for Triangle Executive Limo about the wedding transportation quote you requested for October. Are you still looking for a vehicle?",
     reply: "Yes. We finalized the guest count and I’m ready to look at the options again.",
     outcome: "Quote follow-up",
   },
@@ -50,7 +50,7 @@ const stories = [
     name: "Carlos B.",
     source: "Property seller inquiry",
     status: "Went quiet",
-    opener: "Hi Carlos, this is Mabel calling for Oak City Property Group about your earlier property inquiry. Are you still open to talking through your options?",
+    opener: "Hi Carlos, this is Chloe calling for Oak City Property Group about your earlier property inquiry. Are you still open to talking through your options?",
     reply: "Yes. My timing changed, and I’d like someone to call me this week.",
     outcome: "Seller follow-up",
   },
@@ -94,7 +94,7 @@ export function LeadStory() {
         <div className="recovery-connector"><span /><PhoneCall aria-hidden="true" /><span /></div>
 
         <div className="recovery-conversation">
-          <div className="recovery-bubble mabel-bubble"><span>Mabel · AI calling agent</span><p>{story.opener}</p></div>
+          <div className="recovery-bubble mabel-bubble"><span>Chloe · AI calling agent</span><p>{story.opener}</p></div>
           <div className="recovery-bubble lead-bubble"><span>{story.name}</span><p>{story.reply}</p></div>
         </div>
 

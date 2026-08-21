@@ -1,5 +1,5 @@
-import type { Call, Client, ExtractedVapiCall } from "./types";
-import { extractVapiCall } from "./vapi";
+import type { Call, Client, ExtractedRetellCall } from "./types";
+import { extractRetellCall } from "./retell";
 import { hasAlertSmsConsent } from "./messaging-consent";
 
 export type SmsMessage = {
@@ -8,11 +8,11 @@ export type SmsMessage = {
 };
 
 export type WebhookStore = {
-  findClientByVapiIds(ids: { assistantId: string | null; phoneNumberId: string | null }): Promise<Client | null>;
-  upsertCall(clientId: string, call: ExtractedVapiCall, rawPayload: unknown, now: Date): Promise<Call>;
-  claimSmsSend(vapiCallId: string, now: Date): Promise<boolean>;
-  markSmsSent(vapiCallId: string, sentAt: Date): Promise<void>;
-  releaseSmsClaim(vapiCallId: string, error: string): Promise<void>;
+  findClientByRetellIds(ids: { agentId: string | null; phoneNumber: string | null }): Promise<Client | null>;
+  upsertCall(clientId: string, call: ExtractedRetellCall, rawPayload: unknown, now: Date): Promise<Call>;
+  claimSmsSend(retellCallId: string, now: Date): Promise<boolean>;
+  markSmsSent(retellCallId: string, sentAt: Date): Promise<void>;
+  releaseSmsClaim(retellCallId: string, error: string): Promise<void>;
 };
 
 export type WebhookDeps = {
@@ -28,11 +28,11 @@ export type WebhookProcessingResult =
   | { status: "unmatched_client"; assistantId: string | null; phoneNumberId: string | null }
   | { status: "processed"; callId: string; sms: "sent" | "skipped" | "already_claimed" | "failed" };
 
-export function shouldSendOwnerSms(call: Pick<ExtractedVapiCall, "leadType">): boolean {
+export function shouldSendOwnerSms(call: Pick<ExtractedRetellCall, "leadType">): boolean {
   return call.leadType !== "spam";
 }
 
-export function buildOwnerSms(call: ExtractedVapiCall): string {
+export function buildOwnerSms(call: ExtractedRetellCall): string {
   const caller = call.callerName ?? "Unknown caller";
   const issue = call.issueDescription ?? call.summary ?? "No issue captured";
   const callback = call.callbackNumber ?? call.callerNumber ?? "No callback number";
@@ -42,46 +42,46 @@ export function buildOwnerSms(call: ExtractedVapiCall): string {
   return `Raleigh Lead Recovery alert: CAUGHT MISSED CALL (${call.urgency}): ${caller} - ${issue}. Call: ${callback}. Addr: ${address}. Wants: ${timing}. Reply STOP to unsubscribe; HELP for help.`;
 }
 
-export async function processVapiWebhook(payload: unknown, deps: WebhookDeps): Promise<WebhookProcessingResult> {
+export async function processRetellWebhook(payload: unknown, deps: WebhookDeps): Promise<WebhookProcessingResult> {
   const logger = deps.logger ?? console;
   const now = deps.now?.() ?? new Date();
-  const extracted = extractVapiCall(payload);
+  const extracted = extractRetellCall(payload);
 
-  if (extracted.eventType !== "end-of-call-report") {
+  if (extracted.eventType !== "call_analyzed") {
     return { status: "ignored", reason: "non_report_event" };
   }
 
-  if (!extracted.vapiCallId) {
-    logger.warn("Vapi end-of-call report missing call id");
+  if (!extracted.retellCallId) {
+    logger.warn("Retell analyzed-call webhook missing call id");
     return { status: "invalid", reason: "missing_call_id" };
   }
 
-  const client = await deps.store.findClientByVapiIds({
-    assistantId: extracted.assistantId,
-    phoneNumberId: extracted.phoneNumberId
+  const client = await deps.store.findClientByRetellIds({
+    agentId: extracted.agentId,
+    phoneNumber: extracted.phoneNumber
   });
 
   if (!client) {
-    logger.warn("No client matched Vapi webhook", {
-      assistantId: extracted.assistantId,
-      phoneNumberId: extracted.phoneNumberId
+    logger.warn("No client matched Retell webhook", {
+      agentId: extracted.agentId,
+      phoneNumber: extracted.phoneNumber
     });
     return {
       status: "unmatched_client",
-      assistantId: extracted.assistantId,
-      phoneNumberId: extracted.phoneNumberId
+      assistantId: extracted.agentId,
+      phoneNumberId: extracted.phoneNumber
     };
   }
 
   await deps.store.upsertCall(client.id, extracted, payload, now);
 
   if (!shouldSendOwnerSms(extracted) || !hasAlertSmsConsent(client)) {
-    return { status: "processed", callId: extracted.vapiCallId, sms: "skipped" };
+    return { status: "processed", callId: extracted.retellCallId, sms: "skipped" };
   }
 
-  const claimed = await deps.store.claimSmsSend(extracted.vapiCallId, now);
+  const claimed = await deps.store.claimSmsSend(extracted.retellCallId, now);
   if (!claimed) {
-    return { status: "processed", callId: extracted.vapiCallId, sms: "already_claimed" };
+    return { status: "processed", callId: extracted.retellCallId, sms: "already_claimed" };
   }
 
   try {
@@ -89,12 +89,12 @@ export async function processVapiWebhook(payload: unknown, deps: WebhookDeps): P
       to: client.alert_phone || client.owner_phone,
       body: buildOwnerSms(extracted)
     });
-    await deps.store.markSmsSent(extracted.vapiCallId, now);
-    return { status: "processed", callId: extracted.vapiCallId, sms: "sent" };
+    await deps.store.markSmsSent(extracted.retellCallId, now);
+    return { status: "processed", callId: extracted.retellCallId, sms: "sent" };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown SMS error";
-    logger.error("Owner SMS failed", { callId: extracted.vapiCallId, error: message });
-    await deps.store.releaseSmsClaim(extracted.vapiCallId, message);
-    return { status: "processed", callId: extracted.vapiCallId, sms: "failed" };
+    logger.error("Owner SMS failed", { callId: extracted.retellCallId, error: message });
+    await deps.store.releaseSmsClaim(extracted.retellCallId, message);
+    return { status: "processed", callId: extracted.retellCallId, sms: "failed" };
   }
 }

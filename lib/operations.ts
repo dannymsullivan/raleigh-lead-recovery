@@ -70,9 +70,8 @@ export function buildCustomerSnapshot(clients: Client[], now = new Date()): Cust
 }
 
 export function buildIntegrationStatuses(environment: Environment, databaseConnected: boolean, clients: Client[]): IntegrationStatus[] {
-  const vapiConfigured = has(environment, "VAPI_API_KEY") && has(environment, "VAPI_WEBHOOK_SECRET") && (has(environment, "VAPI_PUBLIC_WEBHOOK_URL") || has(environment, "NEXT_PUBLIC_APP_URL"));
-  const twilioConfigured = has(environment, "TWILIO_ACCOUNT_SID") && has(environment, "TWILIO_AUTH_TOKEN") && has(environment, "TWILIO_FROM_NUMBER");
-  const a2pApproved = environment.TWILIO_A2P_APPROVED?.trim().toLowerCase() === "true";
+  const retellConfigured = has(environment, "RETELL_API_KEY") && has(environment, "NEXT_PUBLIC_APP_URL");
+  const retellMessaging = has(environment, "RETELL_SMS_AGENT_ID") && has(environment, "RETELL_SMS_FROM_NUMBER");
   const readyClients = clients.filter((client) => client.provisioning_status === "ready").length;
 
   return [
@@ -83,16 +82,10 @@ export function buildIntegrationStatuses(environment: Environment, databaseConne
       detail: databaseConnected ? `${clients.length} customer workspace${clients.length === 1 ? "" : "s"} reachable` : "Database query failed"
     },
     {
-      name: "Vapi",
-      purpose: "Mabel voice agent and call capture",
-      status: vapiConfigured ? "connected" : "not_configured",
-      detail: vapiConfigured ? databaseConnected ? `${readyClients} customer setup${readyClients === 1 ? "" : "s"} ready` : "Configured; customer readiness unavailable until the database reconnects" : "API key, webhook secret, or public URL is missing"
-    },
-    {
-      name: "Twilio Messaging",
-      purpose: "Customer sign-in codes and owner alerts",
-      status: twilioConfigured && a2pApproved ? "connected" : twilioConfigured ? "attention" : "not_configured",
-      detail: twilioConfigured && a2pApproved ? "A2P registration approved and messaging ready" : twilioConfigured ? "Credentials and sender are connected; A2P approval is the remaining blocker" : "Twilio credentials or sender number are missing"
+      name: "Retell",
+      purpose: "Voice agents, phone numbers, and call capture",
+      status: retellConfigured ? "connected" : "not_configured",
+      detail: retellConfigured ? databaseConnected ? `${readyClients} customer setup${readyClients === 1 ? "" : "s"} ready${retellMessaging ? " · messaging configured" : ""}` : "Configured; customer readiness unavailable until the database reconnects" : "API key or public app URL is missing"
     },
     {
       name: "Vercel",
@@ -108,20 +101,12 @@ export function buildTrialForecast(environment: Environment = process.env): Tria
   const callsPerTrial = envNumber(environment, "COST_TRIAL_CALLS", 20);
   const averageCallMinutes = envNumber(environment, "COST_TRIAL_AVG_CALL_MIN", 2.5);
   const minutesPerTrial = callsPerTrial * averageCallMinutes;
-  const voiceAi = minutesPerTrial * envNumber(environment, "COST_VAPI_HOSTING_PER_MIN", 0.05);
-  const modelAllowance = minutesPerTrial * envNumber(environment, "COST_MODEL_PROVIDER_PER_MIN", 0.04);
-  const voiceTransport = minutesPerTrial * envNumber(
-    environment,
-    "COST_TWILIO_OUTBOUND_PER_MIN",
-    envNumber(environment, "COST_TWILIO_LOCAL_INBOUND_PER_MIN", 0.014)
-  );
-  const smsSegments = callsPerTrial * envNumber(environment, "COST_SMS_SEGMENTS_PER_ALERT", 2);
-  const ownerAlerts = smsSegments * (
-    envNumber(environment, "COST_TWILIO_SMS_BASE_PER_SEGMENT", 0.0083) +
-    envNumber(environment, "COST_TWILIO_SMS_CARRIER_FEE_PER_SEGMENT", 0.0045)
-  );
-  const signupVerification = envNumber(environment, "COST_VERIFY_SUCCESS", 0.05) + envNumber(environment, "COST_VERIFY_SMS", 0.0083);
-  const phoneNumber = envNumber(environment, "COST_PHONE_NUMBER_MONTHLY", 1.15) * (trialDays / 30);
+  const voiceAi = minutesPerTrial * envNumber(environment, "COST_RETELL_VOICE_PER_MIN", 0.11);
+  const modelAllowance = 0;
+  const voiceTransport = 0;
+  const ownerAlerts = callsPerTrial * envNumber(environment, "COST_SMS_MESSAGES_PER_ALERT", 1) * envNumber(environment, "COST_RETELL_SMS_PER_MESSAGE", 0.01);
+  const signupVerification = 0;
+  const phoneNumber = envNumber(environment, "COST_PHONE_NUMBER_MONTHLY", 2) * (trialDays / 30);
   const fixedMonthlyBaseline = envNumber(environment, "COST_VERCEL_MONTHLY", 20) + envNumber(environment, "COST_SUPABASE_MONTHLY", 25);
   const total = voiceAi + modelAllowance + voiceTransport + ownerAlerts + signupVerification + phoneNumber;
 

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2175" height="1575" viewBox="0 0 2175 1575">
+  <rect width="2175" height="1575" fill="#d8ff57"/>
+  <g transform="translate(150 145)">
+    <rect width="116" height="116" rx="25" fill="#151713"/>
+    <path d="M35 85V31h24c16 0 25 8 25 20 0 12-9 20-25 20H35m24 0 25 16" fill="none" stroke="#d8ff57" stroke-linecap="round" stroke-linejoin="round" stroke-width="11"/>
+    <text x="155" y="49" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" letter-spacing="-1.5">RALEIGH LEAD</text>
+    <text x="155" y="101" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" letter-spacing="-1.5">RECOVERY</text>
+  </g>
+
+  <text x="150" y="530" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="126" font-weight="700" letter-spacing="-5">Your next customer</text>
+  <text x="150" y="665" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="126" font-weight="700" letter-spacing="-5">may already be sitting</text>
+  <text x="150" y="800" fill="#151713" font-family="Iowan Old Style, Baskerville, Georgia, serif" font-size="126" font-weight="700" letter-spacing="-5">in your CRM.</text>
+
+  <text x="150" y="950" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="43" font-weight="700">Mabel re-engages old leads, qualifies who is still interested,</text>
+  <text x="150" y="1012" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="43" font-weight="700">and sends live opportunities back to your team.</text>
+
+  <rect x="150" y="1140" width="690" height="145" rx="4" fill="#151713"/>
+  <text x="495" y="1230" text-anchor="middle" fill="#ffffff" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="44" font-weight="800">TRY MABEL LIVE →</text>
+  <text x="150" y="1380" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="34" font-weight="800">raleighleadrecovery.com/demo</text>
+
+  <rect x="1585" y="880" width="430" height="430" rx="28" fill="#ffffff" stroke="#151713" stroke-width="6"/>
+  <image href="qr-demo.png" x="1620" y="915" width="360" height="360" preserveAspectRatio="xMidYMid meet"/>
+  <text x="1800" y="1380" text-anchor="middle" fill="#151713" font-family="Avenir Next, Avenir, Helvetica, Arial, sans-serif" font-size="31" font-weight="800" letter-spacing="1">SCAN FOR THE LIVE DEMO</text>
+</svg>

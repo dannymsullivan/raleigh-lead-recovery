@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { getRetellClient, requiredRetellApiKey } from "@/lib/retell";
 import {
   buildPublicDemoCallRequest,
   isPublicDemoCallingWindow,
@@ -11,8 +12,6 @@ import {
 } from "@/lib/public-demo-call";
 
 export const runtime = "nodejs";
-
-type VapiCall = { id?: string };
 
 function requiredEnv(key: string): string {
   const value = process.env[key]?.trim();
@@ -68,19 +67,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   let admin;
   let requestId: string | null = null;
   try {
-    const apiKey = requiredEnv("VAPI_API_KEY");
-    const verticalAssistantId = {
+    requiredRetellApiKey();
+    const verticalAgentId = {
       general: undefined,
-      hvac: process.env.VAPI_HVAC_DEMO_ASSISTANT_ID?.trim(),
-      plumbing: process.env.VAPI_PLUMBING_DEMO_ASSISTANT_ID?.trim(),
-      roofing: process.env.VAPI_ROOFING_DEMO_ASSISTANT_ID?.trim(),
-      real_estate: process.env.VAPI_REAL_ESTATE_DEMO_ASSISTANT_ID?.trim(),
-      home_services: process.env.VAPI_HOME_SERVICES_DEMO_ASSISTANT_ID?.trim(),
-      events: process.env.VAPI_EVENTS_DEMO_ASSISTANT_ID?.trim()
+      hvac: process.env.RETELL_HVAC_DEMO_AGENT_ID?.trim(),
+      plumbing: process.env.RETELL_PLUMBING_DEMO_AGENT_ID?.trim(),
+      roofing: process.env.RETELL_ROOFING_DEMO_AGENT_ID?.trim(),
+      real_estate: process.env.RETELL_REAL_ESTATE_DEMO_AGENT_ID?.trim(),
+      home_services: process.env.RETELL_HOME_SERVICES_DEMO_AGENT_ID?.trim(),
+      events: process.env.RETELL_EVENTS_DEMO_AGENT_ID?.trim()
     }[input.demoType];
-    const assistantId = verticalAssistantId || requiredEnv("VAPI_OUTBOUND_ASSISTANT_ID");
-    const phoneNumberId = requiredEnv("VAPI_OUTBOUND_PHONE_NUMBER_ID");
-    const hashSecret = process.env.DEMO_CALL_HASH_SECRET?.trim() || requiredEnv("VAPI_WEBHOOK_SECRET");
+    const agentId = verticalAgentId || requiredEnv("RETELL_DEMO_AGENT_ID");
+    const phoneNumber = requiredEnv("RETELL_DEMO_PHONE_NUMBER");
+    const hashSecret = requiredEnv("DEMO_CALL_HASH_SECRET");
     admin = getSupabaseAdmin();
     const { data, error } = await admin.rpc("create_public_demo_call_request_v2", {
       p_name: input.name,
@@ -101,16 +100,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
     requestId = data as string;
 
-    const vapiResponse = await fetch("https://api.vapi.ai/call", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(buildPublicDemoCallRequest(input, { assistantId, phoneNumberId, requestId }))
-    });
-    if (!vapiResponse.ok) throw new Error(`vapi_call_failed_${vapiResponse.status}`);
-    const call = await vapiResponse.json() as VapiCall;
-    if (!call.id) throw new Error("vapi_call_id_missing");
-    await admin.from("public_demo_call_requests").update({ vapi_call_id: call.id, status: "in_progress", updated_at: new Date().toISOString() }).eq("id", requestId);
-    return NextResponse.json({ ok: true, message: "Mabel is calling now. It may take up to a minute." }, { status: 202 });
+    const call = await getRetellClient().call.createPhoneCall(buildPublicDemoCallRequest(input, { agentId, phoneNumber, requestId }));
+    await admin.from("public_demo_call_requests").update({ retell_call_id: call.call_id, status: "in_progress", updated_at: new Date().toISOString() }).eq("id", requestId);
+    return NextResponse.json({ ok: true, message: "Your AI receptionist is calling now. It may take up to a minute." }, { status: 202 });
   } catch (error) {
     if (admin && requestId) {
       const message = error instanceof Error ? error.message : "unknown_error";

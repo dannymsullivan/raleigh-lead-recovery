@@ -14,8 +14,6 @@ const client = {
   pilot_end: "2027-08-19",
   avg_job_value: 1800,
   close_rate: 0.4,
-  vapi_assistant_id: "assistant-test",
-  vapi_phone_number_id: "phone-test",
   created_at: "2026-08-19T12:00:00.000Z",
   is_test_account: true
 } satisfies Client;
@@ -70,14 +68,14 @@ const contact = {
 } satisfies ReactivationContact;
 
 describe("reactivation call requests", () => {
-  it("injects the real customer and lead variables into Vapi", () => {
-    const request = buildReactivationCallRequest(client, campaign, contact, { assistantId: "assistant-live", phoneNumberId: "phone-live" });
+  it("injects the real customer and lead variables into Retell", () => {
+    const request = buildReactivationCallRequest(client, campaign, contact, { agentId: "agent-live", phoneNumber: "+19195550123" });
     expect(request).toMatchObject({
-      assistantId: "assistant-live",
-      phoneNumberId: "phone-live",
-      customer: { name: "Daniel", number: client.owner_phone },
+      override_agent_id: "agent-live",
+      from_number: "+19195550123",
+      to_number: client.owner_phone,
       metadata: { app: "lead-reactivation", clientId: client.id, campaignId: campaign.id, contactId: contact.id },
-      assistantOverrides: { variableValues: {
+      retell_llm_dynamic_variables: {
         business_name: "Oak City Home Services",
         owner_name: "Daniel",
         contact_name: "Daniel",
@@ -87,7 +85,7 @@ describe("reactivation call requests", () => {
         event_type: "Wedding",
         event_date: "2027-05-22",
         prior_reason: "Needed more information"
-      } }
+      }
     });
   });
 

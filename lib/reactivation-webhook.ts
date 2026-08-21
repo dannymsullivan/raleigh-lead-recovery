@@ -27,23 +27,20 @@ export type ReactivationReport = {
 
 export function extractReactivationReport(payload: unknown): ReactivationReport | null {
   const root = record(payload);
-  const message = Object.keys(record(root.message)).length ? record(root.message) : root;
-  const call = record(message.call);
+  const call = record(root.call);
   const metadata = record(call.metadata);
   if (text(metadata.app) !== "lead-reactivation") return null;
-  const analysis = record(message.analysis);
-  const structured = record(analysis.structuredData ?? analysis.structured_data);
-  const artifact = record(message.artifact ?? call.artifact);
-  const recording = record(artifact.recording);
+  const analysis = record(call.call_analysis);
+  const structured = record(analysis.custom_analysis_data);
   const rawOutcome = text(structured.outcome);
-  const endedReason = (text(call.endedReason) ?? "").toLowerCase();
-  const transcript = text(message.transcript ?? artifact.transcript ?? call.transcript);
-  const fallback: ReactivationOutcome = !transcript && (endedReason.includes("no-answer") || endedReason.includes("voicemail")) ? "no_answer" : "failed";
+  const endedReason = (text(call.disconnection_reason) ?? "").toLowerCase();
+  const transcript = text(call.transcript);
+  const fallback: ReactivationOutcome = !transcript && (endedReason.includes("no-answer") || endedReason.includes("voicemail") || endedReason.includes("dial_no_answer")) ? "no_answer" : "failed";
   const outcome = rawOutcome && outcomes.has(rawOutcome as ReactivationOutcome) ? rawOutcome as ReactivationOutcome : fallback;
-  const duration = message.durationSeconds ?? call.durationSeconds ?? message.duration;
+  const durationMs = typeof call.duration_ms === "number" && Number.isFinite(call.duration_ms) ? call.duration_ms : null;
   return {
-    eventType: text(message.type),
-    callId: text(call.id ?? message.callId),
+    eventType: text(root.event),
+    callId: text(call.call_id),
     clientId: text(metadata.clientId),
     campaignId: text(metadata.campaignId),
     contactId: text(metadata.contactId),
@@ -53,10 +50,10 @@ export function extractReactivationReport(payload: unknown): ReactivationReport 
     qualificationNotes: text(structured.qualification_notes),
     nextStep: text(structured.next_step),
     optOut: structured.opt_out === true || outcome === "do_not_call",
-    summary: text(analysis.summary ?? message.summary),
+    summary: text(analysis.call_summary),
     transcript,
-    recordingUrl: text(recording.stereoUrl ?? recording.monoUrl ?? recording.url ?? artifact.recordingUrl ?? message.recordingUrl),
-    durationSeconds: typeof duration === "number" && Number.isFinite(duration) ? duration : null,
+    recordingUrl: text(call.recording_url),
+    durationSeconds: durationMs === null ? null : Math.round(durationMs / 1000),
     structuredData: structured
   };
 }
