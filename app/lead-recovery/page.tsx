@@ -89,9 +89,9 @@ export default function LandingPage() {
 
       <section className="recovery-single-demo page-shell" id="listen-now-form">
         <div className="recovery-demo-copy">
-          <p className="eyebrow"><span /> Live HVAC call</p>
-          <h1>Hear one call. See what your team gets back.</h1>
-          <p>Play the customer and ask about a real HVAC problem. Raleigh Lead Recovery handles the conversation, follows the safety rules, and leaves the human team with a useful next step.</p>
+          <p className="eyebrow"><span /> Live HVAC follow-up</p>
+          <h1>Hear what a follow-up call sounds like.</h1>
+          <p>Put yourself in the customer&apos;s shoes. Raleigh Lead Recovery calls you about an earlier HVAC inquiry, keeps the conversation natural, and sends the human team a clear next step.</p>
           <ul className="recovery-demo-points" aria-label="What the demo shows">
             <li><span>01</span> Natural conversation</li>
             <li><span>02</span> Clear safety limits</li>
@@ -99,11 +99,11 @@ export default function LandingPage() {
           </ul>
         </div>
         <aside className="recovery-demo-stage" aria-label="Live browser call demo">
-          <div className="recovery-demo-stage-top"><span>One live service call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
+          <div className="recovery-demo-stage-top"><span>One live follow-up call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
           <div className="recovery-demo-route" aria-hidden="true">
-            <article className="recovery-route-caller"><PhoneIncoming /><span>Caller says</span><strong>“The upstairs isn’t cooling.”</strong></article>
+            <article className="recovery-route-caller"><PhoneIncoming /><span>You answer</span><strong>“Yes, I still need help with it.”</strong></article>
             <div className="recovery-route-line"><i /><i /><i /></div>
-            <article className="recovery-route-agent"><span className="recovery-route-live">Live</span><strong>Raleigh Lead Recovery</strong><p>Listens, asks one question at a time, and stays inside your rules.</p></article>
+            <article className="recovery-route-agent"><span className="recovery-route-live">Live</span><strong>Raleigh Lead Recovery</strong><p>Calls, listens, asks one question at a time, and stays inside your rules.</p></article>
             <div className="recovery-route-line"><i /><i /><i /></div>
             <article className="recovery-route-handoff"><ClipboardCheck /><span>Human handoff</span><strong>Need · urgency · address · callback</strong></article>
           </div>
