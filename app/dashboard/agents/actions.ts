@@ -4,9 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
-import { ensureDefaultCustomerAgent, provisionCustomerAgent, provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
-import { normalizePhoneNumber } from "@/lib/phone";
-import { getRetellClient } from "@/lib/retell";
+import { ensureDefaultCustomerAgent, provisionCustomerAgent } from "@/lib/customer-agent-provisioning";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import type { CustomerAgentType } from "@/lib/types";
@@ -65,46 +63,6 @@ async function saveAndProvision(clientId: string, type: string, returnPath: stri
 
 export async function saveCustomerAgentAction(type: string, formData: FormData): Promise<void> {
   return saveAndProvision(await customerClientId(), type, "/dashboard/agents", formData);
-}
-
-export async function connectExistingRetellNumberAction(formData: FormData): Promise<void> {
-  const clientId = await customerClientId();
-  const phoneNumber = normalizePhoneNumber(value(formData, "phone_number", 32) || "");
-  if (!phoneNumber) redirect("/dashboard/agents?error=phone_number#agents");
-
-  const admin = getSupabaseAdmin();
-  const { data: claimed } = await admin
-    .from("clients")
-    .select("id")
-    .eq("provisioned_phone_number", phoneNumber)
-    .neq("id", clientId)
-    .maybeSingle();
-  if (claimed) redirect("/dashboard/agents?error=phone_claimed#agents");
-
-  try {
-    await getRetellClient().phoneNumber.retrieve(phoneNumber);
-  } catch {
-    redirect("/dashboard/agents?error=phone_not_found#agents");
-  }
-
-  const { error: clientError } = await admin.from("clients").update({
-    provisioned_phone_number: phoneNumber,
-    number_provider: "retell",
-    provisioning_status: "provisioning",
-    provisioning_error: null
-  }).eq("id", clientId);
-  if (clientError) redirect("/dashboard/agents?error=phone_connect#agents");
-
-  const { error: agentError } = await admin.from("customer_agents").update({
-    retell_phone_number: phoneNumber,
-    provisioned_phone_number: phoneNumber
-  }).eq("client_id", clientId);
-  if (agentError) redirect("/dashboard/agents?error=phone_connect#agents");
-
-  await provisionCustomerAgents(clientId);
-  revalidatePath("/dashboard");
-  revalidatePath("/dashboard/agents");
-  redirect("/dashboard/agents?phone_connected=1#agents");
 }
 
 export async function saveAdminCustomerAgentAction(clientId: string, returnPath: string, type: string, formData: FormData): Promise<void> {
