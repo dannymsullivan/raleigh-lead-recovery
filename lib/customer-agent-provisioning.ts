@@ -19,17 +19,17 @@ export type ProvisioningIssue = {
 
 export function classifyRetellProvisioningError(error: unknown): ProvisioningIssue {
   const detail = error instanceof Error ? error.message : String(error ?? "");
-  if (/\bkyc\b|identity verification|one-time account verification|complete verification in retell/i.test(detail)) {
+  if (/\bkyc\b|identity verification|one-time (?:account|provider) verification|complete verification in retell/i.test(detail)) {
     return {
       status: "needs_configuration",
-      message: "Retell needs a one-time account verification before it can assign your phone number. Complete verification in Retell, then retry setup here.",
+      message: "Phone-number activation is waiting on a one-time provider verification. Your call flows are saved, and no action is required from you.",
       verificationRequired: true
     };
   }
   if (/card on file|payment method|billing/i.test(detail)) {
     return {
       status: "needs_configuration",
-      message: "Retell needs a payment method before it can assign your phone number. Add one in Retell, then retry setup here.",
+      message: "Phone-number activation is waiting on an account billing update. Your call flows are saved, and no action is required from you.",
       verificationRequired: false
     };
   }

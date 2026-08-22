@@ -24,10 +24,10 @@ describe("customer agent publishing", () => {
 });
 
 describe("customer-facing Retell provisioning errors", () => {
-  it("turns a raw KYC response into an actionable configuration state", () => {
+  it("turns a raw KYC response into a customer-safe configuration state", () => {
     expect(classifyRetellProvisioningError(new Error("403 No valid KYC, please visit the dashboard"))).toEqual({
       status: "needs_configuration",
-      message: "Retell needs a one-time account verification before it can assign your phone number. Complete verification in Retell, then retry setup here.",
+      message: "Phone-number activation is waiting on a one-time provider verification. Your call flows are saved, and no action is required from you.",
       verificationRequired: true
     });
   });
