@@ -89,9 +89,9 @@ export default function LandingPage() {
 
       <section className="recovery-single-demo page-shell" id="listen-now-form">
         <div className="recovery-demo-copy">
-          <p className="eyebrow"><span /> Live HVAC follow-up</p>
-          <h1>Hear what a follow-up call sounds like.</h1>
-          <p>Put yourself in the customer&apos;s shoes. Raleigh Lead Recovery calls you about an earlier HVAC inquiry, keeps the conversation natural, and sends the human team a clear next step.</p>
+          <p className="eyebrow"><span /> Live HVAC call</p>
+          <h1>Hear a customer call—live.</h1>
+          <p>Put yourself in the customer&apos;s shoes and call with a real HVAC problem. Raleigh Lead Recovery answers, follows the safety rules, and leaves the human team with a clear next step.</p>
           <ul className="recovery-demo-points" aria-label="What the demo shows">
             <li><span>01</span> Natural conversation</li>
             <li><span>02</span> Clear safety limits</li>
@@ -99,7 +99,7 @@ export default function LandingPage() {
           </ul>
         </div>
         <aside className="recovery-demo-stage" aria-label="Live browser call demo">
-          <div className="recovery-demo-stage-top"><span>One live follow-up call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
+          <div className="recovery-demo-stage-top"><span>One live customer call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
           <div className="recovery-demo-route" aria-hidden="true">
             <article className="recovery-route-caller"><PhoneIncoming /><span>You answer</span><strong>“Yes, I still need help with it.”</strong></article>
             <div className="recovery-route-line"><i /><i /><i /></div>
@@ -277,8 +277,8 @@ export default function LandingPage() {
 
       <section className="final-cta recovery-final page-shell">
         <p className="eyebrow">Hear it for yourself</p>
-        <h2>Hear the follow-up your leads would get.</h2>
-        <p>Take one call on your own phone. No lead list, sales call, or setup required.</p>
+        <h2>Hear how a customer call gets handled.</h2>
+        <p>Play the customer in one live browser conversation. No phone number, sales call, or setup required.</p>
         <div className="hero-actions centered-actions">
           <a className="button button-dark" href="#listen-now-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="final_cta">Try it now <ArrowRight aria-hidden="true" /></a>
         </div>
