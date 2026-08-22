@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle, PhoneOff, Radio } from "lucide-react";
 import { RetellWebClient } from "retell-client-js-sdk";
+import type { WebDemoMode } from "@/lib/web-demo-config";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
 
-export function WebVoiceDemo({ compact = false }: { compact?: boolean }) {
+export function WebVoiceDemo({ compact = false, mode = "receptionist" }: { compact?: boolean; mode?: WebDemoMode }) {
   const clientRef = useRef<RetellWebClient | null>(null);
   const [state, setState] = useState<DemoState>("idle");
   const [agentTalking, setAgentTalking] = useState(false);
@@ -21,7 +22,7 @@ export function WebVoiceDemo({ compact = false }: { compact?: boolean }) {
       const response = await fetch("/api/web-call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ website: "" })
+        body: JSON.stringify({ website: "", mode })
       });
       const result = await response.json() as { accessToken?: string; error?: string };
       if (!response.ok || !result.accessToken) throw new Error(result.error || "Unable to start the conversation.");

@@ -80,7 +80,7 @@ export default function HomePage() {
             Raleigh Lead Recovery answers when you can&apos;t, captures what the customer needs, and sends your team a useful handoff.
           </p>
           <div className="receptionist-hero-actions" id="talk-now">
-            <WebVoiceDemo />
+            <WebVoiceDemo mode="receptionist" />
           </div>
         </div>
 
@@ -212,14 +212,14 @@ export default function HomePage() {
           <article>
             <p className="eyebrow">Never miss a call</p>
             <h3>24/7 Call Coverage</h3>
-            <strong><span>$499</span> / month</strong>
+            <strong><span>$497</span> / month</strong>
             <ul>{["Answers every call", "Business-specific knowledge", "Lead qualification", "Appointment scheduling", "Call transfers", "Call summaries", "SMS follow-up", "Dashboard"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
             <Link className="button button-dark" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
           <article className="featured">
             <p className="eyebrow">Answer + grow</p>
             <h3>Call Coverage + Lead Recovery</h3>
-            <strong><span>$999</span> / month</strong>
+            <strong><span>$997</span> / month</strong>
             <ul>{["Everything in Call Coverage", "Calls missed leads", "Calls old estimates", "Re-engages dormant customers", "Books appointments", "Campaign reporting"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
             <Link className="button button-light" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
@@ -274,7 +274,7 @@ export default function HomePage() {
         <p className="eyebrow">Skip the pitch</p>
         <h2>Try it now.</h2>
         <p>Give Raleigh Lead Recovery a real service scenario. Ask a hard question. Decide from the conversation, not the sales pitch.</p>
-        <WebVoiceDemo />
+        <WebVoiceDemo mode="receptionist" />
       </section>
 
       <footer className="site-footer">

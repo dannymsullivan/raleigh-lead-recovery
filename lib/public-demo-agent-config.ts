@@ -48,4 +48,3 @@ Naturally gather the minimum useful details for an HVAC handoff:
 
 When you have enough information, summarize the issue, urgency, callback details, and requested timing in plain language. Then say: "In a live setup, I’d send that clear summary to the HVAC team for follow-up."
 `.trim();
-

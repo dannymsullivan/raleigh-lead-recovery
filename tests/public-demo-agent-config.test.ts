@@ -20,4 +20,3 @@ describe("public HVAC demo agent", () => {
     expect(publicDemoPrompt).not.toMatch(/\{\{/);
   });
 });
-

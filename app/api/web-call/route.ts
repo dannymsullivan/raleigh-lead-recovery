@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { getRetellClient } from "@/lib/retell";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { parseWebDemoMode, webDemoAgentId, webDemoDynamicVariables } from "@/lib/web-demo-config";
 
 export const runtime = "nodejs";
 
@@ -18,9 +19,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: "This request could not be verified." }, { status: 403 });
   }
 
-  const agentId = process.env.RETELL_WEB_DEMO_AGENT_ID?.trim() || process.env.RETELL_DEMO_AGENT_ID?.trim();
   const hashSecret = process.env.DEMO_CALL_HASH_SECRET?.trim();
-  if (!agentId || !hashSecret || !process.env.RETELL_API_KEY?.trim()) {
+  if (!hashSecret || !process.env.RETELL_API_KEY?.trim()) {
     return NextResponse.json({ ok: false, error: "The live demo is being configured." }, { status: 503 });
   }
 
@@ -32,6 +32,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
   if (typeof body.website === "string" && body.website.trim()) {
     return NextResponse.json({ ok: false, error: "Unable to start the demo." }, { status: 400 });
+  }
+  const mode = parseWebDemoMode(body.mode);
+  if (!mode) {
+    return NextResponse.json({ ok: false, error: "Unable to start the demo." }, { status: 400 });
+  }
+  const agentId = webDemoAgentId(mode);
+  if (!agentId) {
+    return NextResponse.json({ ok: false, error: "The live demo is being configured." }, { status: 503 });
   }
 
   const admin = getSupabaseAdmin();
@@ -51,10 +59,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const call = await getRetellClient().call.createWebCall({
       agent_id: agentId,
       agent_version: "latest_published",
-      metadata: { app: "public-web-demo", requestId },
-      retell_llm_dynamic_variables: {
-        demo_channel: "website"
-      }
+      metadata: { app: "public-web-demo", requestId, mode },
+      retell_llm_dynamic_variables: webDemoDynamicVariables(mode)
     });
     await admin.from("public_web_call_requests").update({ retell_call_id: call.call_id, status: "in_progress" }).eq("id", requestId);
     return NextResponse.json({ ok: true, accessToken: call.access_token });

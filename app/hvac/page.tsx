@@ -160,8 +160,8 @@ export default function HvacLandingPage() {
         <div className="page-shell hvac-single-demo">
           <p className="eyebrow"><span /> Live HVAC browser demo</p>
           <h2>Play the homeowner. Hear the call live.</h2>
-          <p>Ask a real HVAC question and hear how Raleigh Lead Recovery gathers the details, checks urgency, and prepares the handoff.</p>
-          <WebVoiceDemo />
+          <p>Respond as a past customer due for seasonal maintenance and hear how Raleigh Lead Recovery turns the conversation into a clear next step.</p>
+          <WebVoiceDemo mode="reactivation" />
         </div>
       </div>
 

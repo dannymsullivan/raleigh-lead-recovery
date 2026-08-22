@@ -91,7 +91,7 @@ export default function LandingPage() {
         <div className="recovery-demo-copy">
           <p className="eyebrow"><span /> Live HVAC call</p>
           <h1>Hear a customer call—live.</h1>
-          <p>Put yourself in the customer&apos;s shoes and call with a real HVAC problem. Raleigh Lead Recovery answers, follows the safety rules, and leaves the human team with a clear next step.</p>
+          <p>Put yourself in the customer&apos;s shoes and respond as a past customer whose system may be due for a tune-up. Raleigh Lead Recovery follows up, stays inside the rules, and leaves the human team with a clear next step.</p>
           <ul className="recovery-demo-points" aria-label="What the demo shows">
             <li><span>01</span> Natural conversation</li>
             <li><span>02</span> Clear safety limits</li>
@@ -101,13 +101,13 @@ export default function LandingPage() {
         <aside className="recovery-demo-stage" aria-label="Live browser call demo">
           <div className="recovery-demo-stage-top"><span>One live customer call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
           <div className="recovery-demo-route" aria-hidden="true">
-            <article className="recovery-route-caller"><PhoneIncoming /><span>You answer</span><strong>“Yes, I still need help with it.”</strong></article>
+            <article className="recovery-route-caller"><PhoneIncoming /><span>You answer</span><strong>“Yes, I&apos;m interested in a tune-up.”</strong></article>
             <div className="recovery-route-line"><i /><i /><i /></div>
             <article className="recovery-route-agent"><span className="recovery-route-live">Live</span><strong>Raleigh Lead Recovery</strong><p>Calls, listens, asks one question at a time, and stays inside your rules.</p></article>
             <div className="recovery-route-line"><i /><i /><i /></div>
             <article className="recovery-route-handoff"><ClipboardCheck /><span>Human handoff</span><strong>Need · urgency · address · callback</strong></article>
           </div>
-          <div className="recovery-demo-action"><WebVoiceDemo /></div>
+          <div className="recovery-demo-action"><WebVoiceDemo mode="reactivation" /></div>
         </aside>
       </section>
 
