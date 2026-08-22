@@ -7,7 +7,7 @@ import type { WebDemoMode } from "@/lib/web-demo-config";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
 
-export function WebVoiceDemo({ compact = false, mode = "receptionist" }: { compact?: boolean; mode?: WebDemoMode }) {
+export function WebVoiceDemo({ compact = false, label = "Try it now", mode = "receptionist" }: { compact?: boolean; label?: string; mode?: WebDemoMode }) {
   const clientRef = useRef<RetellWebClient | null>(null);
   const [state, setState] = useState<DemoState>("idle");
   const [agentTalking, setAgentTalking] = useState(false);
@@ -73,7 +73,7 @@ export function WebVoiceDemo({ compact = false, mode = "receptionist" }: { compa
               <span /><span /><span /><span /><span />
             </span>
           )}
-          {state === "connecting" ? "Connecting…" : "Try it now"}
+          {state === "connecting" ? "Connecting…" : label}
         </button>
       )}
       {!compact ? (

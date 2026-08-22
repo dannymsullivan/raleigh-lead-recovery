@@ -3,19 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  CalendarCheck,
-  ClipboardCheck,
   Database,
-  MailCheck,
-  MessageSquareText,
-  PhoneIncoming,
   PhoneCall,
-  RefreshCw,
-  ShieldCheck,
   Sparkles,
-  TimerReset,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
+import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
@@ -74,41 +67,47 @@ const faqs = [
 export default function LandingPage() {
   return (
     <main className="landing-page recovery-page">
-      <header className="site-header recovery-header">
-        <nav className="page-shell nav-row" aria-label="Primary navigation">
-          <BrandMark accent="#d8ff57" />
-          <div className="nav-links">
-            <a href="#how-it-works">How it works</a>
-            <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href="#listen-now-form" data-analytics-event="demo_call_cta_clicked" data-analytics-location="header">
-              Try it now <ArrowRight aria-hidden="true" />
-            </a>
-          </div>
-        </nav>
-      </header>
+      <PublicSiteNav
+        items={[
+          { href: "/", label: "24/7 call coverage" },
+          { href: "#how-it-works", label: "Lead recovery" },
+          { href: "/login", label: "Sign in" },
+        ]}
+        cta={{ href: "#listen-now-form", label: "Try it now" }}
+      />
 
       <section className="recovery-single-demo page-shell" id="listen-now-form">
         <div className="recovery-demo-copy">
-          <p className="eyebrow"><span /> Live HVAC call</p>
-          <h1>Hear a customer call—live.</h1>
-          <p>Put yourself in the customer&apos;s shoes and respond as a past customer whose system may be due for a tune-up. Raleigh Lead Recovery follows up, stays inside the rules, and leaves the human team with a clear next step.</p>
-          <ul className="recovery-demo-points" aria-label="What the demo shows">
-            <li><span>01</span> Natural conversation</li>
-            <li><span>02</span> Clear safety limits</li>
-            <li><span>03</span> A handoff humans can use</li>
-          </ul>
+          <p className="eyebrow"><span /> Live HVAC follow-up</p>
+          <h1>Hear a real HVAC follow-up.</h1>
+          <p>Play the customer. Raleigh Lead Recovery calls about a tune-up, handles the conversation, and gives the human team a clear next step.</p>
+          <div className="recovery-hero-demo"><WebVoiceDemo mode="reactivation" /></div>
         </div>
-        <aside className="recovery-demo-stage" aria-label="Live browser call demo">
-          <div className="recovery-demo-stage-top"><span>One live customer call</span><strong>YOU PLAY THE CUSTOMER</strong></div>
-          <div className="recovery-demo-route" aria-hidden="true">
-            <article className="recovery-route-caller"><PhoneIncoming /><span>You answer</span><strong>“Yes, I&apos;m interested in a tune-up.”</strong></article>
-            <div className="recovery-route-line"><i /><i /><i /></div>
-            <article className="recovery-route-agent"><span className="recovery-route-live">Live</span><strong>Raleigh Lead Recovery</strong><p>Calls, listens, asks one question at a time, and stays inside your rules.</p></article>
-            <div className="recovery-route-line"><i /><i /><i /></div>
-            <article className="recovery-route-handoff"><ClipboardCheck /><span>Human handoff</span><strong>Need · urgency · address · callback</strong></article>
+        <div className="receptionist-call-visual recovery-call-visual" aria-label="Illustration of an HVAC tune-up follow-up call">
+          <div className="receptionist-call-visual-top">
+            <span><i /> Live follow-up</span>
+            <span>2:14 PM</span>
           </div>
-          <div className="recovery-demo-action"><WebVoiceDemo mode="reactivation" /></div>
-        </aside>
+          <div className="receptionist-signal-stage">
+            <div className="receptionist-signal" aria-hidden="true">
+              <span className="receptionist-signal-ring ring-one" />
+              <span className="receptionist-signal-ring ring-two" />
+              <span className="receptionist-signal-core"><PhoneCall /></span>
+            </div>
+            <div>
+              <p>Raleigh Lead Recovery is calling</p>
+              <strong>Seasonal HVAC tune-up</strong>
+            </div>
+          </div>
+          <div className="receptionist-transcript">
+            <div className="agent-line"><span>Raleigh Lead Recovery</span><p>Would you like the team to follow up about seasonal maintenance?</p></div>
+            <div className="caller-line"><span>Customer</span><p>Yes, Tuesday morning would be best.</p></div>
+          </div>
+          <div className="receptionist-captured">
+            <p>Sent back to the human team</p>
+            <div><span>Interested</span><span>Tuesday morning</span><span>Callback requested</span></div>
+          </div>
+        </div>
       </section>
 
       <section className="recovery-problem page-shell">
@@ -190,64 +189,6 @@ export default function LandingPage() {
           </div>
           <figcaption>Illustrative dashboard data. Actual campaign results vary by list quality, age, offer, and follow-up.</figcaption>
         </figure>
-      </section>
-
-      <section className="recovery-booking page-shell" aria-labelledby="booking-handoff">
-        <div className="recovery-booking-heading">
-          <p className="eyebrow">From conversation to calendar</p>
-          <h2 id="booking-handoff">Finish the handoff before the call ends.</h2>
-          <p>
-            Connect an approved calendar and Raleigh Lead Recovery can check availability, book the selected time, email the customer an invitation, and text your team with the details.
-          </p>
-        </div>
-        <div className="recovery-booking-grid">
-          <article>
-            <CalendarCheck aria-hidden="true" />
-            <h3>Offer real availability.</h3>
-            <p>Raleigh Lead Recovery offers only approved open times based on your hours, appointment length, notice, and buffer rules.</p>
-          </article>
-          <article>
-            <MailCheck aria-hidden="true" />
-            <h3>Book and confirm.</h3>
-            <p>Once the customer chooses, Raleigh Lead Recovery books the appointment and sends the calendar invitation. It confirms only after the calendar accepts it.</p>
-          </article>
-          <article>
-            <MessageSquareText aria-hidden="true" />
-            <h3>Alert the right person.</h3>
-            <p>Your team receives the scheduled time, contact details, call summary, and a link to the complete conversation in the dashboard.</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="recovery-autopilot page-shell" aria-labelledby="autopilot-heading">
-        <div className="recovery-autopilot-heading">
-          <p className="eyebrow">Start simple. Automate when ready.</p>
-          <h2 id="autopilot-heading">Call only the leads you approve.</h2>
-          <p>
-            Start with an approved CSV. Connect your CRM later if you want eligibility and recent activity checked automatically.
-          </p>
-        </div>
-        <div className="recovery-autopilot-grid">
-          <article>
-            <TimerReset aria-hidden="true" />
-            <span>01 · Eligibility</span>
-            <h3>Your rules choose the lead.</h3>
-            <p>Your rules can require a specific stage, source, and period with no activity before a lead enters the recovery queue.</p>
-          </article>
-          <article>
-            <RefreshCw aria-hidden="true" />
-            <span>02 · Safety check</span>
-            <h3>Every lead is checked before calling.</h3>
-            <p>Recent calls, emails, appointments, status changes, holds, and opt-outs automatically stop the call.</p>
-          </article>
-          <article>
-            <ShieldCheck aria-hidden="true" />
-            <span>03 · Sync</span>
-            <h3>The outcome comes back.</h3>
-            <p>Attempts, summaries, appointments, and opt-outs appear in the dashboard and can sync back to your CRM.</p>
-          </article>
-        </div>
-        <p className="recovery-connection-note"><strong>Keep your CRM.</strong> Raleigh Lead Recovery can start with a CSV, then connect through an available API, webhook, Zapier, or Make workflow when you&apos;re ready.</p>
       </section>
 
       <section className="faq-section page-shell recovery-faq">

@@ -16,6 +16,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
+import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
@@ -54,17 +55,16 @@ const faqs = [
 export default function HvacLandingPage() {
   return (
     <main className="landing-page hvac-page">
-      <header className="hvac-header">
-        <nav className="page-shell hvac-nav" aria-label="HVAC page navigation">
-          <BrandMark />
-          <div className="hvac-nav-links">
-            <a href="#workflow">How it works</a>
-            <a href="#live-demo">Try it now</a>
-            <Link href="/login">Sign in</Link>
-            <Link className="hvac-button hvac-button-dark" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
-          </div>
-        </nav>
-      </header>
+      <PublicSiteNav
+        variant="hvac"
+        items={[
+          { href: "#workflow", label: "How it works" },
+          { href: "#live-demo", label: "Try it now" },
+          { href: "/lead-recovery", label: "Lead recovery" },
+          { href: "/login", label: "Sign in" },
+        ]}
+        cta={{ href: "/signup", label: "Start free" }}
+      />
 
       <section className="page-shell hvac-hero">
         <div className="hvac-hero-copy">

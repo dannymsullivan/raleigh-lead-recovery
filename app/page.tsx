@@ -14,6 +14,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
+import { PublicSiteNav } from "./components/public-site-nav";
 import { WebVoiceDemo } from "./components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
@@ -60,17 +61,14 @@ const faqs = [
 export default function HomePage() {
   return (
     <main className="landing-page receptionist-page">
-      <header className="site-header receptionist-header">
-        <nav className="page-shell nav-row" aria-label="Primary navigation">
-          <BrandMark accent="#d8ff57" />
-          <div className="nav-links">
-            <a href="#how-it-works">How it works</a>
-            <Link href="/lead-recovery">Lead recovery</Link>
-            <Link href="/login">Sign in</Link>
-            <a className="button button-dark button-small" href="#talk-now">Try it now <ArrowRight aria-hidden="true" /></a>
-          </div>
-        </nav>
-      </header>
+      <PublicSiteNav
+        items={[
+          { href: "#how-it-works", label: "24/7 call coverage" },
+          { href: "/lead-recovery", label: "Lead recovery" },
+          { href: "/login", label: "Sign in" },
+        ]}
+        cta={{ href: "#talk-now", label: "Try it now" }}
+      />
 
       <section className="receptionist-hero page-shell">
         <div className="receptionist-hero-copy">
