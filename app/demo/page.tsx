@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function DemoPage() {
-  redirect("/#talk-now");
+  redirect("/lead-recovery#listen-now-form");
 }
