@@ -4521,11 +4521,11 @@ details > summary {
 .hvac-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.03fr) minmax(440px, .97fr);
-  gap: clamp(48px, 7vw, 96px);
+  grid-template-columns: minmax(0, 1fr) minmax(440px, 1fr);
+  gap: clamp(52px, 6vw, 82px);
   align-items: center;
-  min-height: 780px;
-  padding-block: 78px 100px;
+  min-height: 700px;
+  padding-block: 68px 88px;
 }
 
 .hvac-kicker {
@@ -4542,11 +4542,11 @@ details > summary {
 }
 
 .hvac-hero h1 {
-  max-width: 760px;
-  margin-bottom: 30px;
-  font-size: clamp(4.6rem, 7.1vw, 7.2rem);
-  letter-spacing: -.078em;
-  line-height: .84;
+  max-width: 720px;
+  margin-bottom: 27px;
+  font-size: clamp(4.15rem, 6.25vw, 6.35rem);
+  letter-spacing: -.072em;
+  line-height: .88;
 }
 
 .hvac-hero h1 em {
@@ -4820,7 +4820,7 @@ details > summary {
   grid-template-columns: 60px minmax(0, 1fr) minmax(280px, .48fr);
   gap: 38px;
   align-items: start;
-  padding-block: 130px;
+  padding-block: 105px;
 }
 
 .hvac-problem-copy h2,
@@ -4830,9 +4830,9 @@ details > summary {
 .hvac-faq h2,
 .hvac-founder h2 {
   margin-bottom: 24px;
-  font-size: clamp(3.3rem, 5.7vw, 5.7rem);
-  letter-spacing: -.062em;
-  line-height: .94;
+  font-size: clamp(2.9rem, 4.8vw, 4.85rem);
+  letter-spacing: -.057em;
+  line-height: .97;
 }
 
 .hvac-problem-copy > p:last-child,
@@ -4846,14 +4846,14 @@ details > summary {
 }
 
 .hvac-gauge-card {
-  min-height: 320px;
+  min-height: 290px;
   padding: 26px;
   border: 2px solid var(--hvac-ink);
   background: var(--hvac-blue);
   box-shadow: 10px 10px 0 var(--hvac-ink);
 }
 
-.hvac-gauge-card svg { width: 42px; height: 42px; margin-bottom: 84px; }
+.hvac-gauge-card svg { width: 42px; height: 42px; margin-bottom: 58px; }
 .hvac-gauge-card span { display: block; font: 900 .56rem/1 ui-monospace, monospace; letter-spacing: .13em; }
 .hvac-gauge-card strong { display: block; margin-block: 8px 18px; font-size: 3.2rem; letter-spacing: -.07em; }
 .hvac-gauge-card p { margin: 0; font-size: .75rem; font-weight: 750; line-height: 1.6; }
@@ -4862,7 +4862,7 @@ details > summary {
   border-block: 2px solid var(--hvac-ink);
   background: var(--hvac-ink);
   color: white;
-  padding-block: 110px 120px;
+  padding-block: 90px 100px;
 }
 
 .hvac-workflow .eyebrow { color: #b9beb4; }
@@ -4878,7 +4878,7 @@ details > summary {
 .hvac-workflow-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 78px 0 0;
+  margin: 58px 0 0;
   padding: 0;
   border-top: 1px solid #50534d;
   border-left: 1px solid #50534d;
@@ -4887,8 +4887,8 @@ details > summary {
 
 .hvac-workflow-grid li {
   position: relative;
-  min-height: 385px;
-  padding: 24px;
+  min-height: 330px;
+  padding: 26px;
   border-right: 1px solid #50534d;
   border-bottom: 1px solid #50534d;
 }
@@ -4898,19 +4898,20 @@ details > summary {
   font: 900 .6rem/1 ui-monospace, monospace;
 }
 
-.hvac-workflow-grid svg { width: 38px; height: 38px; margin-block: 96px 26px; color: var(--hvac-lime); }
-.hvac-workflow-grid h3 { margin-bottom: 14px; font-size: 1.22rem; }
-.hvac-workflow-grid p { margin: 0; color: #aeb2aa; font-size: .76rem; font-weight: 620; line-height: 1.65; }
+.hvac-workflow-grid svg { width: 36px; height: 36px; margin-block: 58px 24px; color: var(--hvac-lime); }
+.hvac-workflow-grid h3 { margin-bottom: 12px; font-size: 1.18rem; line-height: 1.25; }
+.hvac-workflow-grid p { margin: 0; color: #b8bcb4; font-size: .82rem; font-weight: 620; line-height: 1.65; }
 
 .hvac-outcome {
   display: grid;
-  grid-template-columns: minmax(0, .75fr) minmax(520px, 1.25fr);
-  gap: clamp(56px, 8vw, 105px);
+  grid-template-columns: minmax(340px, .9fr) minmax(520px, 1.1fr);
+  gap: clamp(54px, 6vw, 82px);
   align-items: center;
-  padding-block: 130px;
+  padding-block: 105px;
 }
 
-.hvac-outcome-copy .hvac-section-number { margin-bottom: 42px; }
+.hvac-outcome-copy .hvac-section-number { margin-bottom: 32px; }
+.hvac-outcome-copy h2 { max-width: 560px; font-size: clamp(2.85rem, 4.25vw, 4.45rem); }
 
 .hvac-outcome-copy ul {
   display: grid;
@@ -4945,7 +4946,7 @@ details > summary {
 
 .hvac-dashboard-frame > div span:last-child { padding: 6px 8px; background: var(--hvac-lime); }
 .hvac-dashboard-frame img { display: block; width: 100%; height: auto; }
-.hvac-dashboard-frame figcaption { padding: 10px 13px; border-top: 1px solid #cccfc6; color: #74786f; font-size: .52rem; font-weight: 700; }
+.hvac-dashboard-frame figcaption { padding: 11px 13px; border-top: 1px solid #cccfc6; color: #6b7067; font-size: .62rem; font-weight: 700; line-height: 1.45; }
 
 .hvac-demo-wrap {
   border-block: 2px solid var(--hvac-ink);
@@ -4956,15 +4957,78 @@ details > summary {
 
 .hvac-demo-wrap .demo-type-picker { display: none; }
 
+.hvac-single-demo {
+  grid-template-columns: minmax(0, .92fr) minmax(420px, 1.08fr);
+  gap: clamp(50px, 7vw, 92px);
+  padding-block: clamp(86px, 9vw, 116px);
+}
+
+.hvac-demo-copy h2 {
+  max-width: 620px;
+  margin: 18px 0 22px;
+  font-size: clamp(3.15rem, 5vw, 5rem);
+  letter-spacing: -.06em;
+  line-height: .94;
+  text-wrap: balance;
+}
+
+.hvac-demo-copy > p:last-child {
+  max-width: 580px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.hvac-demo-console {
+  border: 2px solid var(--hvac-ink);
+  background: #fffef9;
+  box-shadow: 12px 14px 0 #d4dcc6;
+}
+
+.hvac-demo-console-top {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-inline: 18px;
+  border-bottom: 1px solid var(--hvac-ink);
+  font: 900 .56rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .12em;
+}
+
+.hvac-demo-console-top strong { padding: 7px 9px; background: var(--hvac-lime); }
+
+.hvac-demo-prompt {
+  min-height: 150px;
+  padding: 30px;
+  background: var(--hvac-ink);
+  color: white;
+}
+
+.hvac-demo-prompt span {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--hvac-lime);
+  font: 900 .58rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .13em;
+}
+
+.hvac-demo-prompt strong { display: block; max-width: 500px; font-size: 1.35rem; line-height: 1.4; }
+.hvac-demo-console .web-voice-demo { width: 100%; padding: 22px; }
+.hvac-demo-console .web-voice-demo .button { width: 100%; justify-content: center; }
+.hvac-demo-console .web-voice-status { justify-self: center; text-align: center; }
+
 .hvac-pilot {
-  padding-block: 125px;
+  padding-block: 105px;
   background: var(--hvac-lime);
 }
 
 .hvac-pilot-grid {
   display: grid;
   grid-template-columns: 1fr 390px;
-  gap: 100px;
+  gap: clamp(60px, 8vw, 100px);
   align-items: center;
 }
 
@@ -4999,8 +5063,8 @@ details > summary {
 .hvac-faq {
   display: grid;
   grid-template-columns: minmax(300px, .7fr) 1fr;
-  gap: 100px;
-  padding-block: 125px;
+  gap: clamp(60px, 8vw, 100px);
+  padding-block: 105px;
 }
 
 .hvac-faq-list details { border-top: 2px solid var(--hvac-ink); }
@@ -5016,14 +5080,14 @@ details > summary {
   grid-template-columns: 92px 1fr auto;
   gap: 32px;
   align-items: center;
-  margin-bottom: 110px;
+  margin-bottom: 90px;
   padding: 34px;
   border: 2px solid var(--hvac-ink);
   background: var(--hvac-blue);
 }
 
 .hvac-founder img { border: 2px solid var(--hvac-ink); filter: grayscale(1); }
-.hvac-founder h2 { max-width: 720px; margin-bottom: 12px; font-size: clamp(2.2rem, 4vw, 3.7rem); }
+.hvac-founder h2 { max-width: 800px; margin-bottom: 12px; font-size: clamp(2rem, 3.35vw, 3.2rem); line-height: 1; }
 .hvac-founder .eyebrow { margin-bottom: 13px; }
 
 .hvac-footer {
@@ -5062,6 +5126,8 @@ details > summary {
   .hvac-dashboard-frame { max-width: 720px; }
   .hvac-pilot-card { max-width: 460px; }
   .hvac-faq { gap: 50px; }
+  .hvac-single-demo { grid-template-columns: 1fr; }
+  .hvac-demo-console { width: min(680px, 100%); }
   .hvac-founder { grid-template-columns: 92px 1fr; }
   .hvac-founder .hvac-text-link { grid-column: 2; }
 }
@@ -5072,7 +5138,7 @@ details > summary {
   .hvac-nav .hvac-button { min-height: 42px; padding-inline: 13px; font-size: .66rem; }
   .hvac-hero { padding-block: 52px 74px; }
   .hvac-kicker span:last-child { display: none; }
-  .hvac-hero h1 { font-size: clamp(3.7rem, 17vw, 5.1rem); }
+  .hvac-hero h1 { font-size: clamp(3.25rem, 15vw, 4.6rem); line-height: .9; }
   .hvac-hero h1 em { white-space: normal; }
   .hvac-ticket-top { grid-template-columns: 1fr auto; }
   .hvac-ticket-top > strong { display: none; }
@@ -5097,6 +5163,9 @@ details > summary {
   .hvac-workflow-grid { grid-template-columns: 1fr; margin-top: 48px; }
   .hvac-workflow-grid li { min-height: 300px; }
   .hvac-workflow-grid svg { margin-top: 62px; }
+  .hvac-demo-console-top { align-items: flex-start; flex-direction: column; padding-block: 15px; }
+  .hvac-demo-prompt { min-height: 0; padding: 24px; }
+  .hvac-demo-prompt strong { font-size: 1.12rem; }
   .hvac-outcome { gap: 55px; }
   .hvac-pilot-grid { gap: 52px; }
   .hvac-pilot-card { margin-right: 10px; padding: 27px; }
@@ -5106,6 +5175,14 @@ details > summary {
   .hvac-founder .hvac-text-link { grid-column: 1 / -1; }
   .hvac-footer > div { grid-template-columns: 1fr; }
   .hvac-footer nav { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hvac-service-ticket,
+  .hvac-marquee > div,
+  .hvac-pulse {
+    animation: none;
+  }
 }
 
 /* Product workspace: the warm site identity, tuned for repeated daily use. */
