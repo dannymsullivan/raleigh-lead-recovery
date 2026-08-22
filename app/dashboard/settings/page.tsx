@@ -5,6 +5,7 @@ import { ArrowLeft, Check, Save } from "lucide-react";
 import { BrandMark } from "../../components/brand-mark";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { industryKeyForTrade, industryOptions } from "@/lib/industry-presets";
 import type { Client } from "@/lib/types";
 import { saveAssistantSettingsAction } from "../actions";
 
@@ -23,6 +24,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   if (!data) redirect("/signup?error=workspace");
   const client = data as Client;
   const search = (await searchParams) ?? {};
+  const supportedIndustry = industryKeyForTrade(client.trade) !== "other";
 
   return (
     <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
@@ -38,7 +40,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
             {search.error ? <div className="border-2 border-black bg-white p-4 text-sm font-black">{search.error === "consent" ? "Confirm permission to send transactional alerts to the alert number." : "We could not save those settings. Check the required fields and try again."}</div> : null}
 
             <SettingsSection number="01" title="Business basics">
-              <div className="grid gap-5 sm:grid-cols-2"><Field label="Business name" name="business_name" defaultValue={client.business_name} required /><Field label="Business phone" name="owner_phone" type="tel" defaultValue={client.owner_phone} required /><Field label="Business type" name="trade" defaultValue={client.trade} /><Field label="Service area" name="service_area" defaultValue={client.service_area ?? ""} /></div>
+              <div className="grid gap-5 sm:grid-cols-2"><Field label="Business name" name="business_name" defaultValue={client.business_name} required /><Field label="Business phone" name="owner_phone" type="tel" defaultValue={client.owner_phone} required /><label className="block text-sm font-black">Business type<select className="mt-2 h-13 w-full border-2 border-black bg-white px-3 font-semibold" name="trade" defaultValue={client.trade}>{!supportedIndustry ? <option value={client.trade}>{client.trade} (current)</option> : null}{industryOptions.filter((option) => option.value !== "other").map((option) => <option value={option.label} key={option.value}>{option.label}</option>)}</select><span className="mt-2 block text-[11px] font-semibold leading-4 text-black/45">Changing this refreshes the starter services and safety rules when you save.</span></label><Field label="Service area" name="service_area" defaultValue={client.service_area ?? ""} /></div>
               <label className="mt-5 block text-sm font-black">Short business description<textarea className="mt-2 min-h-24 w-full border-2 border-black bg-white p-3 font-semibold leading-6" name="business_description" defaultValue={client.business_description ?? ""} /></label>
             </SettingsSection>
 

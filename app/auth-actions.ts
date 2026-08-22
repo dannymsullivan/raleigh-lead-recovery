@@ -7,6 +7,7 @@ import { normalizePhoneNumber } from "@/lib/phone";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
+import { isGuidedIndustry, isIndustryKey, selectedTrade } from "@/lib/industry-presets";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
 import { ensureDefaultCustomerAgent, provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
@@ -115,7 +116,11 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   const businessName = value(formData, "business_name");
   const ownerName = value(formData, "owner_name");
   const ownerPhone = value(formData, "owner_phone");
-  const trade = value(formData, "trade");
+  const tradeCategoryValue = value(formData, "trade_category");
+  if (!isIndustryKey(tradeCategoryValue)) redirect("/onboarding?error=missing");
+  const tradeCategory = tradeCategoryValue;
+  const trade = selectedTrade(tradeCategory, value(formData, "other_trade"));
+  const guidedSetup = isGuidedIndustry(tradeCategory);
   const serviceArea = value(formData, "service_area");
   const alertPhone = normalizePhoneNumber(value(formData, "alert_phone") || ownerPhone);
 
@@ -168,8 +173,8 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     pilot_end: trialEndsAt.toISOString().slice(0, 10),
     account_status: "trialing",
     product_mode: "missed_call_recovery",
-    provisioning_status: "pending",
-    provisioning_error: null
+    provisioning_status: guidedSetup ? "needs_configuration" : "pending",
+    provisioning_error: guidedSetup ? "Guided setup requested. Danny will help tailor these call flows before a phone number is assigned." : null
   }).eq("user_id", user.id);
 
   if (error) redirect("/onboarding?error=save");
@@ -194,7 +199,13 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     .maybeSingle();
   if (campaignLookupError) redirect("/onboarding?error=save");
   const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
-  await ensureDefaultCustomerAgent(client.id, "receptionist");
+  const receptionistAgent = await ensureDefaultCustomerAgent(client.id, "receptionist");
+  if (guidedSetup) {
+    await admin.from("customer_agents").update({
+      status: "needs_configuration",
+      provisioning_error: "Guided setup requested. Danny will help tailor this call flow before a phone number is assigned."
+    }).in("id", [leadAgent.id, receptionistAgent.id]).eq("client_id", client.id);
+  }
   if (!existingCampaign) {
     const { error: campaignError } = await admin.from("reactivation_campaigns").insert({
       client_id: client.id,
@@ -212,14 +223,16 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
     const { error: campaignAgentError } = await admin.from("reactivation_campaigns").update({ agent_id: leadAgent.id }).eq("id", existingCampaign.id).eq("client_id", client.id).is("agent_id", null);
     if (campaignAgentError) redirect("/onboarding?error=save");
   }
-  after(async () => {
-    try {
-      await provisionCustomerAgents(client.id);
-    } catch (provisioningError) {
-      console.error("Customer call-flow provisioning failed", provisioningError);
-    }
-  });
-  redirect("/dashboard?welcome=1");
+  if (!guidedSetup) {
+    after(async () => {
+      try {
+        await provisionCustomerAgents(client.id);
+      } catch (provisioningError) {
+        console.error("Customer call-flow provisioning failed", provisioningError);
+      }
+    });
+  }
+  redirect(guidedSetup ? "/dashboard?welcome=guided" : "/dashboard?welcome=1");
 }
 
 export async function logoutCustomerAction(): Promise<void> {

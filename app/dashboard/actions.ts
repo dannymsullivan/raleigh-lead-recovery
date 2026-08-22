@@ -8,6 +8,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
 import { normalizePhoneNumber } from "@/lib/phone";
 import { alertConsentText, messagingConsentVersion } from "@/lib/messaging-consent";
+import { industryKeyForTrade, industryPresets } from "@/lib/industry-presets";
 
 type LeadStatus = "new" | "contacted" | "booked" | "lost" | "spam";
 
@@ -88,19 +89,24 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
 
   const admin = getSupabaseAdmin();
   const consentedAt = new Date().toISOString();
+  const nextTrade = formValue(formData, "trade") || "service business";
+  const { data: currentClient } = await admin.from("clients").select("trade").eq("id", clientId).single();
+  const nextIndustry = industryKeyForTrade(nextTrade);
+  const preset = nextIndustry === "other" ? null : industryPresets[nextIndustry];
+  const useNewPreset = Boolean(preset && currentClient?.trade !== nextTrade);
   const { data: readyAgentRows } = await admin.from("customer_agents").select("agent_type").eq("client_id", clientId).eq("status", "ready");
   const readyAgentTypes = (readyAgentRows ?? []).map((agent) => agent.agent_type).filter((type): type is "receptionist" | "lead_reactivation" => type === "receptionist" || type === "lead_reactivation");
   const receptionistActive = readyAgentTypes.includes("receptionist");
   const { error } = await admin.from("clients").update({
     business_name: businessName,
     owner_phone: ownerPhone,
-    trade: formValue(formData, "trade") || "service business",
+    trade: nextTrade,
     service_area: formValue(formData, "service_area") || null,
-    business_description: formValue(formData, "business_description") || null,
-    services,
+    business_description: useNewPreset ? preset?.description : formValue(formData, "business_description") || null,
+    services: useNewPreset ? preset?.services.split("\n") : services,
     business_hours: businessHours,
     timezone: formValue(formData, "timezone") || "America/New_York",
-    emergency_rules: formValue(formData, "emergency_rules") || null,
+    emergency_rules: useNewPreset ? preset?.emergencyRules : formValue(formData, "emergency_rules") || null,
     callback_window: formValue(formData, "callback_window") || "The team will call back as soon as possible.",
     alert_phone: alertPhone,
     alert_sms_consent_at: consentedAt,

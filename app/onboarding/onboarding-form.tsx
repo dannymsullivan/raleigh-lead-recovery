@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BriefcaseBusiness, Check, Clock3, Database } from "lucide-react";
 import { completeOnboardingAction } from "../auth-actions";
 import type { Client } from "@/lib/types";
+import { industryKeyForTrade, industryOptions, industryPresets, type IndustryKey } from "@/lib/industry-presets";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -16,6 +17,21 @@ const stepContent = [
 export function OnboardingForm({ client, email, error }: { client: Client; email: string; error: string | null }) {
   const [step, setStep] = useState(1);
   const formRef = useRef<HTMLFormElement>(null);
+  const initialIndustry = industryKeyForTrade(client.trade === "service business" ? "" : client.trade);
+  const initialPreset = initialIndustry === "other" ? null : industryPresets[initialIndustry];
+  const [industry, setIndustry] = useState<IndustryKey>(initialIndustry);
+  const [services, setServices] = useState(client.services?.join("\n") || initialPreset?.services || "");
+  const [businessDescription, setBusinessDescription] = useState(client.business_description || initialPreset?.description || "");
+  const [emergencyRules, setEmergencyRules] = useState(client.emergency_rules || initialPreset?.emergencyRules || "");
+
+  function chooseIndustry(nextIndustry: IndustryKey) {
+    setIndustry(nextIndustry);
+    if (nextIndustry === "other") return;
+    const preset = industryPresets[nextIndustry];
+    setServices(preset.services);
+    setBusinessDescription(preset.description);
+    setEmergencyRules(preset.emergencyRules);
+  }
 
   function nextStep() {
     const activeStep = formRef.current?.querySelector(`[data-onboarding-step="${step}"]`) ?? null;
@@ -69,7 +85,12 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                 <Field label="Business name" name="business_name" defaultValue={client.business_name === "New workspace" ? "" : client.business_name} autoComplete="organization" required />
                 <Field label="Your name" name="owner_name" defaultValue={client.owner_name} autoComplete="name" required />
                 <Field label="Business phone" name="owner_phone" type="tel" defaultValue={client.owner_phone === "Not set" ? "" : client.owner_phone} autoComplete="tel" required />
-                <Field label="Business type" name="trade" placeholder="Plumbing, HVAC, electrical…" defaultValue={client.trade === "service business" ? "" : client.trade} required />
+                <label className="block text-sm font-black">Business type
+                  <select className="mt-2 h-13 w-full border-2 border-black bg-white px-4 font-semibold outline-none focus:shadow-[5px_5px_0_#000]" name="trade_category" value={industry} onChange={(event) => chooseIndustry(event.target.value as IndustryKey)} required>
+                    {industryOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}
+                  </select>
+                </label>
+                {industry === "other" ? <Field label="What kind of business?" name="other_trade" placeholder="Tell us what you do" defaultValue={initialIndustry === "other" && client.trade !== "service business" ? client.trade : ""} required /> : null}
                 <Field label="Service area" name="service_area" placeholder="Raleigh, Cary, Apex…" defaultValue={client.service_area ?? ""} required />
                 <Field label="Account email" name="account_email" type="email" defaultValue={email} disabled />
               </div>
@@ -79,10 +100,10 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               <StepHeading eyebrow="Step 2 of 3" title="What should Raleigh Lead Recovery know?" body="Plain English is perfect. This becomes the starting point for customer conversations." />
               <div className="mt-9 grid gap-6">
                 <label className="block text-sm font-black">Your services <span className="font-semibold text-black/40">· one per line or separated by commas</span>
-                  <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} defaultValue={client.services?.join("\n") ?? ""} />
+                  <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} value={services} onChange={(event) => setServices(event.target.value)} />
                 </label>
                 <label className="block text-sm font-black">Describe the business in a sentence
-                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="business_description" placeholder="Family-owned plumbing company serving homes across Wake County." defaultValue={client.business_description ?? ""} />
+                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="business_description" placeholder="Family-owned plumbing company serving homes across Wake County." value={businessDescription} onChange={(event) => setBusinessDescription(event.target.value)} />
                 </label>
               </div>
             </div>
@@ -94,7 +115,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
               </div>
               <div className="mt-8 grid gap-6">
                 <label className="block text-sm font-black">What counts as an emergency?
-                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="emergency_rules" placeholder="Active flooding, burst pipes, sewage backup, or no water to the home." defaultValue={client.emergency_rules ?? ""} />
+                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="emergency_rules" placeholder="Active flooding, burst pipes, sewage backup, or no water to the home." value={emergencyRules} onChange={(event) => setEmergencyRules(event.target.value)} />
                 </label>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Callback expectation" name="callback_window" defaultValue={client.callback_window ?? "15 minutes for emergencies; 2 hours otherwise"} />
@@ -113,15 +134,15 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
 
               <div className="mt-8 border-2 border-black bg-white p-5">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">What happens next</p>
-                <div className="mt-4 grid gap-3 text-sm font-bold sm:grid-cols-3">
+                {industry === "other" ? <p className="mt-4 text-sm font-semibold leading-6 text-black/60">Your details go to Danny for a quick review. He’ll tailor the call flow with you before your number goes live.</p> : <div className="mt-4 grid gap-3 text-sm font-bold sm:grid-cols-3">
                   <p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Call flows build</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Your number is assigned</p><p className="flex gap-2"><Check className="h-4 w-4 flex-none" /> Make a test call</p>
-                </div>
+                </div>}
               </div>
             </div>
 
             <div className="mt-10 flex items-center justify-between border-t-2 border-black pt-6">
               {step > 1 ? <button className="inline-flex h-12 items-center gap-2 px-2 text-sm font-black" type="button" onClick={previousStep}><ArrowLeft className="h-4 w-4" /> Back</button> : <span />}
-              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">Build my call flows <ArrowRight className="h-4 w-4" /></button>}
+              {step < 3 ? <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="button" onClick={nextStep}>Continue <ArrowRight className="h-4 w-4" /></button> : <button className="inline-flex h-12 items-center gap-2 bg-black px-6 text-sm font-black text-white" type="submit">{industry === "other" ? "Request guided setup" : "Build my call flows"} <ArrowRight className="h-4 w-4" /></button>}
             </div>
           </form>
         </div>
