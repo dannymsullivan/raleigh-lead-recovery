@@ -3356,8 +3356,7 @@ body {
 }
 
 .recovery-process-heading {
-  position: sticky;
-  top: 112px;
+  position: static;
   align-self: start;
 }
 
