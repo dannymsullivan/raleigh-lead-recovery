@@ -5,11 +5,9 @@ import {
   ArrowRight,
   Check,
   ShieldCheck,
-  Volume2,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
-import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
@@ -39,41 +37,16 @@ export default function HvacLandingPage() {
           <p className="hvac-kicker"><span>HVAC REACTIVATION SYSTEM</span><span>RALEIGH, NC</span></p>
           <h1>Your customer list is full of <em>tune-ups</em> waiting to happen.</h1>
           <div className="hvac-hero-actions">
-            <a className="hvac-demo-trigger" href="#live-demo" aria-label="Listen to the live HVAC demo">
-              <span className="hvac-demo-trigger-icon"><Volume2 aria-hidden="true" /></span>
-              <span><strong>Listen to the 45-second example</strong><small>Hear the tune-up follow-up live</small></span>
-            </a>
             <Link className="hvac-button hvac-button-accent" href="/signup">Start with 25 contacts <ArrowRight aria-hidden="true" /></Link>
             <a className="hvac-text-link" href={`mailto:${contactEmail}`}>Contact Danny <ArrowRight aria-hidden="true" /></a>
           </div>
           <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Free pilot · no CRM access required · approved lists, calling windows, disclosures, and opt-out controls come first.</p>
         </div>
 
-        <a className="hvac-hero-listen-card" href="#live-demo" aria-label="Press to listen to the HVAC tune-up demo">
-          <span className="hvac-hero-listen-ring"><Volume2 aria-hidden="true" /></span>
-          <span className="hvac-hero-listen-label">LIVE HVAC DEMO</span>
-          <strong>Press to hear the follow-up call.</strong>
-          <span className="hvac-hero-listen-action">Listen now <ArrowRight aria-hidden="true" /></span>
-        </a>
-      <a className="hvac-scroll-cue" href="#live-demo" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
+      <a className="hvac-scroll-cue" href="#pilot" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
       </section>
 
-      <div className="hvac-demo-wrap" id="live-demo">
-        <div className="page-shell hvac-single-demo">
-          <div className="hvac-demo-copy">
-            <p className="eyebrow"><span /> Live HVAC browser demo</p>
-            <h2>Hear the tune-up call—live.</h2>
-            <p>Press play and hear the follow-up in action.</p>
-          </div>
-          <div className="hvac-demo-console">
-            <div className="hvac-demo-console-top"><span>LIVE SCENARIO</span><strong>SEASONAL TUNE-UP</strong></div>
-            <div className="hvac-demo-prompt"><span>YOU PLAY THE CUSTOMER</span><strong>Answer naturally. Ask a real question. See where the conversation goes.</strong></div>
-            <WebVoiceDemo mode="reactivation" />
-          </div>
-        </div>
-      </div>
-
-      <section className="hvac-pilot">
+      <section className="hvac-pilot" id="pilot">
         <div className="page-shell hvac-pilot-grid">
           <div>
             <p className="eyebrow">Free 25-contact pilot</p>
