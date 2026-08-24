@@ -189,12 +189,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       <td className="px-4 py-3 text-xs font-semibold text-black/55">
                         {client.trial_ends_at ? `Ends ${formatShortDate(client.trial_ends_at)}` : `${client.pilot_start} to ${client.pilot_end}`}
                       </td>
-                      <td className="px-4 py-3">
-                        <Link className="inline-flex items-center gap-1 font-medium text-red-700" href={`/report/${client.id}`}>
-                          Open
-                          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                        </Link>
-                      </td>
                       <td className="px-4 py-3 align-top">
                         <div className="mb-3 flex flex-wrap items-center gap-2">
                           <Link className="inline-flex min-h-10 items-center gap-2 border-2 border-black bg-black px-3 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>

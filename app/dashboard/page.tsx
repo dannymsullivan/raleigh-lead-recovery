@@ -66,7 +66,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         <Link className="flex h-12 flex-none items-center gap-2 border-b-4 border-black px-3 text-xs font-black" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Reactivation</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
-        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Report</Link>
         <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Settings</Link>
       </nav>
 
@@ -76,7 +75,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Lead reactivation</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
             <Link className="flex items-center gap-3 bg-black px-3 py-3 text-white" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
-            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href={`/report/${client.id}`}><ArrowUpRight className="h-4 w-4" /> Full report</Link>
             <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Call-flow settings</Link>
           </nav>
           <div className="mt-auto border-2 border-black bg-white p-4"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p><p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p><a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href={contactHref}>Email support <ChevronRight className="h-3 w-3" /></a></div>
