@@ -20,7 +20,7 @@ import { contactEmail } from "@/lib/contact";
 
 const bookingHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
-  "https://calendly.com/hello-raleighaiguy/lead-recovery-fit-call";
+  "https://calendly.com/hello-raleighaiguy/raleigh-lead-recovery-pilot-setup";
 
 export const metadata: Metadata = {
   title: "Raleigh Lead Recovery Answers Every Call",
@@ -203,22 +203,22 @@ export default function HomePage() {
       <section className="receptionist-pricing page-shell" id="pricing">
         <div className="receptionist-section-heading">
           <p className="eyebrow">Simple monthly plans</p>
-          <h2>One caught job can cover the month.</h2>
-          <p>Start with missed calls. Add lead recovery when you&apos;re ready to work the demand already sitting in your CRM.</p>
+          <h2>One replacement—or a few recovered service calls—can cover the month.</h2>
+          <p>Start with missed calls. Add lead recovery when you&apos;re ready. Your monthly usage is agreed before launch, with no automatic overages.</p>
         </div>
         <div className="receptionist-pricing-grid">
           <article>
             <p className="eyebrow">Never miss a call</p>
             <h3>24/7 Call Coverage</h3>
             <strong><span>$497</span> / month</strong>
-            <ul>{["Answers every call", "Business-specific knowledge", "Lead qualification", "Appointment scheduling", "Call transfers", "Call summaries", "SMS follow-up", "Dashboard"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
+            <ul>{["24/7 coverage for your agreed call volume", "Guided setup and a dedicated number", "Business-specific knowledge", "Lead qualification", "Appointment requests using approved rules", "Call transfers and summaries", "SMS follow-up", "No automatic overages"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
             <Link className="button button-dark" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
           <article className="featured">
             <p className="eyebrow">Answer + grow</p>
             <h3>Call Coverage + Lead Recovery</h3>
             <strong><span>$997</span> / month</strong>
-            <ul>{["Everything in Call Coverage", "Calls missed leads", "Calls old estimates", "Re-engages dormant customers", "Books appointments", "Campaign reporting"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
+            <ul>{["Everything in Call Coverage", "A monthly reactivation list agreed before launch", "Calls missed leads and old estimates", "Re-engages dormant customers", "Appointment requests using approved rules", "Campaign reporting and call review", "No automatic overages"].map((item) => <li key={item}><Check aria-hidden="true" /> {item}</li>)}</ul>
             <Link className="button button-light" href="/signup">Start free <ArrowRight aria-hidden="true" /></Link>
           </article>
           <article>

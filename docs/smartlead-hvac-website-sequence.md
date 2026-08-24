@@ -8,11 +8,13 @@ Get an HVAC owner or operator to hear Raleigh Lead Recovery handle a live HVAC c
 
 - Campaign: `HVAC | Tune-Up Reactivation | Pilot 01`
 - Send as plain text from Danny Sullivan.
+- Disable open tracking and retain click tracking so the campaign measures the
+  demo action without adding an open-tracking pixel.
 - Keep all four messages in the original thread.
 - Stop the sequence immediately on any reply.
 - Preserve the current first-email subject exactly: `tune-up calls at {{company_name}}`
 - Leave the three follow-up subjects blank so they remain in the same thread.
-- Use one direct URL in each message: `https://www.raleighleadrecovery.com/demo`
+- Use one direct URL in each message: `https://www.raleighleadrecovery.com/hvac#live-demo`
 - Send 10 new leads per weekday while deliverability and replies are still being established.
 - Send Monday through Friday in the campaign's Eastern-time window.
 - Import only relevant, verified HVAC contacts.
@@ -31,11 +33,9 @@ Raleigh Lead Recovery follows up with HVAC customers, answers questions using th
 
 You can hear the live HVAC call here:
 
-https://www.raleighleadrecovery.com/demo
+https://www.raleighleadrecovery.com/hvac#live-demo
 
 Worth a listen?
-
-Danny
 
 ## Email 2 — Day 3
 
@@ -45,11 +45,9 @@ The live demo shows how Raleigh Lead Recovery handles a real HVAC conversation�
 
 Hear it here:
 
-https://www.raleighleadrecovery.com/demo
+https://www.raleighleadrecovery.com/hvac#live-demo
 
 Would this be useful for {{company_name}}?
-
-Danny
 
 ## Email 3 — Day 7
 
@@ -59,11 +57,9 @@ Recent calls, appointments, holds, and opt-outs can stop outreach. Interested ho
 
 See how the call feels:
 
-https://www.raleighleadrecovery.com/demo
+https://www.raleighleadrecovery.com/hvac#live-demo
 
 Would you trust this with a small, approved list?
-
-Danny
 
 ## Email 4 — Day 13
 
@@ -71,11 +67,9 @@ I’ll close the loop after this.
 
 If old estimates or past customers are sitting untouched, the live HVAC demo takes about a minute:
 
-https://www.raleighleadrecovery.com/demo
+https://www.raleighleadrecovery.com/hvac#live-demo
 
 If it feels useful, you can start free from the site. Either way, I’ll leave it there.
-
-Danny
 
 ## Why the sequence is structured this way
 
@@ -83,6 +77,8 @@ Danny
 - Email 2 makes the human-support positioning explicit.
 - Email 3 explains the approved rules, safeguards, and handoff.
 - Email 4 honors the close while pointing to self-serve signup.
+- The mailbox-level signature supplies the sender name, company, postal address,
+  and opt-out language without duplicating a manual `Danny` signoff.
 - The strong subject remains unchanged; the body now matches the single live browser demo and current Raleigh Lead Recovery brand.
 
 ## Current rollout

@@ -41,6 +41,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const search = (await searchParams) ?? {};
   const welcome = search.welcome === "1";
   const guidedWelcome = search.welcome === "guided";
+  const bookingHref = "https://calendly.com/hello-raleighaiguy/raleigh-lead-recovery-pilot-setup";
   const newLeads = calls.filter((call) => (call.lead_status ?? "new") === "new" && call.lead_type !== "spam").length;
   const contacted = calls.filter((call) => call.lead_status === "contacted").length;
   const booked = calls.filter((call) => call.lead_status === "booked");
@@ -82,8 +83,27 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </aside>
 
         <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">
-          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building both call flows and getting your number ready now.</p></div> : null}
-          {guidedWelcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Guided setup requested</p><p className="mt-2 text-xl font-black">Your business profile is saved. Danny will help tailor the call flow before it goes live.</p></div> : null}
+          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building both call flows and getting your number ready now.</p><p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/70">Next step: book a quick pilot setup with Danny. He’ll review your 25-contact list, confirm calling rules, and help you choose the first recovery campaign.</p><a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a></div> : null}
+          {guidedWelcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Guided setup requested</p><p className="mt-2 text-xl font-black">Your business profile is saved. Danny will help tailor the call flow before it goes live.</p><p className="mt-3 text-sm font-semibold leading-6 text-white/70">Book your pilot setup so we can review your first 25 contacts and confirm the campaign is ready.</p><a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a></div> : null}
+
+          <section className="mb-7 border-2 border-black bg-white p-5 sm:p-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Your first pilot</p>
+                <h2 className="mt-2 text-xl font-black">Three steps to get your first recovery campaign live.</h2>
+                <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-black/55">Start with 25 old leads. We’ll check the list, confirm the calling rules, and help you review the first results before scaling.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-black text-white" href="/dashboard/reactivation">Send 25 contacts <ChevronRight className="h-4 w-4" /></Link>
+                <a className="inline-flex h-11 items-center gap-2 border-2 border-black px-4 text-sm font-black" href={bookingHref} target="_blank" rel="noreferrer">Book setup call <ArrowUpRight className="h-4 w-4" /></a>
+              </div>
+            </div>
+            <div className="mt-5 grid gap-3 border-t-2 border-black pt-5 sm:grid-cols-3">
+              <PilotStep number="01" title="Import" detail="Upload a CSV with up to 25 prior leads." />
+              <PilotStep number="02" title="Review" detail="We verify eligibility, suppression, and timing." />
+              <PilotStep number="03" title="Recover" detail="Launch carefully and watch the outcomes together." />
+            </div>
+          </section>
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
@@ -114,6 +134,10 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       </div>
     </main>
   );
+}
+
+function PilotStep({ number, title, detail }: { number: string; title: string; detail: string }) {
+  return <div className="flex gap-3"><span className="font-mono text-[10px] font-black text-black/45">{number}</span><div><p className="text-sm font-black">{title}</p><p className="mt-1 text-xs font-semibold leading-5 text-black/50">{detail}</p></div></div>;
 }
 
 function LeadCard({ call }: { call: ReturnType<typeof buildReportModel>["calls"][number] }) {

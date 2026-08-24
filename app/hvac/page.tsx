@@ -8,12 +8,10 @@ import {
   Check,
   ClipboardCheck,
   Database,
-  Gauge,
   PhoneCall,
   ShieldCheck,
   Snowflake,
   Sun,
-  Wrench,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
@@ -57,13 +55,8 @@ export default function HvacLandingPage() {
     <main className="landing-page hvac-page">
       <PublicSiteNav
         variant="hvac"
-        items={[
-          { href: "#workflow", label: "How it works" },
-          { href: "#live-demo", label: "Try it now" },
-          { href: "/lead-recovery", label: "Lead recovery" },
-          { href: "/login", label: "Sign in" },
-        ]}
-        cta={{ href: "/signup", label: "Start free" }}
+        items={[]}
+        cta={{ href: "/signup", label: "Start free pilot" }}
       />
 
       <section className="page-shell hvac-hero">
@@ -72,10 +65,10 @@ export default function HvacLandingPage() {
           <h1>Your customer list is full of <em>tune-ups</em> waiting to happen.</h1>
           <p className="hvac-hero-lede">Raleigh Lead Recovery calls eligible past HVAC customers who may be due for seasonal maintenance, then hands interested homeowners back to your team.</p>
           <div className="hvac-hero-actions">
-            <a className="hvac-button hvac-button-accent" href="#live-demo">Hear the HVAC call <PhoneCall aria-hidden="true" /></a>
-            <Link className="hvac-text-link" href="/signup">Start with 25 contacts <ArrowRight aria-hidden="true" /></Link>
+            <Link className="hvac-button hvac-button-accent" href="/signup">Start free 25-contact pilot <ArrowRight aria-hidden="true" /></Link>
+            <a className="hvac-text-link" href="#live-demo">Hear the live call <PhoneCall aria-hidden="true" /></a>
           </div>
-          <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Approved lists, calling windows, disclosures, and opt-out controls come first.</p>
+          <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Free pilot · no CRM access required · approved lists, calling windows, disclosures, and opt-out controls come first.</p>
         </div>
 
         <div className="hvac-service-ticket" aria-label="Example HVAC tune-up campaign workflow">
@@ -95,26 +88,7 @@ export default function HvacLandingPage() {
           <div className="hvac-call-strip"><span className="hvac-pulse" /><div><span>RALEIGH LEAD RECOVERY IS CALLING</span><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
           <div className="hvac-ticket-result"><Check aria-hidden="true" /><div><span>INTEREST DETECTED</span><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
         </div>
-        <a className="hvac-scroll-cue" href="#problem" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
-      </section>
-
-      <section className="hvac-marquee" aria-label="Common HVAC reactivation segments">
-        <div><span>PAST CUSTOMERS</span><Wrench aria-hidden="true" /><span>SPRING TUNE-UPS</span><Wrench aria-hidden="true" /><span>MAINTENANCE DUE</span><Wrench aria-hidden="true" /><span>FALL TUNE-UPS</span><Wrench aria-hidden="true" /></div>
-      </section>
-
-      <section className="page-shell hvac-problem" id="problem">
-        <div className="hvac-section-number">01</div>
-        <div className="hvac-problem-copy">
-          <p className="eyebrow">The list you already paid for</p>
-          <h2>Don&apos;t wait for the weather to create your next call.</h2>
-          <p>Busy-season demand hides a quieter problem: past customers drift out of the maintenance rhythm, service history gets buried, and good records sit untouched because the team has more urgent work.</p>
-        </div>
-        <div className="hvac-gauge-card">
-          <Gauge aria-hidden="true" />
-          <span>PIPELINE PRESSURE</span>
-          <strong>LOW?</strong>
-          <p>Give the eligible list a useful reason to talk now: a timely tune-up conversation.</p>
-        </div>
+      <a className="hvac-scroll-cue" href="#live-demo" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
       </section>
 
       <section className="hvac-workflow" id="workflow">
@@ -132,25 +106,6 @@ export default function HvacLandingPage() {
         </div>
       </section>
 
-      <section className="page-shell hvac-outcome">
-        <div className="hvac-outcome-copy">
-          <div className="hvac-section-number">03</div>
-          <p className="eyebrow">Not a robocall blast</p>
-          <h2>See every call. Send your team the live opportunities.</h2>
-          <p>Every record has a status. Every call has an outcome. Interested homeowners rise to the top, while opt-outs and closed records stay suppressed.</p>
-          <ul>
-            <li><Check aria-hidden="true" /> Attempts, answers, and dispositions</li>
-            <li><Check aria-hidden="true" /> Call summaries, recordings, and transcripts</li>
-            <li><Check aria-hidden="true" /> Interested contacts and requested timing</li>
-            <li><Check aria-hidden="true" /> Booked work and estimated pipeline</li>
-          </ul>
-        </div>
-        <figure className="hvac-dashboard-frame">
-          <div><span>RALEIGH LEAD RECOVERY / HVAC CAMPAIGN</span><span>LIVE VIEW</span></div>
-          <Image src="/lead-recovery-dashboard-preview.png" alt="Lead recovery dashboard showing campaign attempts, interested contacts, booked appointments, and recovered pipeline" width={1407} height={1118} sizes="(max-width: 900px) calc(100vw - 40px), 620px" />
-          <figcaption>Illustrative dashboard data. Results depend on list quality, eligibility, timing, and offer.</figcaption>
-        </figure>
-      </section>
 
       <div className="hvac-demo-wrap" id="live-demo">
         <div className="page-shell hvac-single-demo">
