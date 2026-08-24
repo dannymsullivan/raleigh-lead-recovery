@@ -4599,8 +4599,8 @@ details > summary {
   grid-template-columns: minmax(0, 1fr) minmax(440px, 1fr);
   gap: clamp(52px, 6vw, 82px);
   align-items: center;
-  min-height: 700px;
-  padding-block: 68px 88px;
+  min-height: 620px;
+  padding-block: 48px 64px;
 }
 
 .hvac-kicker {
@@ -4617,9 +4617,9 @@ details > summary {
 }
 
 .hvac-hero h1 {
-  max-width: 720px;
-  margin-bottom: 27px;
-  font-size: clamp(4.15rem, 6.25vw, 6.35rem);
+  max-width: 650px;
+  margin-bottom: 21px;
+  font-size: clamp(3.6rem, 5.1vw, 5.2rem);
   letter-spacing: -.072em;
   line-height: .88;
 }
