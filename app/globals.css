@@ -4560,6 +4560,27 @@ details > summary {
   background: var(--hvac-lime);
 }
 
+.hvac-demo-trigger {
+  display: inline-flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 13px;
+  border: 2px solid var(--hvac-ink);
+  padding: 9px 16px 9px 10px;
+  color: inherit;
+  text-decoration: none;
+  background: white;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.hvac-demo-trigger:hover { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--hvac-ink); }
+.hvac-demo-trigger-icon { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 999px; background: var(--hvac-lime); animation: hvac-pulse 1.8s ease-in-out infinite; }
+.hvac-demo-trigger-icon svg { width: 23px; height: 23px; }
+.hvac-demo-trigger strong, .hvac-demo-trigger small { display: block; }
+.hvac-demo-trigger strong { font-size: .78rem; font-weight: 950; text-transform: uppercase; }
+.hvac-demo-trigger small { margin-top: 3px; font-size: .7rem; font-weight: 700; color: color-mix(in srgb, var(--hvac-ink) 58%, transparent); }
+@keyframes hvac-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--hvac-lime) 70%, transparent); } 50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--hvac-lime) 0%, transparent); } }
+
 .hvac-text-link {
   display: inline-flex;
   align-items: center;

@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Snowflake,
   Sun,
+  Volume2,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
@@ -65,8 +66,11 @@ export default function HvacLandingPage() {
           <h1>Your customer list is full of <em>tune-ups</em> waiting to happen.</h1>
           <p className="hvac-hero-lede">Raleigh Lead Recovery calls eligible past HVAC customers who may be due for seasonal maintenance, then hands interested homeowners back to your team.</p>
           <div className="hvac-hero-actions">
-            <Link className="hvac-button hvac-button-accent" href="/signup">Start free 25-contact pilot <ArrowRight aria-hidden="true" /></Link>
-            <a className="hvac-text-link" href="#live-demo">Hear the live call <PhoneCall aria-hidden="true" /></a>
+            <a className="hvac-demo-trigger" href="#live-demo" aria-label="Listen to the live HVAC demo">
+              <span className="hvac-demo-trigger-icon"><Volume2 aria-hidden="true" /></span>
+              <span><strong>Listen to the 45-second example</strong><small>Hear the tune-up follow-up live</small></span>
+            </a>
+            <Link className="hvac-button hvac-button-accent" href="/signup">Start with 25 contacts <ArrowRight aria-hidden="true" /></Link>
           </div>
           <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Free pilot · no CRM access required · approved lists, calling windows, disclosures, and opt-out controls come first.</p>
         </div>
