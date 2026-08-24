@@ -3,11 +3,11 @@ import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
-  Check,
   ShieldCheck,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
+import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
@@ -34,32 +34,34 @@ export default function HvacLandingPage() {
 
       <section className="page-shell hvac-hero">
         <div className="hvac-hero-copy">
-          <p className="hvac-kicker"><span>HVAC REACTIVATION SYSTEM</span><span>RALEIGH, NC</span></p>
-          <h1>Your customer list is full of <em>tune-ups</em> waiting to happen.</h1>
+          <p className="hvac-kicker"><span>HVAC FOLLOW-UP</span><span>RALEIGH, NC</span></p>
+          <h1>Hear how old HVAC leads become <em>tune-up calls.</em></h1>
+          <p className="hvac-hero-lede">Press play. You play the homeowner. The follow-up happens live in your browser.</p>
           <div className="hvac-hero-actions">
-            <Link className="hvac-button hvac-button-accent" href="/signup">Start with 25 contacts <ArrowRight aria-hidden="true" /></Link>
-            <a className="hvac-text-link" href={`mailto:${contactEmail}`}>Contact Danny <ArrowRight aria-hidden="true" /></a>
+            <a className="hvac-text-link" href="#listen">Jump to the live call <ArrowDown aria-hidden="true" /></a>
           </div>
-          <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Free pilot · no CRM access required · approved lists, calling windows, disclosures, and opt-out controls come first.</p>
         </div>
+      </section>
 
-      <a className="hvac-scroll-cue" href="#pilot" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
+      <section className="hvac-demo-wrap" id="listen">
+        <div className="page-shell hvac-single-demo">
+          <div className="hvac-demo-copy">
+            <p className="eyebrow"><span /> Live browser demo</p>
+            <h2>Try the call.</h2>
+            <p>Answer naturally and hear what a tune-up follow-up sounds like.</p>
+          </div>
+          <div className="hvac-demo-console">
+            <div className="hvac-demo-console-top"><span>LIVE SCENARIO</span><strong>SEASONAL TUNE-UP</strong></div>
+            <div className="hvac-demo-prompt"><span>YOU PLAY THE CUSTOMER</span><strong>Press “Try it now” and start talking.</strong></div>
+            <WebVoiceDemo mode="reactivation" />
+          </div>
+        </div>
       </section>
 
       <section className="hvac-pilot" id="pilot">
         <div className="page-shell hvac-pilot-grid">
-          <div>
-            <p className="eyebrow">Free 25-contact pilot</p>
-            <h2>Start with 25. Scale what works.</h2>
-            <p>Consistent tune-up follow-up for an approved list, with interested homeowners handed back to your team.</p>
-          </div>
-          <div className="hvac-pilot-card">
-            <div className="hvac-pilot-stamp">PILOT</div>
-            <p>INITIAL RUN</p>
-            <strong>25</strong><span>eligible contacts</span>
-            <ul><li><Check /> 14 days to test</li><li><Check /> $0 setup fee</li><li><Check /> Call review before scaling</li></ul>
-            <Link className="hvac-button hvac-button-dark" href="/signup">Start free <ArrowRight /></Link>
-          </div>
+          <div><p className="eyebrow">Want this for your list?</p><h2>Start with 25 contacts free.</h2><p><ShieldCheck aria-hidden="true" /> Approved list. Consistent follow-up. Interested homeowners handed back to your team.</p></div>
+          <div className="hvac-pilot-card"><Link className="hvac-button hvac-button-dark" href="/signup">Start free <ArrowRight /></Link><a className="hvac-text-link" href={`mailto:${contactEmail}`}>Contact Danny <ArrowRight /></a></div>
         </div>
       </section>
 
