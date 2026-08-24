@@ -47,7 +47,7 @@ export function AuthShell({
   );
 }
 
-export function AuthField({ label, name, type = "text", placeholder, autoComplete, required = true }: { label: string; name: string; type?: string; placeholder?: string; autoComplete?: string; required?: boolean }) {
+export function AuthField({ label, name, type = "text", placeholder, autoComplete, inputMode, required = true }: { label: string; name: string; type?: string; placeholder?: string; autoComplete?: string; inputMode?: "numeric" | "text" | "tel"; required?: boolean }) {
   return (
     <label className="block text-sm font-extrabold">
       {label}
@@ -57,6 +57,7 @@ export function AuthField({ label, name, type = "text", placeholder, autoComplet
         type={type}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        inputMode={inputMode}
         required={required}
       />
     </label>

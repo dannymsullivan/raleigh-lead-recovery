@@ -11,7 +11,7 @@ import { isGuidedIndustry, isIndustryKey, selectedTrade } from "@/lib/industry-p
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
 import { ensureDefaultCustomerAgent, provisionCustomerAgents } from "@/lib/customer-agent-provisioning";
-import { pendingEmailCookie, pendingInvitationCookie, pendingModeCookie } from "@/lib/auth-email";
+import { pendingEmailCookie, pendingInvitationCookie, pendingModeCookie, pendingOwnerNameCookie, pendingPhoneCookie } from "@/lib/auth-email";
 
 function value(formData: FormData, key: string): string {
   const entry = formData.get(key);
@@ -104,6 +104,47 @@ export async function requestLoginLinkAction(formData: FormData): Promise<void> 
   if (error) redirect("/login?error=email");
   await rememberPendingEmail(email, "login");
   redirect("/check-email");
+}
+
+export async function requestPhoneOtpAction(formData: FormData): Promise<void> {
+  const phone = normalizePhoneNumber(value(formData, "phone"));
+  const mode = value(formData, "mode") === "signup" ? "signup" : "login";
+  const ownerName = value(formData, "owner_name");
+  if (!isSupabaseAuthConfigured() || !phone || (mode === "signup" && !ownerName)) redirect(`/${mode === "signup" ? "signup" : "login"}?error=phone`);
+  const supabase = await getSupabaseAuth();
+  const { error } = await supabase.auth.signInWithOtp({ phone, options: { shouldCreateUser: mode === "signup", data: mode === "signup" ? { owner_name: ownerName } : undefined } });
+  if (error) redirect(`/${mode === "signup" ? "signup" : "login"}?error=sms`);
+  const cookieStore = await cookies();
+  const options = { httpOnly: true, maxAge: 10 * 60, path: "/", sameSite: "lax" as const, secure: process.env.NODE_ENV === "production" };
+  cookieStore.set(pendingPhoneCookie, phone, options);
+  cookieStore.set(pendingModeCookie, mode, options);
+  if (mode === "signup") cookieStore.set(pendingOwnerNameCookie, ownerName, options);
+  redirect("/verify-phone");
+}
+
+export async function verifyPhoneOtpAction(formData: FormData): Promise<void> {
+  const token = value(formData, "token");
+  const cookieStore = await cookies();
+  const phone = cookieStore.get(pendingPhoneCookie)?.value;
+  const mode = cookieStore.get(pendingModeCookie)?.value;
+  const ownerName = cookieStore.get(pendingOwnerNameCookie)?.value || "";
+  if (!phone || !/^[0-9]{6}$/.test(token) || (mode !== "login" && mode !== "signup")) redirect("/login?error=expired");
+  const supabase = await getSupabaseAuth();
+  const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
+  if (error || !data.user) redirect("/verify-phone?error=invalid");
+  const admin = getSupabaseAdmin();
+  if (mode === "login") {
+    const { data: client } = await admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle();
+    if (!client) { await supabase.auth.signOut(); redirect("/login?error=account"); }
+    cookieStore.delete(pendingPhoneCookie); cookieStore.delete(pendingModeCookie); cookieStore.delete(pendingOwnerNameCookie);
+    redirect("/dashboard");
+  }
+  const today = new Date();
+  const pilotEnd = new Date(today); pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 14);
+  const { error: clientError } = await admin.from("clients").upsert({ user_id: data.user.id, business_name: `${ownerName} workspace`, trade: "service business", owner_name: ownerName, owner_phone: phone, pilot_start: today.toISOString().slice(0, 10), pilot_end: pilotEnd.toISOString().slice(0, 10), account_status: "onboarding" }, { onConflict: "user_id" });
+  if (clientError) redirect("/signup?error=workspace");
+  cookieStore.delete(pendingPhoneCookie); cookieStore.delete(pendingModeCookie); cookieStore.delete(pendingOwnerNameCookie);
+  redirect("/onboarding");
 }
 
 export async function completeOnboardingAction(formData: FormData): Promise<void> {

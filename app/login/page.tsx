@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { requestLoginLinkAction } from "../auth-actions";
+import { requestPhoneOtpAction } from "../auth-actions";
 import { AuthField, AuthShell } from "../components/auth-card";
 
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
@@ -11,11 +11,12 @@ export default async function LoginPage({ searchParams }: PageProps) {
 
   return (
     <AuthShell eyebrow="Welcome back" title="Open your customer dashboard." description="Sign in to see conversations, qualified leads, and the next steps your agents captured for the team.">
-      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : error === "email" ? "We could not email that address. Check it or create an account first." : error === "invitation" ? "That customer access link is invalid or expired. Ask for a fresh link." : error === "expired" ? "That sign-in link is invalid or expired. Request a new one." : "We could not sign you in."}</p> : null}
-      <form action={requestLoginLinkAction} className="grid gap-5">
-        <AuthField label="Email address" name="email" type="email" placeholder="you@business.com" autoComplete="email" />
+      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : error === "phone" ? "Enter a valid mobile phone number." : error === "sms" ? "We could not send a text to that number. Try again." : error === "account" ? "No customer workspace is connected to that phone yet." : error === "expired" ? "That code expired. Request a new one." : error === "invitation" ? "That customer access link is invalid or expired." : "We could not sign you in."}</p> : null}
+      <form action={requestPhoneOtpAction} className="grid gap-5">
+        <AuthField label="Mobile phone" name="phone" type="tel" placeholder="(919) 555-0123" autoComplete="tel" />
+        <input type="hidden" name="mode" value="login" />
         <button className="mt-2 inline-flex h-14 items-center justify-center gap-2 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-0.5" type="submit">
-          Email me a sign-in link <ArrowRight className="h-4 w-4" />
+          Text me a sign-in code <ArrowRight className="h-4 w-4" />
         </button>
       </form>
       <div className="mt-6 border-2 border-black bg-[#d8ff57] p-4">

@@ -4,7 +4,7 @@ import { Bot, PhoneCall, Settings2, Sparkles } from "lucide-react";
 
 export function DashboardSidebar({ active }: { active: "board" | "reactivation" | "agents" | "settings" }) {
   const item = (key: typeof active, href: string, label: string, icon: ReactNode) => (
-    <Link className={`flex items-center gap-3 px-3 py-3 text-sm font-extrabold ${active === key ? "bg-black text-white" : "hover:bg-black/5"}`} href={href}>{icon}{label}</Link>
+    <Link className={`flex items-center gap-3 px-3 py-3 text-sm font-extrabold ${active === key ? "bg-[#d8ff57] text-black" : "hover:bg-black/5"}`} href={href}>{icon}{label}</Link>
   );
   return <aside className="hidden min-h-[calc(100vh-82px)] border-r-2 border-black p-5 lg:block">
     <nav className="grid gap-1" aria-label="Dashboard navigation">
