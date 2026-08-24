@@ -10,8 +10,6 @@ import {
   Database,
   PhoneCall,
   ShieldCheck,
-  Snowflake,
-  Sun,
   Volume2,
 } from "lucide-react";
 import { BrandMark } from "../components/brand-mark";
@@ -75,23 +73,13 @@ export default function HvacLandingPage() {
           <p className="hvac-fine-print"><ShieldCheck aria-hidden="true" /> Free pilot · no CRM access required · approved lists, calling windows, disclosures, and opt-out controls come first.</p>
         </div>
 
-        <div className="hvac-service-ticket" aria-label="Example HVAC tune-up campaign workflow">
-          <div className="hvac-ticket-top">
-            <span>WORK ORDER</span><strong>#RLR-01</strong><span className="hvac-ticket-status">READY</span>
-          </div>
-          <div className="hvac-thermostat">
-            <div className="hvac-dial"><Snowflake aria-hidden="true" /><strong>72°</strong><Sun aria-hidden="true" /></div>
-            <div><span>CAMPAIGN MODE</span><strong>SEASONAL TUNE-UP</strong></div>
-          </div>
-          <div className="hvac-ticket-grid">
-            <div><span>SEGMENT</span><strong>Past customers</strong></div>
-            <div><span>OFFER</span><strong>Maintenance visit</strong></div>
-            <div><span>HANDOFF</span><strong>Owner alert + booking</strong></div>
-            <div><span>SOURCE</span><strong>Your CRM / CSV</strong></div>
-          </div>
-          <div className="hvac-call-strip"><span className="hvac-pulse" /><div><span>RALEIGH LEAD RECOVERY IS CALLING</span><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
-          <div className="hvac-ticket-result"><Check aria-hidden="true" /><div><span>INTEREST DETECTED</span><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
-        </div>
+        <a className="hvac-hero-listen-card" href="#live-demo" aria-label="Press to listen to the HVAC tune-up demo">
+          <span className="hvac-hero-listen-ring"><Volume2 aria-hidden="true" /></span>
+          <span className="hvac-hero-listen-label">LIVE HVAC DEMO</span>
+          <strong>Press to hear the follow-up call.</strong>
+          <span>See how an old tune-up inquiry becomes a real conversation—without adding work for your team.</span>
+          <span className="hvac-hero-listen-action">Listen now <ArrowRight aria-hidden="true" /></span>
+        </a>
       <a className="hvac-scroll-cue" href="#live-demo" aria-label="Continue to learn more"><ArrowDown aria-hidden="true" /></a>
       </section>
 
