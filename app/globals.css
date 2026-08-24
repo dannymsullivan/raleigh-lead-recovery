@@ -4652,6 +4652,26 @@ details > summary {
   transform: rotate(-1.5deg);
 }
 
+.hvac-hero-illustration { display: grid; align-self: center; border: 2px solid var(--hvac-ink); background: #fff; box-shadow: 12px 12px 0 rgb(196 208 180); }
+.hvac-illustration-top, .hvac-illustration-main, .hvac-illustration-grid, .hvac-illustration-call, .hvac-illustration-result { display: flex; }
+.hvac-illustration-top { justify-content: space-between; border-bottom: 1px solid var(--hvac-ink); padding: 18px 22px; font: 900 .62rem/1 ui-monospace, monospace; letter-spacing: .14em; }
+.hvac-illustration-top strong { background: var(--hvac-lime); padding: 9px 12px; letter-spacing: .08em; }
+.hvac-illustration-main { align-items: center; gap: 28px; border-bottom: 1px solid var(--hvac-ink); padding: 30px 28px; }
+.hvac-illustration-dial { display: grid; width: 118px; height: 118px; place-items: center; border: 3px solid var(--hvac-ink); border-radius: 50%; box-shadow: inset 0 0 0 14px #e7f8fd; font: 900 2rem/1 ui-monospace, monospace; }
+.hvac-illustration-main small, .hvac-illustration-grid small, .hvac-illustration-call small, .hvac-illustration-result small { display: block; color: #73786e; font: 900 .55rem/1.2 ui-monospace, monospace; letter-spacing: .14em; }
+.hvac-illustration-main h2 { margin-top: 12px; font-size: 1.25rem; line-height: 1.05; }
+.hvac-illustration-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.hvac-illustration-grid > div { display: grid; gap: 10px; border-bottom: 1px solid #c9cbc2; padding: 22px; }
+.hvac-illustration-grid > div:nth-child(odd) { border-right: 1px solid #c9cbc2; }
+.hvac-illustration-grid strong { font-size: .82rem; }
+.hvac-illustration-call { align-items: center; gap: 14px; background: #10130f; padding: 22px; color: white; }
+.hvac-illustration-call > span { color: var(--hvac-lime); font-size: 1.5rem; }
+.hvac-illustration-call strong { display: block; margin-top: 10px; font-size: .8rem; }
+.hvac-illustration-result { align-items: center; gap: 14px; background: var(--hvac-lime); padding: 18px 22px; }
+.hvac-illustration-result > span { display: grid; width: 30px; height: 30px; place-items: center; border: 2px solid var(--hvac-ink); border-radius: 50%; background: white; font-weight: 900; }
+.hvac-illustration-result strong { display: block; margin-top: 8px; font-size: .8rem; }
+.hvac-illustration-result svg { margin-left: auto; }
+
 .hvac-hero-lede {
   max-width: 650px;
   margin-bottom: 34px;

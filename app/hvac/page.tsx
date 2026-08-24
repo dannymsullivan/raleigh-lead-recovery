@@ -41,6 +41,13 @@ export default function HvacLandingPage() {
             <a className="hvac-text-link" href="#listen">Jump to the live call <ArrowDown aria-hidden="true" /></a>
           </div>
         </div>
+        <div className="hvac-hero-illustration" aria-label="Seasonal tune-up follow-up illustration">
+          <div className="hvac-illustration-top"><span>WORK ORDER</span><strong>READY</strong></div>
+          <div className="hvac-illustration-main"><div className="hvac-illustration-dial">72°</div><div><small>CAMPAIGN MODE</small><h2>SEASONAL<br />TUNE-UP</h2></div></div>
+          <div className="hvac-illustration-grid"><div><small>SEGMENT</small><strong>Past customers</strong></div><div><small>OFFER</small><strong>Maintenance visit</strong></div><div><small>HANDOFF</small><strong>Owner alert + booking</strong></div><div><small>SOURCE</small><strong>Your CRM / CSV</strong></div></div>
+          <div className="hvac-illustration-call"><span>●</span><div><small>RALEIGH LEAD RECOVERY IS CALLING</small><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
+          <div className="hvac-illustration-result"><span>✓</span><div><small>INTEREST DETECTED</small><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
+        </div>
       </section>
 
       <section className="hvac-demo-wrap" id="listen">
