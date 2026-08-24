@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { BrandMark } from "@/app/components/brand-mark";
+import { DashboardSidebar } from "../dashboard-sidebar";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { customerAgentReady } from "@/lib/customer-agent-config";
@@ -302,7 +303,9 @@ export default async function ReactivationDashboardPage({
           </div>
         </div>
       </header>
-      <div className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 sm:py-11">
+      <div className="mx-auto grid max-w-[1500px] lg:grid-cols-[230px_1fr]">
+        <DashboardSidebar active="reactivation" />
+        <div className="min-w-0 px-5 py-8 sm:px-8 sm:py-11">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">
@@ -604,6 +607,7 @@ export default async function ReactivationDashboardPage({
             </section>
           </>
         )}
+        </div>
       </div>
     </main>
   );

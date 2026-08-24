@@ -5282,6 +5282,12 @@ details > summary {
   -webkit-font-smoothing: antialiased;
 }
 
+.product-ui input,
+.product-ui textarea,
+.product-ui select {
+  font-weight: 500;
+}
+
 .product-ui header,
 .product-ui nav { border-color: var(--product-line-strong); }
 .product-ui .border-2 { border-width: 1px; }
