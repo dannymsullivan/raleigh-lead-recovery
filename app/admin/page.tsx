@@ -252,7 +252,7 @@ function AdminTab({ href, active, icon, children }: { href: string; active: bool
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`inline-flex min-h-11 items-center gap-2 border-x-2 border-t-2 px-4 text-sm font-black transition-[background-color,color] duration-150 active:scale-[0.97] ${active ? "border-black bg-black text-white" : "border-transparent text-black/50 hover:border-black/20 hover:bg-black/5 hover:text-black"}`}
+      className={`inline-flex min-h-11 items-center gap-2 border-x-2 border-t-2 px-4 text-sm font-black transition-[background-color,color] duration-150 active:scale-[0.97] ${active ? "border-black bg-[#d8ff57] text-black" : "border-transparent text-black/50 hover:border-black/20 hover:bg-black/5 hover:text-black"}`}
     >
       {icon}
       {children}
