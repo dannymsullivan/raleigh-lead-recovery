@@ -38,9 +38,14 @@ function sum<T>(items: T[], value: (item: T) => number): number {
   return items.reduce((total, item) => total + value(item), 0);
 }
 
-function getRates(clients: Client[]): RateConfig {
+type RetellNumberRow = { client_id: string; retell_phone_number: string | null; provisioned_phone_number: string | null };
+
+function getRates(clients: Client[], agentNumbers: RetellNumberRow[] = []): RateConfig {
   const configuredCount = Number(process.env.COST_PHONE_NUMBER_COUNT);
-  const liveNumbers = new Set(clients.map((client) => client.provisioned_phone_number).filter(Boolean));
+  const liveNumbers = new Set([
+    ...clients.map((client) => client.provisioned_phone_number),
+    ...agentNumbers.map((agent) => agent.retell_phone_number || agent.provisioned_phone_number),
+  ].filter(Boolean));
   return {
     retellVoicePerMinute: envNumber("COST_RETELL_VOICE_PER_MIN", 0.11),
     retellSmsPerMessage: envNumber("COST_RETELL_SMS_PER_MESSAGE", 0.01),
@@ -50,12 +55,22 @@ function getRates(clients: Client[]): RateConfig {
   };
 }
 
-export function buildCostDashboard(clients: Client[], calls: Call[], now = new Date(), attempts: ReactivationUsage[] = []): CostDashboard {
+export function buildCostDashboard(clients: Client[], calls: Call[], now = new Date(), attempts: ReactivationUsage[] = [], agentNumbers: RetellNumberRow[] = []): CostDashboard {
   const start = monthStart(now);
   const periodCalls = calls.filter((call) => new Date(call.created_at) >= start && new Date(call.created_at) <= now);
   const periodAttempts = attempts.filter((attempt) => new Date(attempt.created_at) >= start && new Date(attempt.created_at) <= now && Boolean(attempt.retell_call_id || attempt.duration_seconds));
   const clientById = new Map(clients.map((client) => [client.id, client]));
-  const rates = getRates(clients);
+  const rates = getRates(clients, agentNumbers);
+  const numbersByClient = new Map<string, Set<string>>();
+  for (const client of clients) {
+    const numbers = new Set<string>();
+    if (client.provisioned_phone_number) numbers.add(client.provisioned_phone_number);
+    numbersByClient.set(client.id, numbers);
+  }
+  for (const agent of agentNumbers) {
+    const number = agent.retell_phone_number || agent.provisioned_phone_number;
+    if (number) numbersByClient.get(agent.client_id)?.add(number);
+  }
   const inboundMinutes = sum(periodCalls, (call) => Math.max(0, call.duration_seconds ?? 0)) / 60;
   const outboundMinutes = sum(periodAttempts, (attempt) => Math.max(0, attempt.duration_seconds ?? 0)) / 60;
   const minutes = inboundMinutes + outboundMinutes;
@@ -77,7 +92,7 @@ export function buildCostDashboard(clients: Client[], calls: Call[], now = new D
   ];
   const estimatedSpend = sum(lines, (line) => line.amount);
   const rows = new Map<string, ClientCostRow>(clients.map((client) => {
-    const numberCost = client.provisioned_phone_number ? rates.phoneNumberMonthly : 0;
+    const numberCost = (numbersByClient.get(client.id)?.size ?? 0) * rates.phoneNumberMonthly;
     return [client.id, { clientId: client.id, businessName: client.business_name, calls: 0, leads: 0, minutes: 0, ownerTextsSent: 0, voiceSpend: 0, messagingSpend: 0, phoneNumberSpend: numberCost, estimatedSpend: numberCost, estimatedPipeline: 0 }];
   }));
   for (const call of periodCalls) {
@@ -117,13 +132,15 @@ export function buildCostDashboard(clients: Client[], calls: Call[], now = new D
 export async function loadCostDashboard(now = new Date()): Promise<CostDashboard> {
   const supabase = getSupabaseAdmin();
   const start = monthStart(now).toISOString();
-  const [{ data: clients, error: clientsError }, { data: calls, error: callsError }, { data: attempts, error: attemptsError }] = await Promise.all([
+  const [{ data: clients, error: clientsError }, { data: calls, error: callsError }, { data: attempts, error: attemptsError }, { data: agentNumbers, error: agentNumbersError }] = await Promise.all([
     supabase.from("clients").select("*"),
     supabase.from("calls").select("*").gte("created_at", start).order("created_at", { ascending: false }),
-    supabase.from("reactivation_attempts").select("client_id,retell_call_id,status,outcome,duration_seconds,owner_alert_sent_at,error,created_at").gte("created_at", start).order("created_at", { ascending: false })
+    supabase.from("reactivation_attempts").select("client_id,retell_call_id,status,outcome,duration_seconds,owner_alert_sent_at,error,created_at").gte("created_at", start).order("created_at", { ascending: false }),
+    supabase.from("customer_agents").select("client_id,retell_phone_number,provisioned_phone_number").not("retell_phone_number", "is", null)
   ]);
   if (clientsError) throw clientsError;
   if (callsError) throw callsError;
   if (attemptsError) throw attemptsError;
-  return buildCostDashboard((clients ?? []) as Client[], (calls ?? []) as Call[], now, (attempts ?? []) as ReactivationUsage[]);
+  if (agentNumbersError) throw agentNumbersError;
+  return buildCostDashboard((clients ?? []) as Client[], (calls ?? []) as Call[], now, (attempts ?? []) as ReactivationUsage[], (agentNumbers ?? []) as RetellNumberRow[]);
 }
