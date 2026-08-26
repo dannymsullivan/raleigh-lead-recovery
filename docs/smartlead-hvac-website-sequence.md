@@ -2,7 +2,7 @@
 
 ## Campaign goal
 
-Get an HVAC owner or operator to hear Raleigh Lead Recovery handle a live HVAC call on the website. The site carries the explanation and free-trial offer; the emails should not ask for a meeting.
+Start a conversation with an HVAC owner or operator who has eligible past customers that are not receiving consistent seasonal-maintenance follow-up. The live browser call supplies proof; Danny personally scopes the first 25-contact pilot. The emails should not ask for a meeting.
 
 ## Campaign settings
 
@@ -14,10 +14,11 @@ Get an HVAC owner or operator to hear Raleigh Lead Recovery handle a live HVAC c
 - Stop the sequence immediately on any reply.
 - Preserve the current first-email subject exactly: `tune-up calls at {{company_name}}`
 - Leave the three follow-up subjects blank so they remain in the same thread.
-- Use one direct URL in each message: `https://www.raleighleadrecovery.com/hvac#live-demo`
+- Use the direct demo URL only where shown: `https://www.raleighleadrecovery.com/hvac#listen`
 - Send 10 new leads per weekday while deliverability and replies are still being established.
 - Send Monday through Friday in the campaign's Eastern-time window.
-- Import only relevant, verified HVAC contacts.
+- Send only to relevant, verified residential HVAC companies that visibly offer tune-ups, maintenance, or service agreements.
+- Prefer an owner, general manager, service manager, or marketing leader who can approve a small customer-reactivation test.
 - Remove bounced, unsubscribed, role-based, and clearly irrelevant contacts.
 - Do not add images, attachments, a Calendly link, or a second CTA.
 
@@ -27,59 +28,55 @@ Subject: `tune-up calls at {{company_name}}`
 
 Hi {{first_name}},
 
-Do you have past customers or old estimates that never got a second call?
+Do past customers ever fall off the maintenance follow-up list at {{company_name}}?
 
-Raleigh Lead Recovery follows up with HVAC customers, answers questions using the rules you approve, and hands interested homeowners back to your team.
+I built a live HVAC call that checks whether a past customer wants a seasonal tune-up and hands interested homeowners back to the team.
 
-You can hear the live HVAC call here:
+You can hear the whole conversation here:
 
-https://www.raleighleadrecovery.com/hvac#live-demo
+https://www.raleighleadrecovery.com/hvac#listen
 
-Worth a listen?
+Worth hearing?
 
 ## Email 2 — Day 3
 
-A lot of HVAC shops already paid to acquire these customers. The list just sits between busy seasons.
+Some of the next tune-up calls may already be sitting in your customer history.
 
-The live demo shows how Raleigh Lead Recovery handles a real HVAC conversation—without replacing your people or making up prices or arrival times.
+The live demo takes about a minute. You play the homeowner, and Raleigh Lead Recovery handles the follow-up without needing CRM access or customer data.
 
-Hear it here:
+Hear the call:
 
-https://www.raleighleadrecovery.com/hvac#live-demo
+https://www.raleighleadrecovery.com/hvac#listen
 
-Would this be useful for {{company_name}}?
+Would you trust the approach with 25 eligible customers?
 
 ## Email 3 — Day 7
 
-The live call is only one part. In a real setup, you decide who is eligible, what Raleigh Lead Recovery can say, and when a human takes over.
+For a real campaign, you choose the 25 eligible customers and approve exactly what Raleigh Lead Recovery can say. I review the setup and first conversations personally.
 
-Recent calls, appointments, holds, and opt-outs can stop outreach. Interested homeowners come back with a clear summary.
+Interested homeowners come back to your team with a clear summary. Opt-outs stop immediately.
 
-See how the call feels:
-
-https://www.raleighleadrecovery.com/hvac#live-demo
-
-Would you trust this with a small, approved list?
+Open to trying that with a small list at {{company_name}}?
 
 ## Email 4 — Day 13
 
 I’ll close the loop after this.
 
-If old estimates or past customers are sitting untouched, the live HVAC demo takes about a minute:
+If seasonal-maintenance customers are sitting untouched, the live HVAC call takes about a minute:
 
-https://www.raleighleadrecovery.com/hvac#live-demo
+https://www.raleighleadrecovery.com/hvac#listen
 
-If it feels useful, you can start free from the site. Either way, I’ll leave it there.
+If it sounds right for your customers, the first 25-contact pilot is free and I’ll help set it up. Either way, I’ll leave it there.
 
 ## Why the sequence is structured this way
 
-- Email 1 names the neglected-list problem and gives one low-friction action.
-- Email 2 makes the human-support positioning explicit.
-- Email 3 explains the approved rules, safeguards, and handoff.
-- Email 4 honors the close while pointing to self-serve signup.
+- Email 1 names one specific neglected-list problem and gives one low-friction action.
+- Email 2 lets the prospect experience the call without sharing data or granting CRM access.
+- Email 3 asks for a reply and makes Danny's personal review, approved rules, and opt-out handling explicit.
+- Email 4 honors the close and states the exact 25-contact pilot offer.
 - The mailbox-level signature supplies the sender name, company, postal address,
   and opt-out language without duplicating a manual `Danny` signoff.
-- The strong subject remains unchanged; the body now matches the single live browser demo and current Raleigh Lead Recovery brand.
+- The strong subject remains unchanged; the body, demo, and pilot now all describe seasonal-maintenance reactivation for past HVAC customers.
 
 ## Current rollout
 
@@ -90,9 +87,10 @@ If it feels useful, you can start free from the site. Either way, I’ll leave i
 
 ## Preflight
 
-- Confirm the demo redirects to the homepage live browser experience.
-- Confirm each message has exactly one website URL.
+- Confirm the direct demo URL lands at the HVAC live browser experience.
+- Confirm emails 1, 2, and 4 have exactly one website URL and email 3 has no URL.
 - Confirm no message names Mabel, Chloe, or an “AI receptionist.”
 - Confirm only the first email has a subject.
 - Confirm stop-on-reply and opt-out handling remain enabled.
+- Confirm every remaining prospect visibly offers tune-ups, maintenance, or service agreements before the message sends.
 - Test-send the complete thread before changing the daily lead limit.
