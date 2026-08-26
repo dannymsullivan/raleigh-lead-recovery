@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: "Hear Raleigh Lead Recovery reconnect with a past HVAC customer about seasonal maintenance, then test it with 25 eligible contacts at no cost.",
   alternates: { canonical: "/hvac" },
   openGraph: {
-    title: "Turn Past HVAC Customers Into Tune-Up Conversations",
+    title: "Turn Past HVAC Customers Into Tune-Up Calls",
     description: "Hear the live follow-up, then test Raleigh Lead Recovery with 25 eligible past customers at no cost.",
     url: "/hvac",
     type: "website",
@@ -35,7 +35,7 @@ export default function HvacLandingPage() {
       <section className="page-shell hvac-hero">
         <div className="hvac-hero-copy">
           <p className="hvac-kicker"><span>SEASONAL MAINTENANCE FOLLOW-UP</span><span>RALEIGH, NC</span></p>
-          <h1>Hear how past HVAC customers become <em>tune-up conversations.</em></h1>
+          <h1>Hear how past HVAC customers become <em>tune-up calls.</em></h1>
           <p className="hvac-hero-lede">Play the homeowner in the exact seasonal-maintenance call. It happens live in your browser.</p>
           <div className="hvac-hero-actions">
             <a className="hvac-text-link" href="#listen">Jump to the live call <ArrowDown aria-hidden="true" /></a>

@@ -4635,9 +4635,11 @@ details > summary {
 
 .hvac-hero h1 em {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
   font-weight: inherit;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .hvac-hero h1 em::after {
