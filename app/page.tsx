@@ -3,18 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BellRing,
   Check,
+  Clock3,
   Headphones,
   MessageSquareText,
-  PhoneCall,
+  Moon,
   PhoneForwarded,
   ShieldCheck,
+  Wrench,
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
 import { PublicSiteNav } from "./components/public-site-nav";
 import { WebVoiceDemo } from "./components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
-import styles from "./home-pilot.module.css";
 
 const bookingHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
@@ -26,370 +28,522 @@ export const metadata: Metadata = {
     "Let Raleigh Lead Recovery answer only the HVAC calls your team misses. Test one controlled evening free, keep your current number, and see every call outcome.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Your Next Missed Call Does Not Have to Become Someone Else’s Job",
+    title: "The Call You Miss Shouldn’t Become Someone Else’s Job",
     description:
-      "One Raleigh HVAC company can test missed-call coverage for a controlled evening at no cost.",
+      "A Raleigh HVAC company can test missed-call coverage for one controlled evening at no cost.",
     url: "/",
     type: "website",
+    images: [
+      {
+        url: "/raleigh-lead-recovery-social.png",
+        width: 1200,
+        height: 630,
+        alt: "Raleigh Lead Recovery missed-call coverage for HVAC companies",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Call You Miss Shouldn’t Become Someone Else’s Job",
+    description:
+      "Test missed-call coverage for one controlled evening at no cost.",
     images: ["/raleigh-lead-recovery-social.png"],
   },
 };
 
-const assurances = [
-  {
-    icon: Headphones,
-    title: "Your team answers first",
-    body: "Calls roll over only after nobody picks up.",
-  },
-  {
-    icon: PhoneCall,
-    title: "Keep your current number",
-    body: "No phone-system replacement or number change.",
-  },
-  {
-    icon: MessageSquareText,
-    title: "See every handled call",
-    body: "Get an immediate summary of what the caller needed.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Turn it off at any time",
-    body: "The test ends when you say it ends.",
-  },
-];
-
-const setupSteps = [
-  {
-    number: "01",
-    title: "Choose one evening",
-    body: "We pick a controlled two-hour window and approve the greeting, questions, and escalation rules before anything goes live.",
-  },
-  {
-    number: "02",
-    title: "Forward only unanswered calls",
-    body: "On a short screen share, we set your existing phone system to forward after about four rings. Your regular number still works normally.",
-  },
-  {
-    number: "03",
-    title: "Work as usual",
-    body: "Your employees keep answering calls. Raleigh Lead Recovery handles only the calls nobody reaches and sends the owner or dispatcher a summary.",
-  },
-  {
-    number: "04",
-    title: "Review every outcome",
-    body: "At the end of the window, forwarding comes off unless you want to continue. We review the calls and decide whether the test earned another night.",
-  },
-];
-
-const scorecard = [
-  {
-    number: "01",
-    title: "Calls recovered",
-    body: "Unanswered and after-hours calls that reached the assistant instead of voicemail.",
-  },
-  {
-    number: "02",
-    title: "Qualified opportunities",
-    body: "Callers with a real service need, valid contact details, and a location in your service area.",
-  },
-  {
-    number: "03",
-    title: "Appointments requested",
-    body: "Callers ready for a visit or callback, with their preferred timing captured for your team.",
-  },
-  {
-    number: "04",
-    title: "Estimated revenue recovered",
-    body: "Job value based on outcomes your team confirms, not an invented software estimate.",
-  },
-];
-
 const faqs = [
   {
-    question: "Do I have to replace my phone system?",
-    answer:
-      "No. Your main number and normal call flow stay in place. We use conditional, no-answer, or overflow forwarding—the name varies by provider—so only calls your team misses reach Raleigh Lead Recovery.",
+    q: "Do we have to replace our phone system?",
+    a: "No. Your regular number and phone system stay in place. We use the provider’s no-answer, overflow, or conditional-forwarding setting so your team still gets the first chance to answer.",
   },
   {
-    question: "What will a caller hear?",
-    answer:
-      "We approve the greeting and call flow with you first. The assistant can collect the caller’s name, number, service need, location, urgency, and preferred timing without diagnosing equipment or promising work your team has not approved.",
+    q: "What happens during the free test?",
+    a: "We choose one controlled two-hour window, approve the greeting and call rules, and forward only calls nobody answers. You receive a summary after every handled call and can turn forwarding off immediately.",
   },
   {
-    question: "What if a call needs a person right away?",
-    answer:
-      "We follow the escalation rules you approve. Any live transfer goes to a separate owner or dispatcher number—not back to the forwarded main line, which prevents a forwarding loop.",
+    q: "What will the assistant say to callers?",
+    a: "It uses the services, hours, service area, escalation rules, and callback expectations you approve. It will not invent pricing, arrival times, availability, or business policies.",
   },
   {
-    question: "What happens after the evening test?",
-    answer:
-      "We turn off forwarding and review the calls together. If the test was useful, you can extend it through a weekend and then into a measured 30-day pilot. If it was not, you stop there.",
+    q: "Can it transfer an urgent call?",
+    a: "Yes, when you approve a transfer path. Transfers go to a separate owner or dispatcher number, not back to the forwarded main line, so the call cannot get stuck in a forwarding loop.",
   },
   {
-    question: "Is the first test really free?",
-    answer:
-      "Yes. There is no setup fee and no charge for the first controlled two-hour test. If the system proves useful and you choose ongoing coverage later, the current plan is $497 per month.",
+    q: "What happens after the first evening?",
+    a: "If the test is useful, we can extend coverage through a weekend and then run a measured 30-day pilot. If it is not useful, you turn forwarding off and owe nothing for the evening test.",
   },
+];
+
+const scorecardItems = [
+  "Missed calls answered",
+  "Qualified service opportunities",
+  "Appointments requested",
+  "Estimated revenue recovered",
 ];
 
 export default function HomePage() {
   return (
-    <main className={`landing-page receptionist-page ${styles.page}`}>
-      <div className={styles.availabilityBanner}>
-        <span aria-hidden="true" />
-        One Raleigh HVAC pilot opening · First evening free
-      </div>
-
+    <main className="landing-page receptionist-page">
       <PublicSiteNav
         items={[
-          { href: "#live-demo", label: "Live demo" },
           { href: "#how-it-works", label: "How it works" },
-          { href: "#scorecard", label: "What we measure" },
+          { href: "#what-we-measure", label: "What we measure" },
+          { href: "#questions", label: "Questions" },
         ]}
         cta={{ href: bookingHref, label: "Book free test" }}
       />
 
-      <section className={`page-shell ${styles.hero}`}>
-        <div className={styles.heroCopy}>
-          <p className={styles.kicker}>For Raleigh-area HVAC companies</p>
-          <h1>
-            Your next missed call does not have to become <em>someone else&apos;s job.</em>
-          </h1>
-          <p className={styles.heroIntro}>
-            Let Raleigh Lead Recovery cover one controlled evening. Your team answers as usual. Only the calls nobody picks up roll over to your AI call assistant, and you see what happened right away.
+      <section className="receptionist-hero page-shell">
+        <div className="receptionist-hero-copy">
+          <p className="eyebrow">
+            <span /> Missed-call coverage for Raleigh HVAC companies
           </p>
-          <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={bookingHref} target="_blank" rel="noreferrer">
-              Test one evening free <ArrowRight aria-hidden="true" />
+          <h1>
+            Keep missed calls from becoming <em>someone else&apos;s job.</em>
+          </h1>
+          <p className="receptionist-hero-intro">
+            Test Raleigh Lead Recovery for one controlled evening. Your team
+            answers as usual. Only calls nobody picks up roll over, and you see
+            what happened right away.
+          </p>
+          <div className="receptionist-hero-actions" id="talk-now">
+            <a
+              className="button button-dark"
+              href={bookingHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Book the free evening <ArrowRight aria-hidden="true" />
             </a>
-            <a className={styles.textLink} href="#live-demo">
-              Hear the assistant live <span aria-hidden="true">↓</span>
-            </a>
+            <WebVoiceDemo
+              mode="receptionist"
+              label="Hear the assistant live"
+            />
           </div>
-          <ul className={styles.heroNotes} aria-label="Pilot commitments">
-            <li><Check aria-hidden="true" /> No new phone system</li>
-            <li><Check aria-hidden="true" /> No setup fee</li>
-            <li><Check aria-hidden="true" /> No contract</li>
-          </ul>
+          <p className="receptionist-microcopy">
+            No setup fee · No new phone system · Turn it off anytime
+          </p>
         </div>
 
-        <div className={styles.routeCard} aria-label="Example of an unanswered HVAC call routed to Raleigh Lead Recovery">
-          <div className={styles.routeTopline}>
-            <span><i aria-hidden="true" /> Controlled test window</span>
-            <strong>6:00–8:00 PM</strong>
+        <div
+          className="receptionist-call-visual"
+          aria-label="Illustration of Raleigh Lead Recovery answering an unanswered HVAC call"
+        >
+          <div className="receptionist-call-visual-top">
+            <span>
+              <i /> Controlled evening test
+            </span>
+            <span>6:42 PM</span>
           </div>
-
-          <div className={styles.incomingCall}>
-            <span className={styles.phoneIcon}><PhoneCall aria-hidden="true" /></span>
+          <div className="receptionist-signal-stage">
+            <div className="receptionist-signal" aria-hidden="true">
+              <span className="receptionist-signal-ring ring-one" />
+              <span className="receptionist-signal-ring ring-two" />
+              <span className="receptionist-signal-core">
+                <Headphones />
+              </span>
+            </div>
             <div>
-              <small>Incoming customer call</small>
-              <strong>Your regular business number</strong>
+              <p>Your team gets the first four rings</p>
+              <strong>Then the unanswered call rolls over</strong>
             </div>
-            <em>Ringing</em>
           </div>
-
-          <ol className={styles.routeSteps}>
-            <li><span>1</span><p>Your team gets the first four rings</p></li>
-            <li className={styles.activeRoute}><span>2</span><p>No answer? The call rolls over</p></li>
-          </ol>
-
-          <div className={styles.assistantCall}>
-            <div className={styles.assistantHeading}>
-              <div><small>Raleigh Lead Recovery</small><strong>Call answered</strong></div>
-              <span><i aria-hidden="true" /> Live</span>
+          <div className="receptionist-transcript">
+            <div className="caller-line">
+              <span>Caller</span>
+              <p>Our AC stopped cooling and the house is getting hot.</p>
             </div>
-            <blockquote>
-              “I can help get the right person back to you. What&apos;s going on with your system?”
-            </blockquote>
+            <div className="agent-line">
+              <span>Raleigh Lead Recovery</span>
+              <p>
+                I can get the right details to the team. First, is anyone in
+                immediate danger?
+              </p>
+            </div>
           </div>
-
-          <div className={styles.ownerSummary}>
-            <small>Example owner notification · 7:14 PM</small>
-            <strong>No cooling · North Raleigh · Callback requested</strong>
-            <p>Name, number, service need, location, urgency, and preferred timing captured.</p>
+          <div className="receptionist-captured">
+            <p>Summary sent immediately</p>
+            <div>
+              <span>No cooling</span>
+              <span>Urgent</span>
+              <span>Callback requested</span>
+            </div>
           </div>
-
-          <span className={styles.voicemailStamp}>Voicemail avoided</span>
         </div>
       </section>
 
-      <section className={styles.assuranceStrip} aria-label="Pilot safeguards">
+      <section
+        className="receptionist-proof-strip"
+        aria-label="Pilot safeguards"
+      >
         <div className="page-shell">
-          {assurances.map((item) => {
-            const Icon = item.icon;
-            return (
-              <article key={item.title}>
-                <Icon aria-hidden="true" />
-                <div><h2>{item.title}</h2><p>{item.body}</p></div>
-              </article>
-            );
-          })}
+          <span>
+            <Headphones aria-hidden="true" /> Your team answers first
+          </span>
+          <span>
+            <PhoneForwarded aria-hidden="true" /> Keep your current number
+          </span>
+          <span>
+            <MessageSquareText aria-hidden="true" /> Immediate call summaries
+          </span>
+          <span>
+            <ShieldCheck aria-hidden="true" /> Turn it off anytime
+          </span>
         </div>
       </section>
 
-      <section className={`page-shell ${styles.problemSection}`}>
-        <div>
-          <p className={styles.sectionLabel}>The invisible leak</p>
-          <h2>A missed call looks harmless until the caller hires the company that answered.</h2>
+      <section className="receptionist-problem page-shell">
+        <div className="receptionist-section-heading">
+          <p className="eyebrow">The call does not wait</p>
+          <h2>A missed call looks harmless until the customer hires the company that answered.</h2>
+          <p>
+            You do not need another phone system or a long contract to find out
+            whether better coverage matters. Start with the calls your team
+            cannot reach during one ordinary evening.
+          </p>
         </div>
-        <div className={styles.missedLog} aria-label="Example missed-call log">
-          <div className={styles.logHeading}><span>After-hours call log</span><span>What your phone shows</span></div>
-          <div className={styles.logRow}><time>6:42 PM</time><strong>Missed call</strong><span>Unknown caller</span><em>Value unknown</em></div>
-          <div className={styles.logRow}><time>7:14 PM</time><strong>Missed call</strong><span>Unknown caller</span><em>Value unknown</em></div>
-          <div className={styles.logRow}><time>7:51 PM</time><strong>Voicemail</strong><span>No message</span><em>Value unknown</em></div>
-          <p>Your phone records the interruption. It does not tell you whether the caller needed a tune-up, a repair, or a full replacement.</p>
+        <div className="receptionist-scenarios">
+          <article>
+            <Wrench aria-hidden="true" />
+            <span>01</span>
+            <h3>You&apos;re finishing a job.</h3>
+            <p>
+              Your crew keeps working while the unanswered caller still gets a
+              useful response.
+            </p>
+          </article>
+          <article>
+            <Moon aria-hidden="true" />
+            <span>02</span>
+            <h3>The office is closed.</h3>
+            <p>
+              The caller explains the problem, and urgent requests are flagged
+              for the right person.
+            </p>
+          </article>
+          <article>
+            <BellRing aria-hidden="true" />
+            <span>03</span>
+            <h3>Everyone is already on the phone.</h3>
+            <p>
+              Overflow gets answered instead of becoming another voicemail to
+              chase later.
+            </p>
+          </article>
         </div>
       </section>
 
-      <section className={styles.demoSection} id="live-demo">
-        <div className={`page-shell ${styles.demoGrid}`}>
-          <div className={styles.demoCopy}>
-            <p className={styles.sectionLabel}>Hear it before a customer does</p>
-            <h2>Put the assistant through a real HVAC call right now.</h2>
-            <p>Play the customer. Describe a no-cooling call, ask a hard question, or interrupt it. The conversation happens live in your browser.</p>
-            <ul>
-              <li><Check aria-hidden="true" /> No phone number required</li>
-              <li><Check aria-hidden="true" /> Uses your microphone</li>
-              <li><Check aria-hidden="true" /> End the conversation any time</li>
-            </ul>
-          </div>
-          <div className={styles.demoConsole}>
-            <div className={styles.demoConsoleTop}><span>Live HVAC scenario</span><strong>Inbound call coverage</strong></div>
-            <div className={styles.demoPrompt}>
-              <Headphones aria-hidden="true" />
-              <div><small>You play the caller</small><strong>Press the button, then start talking.</strong></div>
+      <section
+        className="receptionist-process page-shell"
+        id="how-it-works"
+      >
+        <div className="receptionist-process-heading">
+          <p className="eyebrow">A controlled test</p>
+          <h2>
+            <span>Pick a night.</span>
+            <span>Forward missed calls.</span>
+            <span>See what happens.</span>
+          </h2>
+          <p>
+            Nothing changes for the people who already answer your phones. The
+            assistant handles only the calls they miss.
+          </p>
+        </div>
+        <ol>
+          <li>
+            <span>01</span>
+            <div>
+              <h3>Choose one two-hour evening.</h3>
+              <p>
+                We approve the greeting, services, questions, urgency rules,
+                and callback expectations before anything goes live.
+              </p>
             </div>
-            <WebVoiceDemo mode="receptionist" label="Start the live HVAC call" />
-          </div>
-        </div>
-      </section>
-
-      <section className={`page-shell ${styles.processSection}`} id="how-it-works">
-        <div className={styles.processHeading}>
-          <p className={styles.sectionLabel}>One evening. Fully controlled.</p>
-          <h2>Do not hand over your phones. Let us earn the next two hours.</h2>
-          <p>The first test is deliberately small. Nothing changes for your employees or customers unless a call would otherwise go unanswered.</p>
-        </div>
-        <ol className={styles.processList}>
-          {setupSteps.map((step) => (
-            <li key={step.number}>
-              <span>{step.number}</span>
-              <div><h3>{step.title}</h3><p>{step.body}</p></div>
-            </li>
-          ))}
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <h3>Forward only unanswered calls.</h3>
+              <p>
+                On a short screen share, we set your existing provider to
+                forward after about four rings. Your regular number still works
+                normally.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <h3>Work as usual.</h3>
+              <p>
+                Your team keeps answering. Raleigh Lead Recovery covers only
+                the calls nobody reaches and sends the owner or dispatcher a
+                summary.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>04</span>
+            <div>
+              <h3>Review every outcome.</h3>
+              <p>
+                At the end of the test, you decide whether the calls justify a
+                weekend or a measured 30-day pilot.
+              </p>
+            </div>
+          </li>
         </ol>
-        <div className={styles.providerNote}>
-          <PhoneForwarded aria-hidden="true" />
-          <div>
-            <strong>You do not have to find the forwarding setting alone.</strong>
-            <p>Tell me which phone provider you use. I&apos;ll guide you through its overflow, call handling, or forward-when-unanswered setting on a short screen share.</p>
+      </section>
+
+      <section className="receptionist-human page-shell">
+        <div className="receptionist-section-heading">
+          <p className="eyebrow">Evidence before a subscription</p>
+          <h2>Judge it by recovered calls, not a promise that the AI “worked.”</h2>
+          <p>
+            Every handled call should produce something your team can verify:
+            who called, what they needed, whether the opportunity was
+            qualified, and what should happen next.
+          </p>
+        </div>
+      </section>
+
+      <section className="receptionist-two-jobs" id="what-we-measure">
+        <div className="page-shell receptionist-two-jobs-grid">
+          <div className="receptionist-two-jobs-copy">
+            <p className="eyebrow">The 30-day scorecard</p>
+            <h2>One system. Four numbers that matter.</h2>
+            <p>
+              If the first evening earns a longer pilot, we track the outcomes
+              that can become a real case study—not vanity metrics.
+            </p>
+          </div>
+          <div className="receptionist-job-cards">
+            <article className="active">
+              <div>
+                <Headphones aria-hidden="true" />
+                <span>Calls</span>
+              </div>
+              <h3>Demand recovered</h3>
+              <p>
+                Missed calls answered and qualified service opportunities
+                captured while your team was unavailable.
+              </p>
+              <a href="#pilot-plan">
+                See the pilot plan <ArrowRight aria-hidden="true" />
+              </a>
+            </article>
+            <article>
+              <div>
+                <MessageSquareText aria-hidden="true" />
+                <span>Outcomes</span>
+              </div>
+              <h3>Revenue evidence</h3>
+              <p>
+                Appointment requests and estimated recovered revenue based on
+                outcomes your team confirms.
+              </p>
+              <a href={bookingHref} target="_blank" rel="noreferrer">
+                Book the free test <ArrowRight aria-hidden="true" />
+              </a>
+            </article>
           </div>
         </div>
       </section>
 
-      <section className={styles.scorecardSection} id="scorecard">
-        <div className={`page-shell ${styles.scorecardGrid}`}>
-          <div className={styles.scorecardCopy}>
-            <p className={styles.sectionLabel}>The proof we build together</p>
-            <h2>A revenue scorecard, not a vague promise that the AI “worked.”</h2>
-            <p>Every result stays tied to an actual call and an outcome your team can verify.</p>
-          </div>
-          <div className={styles.scorecardBoard}>
-            <div className={styles.boardHeader}>
-              <div><small>Raleigh Lead Recovery</small><strong>Pilot scorecard</strong></div>
-              <span>Measured with your team</span>
-            </div>
-            {scorecard.map((item) => (
-              <article key={item.number}>
-                <span>{item.number}</span>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <strong>Tracked</strong>
-              </article>
-            ))}
-            <div className={styles.boardFooter}>
-              <span>No sample success numbers.</span>
-              <strong>Your calls create the first real case study.</strong>
-            </div>
-          </div>
+      <section
+        className="receptionist-pricing page-shell"
+        id="pilot-plan"
+      >
+        <div className="receptionist-section-heading">
+          <p className="eyebrow">Start smaller than a pilot</p>
+          <h2>Earn the next step one call at a time.</h2>
+          <p>
+            The first evening is free. Continue only when the calls show enough
+            value to justify more coverage.
+          </p>
         </div>
-      </section>
-
-      <section className={styles.progressionSection}>
-        <div className={`page-shell ${styles.progressionGrid}`}>
-          <div>
-            <p className={styles.sectionLabel}>The pilot earns its way forward</p>
-            <h2>Start small. Continue only when the calls justify it.</h2>
-          </div>
-          <ol>
-            <li><span>Tonight · 01</span><strong>Two-hour test</strong><em>Free</em></li>
-            <li><span>Next · 02</span><strong>Weekend coverage</strong><em>If useful</em></li>
-            <li><span>Then · 03</span><strong>30-day scorecard</strong><em>If proven</em></li>
-            <li><span>Optional · 04</span><strong>Ongoing coverage</strong><em>$497/mo</em></li>
-          </ol>
-        </div>
-      </section>
-
-      <section className={`page-shell ${styles.founderSection}`}>
-        <div className={styles.founderPhoto}>
-          <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={288} height={360} priority />
-          <span>Raleigh-based</span>
-        </div>
-        <div className={styles.founderCopy}>
-          <p className={styles.sectionLabel}>The person behind the pilot</p>
-          <h2>You work directly with me, not a distant support queue.</h2>
-          <p>I&apos;m Danny Sullivan, a Raleigh-based AI product engineer, educator, and former service-business owner. I&apos;ll configure the test with you, review the calls, and stay reachable while it is live.</p>
-          <div className={styles.credentials}>
-            <span>AI product engineer</span>
-            <span>Former service-business owner</span>
-            <span>Raleigh, North Carolina</span>
-          </div>
-          <a href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a>
-        </div>
-      </section>
-
-      <section className={styles.faqSection}>
-        <div className={`page-shell ${styles.faqGrid}`}>
-          <div>
-            <p className={styles.sectionLabel}>Before you forward anything</p>
-            <h2>Reasonable questions from someone protecting the phone line.</h2>
-          </div>
-          <div className={styles.faqList}>
-            {faqs.map((faq, index) => (
-              <details key={faq.question} open={index === 0}>
-                <summary>{faq.question}<span aria-hidden="true">+</span></summary>
-                <p>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.finalSection} id="pilot">
-        <div className={`page-shell ${styles.finalGrid}`}>
-          <div className={styles.finalCopy}>
-            <p className={styles.sectionLabel}>One pilot opening</p>
-            <h2>Put one evening on the calendar.</h2>
-            <p>I&apos;m looking for one Raleigh-area HVAC company with real inbound call volume and an owner or dispatcher willing to test a simple overflow setup.</p>
+        <div className="receptionist-pricing-grid">
+          <article>
+            <p className="eyebrow">Step one</p>
+            <h3>Two-hour evening test</h3>
+            <strong>
+              <span>$0</span>
+            </strong>
             <ul>
-              <li><Check aria-hidden="true" /> Phone-provider setup help</li>
-              <li><Check aria-hidden="true" /> Company-approved greeting and call flow</li>
-              <li><Check aria-hidden="true" /> Immediate summary after every handled call</li>
-              <li><Check aria-hidden="true" /> End-of-test review and scorecard</li>
+              {[
+                "No setup fee",
+                "Your team answers first",
+                "Only missed calls roll over",
+                "Immediate summary after each call",
+              ].map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" /> {item}
+                </li>
+              ))}
             </ul>
-          </div>
-          <div className={styles.offerCard}>
-            <div className={styles.offerTop}><span>Controlled two-hour test</span><strong>$0</strong></div>
-            <p>No setup fee · No contract · No obligation to continue</p>
-            <a href={bookingHref} target="_blank" rel="noreferrer">Book the free evening test <ArrowRight aria-hidden="true" /></a>
-            <span>Choose a short setup time. Nothing gets forwarded until you approve the plan.</span>
-          </div>
+            <a
+              className="button button-dark"
+              href={bookingHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Book the free test <ArrowRight aria-hidden="true" />
+            </a>
+          </article>
+          <article className="featured">
+            <p className="eyebrow">Step two</p>
+            <h3>Weekend coverage</h3>
+            <strong>
+              <span>Next</span> only if useful
+            </strong>
+            <ul>
+              {[
+                "Extend the same approved call flow",
+                "Review summaries and escalation quality",
+                "Confirm whether callers are qualified",
+                "Stop at any time",
+              ].map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" /> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              className="button button-light"
+              href={bookingHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Start with one evening <ArrowRight aria-hidden="true" />
+            </a>
+          </article>
+          <article>
+            <p className="eyebrow">Step three</p>
+            <h3>30-day measured pilot</h3>
+            <strong>
+              <span>Proof</span> before a plan
+            </strong>
+            <ul>
+              {scorecardItems.map((item) => (
+                <li key={item}>
+                  <Check aria-hidden="true" /> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              className="button button-dark"
+              href={`mailto:${contactEmail}?subject=Raleigh%20HVAC%20missed-call%20pilot`}
+            >
+              Email Danny <ArrowRight aria-hidden="true" />
+            </a>
+          </article>
         </div>
+      </section>
+
+      <section className="receptionist-guardrails page-shell">
+        <div>
+          <p className="eyebrow">Simple to start. Simple to stop.</p>
+          <h2>Your phones stay yours.</h2>
+        </div>
+        <div className="receptionist-guardrail-list">
+          <article>
+            <PhoneForwarded aria-hidden="true" />
+            <div>
+              <h3>No phone-system replacement</h3>
+              <p>
+                Keep your number, provider, phones, and normal call flow. We
+                change only what happens after nobody answers.
+              </p>
+            </div>
+          </article>
+          <article>
+            <ShieldCheck aria-hidden="true" />
+            <div>
+              <h3>No forwarding loops</h3>
+              <p>
+                Approved transfers go to a separate owner or dispatcher number,
+                never back to the forwarded main line.
+              </p>
+            </div>
+          </article>
+          <article>
+            <Clock3 aria-hidden="true" />
+            <div>
+              <h3>No invented promises</h3>
+              <p>
+                The assistant follows your rules and captures requests without
+                making up pricing, availability, or arrival times.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        className="faq-section page-shell receptionist-faq"
+        id="questions"
+      >
+        <div className="section-heading compact-heading">
+          <p className="eyebrow">Good questions</p>
+          <h2>What to expect.</h2>
+        </div>
+        <div className="faq-list">
+          {faqs.map((faq) => (
+            <details key={faq.q}>
+              <summary>
+                {faq.q}
+                <span>+</span>
+              </summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="maker-section page-shell receptionist-maker">
+        <Image
+          src="/danny.jpeg"
+          alt="Danny Sullivan, founder of Raleigh Lead Recovery"
+          width={80}
+          height={80}
+        />
+        <div>
+          <p className="eyebrow">Founder-led setup and support</p>
+          <h2>You work directly with me.</h2>
+          <p>
+            I&apos;m Danny Sullivan, a Raleigh-based AI product engineer and
+            former service-business owner. I&apos;ll help set up the forwarding,
+            approve the call flow, and review the results with you.
+          </p>
+        </div>
+        <a className="text-link" href={`mailto:${contactEmail}`}>
+          Email Danny <ArrowRight aria-hidden="true" />
+        </a>
+      </section>
+
+      <section className="receptionist-final page-shell">
+        <p className="eyebrow">One Raleigh HVAC pilot opening</p>
+        <h2>Put one evening on the calendar.</h2>
+        <p>
+          Your normal number keeps working. Your team keeps answering. We cover
+          only the calls nobody reaches and show you every result.
+        </p>
+        <a
+          className="button button-dark"
+          href={bookingHref}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Book the free evening test <ArrowRight aria-hidden="true" />
+        </a>
       </section>
 
       <footer className="site-footer">
         <div className="page-shell footer-row">
-          <div><BrandMark inverted accent="#d8ff57" /><p>© 2026 Raleigh Lead Recovery</p></div>
+          <div>
+            <BrandMark inverted accent="#d8ff57" />
+            <p>© 2026 Raleigh Lead Recovery</p>
+          </div>
           <nav aria-label="Footer navigation">
             <Link href="/blog">Writing</Link>
             <Link href="/privacy">Privacy</Link>
