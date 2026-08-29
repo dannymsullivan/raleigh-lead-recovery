@@ -99,7 +99,9 @@ export default function HomePage() {
             <span /> Missed-call coverage for Raleigh HVAC companies
           </p>
           <h1>
-            Keep missed calls from becoming <em>someone else&apos;s job.</em>
+            <span>Keep missed calls</span>
+            <span>from becoming</span>
+            <em>someone else&apos;s job.</em>
           </h1>
           <p className="receptionist-hero-intro">
             Test Raleigh Lead Recovery for one controlled evening. Your team

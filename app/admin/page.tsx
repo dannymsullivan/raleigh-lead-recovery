@@ -1,7 +1,7 @@
-import { Calculator, Check, CircleAlert, DollarSign, ExternalLink, LogOut, MessageSquareText, PhoneCall, Plus, Settings2, ShieldCheck, TrendingUp, UsersRound } from "lucide-react";
+import { Calculator, Check, CircleAlert, DollarSign, ExternalLink, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { addClientAction, deleteClientAction, loginAction, logoutAction, updateClientAction } from "../actions";
+import { addClientAction, deleteClientAction, loginAction, updateClientAction } from "../actions";
 import { DeleteRecordButton } from "./delete-record-button";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import { loadCostDashboard, type CostDashboard } from "@/lib/costs";
@@ -11,6 +11,7 @@ import type { Client } from "@/lib/types";
 import { retryTransientCredentialError } from "@/lib/retry";
 import { customerCrmPath } from "@/lib/customer-slug";
 import { isClientDeletionLocked } from "@/lib/client-deletion";
+import { AdminHeader } from "./admin-header";
 
 export const dynamic = "force-dynamic";
 
@@ -115,24 +116,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
 
   return (
     <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
-      <header className="border-b-2 border-black bg-[#f4f1e8]">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
-          <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Founder operations</p>
-            <h1 className="mt-1 text-2xl font-black tracking-[-0.04em]">Raleigh Lead Recovery control room</h1>
-          </div>
-          <form action={logoutAction}>
-            <button className="inline-flex h-10 items-center gap-2 border-2 border-black px-3 text-sm font-extrabold hover:bg-black hover:text-white" type="submit">
-              <LogOut className="h-4 w-4" aria-hidden="true" />
-              Sign out
-            </button>
-          </form>
-        </div>
-        <nav aria-label="Admin sections" className="mx-auto flex max-w-[1440px] gap-1 px-5 sm:px-8">
-          <AdminTab href="/admin" active={view === "customers"} icon={<UsersRound className="h-4 w-4" aria-hidden="true" />}>Customers</AdminTab>
-          <AdminTab href="/admin?view=settings" active={view === "settings"} icon={<Settings2 className="h-4 w-4" aria-hidden="true" />}>System &amp; costs</AdminTab>
-        </nav>
-      </header>
+      <AdminHeader active={view === "settings" ? "settings" : "customers"} />
 
       {created || updated || deleted || error?.startsWith("client-") ? (
         <div className="mx-auto max-w-[1440px] px-5 pt-6 sm:px-8">
@@ -244,19 +228,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
         </details>
       </div> : null}
     </main>
-  );
-}
-
-function AdminTab({ href, active, icon, children }: { href: string; active: boolean; icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "page" : undefined}
-      className={`inline-flex min-h-11 items-center gap-2 border-x-2 border-t-2 px-4 text-sm font-black transition-[background-color,color] duration-150 active:scale-[0.97] ${active ? "border-black bg-[#d8ff57] text-black" : "border-transparent text-black/50 hover:border-black/20 hover:bg-black/5 hover:text-black"}`}
-    >
-      {icon}
-      {children}
-    </Link>
   );
 }
 
