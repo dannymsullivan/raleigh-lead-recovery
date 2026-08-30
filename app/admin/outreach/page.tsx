@@ -17,6 +17,7 @@ import {
   bulkAddOutreachProspectsAction,
   bulkDeleteOutreachProspectsAction,
   deleteOutreachProspectAction,
+  logOutreachCallAction,
   updateOutreachProspectAction,
 } from "./actions";
 import { ProspectBulkToolbar } from "./prospect-bulk-toolbar";
@@ -24,6 +25,8 @@ import { ProspectRow } from "./prospect-row";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import {
   buildOutreachSummary,
+  isOutreachCallOutcome,
+  outreachCallOutcomes,
   outreachStageLabels,
   outreachStages,
   type OutreachProspect,
@@ -87,6 +90,8 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         ? "Prospect removed."
         : typeof search.bulk_added === "string"
           ? `${search.bulk_added} prospect${search.bulk_added === "1" ? "" : "s"} added${Number(search.bulk_skipped) ? ` · ${search.bulk_skipped} skipped as duplicates or blank lines` : ""}.`
+          : typeof search.call_logged === "string" && isOutreachCallOutcome(search.call_logged)
+          ? `Call logged: ${outreachCallOutcomes[search.call_logged]}.`
           : typeof search.bulk_deleted === "string"
             ? `${search.bulk_deleted} prospect${search.bulk_deleted === "1" ? "" : "s"} removed.`
             : search.error === "company"
@@ -97,16 +102,18 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                   ? "Paste at least one line with a company name."
                   : search.error === "bulk_delete"
                     ? "Select at least one prospect to delete."
-                    : null;
+                    : search.error === "call_log"
+                      ? "The call could not be logged. Try again."
+                      : null;
 
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
       <AdminHeader active="outreach" />
 
-      <div className="mx-auto max-w-[1440px] px-5 py-7 sm:px-8 sm:py-9">
+      <div className="mx-auto max-w-[1440px] px-5 py-5 sm:px-8 sm:py-6">
         {notice ? (
           <div
-            className={`mb-6 border px-4 py-3 text-sm font-black ${
+            className={`mb-4 border px-4 py-3 text-sm font-black ${
               search.error ? "border-black bg-black text-white" : "border-[var(--product-line-strong)] bg-white"
             }`}
             role="status"
@@ -115,21 +122,16 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           </div>
         ) : null}
 
-        <section>
-          <div className="max-w-2xl">
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-black/45">
-              HVAC pilot pipeline
-            </p>
-            <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] sm:text-4xl">
-              Outreach that ends in one live test.
-            </h2>
-            <p className="mt-3 max-w-xl text-sm font-semibold leading-6 text-black/55">
-              Keep the list small, send personal emails, and always leave a clear next follow-up.
-            </p>
-          </div>
+        <section className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h2 className="text-xl font-black tracking-[-0.04em] sm:text-2xl">
+            Outreach that ends in one live test.
+          </h2>
+          <p className="text-xs font-semibold text-black/50">
+            Keep the list small, send personal emails, and always leave a clear next follow-up.
+          </p>
         </section>
 
-        <section className="mt-7 grid grid-cols-2 border-l border-t border-[var(--product-line)] bg-white sm:grid-cols-5" aria-label="Outreach summary">
+        <section className="mt-4 grid grid-cols-2 border-l border-t border-[var(--product-line)] bg-white sm:grid-cols-5" aria-label="Outreach summary">
           <OutreachStat icon={<UsersRound />} label="Prospects" value={summary.total} />
           <OutreachStat icon={<Send />} label="Ready to email" value={summary.ready} />
           <OutreachStat icon={<CalendarClock />} label="Follow-ups due" value={summary.followUpsDue} accent={summary.followUpsDue > 0} />
@@ -137,20 +139,18 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           <OutreachStat icon={<Target />} label="Pilots booked" value={summary.pilots} />
         </section>
 
+        <div className="mt-3 grid gap-3 lg:grid-cols-2">
         <details
-          className="mt-7 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
+          className="scroll-mt-5 self-start border border-[var(--product-line-strong)] bg-white"
           id="add-prospect"
           open={search.error === "website" || prospects.length === 0}
         >
-          <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 sm:px-5">
-            <span className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center bg-[var(--product-accent)]">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2">
+            <span className="flex items-center gap-2.5">
+              <span className="grid h-7 w-7 place-items-center bg-[var(--product-accent)]">
                 <Plus className="h-4 w-4" aria-hidden="true" />
               </span>
-              <span>
-                <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">New lead</span>
-                <span className="mt-0.5 block text-base font-black">Add a company by website</span>
-              </span>
+              <span className="text-sm font-black">Add a company by website</span>
             </span>
             <span className="text-xs font-black text-black/45">Open form</span>
           </summary>
@@ -182,19 +182,16 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         </details>
 
         <details
-          className="mt-3 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
+          className="scroll-mt-5 self-start border border-[var(--product-line-strong)] bg-white"
           id="bulk-add"
           open={search.error === "bulk"}
         >
-          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 sm:px-5">
-            <span className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center bg-black text-white">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2">
+            <span className="flex items-center gap-2.5">
+              <span className="grid h-7 w-7 place-items-center bg-black text-white">
                 <UsersRound className="h-4 w-4" aria-hidden="true" />
               </span>
-              <span>
-                <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">Bulk add</span>
-                <span className="mt-0.5 block text-base font-black">Paste a call list</span>
-              </span>
+              <span className="text-sm font-black">Paste a call list</span>
             </span>
             <span className="text-xs font-black text-black/45">Open form</span>
           </summary>
@@ -216,13 +213,11 @@ export default async function OutreachPage({ searchParams }: PageProps) {
             </button>
           </form>
         </details>
+        </div>
 
-        <section className="mt-8" aria-labelledby="prospect-list-title">
-          <div className="flex flex-col gap-4 border-b border-[var(--product-line-strong)] pb-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">Working list</p>
-              <h2 className="mt-1 text-2xl font-black tracking-[-0.04em]" id="prospect-list-title">Prospects</h2>
-            </div>
+        <section className="mt-5" aria-labelledby="prospect-list-title">
+          <div className="flex flex-col gap-3 border-b border-[var(--product-line-strong)] pb-3 lg:flex-row lg:items-center lg:justify-between">
+            <h2 className="text-lg font-black tracking-[-0.03em]" id="prospect-list-title">Prospects</h2>
             <nav className="flex gap-1 overflow-x-auto" aria-label="Filter prospects by stage">
               <StageFilter href="/admin/outreach" active={activeStage === "all"}>All</StageFilter>
               {outreachStages.map((stage) => (
@@ -258,7 +253,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
             </div>
           ) : (
             <>
-              <div className="mt-4">
+              <div className="mt-3">
                 <ProspectBulkToolbar
                   action={bulkDeleteOutreachProspectsAction}
                   formId="outreach-bulk-delete"
@@ -266,7 +261,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                 />
               </div>
               <div className="mt-3 border border-[var(--product-line-strong)] bg-white">
-                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(180px,1fr)_145px_110px_130px_150px] gap-4 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-3 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
+                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(170px,1fr)_140px_105px_125px_190px] gap-3 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
                   <span>Company</span>
                   <span>Contact</span>
                   <span>Stage</span>
@@ -280,6 +275,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                       key={prospect.id}
                       prospect={prospect}
                       bulkFormId="outreach-bulk-delete"
+                      logCallAction={logOutreachCallAction.bind(null, prospect.id)}
                       editForm={
                         <>
                           <ProspectForm
@@ -319,12 +315,10 @@ function OutreachStat({
   accent?: boolean;
 }) {
   return (
-    <div className={`border-b border-r border-[var(--product-line)] p-4 ${accent ? "bg-[var(--product-accent)]" : ""}`}>
-      <div className="flex items-center gap-2 text-black/45">
-        <span className="[&>svg]:h-4 [&>svg]:w-4">{icon}</span>
-        <p className="text-[11px] font-bold">{label}</p>
-      </div>
-      <p className="mt-2 text-2xl font-black tabular-nums tracking-[-0.04em]">{value}</p>
+    <div className={`flex items-center gap-2.5 border-b border-r border-[var(--product-line)] px-3 py-2.5 ${accent ? "bg-[var(--product-accent)]" : ""}`}>
+      <span className="text-black/45 [&>svg]:h-4 [&>svg]:w-4">{icon}</span>
+      <p className="text-xl font-black tabular-nums tracking-[-0.04em]">{value}</p>
+      <p className="text-[11px] font-bold leading-4 text-black/45">{label}</p>
     </div>
   );
 }

@@ -70,6 +70,20 @@ export function outreachWebsiteHref(value: string): string {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
+export const outreachCallOutcomes = {
+  real_person: "Real person answered",
+  voicemail: "Voicemail",
+  no_answer: "No answer",
+  busy: "Busy",
+  wrong_number: "Wrong number",
+} as const;
+
+export type OutreachCallOutcome = keyof typeof outreachCallOutcomes;
+
+export function isOutreachCallOutcome(value: string): value is OutreachCallOutcome {
+  return Object.hasOwn(outreachCallOutcomes, value);
+}
+
 // "https://www.cool-breeze-hvac.com/contact" -> "Cool Breeze Hvac"
 export function companyNameFromWebsite(input: string): string | null {
   const trimmed = input.trim();

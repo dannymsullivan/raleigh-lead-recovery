@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
-import { companyNameFromWebsite, outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
+import { companyNameFromWebsite, isOutreachCallOutcome, outreachCallOutcomes, outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -108,6 +108,28 @@ export async function updateOutreachProspectAction(
 
   revalidatePath("/admin/outreach");
   redirect("/admin/outreach?updated=1");
+}
+
+export async function logOutreachCallAction(prospectId: string, formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const outcome = formString(formData, "outcome");
+  if (!isOutreachCallOutcome(outcome)) redirect("/admin/outreach?error=call_log");
+
+  const admin = getSupabaseAdmin();
+  const { data } = await admin.from("outreach_prospects").select("notes").eq("id", prospectId).maybeSingle();
+  if (!data) redirect("/admin/outreach?error=call_log");
+
+  const today = new Date().toISOString().slice(0, 10);
+  const entry = `${today} — Called: ${outreachCallOutcomes[outcome]}`;
+  const notes = [entry, (data.notes ?? "").trim()].filter(Boolean).join("\n").slice(0, 3000);
+  const { error } = await admin
+    .from("outreach_prospects")
+    .update({ notes, last_contacted_on: today })
+    .eq("id", prospectId);
+  if (error) throw error;
+
+  revalidatePath("/admin/outreach");
+  redirect(`/admin/outreach?call_logged=${outcome}`);
 }
 
 export async function bulkDeleteOutreachProspectsAction(formData: FormData): Promise<void> {
