@@ -74,6 +74,11 @@ export function ProspectRow({ prospect, editForm, bulkFormId }: { prospect: Outr
           <Pencil className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
+      {prospect.notes ? (
+        <p className="line-clamp-2 whitespace-pre-line border-l-2 border-[var(--product-line-strong)] pl-3 text-xs font-semibold leading-5 text-black/50 lg:col-span-6">
+          {prospect.notes}
+        </p>
+      ) : null}
       {editing ? (
         <div className="border border-[var(--product-line)] bg-[var(--product-surface-muted)] p-4 lg:col-span-6">
           {editForm}
