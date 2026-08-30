@@ -73,7 +73,7 @@ export default function HvacLandingPage() {
       </section>
 
       <footer className="hvac-footer">
-        <div className="page-shell"><BrandMark inverted /><p>Seasonal-maintenance reactivation for HVAC companies.</p><nav><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav></div>
+        <div className="page-shell"><BrandMark inverted /><p>Seasonal-maintenance reactivation for HVAC companies.</p><nav><Link href="/">Missed-call pilot</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav></div>
       </footer>
     </main>
   );

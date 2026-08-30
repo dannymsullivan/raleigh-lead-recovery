@@ -342,6 +342,44 @@ export default async function CustomerCrmPage({
     : { data: null };
   const testContact = testContactData as ReactivationContact | null;
   const notice = crmNotice(search);
+  const requestedView = firstParam(search.view);
+  const errorKey = firstParam(search.error);
+  const setupSignals = [
+    "agent_confirmation",
+    "agent_save",
+    "agent_provision",
+    "agent_type",
+    "customer_access",
+    "customer_access_active",
+    "test-record",
+    "test-guard",
+    "call",
+  ];
+  const campaignSignals = [
+    "campaign",
+    "campaign_name",
+    "campaign_save",
+    "campaign_running",
+    "telephony",
+    "agent_not_ready",
+  ];
+  const defaultView =
+    search.created === "1" ||
+    search.setup === "1" ||
+    search.called === "1" ||
+    typeof search.agent_saved === "string" ||
+    setupSignals.includes(errorKey)
+      ? "setup"
+      : campaignSignals.includes(errorKey)
+        ? "campaign"
+        : "leads";
+  const activeView =
+    requestedView === "leads" ||
+    requestedView === "setup" ||
+    requestedView === "campaign" ||
+    requestedView === "calls"
+      ? requestedView
+      : defaultView;
 
   return (
     <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
@@ -388,29 +426,6 @@ export default async function CustomerCrmPage({
             </p>
           </div>
         </div>
-        <nav aria-label="On this page" className="mt-6 flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/40">
-            Jump to
-          </span>
-          {[
-            ["#customer-access", "Access"],
-            ["#agents", "Agents"],
-            ["#lead-import", "Upload leads"],
-            ["#campaign-settings", "Campaign"],
-            ["#leads", "Lead workspace"],
-            ...(inboundCalls.length
-              ? [["#inbound-calls", "Inbound calls"]]
-              : []),
-          ].map(([href, label]) => (
-            <a
-              className="inline-flex min-h-9 items-center border border-black bg-white px-3 text-xs font-black hover:bg-black hover:text-white"
-              href={href}
-              key={href}
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
         {notice ? (
           <div
             className={`mt-7 border-2 border-black p-4 text-sm font-black ${notice.error ? "bg-black text-white" : "bg-[#d8ff57]"}`}
@@ -427,26 +442,6 @@ export default async function CustomerCrmPage({
             replaced={search.replaced === "1"}
           />
         ) : null}
-
-        <CustomerAccessPanel
-          active={Boolean(client.user_id)}
-          ownerName={client.owner_name}
-          ownerEmail={client.owner_email}
-          pendingUntil={pendingInvitationData?.expires_at ?? null}
-          invitationUrl={invitationUrl}
-          action={createCustomerInvitationAction.bind(
-            null,
-            client.id,
-            basePath,
-          )}
-        />
-
-        <AgentManager
-          action={saveAdminCustomerAgentAction.bind(null, client.id, basePath)}
-          agents={agents}
-          client={client}
-          compact
-        />
 
         <section className="mt-6 grid border-l border-t border-black sm:grid-cols-2 xl:grid-cols-6">
           <Metric
@@ -488,7 +483,67 @@ export default async function CustomerCrmPage({
           />
         </section>
 
-        <section className="scroll-mt-6 mt-8" id="lead-import">
+        <nav
+          className="mt-8 flex gap-1 overflow-x-auto border-b-2 border-black"
+          aria-label="Customer sections"
+        >
+          <CrmTab
+            active={activeView === "leads"}
+            href={`${basePath}?view=leads`}
+          >
+            Leads ({contactTotal.toLocaleString()})
+          </CrmTab>
+          <CrmTab
+            active={activeView === "campaign"}
+            href={`${basePath}?view=campaign`}
+          >
+            Campaign
+          </CrmTab>
+          <CrmTab
+            active={activeView === "setup"}
+            href={`${basePath}?view=setup`}
+          >
+            Access &amp; agents
+          </CrmTab>
+          {inboundCalls.length ? (
+            <CrmTab
+              active={activeView === "calls"}
+              href={`${basePath}?view=calls`}
+            >
+              Inbound calls ({inboundCalls.length})
+            </CrmTab>
+          ) : null}
+        </nav>
+
+        {activeView === "setup" ? (
+          <>
+            <CustomerAccessPanel
+              active={Boolean(client.user_id)}
+              ownerName={client.owner_name}
+              ownerEmail={client.owner_email}
+              pendingUntil={pendingInvitationData?.expires_at ?? null}
+              invitationUrl={invitationUrl}
+              action={createCustomerInvitationAction.bind(
+                null,
+                client.id,
+                basePath,
+              )}
+            />
+            <AgentManager
+              action={saveAdminCustomerAgentAction.bind(
+                null,
+                client.id,
+                basePath,
+              )}
+              agents={agents}
+              client={client}
+              compact
+            />
+          </>
+        ) : null}
+
+        {activeView === "leads" ? (
+        <section className="scroll-mt-6 mt-6" id="lead-import">
           {primaryCampaign ? (
             contactTotal ? (
               <details className="group border-2 border-black bg-white">
@@ -564,8 +619,9 @@ export default async function CustomerCrmPage({
             <CreateCampaign client={client} returnPath={basePath} />
           )}
         </section>
+        ) : null}
 
-        {client.is_test_account ? (
+        {activeView === "setup" && client.is_test_account ? (
           <section className="mt-8 border-2 border-black bg-[#d8ff57] p-6 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
@@ -606,10 +662,12 @@ export default async function CustomerCrmPage({
           </section>
         ) : null}
 
+        {activeView === "campaign" ? (
         <section className="mt-6">
           <details
             className="scroll-mt-6 group border border-black bg-white"
             id="campaign-settings"
+            open
           >
             <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 marker:content-none sm:px-5">
               <div className="min-w-0">
@@ -693,7 +751,9 @@ export default async function CustomerCrmPage({
             </div>
           </details>
         </section>
+        ) : null}
 
+        {activeView === "leads" ? (
         <section
           className="scroll-mt-6 mt-4 border border-black bg-white"
           id="leads"
@@ -788,10 +848,11 @@ export default async function CustomerCrmPage({
             total={filteredTotal}
           />
         </section>
+        ) : null}
 
-        {inboundCalls.length ? (
+        {activeView === "calls" && inboundCalls.length ? (
           <section
-            className="scroll-mt-6 mt-10 border-2 border-black bg-white"
+            className="scroll-mt-6 mt-6 border-2 border-black bg-white"
             id="inbound-calls"
           >
             <div className="border-b-2 border-black p-5">
@@ -1209,6 +1270,29 @@ function AdminLead({
   );
 }
 
+function CrmTab({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`inline-flex min-h-11 shrink-0 items-center gap-2 border-x-2 border-t-2 px-4 text-sm font-black ${
+        active
+          ? "border-black bg-[#d8ff57] text-black"
+          : "border-transparent text-black/50 hover:bg-black/5 hover:text-black"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
 function Metric({
   icon: Icon,
   label,

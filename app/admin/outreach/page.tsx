@@ -16,6 +16,7 @@ import { AdminHeader } from "../admin-header";
 import { DeleteRecordButton } from "../delete-record-button";
 import {
   addOutreachProspectAction,
+  bulkAddOutreachProspectsAction,
   deleteOutreachProspectAction,
   updateOutreachProspectAction,
 } from "./actions";
@@ -84,9 +85,13 @@ export default async function OutreachPage({ searchParams }: PageProps) {
       ? "Prospect updated."
       : search.deleted
         ? "Prospect removed."
-        : search.error === "company"
-          ? "Company name is required."
-          : null;
+        : typeof search.bulk_added === "string"
+          ? `${search.bulk_added} prospect${search.bulk_added === "1" ? "" : "s"} added${Number(search.bulk_skipped) ? ` · ${search.bulk_skipped} skipped as duplicates or blank lines` : ""}.`
+          : search.error === "company"
+            ? "Company name is required."
+            : search.error === "bulk"
+              ? "Paste at least one line with a company name."
+              : null;
 
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
@@ -152,6 +157,42 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           <div className="border-t border-[var(--product-line)] p-4 sm:p-5">
             <ProspectForm action={addOutreachProspectAction} />
           </div>
+        </details>
+
+        <details
+          className="mt-3 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
+          id="bulk-add"
+          open={search.error === "bulk"}
+        >
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 sm:px-5">
+            <span className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center bg-black text-white">
+                <UsersRound className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">Bulk add</span>
+                <span className="mt-0.5 block text-base font-black">Paste a call list</span>
+              </span>
+            </span>
+            <span className="text-xs font-black text-black/45">Open form</span>
+          </summary>
+          <form action={bulkAddOutreachProspectsAction} className="border-t border-[var(--product-line)] p-4 sm:p-5">
+            <label className="block text-xs font-black">
+              One company per line: Company | City | Website | Phone
+              <textarea
+                className="mt-2 min-h-44 w-full resize-y border px-3 py-2 font-mono text-xs leading-6 outline-none"
+                name="bulk_lines"
+                placeholder={"Cool Breeze Heating & Air | Raleigh | coolbreezenc.com | (919) 555-0100\nComfort Pros HVAC | Cary | comfortproshvac.com"}
+                required
+              />
+            </label>
+            <p className="mt-2 text-[11px] font-semibold text-black/45">
+              Only the company name is required. Companies already in the tracker are skipped, and everyone lands in the Not contacted stage.
+            </p>
+            <button className="mt-3 inline-flex min-h-11 items-center justify-center bg-black px-5 text-sm font-black text-white" type="submit">
+              Add all to the tracker
+            </button>
+          </form>
         </details>
 
         <section className="mt-8" aria-labelledby="prospect-list-title">

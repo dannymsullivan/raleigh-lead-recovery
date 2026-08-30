@@ -547,6 +547,7 @@ export default function HomePage() {
             <p>© 2026 Raleigh Lead Recovery</p>
           </div>
           <nav aria-label="Footer navigation">
+            <Link href="/lead-recovery">Lead recovery</Link>
             <Link href="/blog">Writing</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>

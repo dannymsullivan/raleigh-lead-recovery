@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
-import { outreachStages, type OutreachStage } from "@/lib/outreach";
+import { outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -61,6 +61,29 @@ export async function addOutreachProspectAction(formData: FormData): Promise<voi
 
   revalidatePath("/admin/outreach");
   redirect("/admin/outreach?created=1");
+}
+
+export async function bulkAddOutreachProspectsAction(formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const { rows, skipped } = parseOutreachBulkLines(formString(formData, "bulk_lines"));
+  if (!rows.length) redirect("/admin/outreach?error=bulk#bulk-add");
+
+  const admin = getSupabaseAdmin();
+  const { data: existingData } = await admin.from("outreach_prospects").select("company_name");
+  const existing = new Set(
+    ((existingData ?? []) as Array<{ company_name: string }>).map((row) => row.company_name.toLowerCase()),
+  );
+  const fresh = rows.filter((row) => !existing.has(row.company_name.toLowerCase()));
+  const duplicates = skipped + (rows.length - fresh.length);
+  if (!fresh.length) redirect(`/admin/outreach?bulk_added=0&bulk_skipped=${duplicates}#bulk-add`);
+
+  const { error } = await admin
+    .from("outreach_prospects")
+    .insert(fresh.map((row) => ({ ...row, stage: "not_contacted" as OutreachStage })));
+  if (error) throw error;
+
+  revalidatePath("/admin/outreach");
+  redirect(`/admin/outreach?bulk_added=${fresh.length}&bulk_skipped=${duplicates}`);
 }
 
 export async function updateOutreachProspectAction(

@@ -69,3 +69,38 @@ export function buildOutreachSummary(
 export function outreachWebsiteHref(value: string): string {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
+
+export type OutreachBulkRow = {
+  company_name: string;
+  city: string | null;
+  website: string | null;
+  phone: string | null;
+};
+
+export const outreachBulkLineLimit = 100;
+
+// Format: one prospect per line, fields separated by "|" or tabs:
+// Company | City | Website | Phone — only the company is required.
+export function parseOutreachBulkLines(text: string): { rows: OutreachBulkRow[]; skipped: number } {
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, outreachBulkLineLimit);
+  const seen = new Set<string>();
+  const rows: OutreachBulkRow[] = [];
+  let skipped = 0;
+  for (const line of lines) {
+    const [company, city, website, phone] = line.split(/\||\t/).map((part) => part.trim());
+    const companyName = (company ?? "").slice(0, 160);
+    const key = companyName.toLowerCase();
+    if (!companyName || seen.has(key)) {
+      skipped += 1;
+      continue;
+    }
+    seen.add(key);
+    rows.push({
+      company_name: companyName,
+      city: city?.slice(0, 100) || null,
+      website: website?.slice(0, 500) || null,
+      phone: phone?.slice(0, 60) || null,
+    });
+  }
+  return { rows, skipped };
+}

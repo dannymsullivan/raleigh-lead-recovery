@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildOutreachSummary, outreachWebsiteHref } from "@/lib/outreach";
+import { buildOutreachSummary, outreachWebsiteHref, parseOutreachBulkLines } from "@/lib/outreach";
 
 describe("outreach tracker", () => {
   it("summarizes the founder pipeline and due follow-ups", () => {
@@ -19,5 +19,23 @@ describe("outreach tracker", () => {
   it("turns a bare domain into a safe outbound link", () => {
     expect(outreachWebsiteHref("example.com")).toBe("https://example.com");
     expect(outreachWebsiteHref("https://example.com")).toBe("https://example.com");
+  });
+
+  it("parses pasted bulk lines into prospects with optional fields", () => {
+    const { rows, skipped } = parseOutreachBulkLines(
+      "Cool Breeze HVAC | Raleigh | coolbreeze.com | (919) 555-0100\nComfort Pros\n\nCool Breeze HVAC | Durham\n| Cary",
+    );
+    expect(rows).toEqual([
+      { company_name: "Cool Breeze HVAC", city: "Raleigh", website: "coolbreeze.com", phone: "(919) 555-0100" },
+      { company_name: "Comfort Pros", city: null, website: null, phone: null },
+    ]);
+    expect(skipped).toBe(2);
+  });
+
+  it("accepts tab-separated bulk lines from spreadsheets", () => {
+    const { rows } = parseOutreachBulkLines("Airflow Experts\tApex\tairflowexperts.com");
+    expect(rows).toEqual([
+      { company_name: "Airflow Experts", city: "Apex", website: "airflowexperts.com", phone: null },
+    ]);
   });
 });

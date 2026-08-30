@@ -121,6 +121,7 @@ export default async function ReactivationDashboardPage({
     ? (firstParam(search.lead_segment) as LeadSegment)
     : "";
   const leadPage = pageNumber(search.lead_page);
+  const requestedView = firstParam(search.view);
   const dateBoundaries = eventDateBoundaries();
 
   let contacts: ReactivationContact[] = [];
@@ -279,6 +280,12 @@ export default async function ReactivationDashboardPage({
       attempts = (attemptData ?? []) as ReactivationAttempt[];
     }
   }
+  const activeView: "leads" | "campaign" =
+    requestedView === "campaign" || requestedView === "leads"
+      ? requestedView
+      : contactTotal
+        ? "leads"
+        : "campaign";
 
   return (
     <DashboardShell active="reactivation" client={client}>
@@ -363,6 +370,25 @@ export default async function ReactivationDashboardPage({
               />
             </section>
 
+            <nav
+              className="mt-8 flex gap-1 border-b-2 border-black"
+              aria-label="Reactivation sections"
+            >
+              <ViewTab
+                active={activeView === "leads"}
+                href="/dashboard/reactivation?view=leads"
+              >
+                Leads ({contactTotal.toLocaleString()})
+              </ViewTab>
+              <ViewTab
+                active={activeView === "campaign"}
+                href="/dashboard/reactivation?view=campaign"
+              >
+                Campaign &amp; import
+              </ViewTab>
+            </nav>
+
+            {activeView === "campaign" ? (
             <section className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(480px,1.1fr)]">
               <div className="border-2 border-black bg-white p-6 sm:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-5">
@@ -521,9 +547,11 @@ export default async function ReactivationDashboardPage({
                 />
               )}
             </section>
+            ) : null}
 
+            {activeView === "leads" ? (
             <section
-              className="scroll-mt-6 mt-8 border border-black bg-white"
+              className="scroll-mt-6 mt-6 border border-black bg-white"
               id="leads"
             >
               <div className="border-b border-black p-4 sm:p-5">
@@ -570,9 +598,20 @@ export default async function ReactivationDashboardPage({
                 ))}
                 {!contacts.length ? (
                   <p className="p-8 text-center text-sm font-semibold text-black/45">
-                    {contactTotal
-                      ? "No leads match these filters."
-                      : "Upload the first eligible spreadsheet to populate this campaign."}
+                    {contactTotal ? (
+                      "No leads match these filters."
+                    ) : (
+                      <>
+                        No leads loaded yet.{" "}
+                        <Link
+                          className="font-black text-black underline underline-offset-4"
+                          href="/dashboard/reactivation?view=campaign"
+                        >
+                          Upload your first spreadsheet
+                        </Link>{" "}
+                        to populate this campaign.
+                      </>
+                    )}
                   </p>
                 ) : null}
               </div>
@@ -586,6 +625,7 @@ export default async function ReactivationDashboardPage({
                 total={filteredContactTotal}
               />
             </section>
+            ) : null}
           </>
         )}
     </DashboardShell>
@@ -835,6 +875,29 @@ function Metric({
       </p>
       <p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p>
     </div>
+  );
+}
+function ViewTab({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`inline-flex min-h-11 items-center gap-2 border-x-2 border-t-2 px-4 text-sm font-black ${
+        active
+          ? "border-black bg-[#d8ff57] text-black"
+          : "border-transparent text-black/50 hover:bg-black/5 hover:text-black"
+      }`}
+    >
+      {children}
+    </Link>
   );
 }
 function Status({ value }: { value: string }) {
