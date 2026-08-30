@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import {
-  ArrowUpRight,
   CalendarClock,
-  Mail,
   MessageSquareReply,
   Plus,
   Send,
@@ -17,15 +15,17 @@ import { DeleteRecordButton } from "../delete-record-button";
 import {
   addOutreachProspectAction,
   bulkAddOutreachProspectsAction,
+  bulkDeleteOutreachProspectsAction,
   deleteOutreachProspectAction,
   updateOutreachProspectAction,
 } from "./actions";
+import { ProspectBulkToolbar } from "./prospect-bulk-toolbar";
+import { ProspectRow } from "./prospect-row";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import {
   buildOutreachSummary,
   outreachStageLabels,
   outreachStages,
-  outreachWebsiteHref,
   type OutreachProspect,
   type OutreachStage,
 } from "@/lib/outreach";
@@ -87,11 +87,15 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         ? "Prospect removed."
         : typeof search.bulk_added === "string"
           ? `${search.bulk_added} prospect${search.bulk_added === "1" ? "" : "s"} added${Number(search.bulk_skipped) ? ` · ${search.bulk_skipped} skipped as duplicates or blank lines` : ""}.`
-          : search.error === "company"
-            ? "Company name is required."
-            : search.error === "bulk"
-              ? "Paste at least one line with a company name."
-              : null;
+          : typeof search.bulk_deleted === "string"
+            ? `${search.bulk_deleted} prospect${search.bulk_deleted === "1" ? "" : "s"} removed.`
+            : search.error === "company"
+              ? "Company name is required."
+              : search.error === "bulk"
+                ? "Paste at least one line with a company name."
+                : search.error === "bulk_delete"
+                  ? "Select at least one prospect to delete."
+                  : null;
 
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
@@ -235,21 +239,49 @@ export default async function OutreachPage({ searchParams }: PageProps) {
               ) : null}
             </div>
           ) : (
-            <div className="mt-5 border border-[var(--product-line-strong)] bg-white">
-              <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(180px,1fr)_145px_110px_130px_112px] gap-4 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-3 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
-                <span>Company</span>
-                <span>Contact</span>
-                <span>Stage</span>
-                <span>Last touch</span>
-                <span>Next follow-up</span>
-                <span className="text-right">Actions</span>
+            <>
+              <div className="mt-4">
+                <ProspectBulkToolbar
+                  action={bulkDeleteOutreachProspectsAction}
+                  formId="outreach-bulk-delete"
+                  total={visibleProspects.length}
+                />
               </div>
-              <div className="divide-y divide-[var(--product-line)]">
-                {visibleProspects.map((prospect) => (
-                  <ProspectRow key={prospect.id} prospect={prospect} />
-                ))}
+              <div className="mt-3 border border-[var(--product-line-strong)] bg-white">
+                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(180px,1fr)_145px_110px_130px_150px] gap-4 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-3 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
+                  <span>Company</span>
+                  <span>Contact</span>
+                  <span>Stage</span>
+                  <span>Last touch</span>
+                  <span>Next follow-up</span>
+                  <span className="text-right">Actions</span>
+                </div>
+                <div className="divide-y divide-[var(--product-line)]">
+                  {visibleProspects.map((prospect) => (
+                    <ProspectRow
+                      key={prospect.id}
+                      prospect={prospect}
+                      bulkFormId="outreach-bulk-delete"
+                      editForm={
+                        <>
+                          <ProspectForm
+                            action={updateOutreachProspectAction.bind(null, prospect.id)}
+                            prospect={prospect}
+                          />
+                          <div className="mt-3 border-t border-[var(--product-line)] pt-3">
+                            <DeleteRecordButton
+                              action={deleteOutreachProspectAction.bind(null, prospect.id)}
+                              label="Remove prospect"
+                              confirmMessage={`Remove ${prospect.company_name} from the outreach tracker?`}
+                            />
+                          </div>
+                        </>
+                      }
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            </>
           )}
         </section>
       </div>
@@ -292,93 +324,6 @@ function StageFilter({ href, active, children }: { href: string; active: boolean
     >
       {children}
     </Link>
-  );
-}
-
-function ProspectRow({ prospect }: { prospect: OutreachProspect }) {
-  const due = isFollowUpDue(prospect);
-  return (
-    <article className="grid gap-4 px-4 py-4 lg:grid-cols-[minmax(190px,1.25fr)_minmax(180px,1fr)_145px_110px_130px_112px] lg:items-center">
-      <div className="min-w-0">
-        <p className="font-black leading-5">{prospect.company_name}</p>
-        <p className="mt-1 truncate text-xs font-semibold text-black/45">
-          {[prospect.city, prospect.website ? displayWebsite(prospect.website) : null].filter(Boolean).join(" · ") || "Company details not added"}
-        </p>
-      </div>
-      <div className="min-w-0">
-        <p className="truncate text-sm font-bold">{prospect.contact_name || "Contact not found"}</p>
-        <p className="mt-1 truncate text-xs font-semibold text-black/45">{prospect.contact_role || prospect.email || "Add a role or email"}</p>
-      </div>
-      <div><StagePill stage={prospect.stage} /></div>
-      <LabeledValue label="Last touch" value={formatDate(prospect.last_contacted_on)} />
-      <LabeledValue label="Next follow-up" value={formatDate(prospect.next_follow_up_on)} due={due} />
-      <div className="flex items-center gap-2 lg:justify-end">
-        {prospect.email ? (
-          <a
-            className="grid h-10 w-10 place-items-center border border-[var(--product-line-strong)] bg-white hover:border-black hover:bg-[var(--product-surface-muted)]"
-            href={`mailto:${prospect.email}`}
-            aria-label={`Email ${prospect.contact_name || prospect.company_name}`}
-            title={prospect.email}
-          >
-            <Mail className="h-4 w-4" aria-hidden="true" />
-          </a>
-        ) : null}
-        {prospect.website ? (
-          <a
-            className="grid h-10 w-10 place-items-center border border-[var(--product-line-strong)] bg-white hover:border-black hover:bg-[var(--product-surface-muted)]"
-            href={outreachWebsiteHref(prospect.website)}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Open ${prospect.company_name} website`}
-          >
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-        ) : null}
-      </div>
-      <details className="border-t border-[var(--product-line)] pt-3 lg:col-span-6">
-        <summary className="inline-flex min-h-10 cursor-pointer list-none items-center text-xs font-black underline decoration-1 underline-offset-4">
-          Edit prospect
-        </summary>
-        <div className="mt-3 border border-[var(--product-line)] bg-[var(--product-surface-muted)] p-4">
-          <ProspectForm
-            action={updateOutreachProspectAction.bind(null, prospect.id)}
-            prospect={prospect}
-          />
-          <div className="mt-3 border-t border-[var(--product-line)] pt-3">
-            <DeleteRecordButton
-              action={deleteOutreachProspectAction.bind(null, prospect.id)}
-              label="Remove prospect"
-              confirmMessage={`Remove ${prospect.company_name} from the outreach tracker?`}
-            />
-          </div>
-        </div>
-      </details>
-    </article>
-  );
-}
-
-function LabeledValue({ label, value, due = false }: { label: string; value: string; due?: boolean }) {
-  return (
-    <div>
-      <p className="mb-1 font-mono text-[8px] font-bold uppercase tracking-[0.1em] text-black/40 lg:hidden">{label}</p>
-      <p className={`text-xs font-bold tabular-nums ${due ? "text-red-700" : "text-black/55"}`}>{value}</p>
-    </div>
-  );
-}
-
-function StagePill({ stage }: { stage: OutreachStage }) {
-  const classes =
-    stage === "pilot_booked"
-      ? "border-black bg-[var(--product-accent)] text-black"
-      : stage === "not_interested"
-        ? "border-[var(--product-line-strong)] text-black/40"
-        : stage === "replied" || stage === "call_scheduled"
-          ? "border-black bg-black text-white"
-          : "border-[var(--product-line-strong)] bg-white text-black/60";
-  return (
-    <span className={`inline-flex border px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.07em] ${classes}`}>
-      {outreachStageLabels[stage]}
-    </span>
   );
 }
 
@@ -462,18 +407,3 @@ function SelectField({ label, name, value }: { label: string; name: string; valu
   );
 }
 
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(
-    new Date(`${value}T12:00:00Z`),
-  );
-}
-
-function isFollowUpDue(prospect: OutreachProspect): boolean {
-  if (!prospect.next_follow_up_on || ["pilot_booked", "not_interested"].includes(prospect.stage)) return false;
-  return prospect.next_follow_up_on <= new Date().toISOString().slice(0, 10);
-}
-
-function displayWebsite(value: string): string {
-  return value.replace(/^https?:\/\//i, "").replace(/\/$/, "");
-}

@@ -104,6 +104,21 @@ export async function updateOutreachProspectAction(
   redirect("/admin/outreach?updated=1");
 }
 
+export async function bulkDeleteOutreachProspectsAction(formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const ids = formData
+    .getAll("prospect_ids")
+    .filter((value): value is string => typeof value === "string" && value.length > 0)
+    .slice(0, 500);
+  if (!ids.length) redirect("/admin/outreach?error=bulk_delete");
+
+  const { error } = await getSupabaseAdmin().from("outreach_prospects").delete().in("id", ids);
+  if (error) throw error;
+
+  revalidatePath("/admin/outreach");
+  redirect(`/admin/outreach?bulk_deleted=${ids.length}`);
+}
+
 export async function deleteOutreachProspectAction(prospectId: string): Promise<void> {
   await requireAdminSession();
   const { error } = await getSupabaseAdmin()
