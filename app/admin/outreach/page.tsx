@@ -115,7 +115,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           </div>
         ) : null}
 
-        <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <section>
           <div className="max-w-2xl">
             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-black/45">
               HVAC pilot pipeline
@@ -127,12 +127,6 @@ export default async function OutreachPage({ searchParams }: PageProps) {
               Keep the list small, send personal emails, and always leave a clear next follow-up.
             </p>
           </div>
-          <a
-            className="inline-flex min-h-11 items-center justify-center gap-2 self-start bg-black px-4 text-sm font-black text-white sm:self-auto"
-            href="#add-prospect"
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" /> Add prospect
-          </a>
         </section>
 
         <section className="mt-7 grid grid-cols-2 border-l border-t border-[var(--product-line)] bg-white sm:grid-cols-5" aria-label="Outreach summary">
@@ -146,7 +140,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         <details
           className="mt-7 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
           id="add-prospect"
-          open={search.error === "website"}
+          open={search.error === "website" || prospects.length === 0}
         >
           <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 sm:px-5">
             <span className="flex items-center gap-3">
