@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Calculator, Check, CircleAlert, DollarSign, ExternalLink, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -14,6 +15,7 @@ import { isClientDeletionLocked } from "@/lib/client-deletion";
 import { AdminHeader } from "./admin-header";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Admin | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

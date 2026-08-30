@@ -11,6 +11,11 @@ export function normalizePhoneNumber(input: string): string | null {
   return null;
 }
 
+export function formatPhoneDisplay(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(-10);
+  return digits.length === 10 ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : value;
+}
+
 export function maskPhoneNumber(phone: string): string {
   const digits = phone.replace(/\D/g, "");
   const local = digits.length === 11 && digits.startsWith("1") ? digits.slice(1) : digits;

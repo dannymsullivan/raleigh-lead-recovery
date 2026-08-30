@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { bucketLabel, type LeadBucket } from "@/lib/lead-import";
 import { assessOpportunityDate } from "@/lib/lead-eligibility";
 import { daysUntilEvent, leadEventTypeLabel, leadSegments, leadUrgencyLabel, urgencyBandForDate } from "@/lib/lead-enrichment";
@@ -62,6 +62,25 @@ export function LeadContext({ contact, serviceType = "" }: { contact: Reactivati
   const eventType = contact.event_type && contact.event_type !== "unknown" && contact.event_type !== "other" ? leadEventTypeLabel(contact.event_type) : null;
   if (!contact.notes && !useful.length && !dateEligibility.required && !eventType) return null;
   return <div className="mt-3"><div className="flex flex-wrap gap-1.5">{eventType ? <span className="rounded-sm border border-black/20 bg-white px-2 py-1 text-[10px] font-black">{eventType}</span> : null}{urgency !== "unknown" ? <span className={`rounded-sm border px-2 py-1 text-[10px] font-black ${urgency === "urgent_14" ? "border-black bg-[#d8ff57]" : "border-black/20 bg-white"}`}>{leadUrgencyLabel(urgency)}{days !== null ? ` · ${days}d` : ""}</span> : null}{contact.priority_score ? <span className="rounded-sm border border-black/20 bg-white px-2 py-1 font-mono text-[9px] font-bold text-black/50">Priority {contact.priority_score}</span> : null}</div><details className="mt-2 border-l-2 border-black bg-black/[0.035] px-3 py-2"><summary className="cursor-pointer text-xs font-black">Why this lead is here</summary><div className="mt-3 grid gap-3 text-xs font-semibold text-black/60">{dateEligibility.required ? <div className={`border p-3 ${dateEligibility.eligible ? "border-black/20 bg-[#d8ff57]" : "border-black bg-[#ffd7cc]"}`}><p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em]">Date eligibility</p><p className="mt-1 font-black text-black">{dateEligibility.label}{dateEligibility.rawDate ? ` · ${dateEligibility.rawDate}` : ""}</p><p className="mt-1 text-[10px] font-semibold text-black/55">Event campaigns contact only leads with a confirmed date after today.</p></div> : null}{contact.notes ? <p className="whitespace-pre-line leading-5">{contact.notes}</p> : null}{useful.length ? <dl className="grid gap-2 sm:grid-cols-2">{useful.map(([label, value]) => <div key={label}><dt className="font-mono text-[8px] font-bold uppercase text-black/35">{label}</dt><dd className="mt-1 font-bold text-black/65">{value}</dd></div>)}</dl> : null}</div></details></div>;
+}
+
+export function LaunchChecklist({ agentReady, hasEligibleLeads, attested }: { agentReady: boolean; hasEligibleLeads: boolean; attested: boolean }) {
+  if (agentReady && hasEligibleLeads && attested) return null;
+  return <div className="mt-4 border-2 border-black bg-white p-3">
+    <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/45">Before you can launch</p>
+    <ul className="mt-2 grid gap-1.5 text-xs font-bold">
+      <LaunchStep done={agentReady} label="Set up the Lead Recovery agent" />
+      <LaunchStep done={hasEligibleLeads} label="Import at least one eligible lead" />
+      <LaunchStep done={attested} label="Confirm list eligibility during import" />
+    </ul>
+  </div>;
+}
+
+function LaunchStep({ done, label }: { done: boolean; label: string }) {
+  return <li className="flex items-center gap-2">
+    <span className={`grid h-4 w-4 flex-none place-items-center rounded-full border border-black ${done ? "bg-black text-white" : "bg-white"}`}>{done ? <Check className="h-2.5 w-2.5" /> : null}</span>
+    <span className={done ? "text-black/40" : ""}>{label}</span>
+  </li>;
 }
 
 export function ImportReceipt({ imported, skipped, suppressed, buckets, replaced }: { imported: string; skipped: string; suppressed: string; buckets: string; replaced: boolean }) {

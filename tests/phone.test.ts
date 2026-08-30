@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maskPhoneNumber, normalizePhoneNumber } from "@/lib/phone";
+import { formatPhoneDisplay, maskPhoneNumber, normalizePhoneNumber } from "@/lib/phone";
 
 describe("phone authentication helpers", () => {
   it("normalizes common US phone formats", () => {
@@ -14,5 +14,11 @@ describe("phone authentication helpers", () => {
 
   it("masks phone numbers shown on the verification screen", () => {
     expect(maskPhoneNumber("+19195550123")).toBe("(***) ***-0123");
+  });
+
+  it("formats E.164 numbers for dashboard display and passes through non-US values", () => {
+    expect(formatPhoneDisplay("+19195550123")).toBe("(919) 555-0123");
+    expect(formatPhoneDisplay("9195550123")).toBe("(919) 555-0123");
+    expect(formatPhoneDisplay("555-0123")).toBe("555-0123");
   });
 });

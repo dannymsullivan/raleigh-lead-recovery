@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ArrowUpRight,
   CalendarClock,
@@ -30,6 +31,7 @@ import {
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Outreach | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

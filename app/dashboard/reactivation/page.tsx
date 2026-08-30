@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   CalendarCheck,
-  Check,
   CircleAlert,
   Database,
   Headphones,
@@ -34,6 +33,7 @@ import type {
   ReactivationCampaign,
   ReactivationContact,
 } from "@/lib/types";
+import { formatPhoneDisplay } from "@/lib/phone";
 import { recordingPlaybackPath } from "@/lib/recording";
 import {
   createReactivationCampaignAction,
@@ -45,6 +45,7 @@ import {
 import { LeadImporter } from "./lead-importer";
 import {
   ImportReceipt,
+  LaunchChecklist,
   LeadContext,
   LeadFilters,
   LeadPagination,
@@ -425,29 +426,11 @@ export default async function ReactivationDashboardPage({
                             every call.
                           </p>
                         ) : null}
-                        {!telephonyReady ||
-                        !campaign.eligibility_attested_at ||
-                        !eligibleTotal ? (
-                          <div className="mt-4 border-2 border-black bg-white p-3">
-                            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/45">
-                              Before you can launch
-                            </p>
-                            <ul className="mt-2 grid gap-1.5 text-xs font-bold">
-                              <LaunchStep
-                                done={telephonyReady}
-                                label="Set up the Lead Recovery agent"
-                              />
-                              <LaunchStep
-                                done={Boolean(eligibleTotal)}
-                                label="Import at least one eligible lead"
-                              />
-                              <LaunchStep
-                                done={Boolean(campaign.eligibility_attested_at)}
-                                label="Confirm list eligibility during import"
-                              />
-                            </ul>
-                          </div>
-                        ) : null}
+                        <LaunchChecklist
+                          agentReady={telephonyReady}
+                          hasEligibleLeads={Boolean(eligibleTotal)}
+                          attested={Boolean(campaign.eligibility_attested_at)}
+                        />
                         <form
                           className="mt-4"
                           action={launchReactivationCampaignAction.bind(
@@ -721,7 +704,7 @@ function LeadCard({
           <h3 className="mt-3 text-xl font-black">{contact.name}</h3>
           <p className="mt-1 text-sm font-semibold text-black/45">
             {contact.source || "Imported lead"} ·{" "}
-            {formatPhone(contact.phone_e164)}
+            {formatPhoneDisplay(contact.phone_e164)}
           </p>
           {contact.qualification_notes || latest?.summary ? (
             <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">
@@ -854,18 +837,6 @@ function Metric({
     </div>
   );
 }
-function LaunchStep({ done, label }: { done: boolean; label: string }) {
-  return (
-    <li className="flex items-center gap-2">
-      <span
-        className={`grid h-4 w-4 flex-none place-items-center rounded-full border border-black ${done ? "bg-black text-white" : "bg-white"}`}
-      >
-        {done ? <Check className="h-2.5 w-2.5" /> : null}
-      </span>
-      <span className={done ? "text-black/40" : ""}>{label}</span>
-    </li>
-  );
-}
 function Status({ value }: { value: string }) {
   const accent =
     value === "interested" || value === "running" || value === "booked";
@@ -905,12 +876,6 @@ function Field({
       />
     </label>
   );
-}
-function formatPhone(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(-10);
-  return digits.length === 10
-    ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
-    : value;
 }
 function dashboardMessage(
   search: Record<string, string | string[] | undefined>,

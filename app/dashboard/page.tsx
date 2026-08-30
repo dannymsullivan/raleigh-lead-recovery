@@ -7,6 +7,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { contactHref } from "@/lib/contact";
 import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/report";
 import { classifyRetellProvisioningError } from "@/lib/customer-agent-provisioning";
+import { formatPhoneDisplay } from "@/lib/phone";
 import type { Call, Client, CustomerAgent } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
 import { DashboardShell, trialDaysLeft } from "./dashboard-shell";
@@ -28,12 +29,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   if (!clientData) redirect("/signup?error=workspace");
   const client = clientData as Client;
   if (!client.onboarding_completed_at) redirect("/onboarding");
-  const [{ data: callData }, { data: agentData }] = await Promise.all([
+  const [{ data: callData }, { data: agentData }, { count: campaignCount }] = await Promise.all([
     admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50),
-    admin.from("customer_agents").select("*").eq("client_id", client.id).eq("is_default", true)
+    admin.from("customer_agents").select("*").eq("client_id", client.id).eq("is_default", true),
+    admin.from("reactivation_campaigns").select("id", { count: "exact", head: true }).eq("client_id", client.id)
   ]);
   const calls = (callData ?? []) as Call[];
   const agents = (agentData ?? []) as CustomerAgent[];
+  const hasCampaign = (campaignCount ?? 0) > 0;
   const receptionist = agents.find((agent) => agent.agent_type === "receptionist") ?? null;
   const leadRecovery = agents.find((agent) => agent.agent_type === "lead_reactivation") ?? null;
   const report = buildReportModel(client, calls);
@@ -60,24 +63,26 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         />
       ) : null}
 
-          <section className="mb-7 border-2 border-black bg-white p-5 sm:p-6">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Your first pilot</p>
-                <h2 className="mt-2 text-xl font-black">Three steps to get your first recovery campaign live.</h2>
-                <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-black/55">Start with 25 old leads. We’ll check the list, confirm the calling rules, and help you review the first results before scaling.</p>
+          {!hasCampaign ? (
+            <section className="mb-7 border-2 border-black bg-white p-5 sm:p-6">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Your first pilot</p>
+                  <h2 className="mt-2 text-xl font-black">Three steps to get your first recovery campaign live.</h2>
+                  <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-black/55">Start with 25 old leads. We’ll check the list, confirm the calling rules, and help you review the first results before scaling.</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-black text-white" href="/dashboard/reactivation">Send 25 contacts <ChevronRight className="h-4 w-4" /></Link>
+                  <a className="inline-flex h-11 items-center gap-2 border-2 border-black px-4 text-sm font-black" href={bookingHref} target="_blank" rel="noreferrer">Book setup call <ArrowUpRight className="h-4 w-4" /></a>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-black text-white" href="/dashboard/reactivation">Send 25 contacts <ChevronRight className="h-4 w-4" /></Link>
-                <a className="inline-flex h-11 items-center gap-2 border-2 border-black px-4 text-sm font-black" href={bookingHref} target="_blank" rel="noreferrer">Book setup call <ArrowUpRight className="h-4 w-4" /></a>
+              <div className="mt-5 grid gap-3 border-t-2 border-black pt-5 sm:grid-cols-3">
+                <PilotStep number="01" title="Import" detail="Upload a CSV with up to 25 prior leads." />
+                <PilotStep number="02" title="Review" detail="We verify eligibility, suppression, and timing." />
+                <PilotStep number="03" title="Recover" detail="Launch carefully and watch the outcomes together." />
               </div>
-            </div>
-            <div className="mt-5 grid gap-3 border-t-2 border-black pt-5 sm:grid-cols-3">
-              <PilotStep number="01" title="Import" detail="Upload a CSV with up to 25 prior leads." />
-              <PilotStep number="02" title="Review" detail="We verify eligibility, suppression, and timing." />
-              <PilotStep number="03" title="Recover" detail="Launch carefully and watch the outcomes together." />
-            </div>
-          </section>
+            </section>
+          ) : null}
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Overview</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s what came in.</h1></div>
@@ -163,7 +168,7 @@ function ActivationCard({ client, agent, leadRecovery }: { client: Client; agent
   return (
     <div className="border-2 border-black bg-black p-6 text-white">
       <Sparkles className="h-6 w-6" /><p className="mt-7 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Go-live checklist</p><h2 className="mt-3 text-2xl font-black tracking-[-0.04em]">{ready ? "Your Raleigh Lead Recovery number is ready." : guidedSetup ? "Your guided setup is queued." : verificationRequired || accountUpdateRequired ? "We’re finishing your phone setup." : status === "error" || status === "needs_configuration" ? "Provisioning needs attention." : "Building your call setup…"}</h2>
-      {number ? <a className="mt-5 block text-3xl font-black tracking-[-0.04em]" href={`tel:${number}`}>{formatPhone(number)}</a> : null}
+      {number ? <a className="mt-5 block text-3xl font-black tracking-[-0.04em]" href={`tel:${number}`}>{formatPhoneDisplay(number)}</a> : null}
       <ol className="mt-6 grid gap-4 text-sm font-bold text-white/70"><ChecklistItem done={Boolean(agent?.retell_agent_id)} label="24/7 coverage configured" /><ChecklistItem done={leadRecoveryReady} label="Lead recovery configured" /><ChecklistItem done={Boolean(agent?.retell_phone_number)} label="Shared number assigned" /><ChecklistItem done={Boolean(client.forwarding_completed_at)} label="Missed-call forwarding on" /><ChecklistItem done={Boolean(client.test_call_completed_at)} label="Test call received" /></ol>
       {ready && !client.forwarding_completed_at ? <><p className="mt-6 border-t border-white/20 pt-5 text-xs font-semibold leading-5 text-white/60">In your phone system, turn on conditional forwarding for missed, busy, or after-hours calls and enter the Raleigh Lead Recovery number above. Your existing business number stays the same. We&apos;ll test it before launch.</p><form action={markForwardingCompleteAction}><button className="mt-4 w-full bg-white px-4 py-3 text-sm font-black text-black" type="submit">I&apos;ve turned forwarding on</button></form></> : null}
       {ready && client.forwarding_completed_at && !client.test_call_completed_at && number ? <a className="mt-7 inline-flex w-full items-center justify-center gap-2 bg-white px-4 py-3 text-sm font-black text-black" href={`tel:${number}`}><PhoneCall className="h-4 w-4" /> Make the test call</a> : null}
@@ -181,4 +186,3 @@ function Metric({ label, value, detail, mobileWide = false }: { label: string; v
 function SmallStat({ label, value }: { label: string; value: string }) { return <div><p className="text-2xl font-black">{value}</p><p className="mt-1 text-[10px] font-bold uppercase text-black/40">{label}</p></div>; }
 function daypart(): string { const hour = new Date().getHours(); return hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"; }
 function formatShortDate(value: string): string { const date = value.includes("T") ? new Date(value) : new Date(`${value}T12:00:00`); return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date); }
-function formatPhone(value: string): string { const digits = value.replace(/\D/g, "").slice(-10); return digits.length === 10 ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : value; }

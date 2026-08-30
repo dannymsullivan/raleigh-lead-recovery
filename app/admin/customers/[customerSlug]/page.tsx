@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -48,6 +49,7 @@ import { recordingPlaybackPath } from "@/lib/recording";
 import { LeadImporter } from "@/app/dashboard/reactivation/lead-importer";
 import {
   ImportReceipt,
+  LaunchChecklist,
   LeadContext,
   LeadFilters,
   LeadPagination,
@@ -81,6 +83,7 @@ import { AgentManager } from "@/app/dashboard/agents/agent-manager";
 import { saveAdminCustomerAgentAction } from "@/app/dashboard/agents/actions";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Customer CRM | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 type PageProps = {
   params: Promise<{ customerSlug: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -1003,12 +1006,11 @@ function CampaignControls({
             </form>
           </div>
         ) : null}
-        {!agentReady ? (
-          <p className="mt-4 border-l-4 border-[#c33124] bg-white p-3 text-xs font-black">
-            Set up this customer&apos;s Lead Recovery agent above before
-            launching.
-          </p>
-        ) : null}
+        <LaunchChecklist
+          agentReady={agentReady}
+          hasEligibleLeads={Boolean(total)}
+          attested={Boolean(campaign.eligibility_attested_at)}
+        />
         <form
           className="mt-4"
           action={launchAdminCampaignAction.bind(
@@ -1024,7 +1026,9 @@ function CampaignControls({
           </label>
           <button
             className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 bg-black px-3 text-xs font-black text-white disabled:opacity-35"
-            disabled={!total || !agentReady}
+            disabled={
+              !total || !agentReady || !campaign.eligibility_attested_at
+            }
             type="submit"
           >
             <Play className="h-3.5 w-3.5" /> Confirm and launch
