@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   CalendarCheck,
+  Check,
   CircleAlert,
   Database,
   Headphones,
@@ -12,8 +13,7 @@ import {
   Play,
   Users,
 } from "lucide-react";
-import { BrandMark } from "@/app/components/brand-mark";
-import { DashboardSidebar } from "../dashboard-sidebar";
+import { DashboardShell } from "../dashboard-shell";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { customerAgentReady } from "@/lib/customer-agent-config";
@@ -280,36 +280,11 @@ export default async function ReactivationDashboardPage({
   }
 
   return (
-    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
-      <header className="border-b-2 border-black">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-5 py-5 sm:px-8">
-          <BrandMark />
-          <div className="flex items-center gap-4">
-            <Link
-              className="hidden text-sm font-black sm:inline"
-              href="/dashboard"
-            >
-              Call inbox
-            </Link>
-            <Link className="text-sm font-black" href="/dashboard/agents">
-              Agents
-            </Link>
-            <Link
-              className="inline-flex items-center gap-2 border-2 border-black px-3 py-2 text-sm font-black"
-              href="/dashboard/settings"
-            >
-              Business
-            </Link>
-          </div>
-        </div>
-      </header>
-      <div className="mx-auto grid max-w-[1500px] lg:grid-cols-[230px_1fr]">
-        <DashboardSidebar active="reactivation" />
-        <div className="min-w-0 px-5 py-8 sm:px-8 sm:py-11">
+    <DashboardShell active="reactivation" client={client}>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">
-              Lead recovery command center
+              Reactivation
             </p>
             <h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">
               Turn the old list back on.
@@ -449,6 +424,29 @@ export default async function ReactivationDashboardPage({
                             contacted. The date is rechecked immediately before
                             every call.
                           </p>
+                        ) : null}
+                        {!telephonyReady ||
+                        !campaign.eligibility_attested_at ||
+                        !eligibleTotal ? (
+                          <div className="mt-4 border-2 border-black bg-white p-3">
+                            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/45">
+                              Before you can launch
+                            </p>
+                            <ul className="mt-2 grid gap-1.5 text-xs font-bold">
+                              <LaunchStep
+                                done={telephonyReady}
+                                label="Set up the Lead Recovery agent"
+                              />
+                              <LaunchStep
+                                done={Boolean(eligibleTotal)}
+                                label="Import at least one eligible lead"
+                              />
+                              <LaunchStep
+                                done={Boolean(campaign.eligibility_attested_at)}
+                                label="Confirm list eligibility during import"
+                              />
+                            </ul>
+                          </div>
                         ) : null}
                         <form
                           className="mt-4"
@@ -607,9 +605,7 @@ export default async function ReactivationDashboardPage({
             </section>
           </>
         )}
-        </div>
-      </div>
-    </main>
+    </DashboardShell>
   );
 }
 
@@ -858,6 +854,18 @@ function Metric({
     </div>
   );
 }
+function LaunchStep({ done, label }: { done: boolean; label: string }) {
+  return (
+    <li className="flex items-center gap-2">
+      <span
+        className={`grid h-4 w-4 flex-none place-items-center rounded-full border border-black ${done ? "bg-black text-white" : "bg-white"}`}
+      >
+        {done ? <Check className="h-2.5 w-2.5" /> : null}
+      </span>
+      <span className={done ? "text-black/40" : ""}>{label}</span>
+    </li>
+  );
+}
 function Status({ value }: { value: string }) {
   const accent =
     value === "interested" || value === "running" || value === "booked";
@@ -922,7 +930,7 @@ function dashboardMessage(
     bucket_selection: "Choose at least one opportunity bucket to import.",
     import: "The lead list could not be imported.",
     telephony:
-      "Campaign launch is locked until the production caller number is connected.",
+      "Calling is not connected yet. Finish the Lead Recovery agent setup before launching.",
     agent_not_ready:
       "Set up this customer’s Lead Recovery agent before launching the campaign.",
   };

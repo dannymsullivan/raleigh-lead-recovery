@@ -385,6 +385,29 @@ export default async function CustomerCrmPage({
             </p>
           </div>
         </div>
+        <nav aria-label="On this page" className="mt-6 flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/40">
+            Jump to
+          </span>
+          {[
+            ["#customer-access", "Access"],
+            ["#agents", "Agents"],
+            ["#lead-import", "Upload leads"],
+            ["#campaign-settings", "Campaign"],
+            ["#leads", "Lead workspace"],
+            ...(inboundCalls.length
+              ? [["#inbound-calls", "Inbound calls"]]
+              : []),
+          ].map(([href, label]) => (
+            <a
+              className="inline-flex min-h-9 items-center border border-black bg-white px-3 text-xs font-black hover:bg-black hover:text-white"
+              href={href}
+              key={href}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
         {notice ? (
           <div
             className={`mt-7 border-2 border-black p-4 text-sm font-black ${notice.error ? "bg-black text-white" : "bg-[#d8ff57]"}`}
@@ -582,7 +605,7 @@ export default async function CustomerCrmPage({
 
         <section className="mt-6">
           <details
-            className="group border border-black bg-white"
+            className="scroll-mt-6 group border border-black bg-white"
             id="campaign-settings"
           >
             <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 marker:content-none sm:px-5">
@@ -764,7 +787,10 @@ export default async function CustomerCrmPage({
         </section>
 
         {inboundCalls.length ? (
-          <section className="mt-10 border-2 border-black bg-white">
+          <section
+            className="scroll-mt-6 mt-10 border-2 border-black bg-white"
+            id="inbound-calls"
+          >
             <div className="border-b-2 border-black p-5">
               <p className="font-mono text-[10px] font-bold uppercase text-black/45">
                 Missed-call recovery

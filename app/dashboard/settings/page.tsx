@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Check, Save } from "lucide-react";
-import { DashboardSidebar } from "../dashboard-sidebar";
+import { DashboardShell } from "../dashboard-shell";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { industryKeyForTrade, industryOptions } from "@/lib/industry-presets";
@@ -27,12 +27,10 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   const supportedIndustry = industryKeyForTrade(client.trade) !== "other";
 
   return (
-    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
-      <header className="border-b-2 border-black" />
-      <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[230px_1fr]"><DashboardSidebar active="settings" /><div className="min-w-0 px-5 py-10 sm:px-8 sm:py-14">
+    <DashboardShell active="settings" client={client}>
         <div className="grid gap-8 lg:grid-cols-[0.55fr_1fr]">
           <aside><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Business profile</p><h1 className="mt-2 text-3xl font-black leading-tight tracking-[-0.045em]">One business profile. Every agent stays current.</h1><p className="mt-3 text-sm font-semibold leading-6 text-black/55">These shared facts feed every active agent. Saving synchronizes the new hours, services, and rules automatically.</p><Link className="mt-4 inline-flex text-sm font-black underline decoration-2 underline-offset-4" href="/dashboard/agents">Configure individual agents</Link>
-            <div className="mt-8 border border-black bg-white p-5"><p className="text-sm font-black">Business profile</p><p className="mt-2 flex items-center gap-2 text-sm font-semibold text-black/55"><span className="h-2.5 w-2.5 rounded-full bg-[#d8ff57] ring-1 ring-black" /> Ready to sync to active agents</p>{client.provisioned_phone_number ? <p className="mt-4 text-xs font-semibold text-black/45">Receptionist number</p> : null}{client.provisioned_phone_number ? <p className="mt-1 text-xl font-black">{client.provisioned_phone_number}</p> : null}</div>
+            <div className="mt-8 border border-black bg-white p-5"><p className="text-sm font-black">Sync status</p><p className="mt-2 flex items-center gap-2 text-sm font-semibold text-black/55"><span className="h-2.5 w-2.5 rounded-full bg-[#d8ff57] ring-1 ring-black" /> Ready to sync to active agents</p>{client.provisioned_phone_number ? <p className="mt-4 text-xs font-semibold text-black/45">Receptionist number</p> : null}{client.provisioned_phone_number ? <p className="mt-1 text-xl font-black">{client.provisioned_phone_number}</p> : null}</div>
           </aside>
 
           <form action={saveAssistantSettingsAction} className="grid gap-7">
@@ -59,8 +57,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
             <div className="sticky bottom-4 flex justify-end"><button className="inline-flex h-14 items-center gap-2 border-2 border-white bg-black px-7 text-sm font-black text-white shadow-[6px_6px_0_#f4f1e8,6px_6px_0_2px_#000]" type="submit"><Save className="h-4 w-4" /> Save & update call flows</button></div>
           </form>
         </div>
-      </div></div>
-    </main>
+    </DashboardShell>
   );
 }
 

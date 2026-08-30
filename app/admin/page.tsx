@@ -156,7 +156,6 @@ export default async function AdminPage({ searchParams }: PageProps) {
                     <th className="px-4 py-3 font-bold">Setup</th>
                     <th className="px-4 py-3 font-bold">Owner</th>
                     <th className="px-4 py-3 font-bold">Trial / pilot</th>
-                    <th className="px-4 py-3 font-bold">Report</th>
                     <th className="px-4 py-3 font-bold">Manage</th>
                   </tr>
                 </thead>
@@ -453,10 +452,10 @@ function Field({
   defaultValue?: string;
 }) {
   return (
-    <label className="block text-sm font-medium text-neutral-800">
+    <label className="block text-xs font-black">
       {label}
       <input
-        className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 font-normal outline-none focus:border-neutral-950"
+        className="mt-1 min-h-10 w-full border border-black bg-white px-3 py-2 text-sm font-semibold outline-none"
         name={name}
         type={type}
         required={required}

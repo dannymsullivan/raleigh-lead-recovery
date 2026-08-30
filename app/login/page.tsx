@@ -11,7 +11,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
 
   return (
     <AuthShell eyebrow="Welcome back" title="Open your customer dashboard." description="Sign in to see conversations, qualified leads, and the next steps your agents captured for the team.">
-      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Customer login needs the Supabase publishable key configured." : error === "phone" ? "Enter a valid mobile phone number." : error === "sms" ? "We could not send a text to that number. Try again." : error === "account" ? "No customer workspace is connected to that phone yet." : error === "expired" ? "That code expired. Request a new one." : error === "invitation" ? "That customer access link is invalid or expired." : "We could not sign you in."}</p> : null}
+      {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Sign-in is temporarily unavailable. Please contact support." : error === "phone" ? "Enter a valid mobile phone number." : error === "sms" ? "We could not send a text to that number. Try again." : error === "account" ? "No customer workspace is connected to that phone yet." : error === "expired" ? "That code expired. Request a new one." : error === "invitation" ? "That customer access link is invalid or expired." : "We could not sign you in."}</p> : null}
       <form action={requestPhoneOtpAction} className="grid gap-5">
         <AuthField label="Mobile phone" name="phone" type="tel" placeholder="(919) 555-0123" autoComplete="tel" />
         <input type="hidden" name="mode" value="login" />

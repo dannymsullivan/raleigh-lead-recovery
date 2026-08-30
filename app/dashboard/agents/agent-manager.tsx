@@ -6,7 +6,7 @@ type AgentAction = (type: string, formData: FormData) => void | Promise<void>;
 
 export function AgentManager({ client, agents, action, compact = false }: { client: Client; agents: CustomerAgent[]; action: AgentAction; compact?: boolean }) {
   const byType = new Map(agents.map((agent) => [agent.agent_type, agent]));
-  return <section className={compact ? "mt-6" : ""} id="agents">
+  return <section className={`scroll-mt-6 ${compact ? "mt-6" : ""}`} id="agents">
     <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div><p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-black/45">Your call flows</p><h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">One business, separate jobs.</h2><p className="mt-1.5 max-w-3xl text-xs font-semibold leading-5 text-black/50">Business rules live here and keep each call flow synchronized. Lead recovery and inbound coverage remain independently configurable.</p></div>
       <span className="font-mono text-[9px] font-bold uppercase text-black/40">{agents.filter(customerAgentReady).length} of 2 ready</span>

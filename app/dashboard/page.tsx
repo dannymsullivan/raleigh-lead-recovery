@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowUpRight, Bot, Check, ChevronRight, Clock3, Headphones, LogOut, PhoneCall, RotateCcw, Settings2, Sparkles } from "lucide-react";
-import { logoutCustomerAction } from "../auth-actions";
-import { BrandMark } from "../components/brand-mark";
+import { ArrowUpRight, Check, ChevronRight, Clock3, Headphones, PhoneCall, RotateCcw, Sparkles } from "lucide-react";
 import { getSupabaseAuth, isSupabaseAuthConfigured } from "@/lib/supabase-auth";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { contactHref } from "@/lib/contact";
@@ -11,11 +9,12 @@ import { buildReportModel, formatCurrency, formatRelativeTime } from "@/lib/repo
 import { classifyRetellProvisioningError } from "@/lib/customer-agent-provisioning";
 import type { Call, Client, CustomerAgent } from "@/lib/types";
 import { markForwardingCompleteAction, retryProvisioningAction, saveCallNotesAction, updateLeadStatusAction } from "./actions";
+import { DashboardShell, trialDaysLeft } from "./dashboard-shell";
 import { ProvisioningPoll } from "./provisioning-poll";
 import { recordingPlaybackPath } from "@/lib/recording";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Dashboard | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Lead inbox | Raleigh Lead Recovery", robots: { index: false, follow: false } };
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
 export default async function DashboardPage({ searchParams }: PageProps) {
@@ -50,39 +49,16 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const provisioningActive = client.provisioning_status === "pending" || client.provisioning_status === "provisioning" || agents.some((agent) => agent.status === "provisioning");
 
   return (
-    <main className="product-ui min-h-screen bg-[#f4f1e8] text-black">
+    <DashboardShell active="inbox" client={client}>
       <ProvisioningPoll active={provisioningActive} />
-      <header className="border-b-2 border-black bg-[#f4f1e8]">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8">
-          <BrandMark />
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block"><p className="text-sm font-black">{client.business_name}</p><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/40">{client.account_status ?? "trialing"} · {daysLeft} days left</p></div>
-            <form action={logoutCustomerAction}><button className="inline-flex h-10 items-center gap-2 border-2 border-black px-3 text-sm font-extrabold hover:bg-black hover:text-white" type="submit"><LogOut className="h-4 w-4" /><span className="hidden sm:inline">Sign out</span></button></form>
-          </div>
-        </div>
-      </header>
-
-      <nav className="flex overflow-x-auto border-b-2 border-black bg-white px-3 lg:hidden" aria-label="Dashboard navigation">
-        <Link className="flex h-12 flex-none items-center gap-2 border-b-4 border-black px-3 text-xs font-black" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
-        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Reactivation</Link>
-        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
-        <Link className="flex h-12 flex-none items-center gap-2 px-3 text-xs font-black text-black/55" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Settings</Link>
-      </nav>
-
-      <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[230px_1fr]">
-        <aside className="hidden min-h-[calc(100vh-82px)] border-r-2 border-black p-5 lg:flex lg:flex-col">
-          <nav className="grid gap-1 text-sm font-extrabold">
-            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/reactivation"><Sparkles className="h-4 w-4" /> Lead reactivation</Link>
-            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/agents"><Bot className="h-4 w-4" /> Agents</Link>
-            <Link className="flex items-center gap-3 bg-black px-3 py-3 text-white" href="/dashboard"><PhoneCall className="h-4 w-4" /> Lead board</Link>
-            <Link className="flex items-center gap-3 px-3 py-3 hover:bg-black/5" href="/dashboard/settings"><Settings2 className="h-4 w-4" /> Call-flow settings</Link>
-          </nav>
-          <div className="mt-auto border-2 border-black bg-white p-4"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p><p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p><a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href={contactHref}>Email support <ChevronRight className="h-3 w-3" /></a></div>
-        </aside>
-
-        <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">
-          {welcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Your trial is live</p><p className="mt-2 text-xl font-black">We’re building both call flows and getting your number ready now.</p><p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/70">Next step: book a quick pilot setup with Danny. He’ll review your 25-contact list, confirm calling rules, and help you choose the first recovery campaign.</p><a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a></div> : null}
-          {guidedWelcome ? <div className="mb-7 border-2 border-black bg-black p-5 text-white"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">Guided setup requested</p><p className="mt-2 text-xl font-black">Your business profile is saved. Danny will help tailor the call flow before it goes live.</p><p className="mt-3 text-sm font-semibold leading-6 text-white/70">Book your pilot setup so we can review your first 25 contacts and confirm the campaign is ready.</p><a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a></div> : null}
+      {welcome || guidedWelcome ? (
+        <WelcomeBanner
+          eyebrow={guidedWelcome ? "Guided setup requested" : "Your trial is live"}
+          title={guidedWelcome ? "Your business profile is saved. Danny will help tailor the call flow before it goes live." : "We’re building both call flows and getting your number ready now."}
+          body="Next step: book a quick pilot setup with Danny. He’ll review your first 25 contacts, confirm the calling rules, and help launch your first recovery campaign."
+          bookingHref={bookingHref}
+        />
+      ) : null}
 
           <section className="mb-7 border-2 border-black bg-white p-5 sm:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
@@ -104,7 +80,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Owner command center</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s the board.</h1></div>
+            <div><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Overview</p><h1 className="mt-2 text-3xl font-black tracking-[-0.045em] sm:text-4xl">Good {daypart()}. Here’s what came in.</h1></div>
             <ReceptionistStatus status={receptionist?.status ?? "draft"} />
           </div>
 
@@ -128,9 +104,18 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               <div className="border-2 border-black bg-white p-5"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">This trial</p><div className="mt-5 grid grid-cols-2 gap-4"><SmallStat label="Calls" value={String(report.totalCalls)} /><SmallStat label="Emergencies" value={String(report.emergenciesCaught)} /><SmallStat label="Answer rate" value={report.totalCalls ? "100%" : "—"} /><SmallStat label="Spam filtered" value={String(calls.filter((call) => call.lead_type === "spam").length)} /></div></div>
             </aside>
           </div>
-        </section>
-      </div>
-    </main>
+    </DashboardShell>
+  );
+}
+
+function WelcomeBanner({ eyebrow, title, body, bookingHref }: { eyebrow: string; title: string; body: string; bookingHref: string }) {
+  return (
+    <div className="mb-7 border-2 border-black bg-black p-5 text-white">
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">{eyebrow}</p>
+      <p className="mt-2 text-xl font-black">{title}</p>
+      <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/70">{body}</p>
+      <a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a>
+    </div>
   );
 }
 
@@ -195,6 +180,5 @@ function EmptyCalls() { return <div className="grid min-h-72 place-items-center 
 function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }
 function SmallStat({ label, value }: { label: string; value: string }) { return <div><p className="text-2xl font-black">{value}</p><p className="mt-1 text-[10px] font-bold uppercase text-black/40">{label}</p></div>; }
 function daypart(): string { const hour = new Date().getHours(); return hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"; }
-function trialDaysLeft(value: string): number { const date = value.includes("T") ? new Date(value) : new Date(`${value}T23:59:59`); return Math.max(0, Math.ceil((date.getTime() - Date.now()) / 86_400_000)); }
 function formatShortDate(value: string): string { const date = value.includes("T") ? new Date(value) : new Date(`${value}T12:00:00`); return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date); }
 function formatPhone(value: string): string { const digits = value.replace(/\D/g, "").slice(-10); return digits.length === 10 ? `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}` : value; }

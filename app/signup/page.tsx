@@ -9,7 +9,7 @@ const errors: Record<string, string> = {
   missing: "Enter your name and mobile phone number.",
   expired: "That sign-up link expired. Request a new one.",
   workspace: "Your login was created, but the workspace needs attention. Please contact support.",
-  configuration: "Self-serve signup needs the Supabase publishable key configured.",
+  configuration: "Signup is temporarily unavailable. Please contact support.",
   phone: "Enter your name and a valid mobile phone number.",
   sms: "We could not send a text to that number. Try again.",
   signup: "We could not create the account. Please try again."
