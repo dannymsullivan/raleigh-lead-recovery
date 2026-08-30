@@ -713,6 +713,22 @@ body {
   margin-top: 50px;
 }
 
+.receptionist-pricing-grid.two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.receptionist-pricing-note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.receptionist-pricing-grid article.featured .receptionist-pricing-note {
+  color: rgb(255 255 255 / 60%);
+}
+
 .receptionist-pricing .receptionist-section-heading h2 {
   font-size: clamp(3.1rem, 4.6vw, 4.5rem);
 }
@@ -904,7 +920,8 @@ body {
     max-width: 660px;
   }
 
-  .receptionist-pricing-grid {
+  .receptionist-pricing-grid,
+  .receptionist-pricing-grid.two-up {
     grid-template-columns: 1fr;
   }
 

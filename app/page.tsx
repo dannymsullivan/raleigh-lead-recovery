@@ -74,15 +74,8 @@ const faqs = [
   },
   {
     q: "What happens after the first evening?",
-    a: "If the test is useful, we can extend coverage through a weekend and then run a measured 30-day pilot. If it is not useful, you turn forwarding off and owe nothing for the evening test.",
+    a: "If the test is useful, you can lock the founding rate: $99/month for your first year (regular price $149/month), including 150 minutes of coverage, instant text-back, and a monthly recovered-lead scorecard. If it is not useful, you turn forwarding off and owe nothing for the evening test.",
   },
-];
-
-const scorecardItems = [
-  "Missed calls answered",
-  "Qualified service opportunities",
-  "Appointments requested",
-  "Estimated revenue recovered",
 ];
 
 export default function HomePage() {
@@ -362,14 +355,14 @@ export default function HomePage() {
         id="pilot-plan"
       >
         <div className="receptionist-section-heading">
-          <p className="eyebrow">Start smaller than a pilot</p>
-          <h2>Earn the next step one call at a time.</h2>
+          <p className="eyebrow">Founding partner pricing</p>
+          <h2>Prove it free. Lock the founding rate.</h2>
           <p>
-            The first evening is free. Continue only when the calls show enough
-            value to justify more coverage.
+            Start with the free two-hour evening test. Continue only if the
+            coverage proves useful.
           </p>
         </div>
-        <div className="receptionist-pricing-grid">
+        <div className="receptionist-pricing-grid two-up">
           <article>
             <p className="eyebrow">Step one</p>
             <h3>Two-hour evening test</h3>
@@ -399,17 +392,20 @@ export default function HomePage() {
             </a>
           </article>
           <article className="featured">
-            <p className="eyebrow">Step two</p>
-            <h3>Weekend coverage</h3>
+            <p className="eyebrow">Founding Raleigh HVAC Partner</p>
+            <h3>Missed-call coverage, founding rate</h3>
             <strong>
-              <span>Next</span> only if useful
+              <span>$99</span>/month for your first year
             </strong>
             <ul>
               {[
-                "Extend the same approved call flow",
-                "Review summaries and escalation quality",
-                "Confirm whether callers are qualified",
-                "Stop at any time",
+                "Up to 150 minutes of missed-call and after-hours coverage",
+                "Instant text-back when a caller hangs up",
+                "Immediate call summaries and urgency alerts",
+                "Approved call transfers",
+                "One HVAC call flow customized to your business",
+                "Monthly recovered-lead scorecard",
+                "Founding rate locked for 12 months — regular price $149/month",
               ].map((item) => (
                 <li key={item}>
                   <Check aria-hidden="true" /> {item}
@@ -422,28 +418,12 @@ export default function HomePage() {
               target="_blank"
               rel="noreferrer"
             >
-              Start with one evening <ArrowRight aria-hidden="true" />
+              Start with the free evening <ArrowRight aria-hidden="true" />
             </a>
-          </article>
-          <article>
-            <p className="eyebrow">Step three</p>
-            <h3>30-day measured pilot</h3>
-            <strong>
-              <span>Proof</span> before a plan
-            </strong>
-            <ul>
-              {scorecardItems.map((item) => (
-                <li key={item}>
-                  <Check aria-hidden="true" /> {item}
-                </li>
-              ))}
-            </ul>
-            <a
-              className="button button-dark"
-              href={`mailto:${contactEmail}?subject=Raleigh%20HVAC%20missed-call%20pilot`}
-            >
-              Email Danny <ArrowRight aria-hidden="true" />
-            </a>
+            <p className="receptionist-pricing-note">
+              Additional voice usage is $0.30 per minute. No setup fee. Cancel
+              anytime.
+            </p>
           </article>
         </div>
       </section>
