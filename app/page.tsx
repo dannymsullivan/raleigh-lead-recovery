@@ -65,6 +65,10 @@ const faqs = [
     a: "It uses the services, hours, service area, escalation rules, and callback expectations you approve. It will not invent pricing, arrival times, availability, or business policies.",
   },
   {
+    q: "What if the caller hangs up instead of talking?",
+    a: "They get an immediate text back — a short message from the coverage number letting them know you saw the call and giving them a way to reply. Replies are passed to your team alongside the call summaries, so a hang-up still becomes a reachable lead.",
+  },
+  {
     q: "Can it transfer an urgent call?",
     a: "Yes, when you approve a transfer path. Transfers go to a separate owner or dispatcher number, not back to the forwarded main line, so the call cannot get stuck in a forwarding loop.",
   },
@@ -280,7 +284,8 @@ export default function HomePage() {
               <p>
                 Your team keeps answering. Raleigh Lead Recovery covers only
                 the calls nobody reaches and sends the owner or dispatcher a
-                summary.
+                summary. Callers who hang up instead of talking get an instant
+                text back, so the lead still has a way in.
               </p>
             </div>
           </li>
@@ -376,6 +381,7 @@ export default function HomePage() {
                 "No setup fee",
                 "Your team answers first",
                 "Only missed calls roll over",
+                "Hang-ups get an instant text back",
                 "Immediate summary after each call",
               ].map((item) => (
                 <li key={item}>
