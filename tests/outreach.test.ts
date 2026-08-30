@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildOutreachSummary, outreachWebsiteHref, parseOutreachBulkLines } from "@/lib/outreach";
+import { buildOutreachSummary, companyNameFromWebsite, outreachWebsiteHref, parseOutreachBulkLines } from "@/lib/outreach";
 
 describe("outreach tracker", () => {
   it("summarizes the founder pipeline and due follow-ups", () => {
@@ -30,6 +30,13 @@ describe("outreach tracker", () => {
       { company_name: "Comfort Pros", city: null, website: null, phone: null },
     ]);
     expect(skipped).toBe(2);
+  });
+
+  it("derives a company name from a website URL for quick add", () => {
+    expect(companyNameFromWebsite("https://www.cool-breeze-hvac.com/contact")).toBe("Cool Breeze Hvac");
+    expect(companyNameFromWebsite("santaair.com")).toBe("Santaair");
+    expect(companyNameFromWebsite("not a url")).toBeNull();
+    expect(companyNameFromWebsite("")).toBeNull();
   });
 
   it("accepts tab-separated bulk lines from spreadsheets", () => {

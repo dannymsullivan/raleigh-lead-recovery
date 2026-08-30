@@ -91,11 +91,13 @@ export default async function OutreachPage({ searchParams }: PageProps) {
             ? `${search.bulk_deleted} prospect${search.bulk_deleted === "1" ? "" : "s"} removed.`
             : search.error === "company"
               ? "Company name is required."
-              : search.error === "bulk"
-                ? "Paste at least one line with a company name."
-                : search.error === "bulk_delete"
-                  ? "Select at least one prospect to delete."
-                  : null;
+              : search.error === "website"
+                ? "Enter a valid company website, like coolbreezehvac.com."
+                : search.error === "bulk"
+                  ? "Paste at least one line with a company name."
+                  : search.error === "bulk_delete"
+                    ? "Select at least one prospect to delete."
+                    : null;
 
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
@@ -144,7 +146,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         <details
           className="mt-7 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
           id="add-prospect"
-          open={search.error === "company"}
+          open={search.error === "website"}
         >
           <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 sm:px-5">
             <span className="flex items-center gap-3">
@@ -153,14 +155,36 @@ export default async function OutreachPage({ searchParams }: PageProps) {
               </span>
               <span>
                 <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-black/45">New lead</span>
-                <span className="mt-0.5 block text-base font-black">Add an HVAC company</span>
+                <span className="mt-0.5 block text-base font-black">Add a company by website</span>
               </span>
             </span>
             <span className="text-xs font-black text-black/45">Open form</span>
           </summary>
-          <div className="border-t border-[var(--product-line)] p-4 sm:p-5">
-            <ProspectForm action={addOutreachProspectAction} />
-          </div>
+          <form action={addOutreachProspectAction} className="grid gap-4 border-t border-[var(--product-line)] p-4 sm:grid-cols-[minmax(220px,1fr)_minmax(260px,1.4fr)_auto] sm:items-end sm:p-5">
+            <label className="block text-xs font-black">
+              Company website
+              <input
+                className="mt-1 min-h-11 w-full border px-3 py-2 text-sm font-normal outline-none"
+                name="website"
+                placeholder="coolbreezehvac.com"
+                required
+              />
+            </label>
+            <label className="block text-xs font-black">
+              Notes
+              <input
+                className="mt-1 min-h-11 w-full border px-3 py-2 text-sm font-normal outline-none"
+                name="notes"
+                placeholder="Personal angle or next step (optional)"
+              />
+            </label>
+            <button className="inline-flex min-h-11 items-center justify-center bg-black px-5 text-sm font-black text-white" type="submit">
+              Add prospect
+            </button>
+            <p className="text-[11px] font-semibold text-black/45 sm:col-span-3">
+              The company name is filled in from the domain. Use the pencil on the row to add the contact, phone, email, and follow-up dates.
+            </p>
+          </form>
         </details>
 
         <details

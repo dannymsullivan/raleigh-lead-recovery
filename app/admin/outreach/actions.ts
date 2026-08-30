@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
-import { outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
+import { companyNameFromWebsite, outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -53,10 +53,16 @@ function prospectValues(formData: FormData) {
 
 export async function addOutreachProspectAction(formData: FormData): Promise<void> {
   await requireAdminSession();
-  const values = prospectValues(formData);
-  if (!values.company_name) redirect("/admin/outreach?error=company#add-prospect");
+  const website = formString(formData, "website").slice(0, 500);
+  const companyName = companyNameFromWebsite(website);
+  if (!companyName) redirect("/admin/outreach?error=website#add-prospect");
 
-  const { error } = await getSupabaseAdmin().from("outreach_prospects").insert(values);
+  const { error } = await getSupabaseAdmin().from("outreach_prospects").insert({
+    company_name: companyName,
+    website,
+    notes: nullableText(formData, "notes", 3000),
+    stage: "not_contacted" as OutreachStage,
+  });
   if (error) throw error;
 
   revalidatePath("/admin/outreach");

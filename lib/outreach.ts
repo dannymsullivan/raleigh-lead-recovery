@@ -70,6 +70,25 @@ export function outreachWebsiteHref(value: string): string {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
+// "https://www.cool-breeze-hvac.com/contact" -> "Cool Breeze Hvac"
+export function companyNameFromWebsite(input: string): string | null {
+  const trimmed = input.trim();
+  if (!trimmed) return null;
+  let hostname: string;
+  try {
+    hostname = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`).hostname;
+  } catch {
+    return null;
+  }
+  if (!hostname.includes(".")) return null;
+  const domain = hostname.replace(/^www\./i, "").split(".")[0];
+  const words = domain
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+  return words.join(" ").slice(0, 160) || null;
+}
+
 export type OutreachBulkRow = {
   company_name: string;
   city: string | null;
