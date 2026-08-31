@@ -68,7 +68,7 @@ export default function HvacLandingPage() {
       <section className="hvac-pilot" id="pilot">
         <div className="page-shell hvac-pilot-grid">
           <div><p className="eyebrow">A small, founder-led pilot</p><h2>Test it with 25 eligible past customers. Free.</h2><p><ShieldCheck aria-hidden="true" /> You choose the contacts and approve the conversation. Danny reviews the setup and first calls personally.</p></div>
-          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href={`mailto:${contactEmail}?subject=25-contact%20HVAC%20pilot&body=Hi%20Danny%2C%0A%0AI%27d%20like%20to%20talk%20about%20testing%20Raleigh%20Lead%20Recovery%20with%2025%20eligible%20past%20customers.%0A%0ACompany%3A%20`}>Ask Danny about 25 contacts <ArrowRight /></a><span className="hvac-text-link">No card or CRM access to start</span></div>
+          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href={`mailto:${contactEmail}?subject=25-contact%20HVAC%20pilot&body=Hi%20Danny%2C%0A%0AI%27d%20like%20to%20talk%20about%20testing%20Raleigh%20Lead%20Recovery%20with%2025%20eligible%20past%20customers.%0A%0ACompany%3A%20`}>Ask Danny about 25 contacts <ArrowRight /></a><span className="hvac-text-link">No card or CRM access to start · Founding rate after: $99/month for your first year</span></div>
         </div>
       </section>
 

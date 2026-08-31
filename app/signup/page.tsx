@@ -20,7 +20,7 @@ export default async function SignupPage({ searchParams }: PageProps) {
   const error = typeof search.error === "string" ? search.error : null;
 
   return (
-    <AuthShell eyebrow="14 days free · no card" title="Set up Raleigh Lead Recovery." description="Create your account, add the business basics, and hear your call flow work before you send it a real customer. After setup, book a short pilot call with Danny so he can review your first 25 contacts and help launch it safely.">
+    <AuthShell eyebrow="14 days free · no card" title="Set up Raleigh Lead Recovery." description="Create your account, add the business basics, and hear your call flow work before you send it a real customer. After the free trial, founding Raleigh HVAC partners lock in $99/month for their first year (regular price $149/month).">
       {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{errors[error] ?? errors.signup}</p> : null}
       <form action={requestPhoneOtpAction} className="grid gap-5">
         <AuthField label="Your name" name="owner_name" autoComplete="name" />

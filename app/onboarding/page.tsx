@@ -33,7 +33,7 @@ export default async function OnboardingPage({ searchParams }: PageProps) {
       <header className="border-b-2 border-black">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
           <BrandMark />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">14-day trial starts after setup</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">14-day trial starts after setup · then $99/mo founding rate</p>
         </div>
       </header>
       <OnboardingForm client={client} email={user.email ?? client.owner_email ?? ""} error={error} />
