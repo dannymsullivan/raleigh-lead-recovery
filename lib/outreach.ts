@@ -27,6 +27,7 @@ export type OutreachProspect = {
   contact_role: string | null;
   email: string | null;
   phone: string | null;
+  last_call_outcome: OutreachCallOutcome | null;
   stage: OutreachStage;
   last_contacted_on: string | null;
   next_follow_up_on: string | null;
@@ -84,23 +85,99 @@ export function isOutreachCallOutcome(value: string): value is OutreachCallOutco
   return Object.hasOwn(outreachCallOutcomes, value);
 }
 
-// "https://www.cool-breeze-hvac.com/contact" -> "Cool Breeze Hvac"
-export function companyNameFromWebsite(input: string): string | null {
+export function normalizeOutreachWebsite(input: string): string | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
-  let hostname: string;
   try {
-    hostname = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`).hostname;
+    const url = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+    if (!url.hostname.includes(".")) return null;
+    return url.hostname.toLowerCase().replace(/^www\./i, "");
   } catch {
     return null;
   }
-  if (!hostname.includes(".")) return null;
-  const domain = hostname.replace(/^www\./i, "").split(".")[0];
+}
+
+export function outreachCallUpdate(
+  outcome: OutreachCallOutcome,
+  today = new Date().toISOString().slice(0, 10),
+): {
+  last_call_outcome: OutreachCallOutcome;
+  last_contacted_on: string;
+  next_follow_up_on: string | null;
+} {
+  const followUpDays: Record<OutreachCallOutcome, number | null> = {
+    real_person: 1,
+    voicemail: 2,
+    no_answer: 2,
+    busy: 1,
+    wrong_number: null,
+  };
+  const days = followUpDays[outcome];
+  if (days === null) {
+    return { last_call_outcome: outcome, last_contacted_on: today, next_follow_up_on: null };
+  }
+  const followUp = new Date(`${today}T12:00:00Z`);
+  followUp.setUTCDate(followUp.getUTCDate() + days);
+  return {
+    last_call_outcome: outcome,
+    last_contacted_on: today,
+    next_follow_up_on: followUp.toISOString().slice(0, 10),
+  };
+}
+
+// "https://www.cool-breeze-hvac.com/contact" -> "Cool Breeze HVAC"
+export function companyNameFromWebsite(input: string): string | null {
+  const hostname = normalizeOutreachWebsite(input);
+  if (!hostname) return null;
+  const domain = hostname.split(".")[0];
+  const serviceWords = [
+    "airconditioning",
+    "conditioning",
+    "contractors",
+    "mechanical",
+    "electrical",
+    "american",
+    "plumbing",
+    "solutions",
+    "services",
+    "heating",
+    "cooling",
+    "company",
+    "experts",
+    "comfort",
+    "systems",
+    "service",
+    "electric",
+    "airflow",
+    "hvac",
+    "and",
+    "air",
+  ];
   const words = domain
     .split(/[-_]/)
     .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+    .flatMap((part) => splitKnownSuffixes(part, serviceWords))
+    .map(formatCompanyWord);
   return words.join(" ").slice(0, 160) || null;
+}
+
+function splitKnownSuffixes(value: string, knownWords: string[]): string[] {
+  let remaining = value.toLowerCase();
+  const suffixes: string[] = [];
+  while (remaining) {
+    const match = knownWords.find((word) => remaining.endsWith(word));
+    if (!match || remaining === match) break;
+    suffixes.unshift(match);
+    remaining = remaining.slice(0, -match.length);
+  }
+  return [remaining, ...suffixes].filter(Boolean);
+}
+
+function formatCompanyWord(word: string): string {
+  if (word === "hvac") return "HVAC";
+  if (word === "and") return "and";
+  if (word === "airconditioning") return "Air Conditioning";
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
 export type OutreachBulkRow = {

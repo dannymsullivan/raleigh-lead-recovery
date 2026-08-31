@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import {
   CalendarClock,
   MessageSquareReply,
-  Plus,
   Send,
   Target,
   UsersRound,
@@ -21,7 +20,9 @@ import {
   updateOutreachProspectAction,
 } from "./actions";
 import { ProspectBulkToolbar } from "./prospect-bulk-toolbar";
+import { ProspectSearch } from "./prospect-search";
 import { ProspectRow } from "./prospect-row";
+import { QuickAddProspect } from "./quick-add-prospect";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
 import {
   buildOutreachSummary,
@@ -84,6 +85,8 @@ export default async function OutreachPage({ searchParams }: PageProps) {
   const summary = buildOutreachSummary(prospects);
   const notice = search.created
     ? "Prospect added."
+    : search.duplicate
+      ? "That company is already in your call list."
     : search.updated
       ? "Prospect updated."
       : search.deleted
@@ -124,65 +127,26 @@ export default async function OutreachPage({ searchParams }: PageProps) {
 
         <section className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h2 className="text-xl font-black tracking-[-0.04em] sm:text-2xl">
-            Outreach that ends in one live test.
+            Your daily customer desk.
           </h2>
           <p className="text-xs font-semibold text-black/50">
-            Keep the list small, send personal emails, and always leave a clear next follow-up.
+            Add the company, make the call, tap the result, and let the next action come back to you.
           </p>
         </section>
 
         <section className="mt-4 grid grid-cols-2 border-l border-t border-[var(--product-line)] bg-white sm:grid-cols-5" aria-label="Outreach summary">
           <OutreachStat icon={<UsersRound />} label="Prospects" value={summary.total} />
-          <OutreachStat icon={<Send />} label="Ready to email" value={summary.ready} />
+          <OutreachStat icon={<Send />} label="Ready to contact" value={summary.ready} />
           <OutreachStat icon={<CalendarClock />} label="Follow-ups due" value={summary.followUpsDue} accent={summary.followUpsDue > 0} />
           <OutreachStat icon={<MessageSquareReply />} label="Positive replies" value={summary.replies} />
           <OutreachStat icon={<Target />} label="Pilots booked" value={summary.pilots} />
         </section>
 
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
-        <details
-          className="scroll-mt-5 self-start border border-[var(--product-line-strong)] bg-white"
-          id="add-prospect"
-          open={search.error === "website" || prospects.length === 0}
-        >
-          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2">
-            <span className="flex items-center gap-2.5">
-              <span className="grid h-7 w-7 place-items-center bg-[var(--product-accent)]">
-                <Plus className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <span className="text-sm font-black">Add a company by website</span>
-            </span>
-            <span className="text-xs font-black text-black/45">Open form</span>
-          </summary>
-          <form action={addOutreachProspectAction} className="grid gap-4 border-t border-[var(--product-line)] p-4 sm:grid-cols-[minmax(220px,1fr)_minmax(260px,1.4fr)_auto] sm:items-end sm:p-5">
-            <label className="block text-xs font-black">
-              Company website
-              <input
-                className="mt-1 min-h-11 w-full border px-3 py-2 text-sm font-normal outline-none"
-                name="website"
-                placeholder="coolbreezehvac.com"
-                required
-              />
-            </label>
-            <label className="block text-xs font-black">
-              Notes
-              <input
-                className="mt-1 min-h-11 w-full border px-3 py-2 text-sm font-normal outline-none"
-                name="notes"
-                placeholder="Personal angle or next step (optional)"
-              />
-            </label>
-            <button className="inline-flex min-h-11 items-center justify-center bg-black px-5 text-sm font-black text-white" type="submit">
-              Add prospect
-            </button>
-            <p className="text-[11px] font-semibold text-black/45 sm:col-span-3">
-              The company name is filled in from the domain. Use the pencil on the row to add the contact, phone, email, and follow-up dates.
-            </p>
-          </form>
-        </details>
+        <div className="mt-3">
+          <QuickAddProspect action={addOutreachProspectAction} />
 
         <details
-          className="scroll-mt-5 self-start border border-[var(--product-line-strong)] bg-white"
+          className="mt-3 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
           id="bulk-add"
           open={search.error === "bulk"}
         >
@@ -216,9 +180,15 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         </div>
 
         <section className="mt-5" aria-labelledby="prospect-list-title">
-          <div className="flex flex-col gap-3 border-b border-[var(--product-line-strong)] pb-3 lg:flex-row lg:items-center lg:justify-between">
-            <h2 className="text-lg font-black tracking-[-0.03em]" id="prospect-list-title">Prospects</h2>
-            <nav className="flex gap-1 overflow-x-auto" aria-label="Filter prospects by stage">
+          <div className="border-b border-[var(--product-line-strong)] pb-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h2 className="text-lg font-black tracking-[-0.03em]" id="prospect-list-title">Call list</h2>
+                <p className="mt-1 text-xs font-semibold text-black/45">Search here instead of keeping a second list in Google.</p>
+              </div>
+              <ProspectSearch total={visibleProspects.length} />
+            </div>
+            <nav className="mt-3 flex gap-1 overflow-x-auto" aria-label="Filter prospects by stage">
               <StageFilter href="/admin/outreach" active={activeStage === "all"}>All</StageFilter>
               {outreachStages.map((stage) => (
                 <StageFilter
@@ -261,12 +231,12 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                 />
               </div>
               <div className="mt-3 border border-[var(--product-line-strong)] bg-white">
-                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(170px,1fr)_140px_105px_125px_190px] gap-3 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
+                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(155px,.9fr)_125px_125px_120px_220px] gap-3 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
                   <span>Company</span>
                   <span>Contact</span>
-                  <span>Stage</span>
-                  <span>Last touch</span>
+                  <span>Last result</span>
                   <span>Next follow-up</span>
+                  <span>Stage</span>
                   <span className="text-right">Actions</span>
                 </div>
                 <div className="divide-y divide-[var(--product-line)]">
@@ -418,4 +388,3 @@ function SelectField({ label, name, value }: { label: string; name: string; valu
     </label>
   );
 }
-

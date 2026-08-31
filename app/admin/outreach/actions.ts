@@ -4,7 +4,16 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { adminCookie, verifyAdminSessionToken } from "@/lib/admin";
-import { companyNameFromWebsite, isOutreachCallOutcome, outreachCallOutcomes, outreachStages, parseOutreachBulkLines, type OutreachStage } from "@/lib/outreach";
+import {
+  companyNameFromWebsite,
+  isOutreachCallOutcome,
+  normalizeOutreachWebsite,
+  outreachCallOutcomes,
+  outreachCallUpdate,
+  outreachStages,
+  parseOutreachBulkLines,
+  type OutreachStage,
+} from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 function formString(formData: FormData, key: string): string {
@@ -53,13 +62,22 @@ function prospectValues(formData: FormData) {
 
 export async function addOutreachProspectAction(formData: FormData): Promise<void> {
   await requireAdminSession();
-  const website = formString(formData, "website").slice(0, 500);
-  const companyName = companyNameFromWebsite(website);
+  const websiteInput = formString(formData, "website").slice(0, 500);
+  const website = normalizeOutreachWebsite(websiteInput);
+  const companyName = formString(formData, "company_name").slice(0, 160) || companyNameFromWebsite(websiteInput);
   if (!companyName) redirect("/admin/outreach?error=website#add-prospect");
 
-  const { error } = await getSupabaseAdmin().from("outreach_prospects").insert({
+  const admin = getSupabaseAdmin();
+  const { data: existingData } = await admin.from("outreach_prospects").select("website");
+  const alreadyExists = (existingData ?? []).some((row) =>
+    row.website && normalizeOutreachWebsite(row.website) === website,
+  );
+  if (alreadyExists) redirect("/admin/outreach?duplicate=1#prospect-list-title");
+
+  const { error } = await admin.from("outreach_prospects").insert({
     company_name: companyName,
     website,
+    phone: nullableText(formData, "phone", 60),
     notes: nullableText(formData, "notes", 3000),
     stage: "not_contacted" as OutreachStage,
   });
@@ -119,12 +137,13 @@ export async function logOutreachCallAction(prospectId: string, formData: FormDa
   const { data } = await admin.from("outreach_prospects").select("notes").eq("id", prospectId).maybeSingle();
   if (!data) redirect("/admin/outreach?error=call_log");
 
-  const today = new Date().toISOString().slice(0, 10);
+  const callUpdate = outreachCallUpdate(outcome);
+  const today = callUpdate.last_contacted_on;
   const entry = `${today} — Called: ${outreachCallOutcomes[outcome]}`;
   const notes = [entry, (data.notes ?? "").trim()].filter(Boolean).join("\n").slice(0, 3000);
   const { error } = await admin
     .from("outreach_prospects")
-    .update({ notes, last_contacted_on: today })
+    .update({ notes, ...callUpdate })
     .eq("id", prospectId);
   if (error) throw error;
 

@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildOutreachSummary, companyNameFromWebsite, outreachWebsiteHref, parseOutreachBulkLines } from "@/lib/outreach";
+import {
+  buildOutreachSummary,
+  companyNameFromWebsite,
+  normalizeOutreachWebsite,
+  outreachCallUpdate,
+  outreachWebsiteHref,
+  parseOutreachBulkLines,
+} from "@/lib/outreach";
 
 describe("outreach tracker", () => {
   it("summarizes the founder pipeline and due follow-ups", () => {
@@ -33,10 +40,27 @@ describe("outreach tracker", () => {
   });
 
   it("derives a company name from a website URL for quick add", () => {
-    expect(companyNameFromWebsite("https://www.cool-breeze-hvac.com/contact")).toBe("Cool Breeze Hvac");
-    expect(companyNameFromWebsite("santaair.com")).toBe("Santaair");
+    expect(companyNameFromWebsite("https://www.cool-breeze-hvac.com/contact")).toBe("Cool Breeze HVAC");
+    expect(companyNameFromWebsite("santaair.com")).toBe("Santa Air");
+    expect(companyNameFromWebsite("modernmechanicalhvac.com")).toBe("Modern Mechanical HVAC");
+    expect(companyNameFromWebsite("newcombandcompany.com")).toBe("Newcomb and Company");
     expect(companyNameFromWebsite("not a url")).toBeNull();
     expect(companyNameFromWebsite("")).toBeNull();
+  });
+
+  it("normalizes a pasted website before saving it", () => {
+    expect(normalizeOutreachWebsite("https://www.Cool-Breeze-HVAC.com/contact")).toBe("cool-breeze-hvac.com");
+    expect(normalizeOutreachWebsite("not a url")).toBeNull();
+  });
+
+  it("turns a one-tap call result into the next follow-up", () => {
+    expect(outreachCallUpdate("real_person", "2026-08-31")).toEqual({
+      last_call_outcome: "real_person",
+      last_contacted_on: "2026-08-31",
+      next_follow_up_on: "2026-09-01",
+    });
+    expect(outreachCallUpdate("no_answer", "2026-08-31").next_follow_up_on).toBe("2026-09-02");
+    expect(outreachCallUpdate("wrong_number", "2026-08-31").next_follow_up_on).toBeNull();
   });
 
   it("accepts tab-separated bulk lines from spreadsheets", () => {

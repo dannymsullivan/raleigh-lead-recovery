@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Mail, Pencil, Phone } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Mail, Pencil, Phone, Search } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import {
   outreachCallOutcomes,
@@ -15,7 +15,19 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction }: {
   const [logging, setLogging] = useState(false);
   const due = isFollowUpDue(prospect);
   return (
-    <article className="grid gap-3 px-4 py-3 lg:grid-cols-[minmax(190px,1.25fr)_minmax(170px,1fr)_140px_105px_125px_190px] lg:items-center">
+    <article
+      className="grid gap-3 px-4 py-3 lg:grid-cols-[minmax(190px,1.25fr)_minmax(155px,.9fr)_125px_125px_120px_220px] lg:items-center"
+      data-prospect-search={[
+        prospect.company_name,
+        prospect.website,
+        prospect.city,
+        prospect.contact_name,
+        prospect.contact_role,
+        prospect.email,
+        prospect.phone,
+        prospect.notes,
+      ].filter(Boolean).join(" ").toLowerCase()}
+    >
       <div className="flex min-w-0 items-start gap-3">
         <input
           aria-label={`Select ${prospect.company_name}`}
@@ -36,9 +48,9 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction }: {
         <p className="truncate text-sm font-bold">{prospect.contact_name || "Contact not found"}</p>
         <p className="mt-1 truncate text-xs font-semibold text-black/45">{prospect.contact_role || prospect.email || "Add a role or email"}</p>
       </div>
-      <div><StagePill stage={prospect.stage} /></div>
-      <LabeledValue label="Last touch" value={formatDate(prospect.last_contacted_on)} />
+      <CallOutcome outcome={prospect.last_call_outcome} date={prospect.last_contacted_on} />
       <LabeledValue label="Next follow-up" value={formatDate(prospect.next_follow_up_on)} due={due} />
+      <div><StagePill stage={prospect.stage} /></div>
       <div className="flex items-center gap-2 lg:justify-end">
         {prospect.email ? (
           <a
@@ -61,6 +73,16 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction }: {
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </a>
         ) : null}
+        <a
+          className="grid h-10 w-10 place-items-center border border-[var(--product-line-strong)] bg-white hover:border-black hover:bg-[var(--product-surface-muted)]"
+          href={`https://www.google.com/search?q=${encodeURIComponent(`${prospect.company_name}${prospect.city ? ` ${prospect.city}` : ""}`)}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Search Google for ${prospect.company_name}`}
+          title="Research in Google"
+        >
+          <Search className="h-4 w-4" aria-hidden="true" />
+        </a>
         {prospect.phone ? (
           <button
             className={`grid h-10 w-10 place-items-center border ${
@@ -93,29 +115,57 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction }: {
         </button>
       </div>
       {logging && prospect.phone ? (
-        <div className="flex flex-wrap items-center gap-2 border border-[var(--product-line)] bg-[var(--product-surface-muted)] p-3 lg:col-span-6">
-          <a
-            className="inline-flex min-h-10 items-center gap-2 bg-black px-3 text-xs font-black text-white"
-            href={`tel:${prospect.phone}`}
-          >
-            <Phone className="h-3.5 w-3.5" aria-hidden="true" /> Call {prospect.phone}
-          </a>
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/40">
-            Log the outcome:
-          </span>
-          <form action={logCallAction} className="flex flex-wrap gap-2">
-            {Object.entries(outreachCallOutcomes).map(([key, label]) => (
+        <div className="border border-black bg-[var(--product-surface-muted)] p-3 lg:col-span-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              className="inline-flex min-h-11 items-center gap-2 bg-black px-4 text-sm font-black text-white"
+              href={`tel:${prospect.phone}`}
+            >
+              <Phone className="h-4 w-4" aria-hidden="true" /> Call {prospect.phone}
+            </a>
+            <span className="mx-1 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/40">
+              Then tap one result
+            </span>
+            <form action={logCallAction} className="flex flex-wrap gap-2">
               <button
-                className="min-h-10 border border-[var(--product-line-strong)] bg-white px-3 text-xs font-black hover:border-black"
-                key={key}
+                className="min-h-11 border-2 border-black bg-[var(--product-accent)] px-4 text-sm font-black hover:brightness-95"
                 name="outcome"
                 type="submit"
-                value={key}
+                value="real_person"
               >
-                {label}
+                Answered
               </button>
-            ))}
-          </form>
+              <button
+                className="min-h-11 border-2 border-black bg-white px-4 text-sm font-black hover:bg-black hover:text-white"
+                name="outcome"
+                type="submit"
+                value="no_answer"
+              >
+                No answer
+              </button>
+              <details className="relative">
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 border border-[var(--product-line-strong)] bg-white px-3 text-xs font-black hover:border-black">
+                  Other <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                </summary>
+                <div className="absolute right-0 top-[calc(100%+4px)] z-10 grid min-w-40 border border-black bg-white p-1 shadow-lg">
+                  {(["voicemail", "busy", "wrong_number"] as const).map((key) => (
+                    <button
+                      className="min-h-10 px-3 text-left text-xs font-black hover:bg-[var(--product-surface-muted)]"
+                      key={key}
+                      name="outcome"
+                      type="submit"
+                      value={key}
+                    >
+                      {outreachCallOutcomes[key]}
+                    </button>
+                  ))}
+                </div>
+              </details>
+            </form>
+          </div>
+          <p className="mt-2 text-[11px] font-semibold text-black/45">
+            Answered schedules tomorrow. No answer schedules another attempt in two days. You can change the date anytime.
+          </p>
         </div>
       ) : null}
       {prospect.notes ? (
@@ -129,6 +179,22 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction }: {
         </div>
       ) : null}
     </article>
+  );
+}
+
+function CallOutcome({ outcome, date }: { outcome: OutreachProspect["last_call_outcome"]; date: string | null }) {
+  return (
+    <div>
+      <p className="mb-1 font-mono text-[8px] font-bold uppercase tracking-[0.1em] text-black/40 lg:hidden">Last result</p>
+      {outcome ? (
+        <>
+          <p className="text-xs font-black">{outreachCallOutcomes[outcome]}</p>
+          <p className="mt-1 text-[10px] font-semibold text-black/40">{formatDate(date)}</p>
+        </>
+      ) : (
+        <p className="text-xs font-bold text-black/35">Not called</p>
+      )}
+    </div>
   );
 }
 

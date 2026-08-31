@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { BrandMark } from "./components/brand-mark";
 import { PublicSiteNav } from "./components/public-site-nav";
+import { AutoTextBackDemo } from "./components/auto-text-back-demo";
 import { WebVoiceDemo } from "./components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
@@ -74,7 +75,7 @@ const faqs = [
   },
   {
     q: "What happens after the first evening?",
-    a: "If the test is useful, you can lock the founding rate: $99/month for your first year (regular price $149/month), including 150 minutes of coverage, instant text-back, and a monthly recovered-lead scorecard. If it is not useful, you turn forwarding off and owe nothing for the evening test.",
+    a: "If the test is useful, you can lock the $297/month founding rate for your first year, including 150 minutes of coverage, automatic text-back, and a monthly recovered-lead scorecard. As the service expands, pricing will increase for new partners—not for founding partners during their locked first year. If the test is not useful, you turn forwarding off and owe nothing for the evening test.",
   },
 ];
 
@@ -84,6 +85,7 @@ export default function HomePage() {
       <PublicSiteNav
         items={[
           { href: "#how-it-works", label: "How it works" },
+          { href: "#text-back-demo", label: "Text-back demo" },
           { href: "#what-we-measure", label: "What we measure" },
           { href: "#questions", label: "Questions" },
         ]}
@@ -103,7 +105,8 @@ export default function HomePage() {
           <p className="receptionist-hero-intro">
             Test Raleigh Lead Recovery for one controlled evening. Your team
             answers as usual. Only calls nobody picks up roll over, and you see
-            what happened right away.
+            what happened right away. If the caller hangs up, an automatic text
+            keeps the conversation alive.
           </p>
           <div className="receptionist-hero-actions" id="talk-now">
             <a
@@ -183,11 +186,35 @@ export default function HomePage() {
             <PhoneForwarded aria-hidden="true" /> Keep your current number
           </span>
           <span>
-            <MessageSquareText aria-hidden="true" /> Immediate call summaries
+            <MessageSquareText aria-hidden="true" /> Auto text-back included
           </span>
           <span>
             <ShieldCheck aria-hidden="true" /> Turn it off anytime
           </span>
+        </div>
+      </section>
+
+      <section className="receptionist-text-back" id="text-back-demo">
+        <div className="page-shell receptionist-text-back-grid">
+          <div className="receptionist-text-back-copy">
+            <p className="eyebrow">Included in every plan</p>
+            <h2>The call can end. The lead doesn&apos;t have to.</h2>
+            <p>
+              Some homeowners will hang up before they leave a voicemail or
+              talk to an assistant. Automatic text-back reaches them while the
+              need is still fresh, collects the reply, and sends the
+              conversation to your team.
+            </p>
+            <ul>
+              <li><Check aria-hidden="true" /> Sends within moments of a missed call</li>
+              <li><Check aria-hidden="true" /> Uses wording approved by your business</li>
+              <li><Check aria-hidden="true" /> Routes replies and call context to your team</li>
+            </ul>
+            <p className="receptionist-text-back-included">
+              <MessageSquareText aria-hidden="true" /> Automatic text-back is included in the $297/month plan.
+            </p>
+          </div>
+          <AutoTextBackDemo />
         </div>
       </section>
 
@@ -356,10 +383,11 @@ export default function HomePage() {
       >
         <div className="receptionist-section-heading">
           <p className="eyebrow">Founding partner pricing</p>
-          <h2>Prove it free. Lock the founding rate.</h2>
+          <h2>Prove it free. Start at $297 a month.</h2>
           <p>
             Start with the free two-hour evening test. Continue only if the
-            coverage proves useful.
+            coverage proves useful. Founding partners lock the starting rate
+            for 12 months as pricing increases for new partners.
           </p>
         </div>
         <div className="receptionist-pricing-grid two-up">
@@ -393,19 +421,19 @@ export default function HomePage() {
           </article>
           <article className="featured">
             <p className="eyebrow">Founding Raleigh HVAC Partner</p>
-            <h3>Missed-call coverage, founding rate</h3>
+            <h3>Missed-call recovery plan</h3>
             <strong>
-              <span>$99</span>/month for your first year
+              <span>$297</span>/month · starting rate
             </strong>
             <ul>
               {[
                 "Up to 150 minutes of missed-call and after-hours coverage",
-                "Instant text-back when a caller hangs up",
+                "Automatic text-back after every missed call",
                 "Immediate call summaries and urgency alerts",
                 "Approved call transfers",
                 "One HVAC call flow customized to your business",
                 "Monthly recovered-lead scorecard",
-                "Founding rate locked for 12 months — regular price $149/month",
+                "Your $297 founding rate locked for 12 months",
               ].map((item) => (
                 <li key={item}>
                   <Check aria-hidden="true" /> {item}
@@ -422,7 +450,7 @@ export default function HomePage() {
             </a>
             <p className="receptionist-pricing-note">
               Additional voice usage is $0.30 per minute. No setup fee. Cancel
-              anytime.
+              anytime. Pricing will increase for future new partners.
             </p>
           </article>
         </div>
