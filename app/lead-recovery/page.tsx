@@ -68,11 +68,6 @@ export default function LandingPage() {
   return (
     <main className="landing-page recovery-page">
       <PublicSiteNav
-        items={[
-          { href: "/", label: "24/7 call coverage" },
-          { href: "#how-it-works", label: "Lead recovery" },
-          { href: "/login", label: "Sign in" },
-        ]}
         cta={{ href: "#listen-now-form", label: "Try it now" }}
       />
 

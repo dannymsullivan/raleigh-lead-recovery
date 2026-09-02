@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BrandMark } from "../components/brand-mark";
+import { PublicSiteNav } from "../components/public-site-nav";
 
 export const metadata: Metadata = { title: "Privacy Policy | Raleigh Lead Recovery", description: "How Raleigh Lead Recovery collects, uses, and protects information." };
 
@@ -19,5 +18,5 @@ export default function PrivacyPage() {
   </LegalPage>;
 }
 
-function LegalPage({ title, updated, children }: { title: string; updated: string; children: React.ReactNode }) { return <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]"><header className="border-b border-[#dce4ef] bg-white"><div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-5"><BrandMark /><Link className="text-sm font-bold text-[#33405a]" href="/">Back home</Link></div></header><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated {updated}</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">{title}</h1><p className="mt-6 max-w-2xl text-sm font-semibold leading-7 text-black/55">This policy describes Raleigh Lead Recovery&apos;s current service and messaging practices.</p><div className="mt-12 grid gap-9">{children}</div></article></main>; }
+function LegalPage({ title, updated, children }: { title: string; updated: string; children: React.ReactNode }) { return <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]"><PublicSiteNav cta={{ href: "/signup", label: "Start free" }} /><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated {updated}</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">{title}</h1><p className="mt-6 max-w-2xl text-sm font-semibold leading-7 text-black/55">This policy describes Raleigh Lead Recovery&apos;s current service and messaging practices.</p><div className="mt-12 grid gap-9">{children}</div></article></main>; }
 function Section({ title, children }: { title: string; children: React.ReactNode }) { return <section className="border-t-2 border-black pt-5"><h2 className="text-2xl font-black tracking-[-0.035em]">{title}</h2><div className="mt-3 grid gap-3 text-sm font-semibold leading-7 text-black/65 [&_a]:font-black [&_a]:text-black [&_a]:underline">{children}</div></section>; }

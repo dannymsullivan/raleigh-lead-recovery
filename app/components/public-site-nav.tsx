@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { BrandMark } from "./brand-mark";
 
@@ -11,23 +12,43 @@ type NavItem = {
 };
 
 type PublicSiteNavProps = {
-  items: NavItem[];
   cta: NavItem;
-  variant?: "standard" | "hvac";
 };
 
-export function PublicSiteNav({ items, cta, variant = "standard" }: PublicSiteNavProps) {
+const items = [
+  { href: "/", label: "Missed calls" },
+  { href: "/lead-recovery", label: "Lead recovery" },
+  { href: "/hvac", label: "HVAC pilot" },
+  { href: "/blog", label: "Field notes" },
+  { href: "/login", label: "Sign in" },
+] as const;
+
+export function PublicSiteNav({ cta }: PublicSiteNavProps) {
   const [open, setOpen] = useState(false);
-  const isHvac = variant === "hvac";
+  const pathname = usePathname();
+
+  function isActive(href: string): boolean {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   return (
-    <header className={isHvac ? "hvac-header" : "site-header public-site-header"}>
-      <nav className={`page-shell ${isHvac ? "hvac-nav" : "nav-row"}`} aria-label="Primary navigation">
+    <header className="site-header public-site-header">
+      <nav className="page-shell nav-row" aria-label="Primary navigation">
         <BrandMark />
 
-        <div className={isHvac ? "hvac-nav-links public-nav-desktop" : "nav-links public-nav-desktop"}>
-          {items.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
-          <Link className={isHvac ? "hvac-button hvac-button-accent" : "button button-accent button-small"} href={cta.href}>
+        <div className="nav-links public-nav-desktop">
+          {items.map((item) => (
+            <Link
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className="public-nav-link"
+              key={item.href}
+              href={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link className="button button-accent button-small public-nav-primary" href={cta.href}>
             {cta.label} <ArrowRight aria-hidden="true" />
           </Link>
         </div>
@@ -45,7 +66,14 @@ export function PublicSiteNav({ items, cta, variant = "standard" }: PublicSiteNa
           </button>
           <div className="public-mobile-nav-panel" id="public-mobile-nav-panel" hidden={!open}>
             {items.map((item) => (
-              <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>
+              <Link
+                aria-current={isActive(item.href) ? "page" : undefined}
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
             ))}
             <Link className="public-mobile-nav-cta" href={cta.href} onClick={() => setOpen(false)}>
               {cta.label} <ArrowRight aria-hidden="true" />

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BrandMark } from "../components/brand-mark";
+import { PublicSiteNav } from "../components/public-site-nav";
 
 export const metadata: Metadata = { title: "Terms of Service | Raleigh Lead Recovery", description: "Terms governing Raleigh Lead Recovery and its transactional messaging program." };
 
 export default function TermsPage() {
-  return <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]"><header className="border-b border-[#dce4ef] bg-white"><div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-5"><BrandMark /><Link className="text-sm font-bold text-[#33405a]" href="/">Back home</Link></div></header><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated August 19, 2026</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">Terms of Service</h1><div className="mt-12 grid gap-9">
+  return <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]"><PublicSiteNav cta={{ href: "/signup", label: "Start free" }} /><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated August 19, 2026</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">Terms of Service</h1><div className="mt-12 grid gap-9">
     <Section title="The service"><p>Raleigh Lead Recovery provides inbound call coverage and lead-recovery workflows, including automated calls, campaign controls, call records, dashboards, and transactional account alerts. Features may change as the service develops.</p></Section>
     <Section title="Customer responsibilities"><p>You may upload or contact only people for whom you have a lawful basis and all permissions required for the selected communication. You are responsible for the accuracy of campaign information, consent evidence, suppression lists, calling windows, recording requirements, and instructions supplied to each agent. You must promptly honor opt-outs and must not use the service for unlawful, deceptive, abusive, or unwanted communications.</p></Section>
     <Section title="Automated calling"><p>The configured outbound flow identifies itself as automated. Automated and prerecorded calls may be regulated by federal and state law. The service&apos;s operational safeguards do not constitute legal advice or replace review of your specific lead sources and jurisdictions.</p></Section>

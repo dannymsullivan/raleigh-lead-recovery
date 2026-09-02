@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BrandMark } from "../../components/brand-mark";
+import { PublicSiteNav } from "../../components/public-site-nav";
 import {
   blogPosts,
   getBlogMetadata,
@@ -55,16 +56,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <header className="border-b-2 border-black">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-          <BrandMark />
-          <div className="flex shrink-0 items-center gap-4 text-sm font-black sm:gap-6">
-            <Link className="hidden hover:underline hover:decoration-2 hover:underline-offset-4 sm:inline" href="/blog">Field notes</Link>
-            <a className="hidden hover:underline hover:decoration-2 hover:underline-offset-4 md:inline" href={contactHref}>Contact</a>
-            <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-white transition-transform hover:-translate-y-0.5" href="/signup">Start free <ArrowRight className="h-4 w-4" /></Link>
-          </div>
-        </nav>
-      </header>
+      <PublicSiteNav cta={{ href: "/signup", label: "Start free" }} />
 
       <article>
         <section className="border-b-2 border-black px-5 py-16 sm:px-8 lg:py-24">

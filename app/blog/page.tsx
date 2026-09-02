@@ -2,6 +2,7 @@ import { ArrowRight, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandMark } from "../components/brand-mark";
+import { PublicSiteNav } from "../components/public-site-nav";
 import { blogCategories, blogPosts, siteUrl } from "@/lib/blog";
 import { contactEmail, contactHref } from "@/lib/contact";
 
@@ -17,18 +18,7 @@ const remainingPosts = blogPosts.slice(1);
 export default function BlogIndexPage() {
   return (
     <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]">
-      <header className="border-b-2 border-black">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-          <BrandMark />
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Link className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 sm:block" href="/">Home</Link>
-            <a className="hidden text-sm font-extrabold hover:underline hover:decoration-2 hover:underline-offset-4 md:block" href={contactHref}>Contact</a>
-            <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-extrabold text-white transition-transform hover:-translate-y-0.5 sm:px-5" href="/signup">
-              Start free <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <PublicSiteNav cta={{ href: "/signup", label: "Start free" }} />
 
       <section className="border-b-2 border-black">
         <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.12fr_0.88fr]">

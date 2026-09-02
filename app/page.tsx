@@ -73,13 +73,6 @@ export default function HomePage() {
   return (
     <main className="landing-page rlr-home">
       <PublicSiteNav
-        items={[
-          { href: "#how-it-works", label: "How it works" },
-          { href: "#outcomes", label: "What you see" },
-          { href: "#pilot", label: "Pricing" },
-          { href: "#questions", label: "Questions" },
-          { href: "/lead-recovery", label: "Lead recovery" },
-        ]}
         cta={{ href: bookingHref, label: "Book free pilot" }}
       />
 

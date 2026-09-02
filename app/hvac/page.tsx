@@ -27,8 +27,6 @@ export default function HvacLandingPage() {
   return (
     <main className="landing-page hvac-page">
       <PublicSiteNav
-        variant="hvac"
-        items={[]}
         cta={{ href: `mailto:${contactEmail}?subject=25-contact%20HVAC%20pilot`, label: "Ask about 25 contacts" }}
       />
 
