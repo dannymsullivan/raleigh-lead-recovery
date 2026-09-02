@@ -7,7 +7,17 @@ import type { WebDemoMode } from "@/lib/web-demo-config";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
 
-export function WebVoiceDemo({ compact = false, label = "Try it now", mode = "receptionist" }: { compact?: boolean; label?: string; mode?: WebDemoMode }) {
+export function WebVoiceDemo({
+  compact = false,
+  label = "Try it now",
+  mode = "receptionist",
+  visual = "button",
+}: {
+  compact?: boolean;
+  label?: string;
+  mode?: WebDemoMode;
+  visual?: "button" | "orb";
+}) {
   const clientRef = useRef<RetellWebClient | null>(null);
   const [state, setState] = useState<DemoState>("idle");
   const [agentTalking, setAgentTalking] = useState(false);
@@ -58,6 +68,50 @@ export function WebVoiceDemo({ compact = false, label = "Try it now", mode = "re
     clientRef.current = null;
     setAgentTalking(false);
     setState("idle");
+  }
+
+  if (visual === "orb") {
+    const isActive = state === "active";
+    const isConnecting = state === "connecting";
+    const statusLabel = state === "error"
+      ? "Demo unavailable right now"
+      : isActive
+      ? agentTalking
+        ? "Chloe is speaking"
+        : "Listening—go ahead"
+      : isConnecting
+        ? "Opening a secure demo"
+        : "Ready when you are";
+
+    return (
+      <div className={`web-voice-demo voice-orb-demo is-${state} ${agentTalking ? "is-talking" : ""}`}>
+        <button
+          className="voice-orb-button"
+          type="button"
+          onClick={isActive ? stop : start}
+          disabled={isConnecting}
+          aria-label={isActive ? "End live conversation with Chloe" : "Start a live conversation with Chloe"}
+        >
+          <span className="voice-orb-halo halo-one" aria-hidden="true" />
+          <span className="voice-orb-halo halo-two" aria-hidden="true" />
+          <span className="voice-orb-sphere" aria-hidden="true">
+            <span className="voice-orb-glow" />
+            <span className="voice-orb-wave">
+              <i /><i /><i /><i /><i />
+            </span>
+          </span>
+          <span className="voice-orb-action">
+            {isActive ? <PhoneOff aria-hidden="true" /> : isConnecting ? <LoaderCircle className="web-voice-spinner" aria-hidden="true" /> : <Radio aria-hidden="true" />}
+            {isActive ? "End conversation" : isConnecting ? "Connecting…" : state === "error" ? "Try demo again" : label}
+          </span>
+        </button>
+        <p className="voice-orb-status" aria-live="polite">
+          <span aria-hidden="true" /> {statusLabel}
+        </p>
+        <p className="voice-orb-privacy">Live browser demo · Uses your microphone · No phone number needed</p>
+        {error ? <p className="web-voice-error" role="alert">{error}</p> : null}
+      </div>
+    );
   }
 
   return (
