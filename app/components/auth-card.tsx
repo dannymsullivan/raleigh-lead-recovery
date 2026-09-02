@@ -32,7 +32,7 @@ export function AuthShell({
         <p className="text-xs font-semibold text-white/45">Built in Raleigh. Answers anywhere.</p>
       </section>
 
-      <section className="flex items-center justify-center px-5 py-16 sm:px-10">
+      <section className="auth-form flex items-center justify-center px-5 py-16 sm:px-10">
         <div className="w-full max-w-md">
           <Link className="mb-12 inline-flex items-center gap-2 text-sm font-bold text-black/55 hover:text-black" href="/">
             <ArrowLeft className="h-4 w-4" /> Back home
