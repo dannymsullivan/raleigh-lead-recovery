@@ -95,12 +95,11 @@ describe("outreach Retell call request", () => {
     expect(request.retell_llm_dynamic_variables.prior_context).toHaveLength(500);
   });
 
-  it("allows only weekday business hours in Eastern time", () => {
+  it("allows manual calls from 9 AM through 8:59 PM Eastern on weekdays", () => {
+    expect(isWithinManualOutreachWindow(new Date("2026-09-02T12:59:00Z"))).toBe(false);
     expect(isWithinManualOutreachWindow(new Date("2026-09-02T13:00:00Z"))).toBe(true);
-    expect(isWithinManualOutreachWindow(new Date("2026-09-02T14:00:00Z"))).toBe(true);
-    expect(isWithinManualOutreachWindow(new Date("2026-09-02T20:59:00Z"))).toBe(true);
-    expect(isWithinManualOutreachWindow(new Date("2026-09-02T21:00:00Z"))).toBe(false);
-    expect(isWithinManualOutreachWindow(new Date("2026-09-02T22:00:00Z"))).toBe(false);
+    expect(isWithinManualOutreachWindow(new Date("2026-09-03T00:59:00Z"))).toBe(true);
+    expect(isWithinManualOutreachWindow(new Date("2026-09-03T01:00:00Z"))).toBe(false);
     expect(isWithinManualOutreachWindow(new Date("2026-09-05T14:00:00Z"))).toBe(false);
   });
 });

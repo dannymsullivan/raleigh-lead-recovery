@@ -34,6 +34,7 @@ import {
   type OutreachProspect,
   type OutreachStage,
 } from "@/lib/outreach";
+import { manualOutreachWindowLabel } from "@/lib/outreach-call";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { outreachCallingConfigured } from "@/lib/outreach-retell";
 
@@ -115,7 +116,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                       : search.error === "eligibility"
                         ? "Confirm that this business call is permitted before dialing."
                         : search.error === "outside_window"
-                          ? "AI outreach calls are limited to weekdays from 9 AM to 5 PM Eastern."
+                          ? `AI outreach calls are limited to ${manualOutreachWindowLabel}.`
                           : search.error === "invalid_phone"
                             ? "Add a valid US phone number before dialing."
                             : search.error === "call_in_progress"

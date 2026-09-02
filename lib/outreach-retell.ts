@@ -1,6 +1,6 @@
 import "server-only";
 
-import { buildOutreachCallRequest, isWithinManualOutreachWindow } from "./outreach-call";
+import { buildOutreachCallRequest, isWithinManualOutreachWindow, manualOutreachWindowLabel } from "./outreach-call";
 import type { OutreachProspect } from "./outreach";
 import { normalizePhoneNumber } from "./phone";
 import { getRetellClient } from "./retell";
@@ -42,7 +42,7 @@ export async function queueOutreachProspectCall(
   now = new Date(),
 ): Promise<{ callId: string; attemptId: string }> {
   if (!eligibilityAttested) throw new Error("Confirm call eligibility before dialing.");
-  if (!isWithinManualOutreachWindow(now)) throw new Error("Outreach calls are limited to weekdays from 9 AM to 5 PM Eastern.");
+  if (!isWithinManualOutreachWindow(now)) throw new Error(`Outreach calls are limited to ${manualOutreachWindowLabel}.`);
 
   const admin = getSupabaseAdmin();
   const { data, error } = await admin.from("outreach_prospects").select("*").eq("id", prospectId).maybeSingle();

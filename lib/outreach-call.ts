@@ -1,6 +1,8 @@
 import { normalizePhoneNumber } from "./phone";
 import type { OutreachProspect } from "./outreach";
 
+export const manualOutreachWindowLabel = "weekdays from 9 AM to 9 PM Eastern";
+
 export type OutreachCallRequest = {
   from_number: string;
   to_number: string;
@@ -45,5 +47,5 @@ export function isWithinManualOutreachWindow(date = new Date(), timezone = "Amer
   }).formatToParts(date);
   const weekday = parts.find((part) => part.type === "weekday")?.value;
   const hour = Number(parts.find((part) => part.type === "hour")?.value ?? -1);
-  return weekday !== "Sat" && weekday !== "Sun" && hour >= 9 && hour < 17;
+  return weekday !== "Sat" && weekday !== "Sun" && hour >= 9 && hour < 21;
 }

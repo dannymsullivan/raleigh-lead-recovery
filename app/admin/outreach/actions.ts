@@ -161,7 +161,7 @@ export async function startOutreachAgentCallAction(prospectId: string, formData:
     const message = error instanceof Error ? error.message : "";
     const code = message.includes("do-not-call")
       ? "do_not_call"
-      : message.includes("9 AM to 5 PM")
+      : message.includes("Outreach calls are limited")
         ? "outside_window"
         : message.includes("valid phone")
           ? "invalid_phone"
