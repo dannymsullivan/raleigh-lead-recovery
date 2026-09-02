@@ -169,13 +169,39 @@ export default function LandingPage() {
 
         <figure className="recovery-dashboard-window">
           <div className="recovery-dashboard-preview">
-            <Image
-              src="/lead-recovery-dashboard-preview.png"
-              alt="Lead recovery dashboard showing leads loaded, call attempts, conversations, appointments booked, estimated pipeline, campaign funnel, and launch checks"
-              width={1293}
-              height={1028}
-              sizes="(max-width: 1160px) calc(100vw - 40px), 1120px"
-            />
+            <div className="recovery-dashboard-toolbar">
+              <BrandMark />
+              <div className="recovery-dashboard-live"><i /> Campaign live</div>
+            </div>
+            <div className="recovery-dashboard-intro">
+              <div>
+                <p>Lead recovery</p>
+                <h3>Your old leads are talking again.</h3>
+              </div>
+              <span>Spring tune-up list</span>
+            </div>
+            <div className="recovery-dashboard-metrics">
+              <DashboardMetric label="Eligible leads" value="25" detail="approved contacts" />
+              <DashboardMetric label="Conversations" value="11" detail="meaningful calls" />
+              <DashboardMetric label="Interested" value="4" detail="qualified handoffs" accent />
+              <DashboardMetric label="Booked" value="2" detail="appointments" />
+            </div>
+            <div className="recovery-dashboard-body">
+              <div className="recovery-dashboard-table">
+                <div className="recovery-dashboard-table-head"><span>Customer</span><span>Outcome</span><span>Next step</span></div>
+                <DashboardRow name="Jordan M." context="Seasonal maintenance" status="Interested" next="Call Tuesday" />
+                <DashboardRow name="Avery R." context="Past estimate" status="Booked" next="May 12 · 9 AM" />
+                <DashboardRow name="Casey T." context="System replacement" status="Later" next="Follow up in June" />
+              </div>
+              <aside className="recovery-dashboard-funnel">
+                <p>Campaign progress</p>
+                <FunnelRow label="Eligible" value="25" width="100%" />
+                <FunnelRow label="Reached" value="16" width="64%" />
+                <FunnelRow label="Conversations" value="11" width="44%" />
+                <FunnelRow label="Interested" value="4" width="16%" />
+                <FunnelRow label="Booked" value="2" width="8%" />
+              </aside>
+            </div>
           </div>
           <div className="recovery-dashboard-sync">
             <Database aria-hidden="true" />
@@ -228,4 +254,17 @@ export default function LandingPage() {
       </footer>
     </main>
   );
+}
+
+function DashboardMetric({ label, value, detail, accent = false }: { label: string; value: string; detail: string; accent?: boolean }) {
+  return <article className={accent ? "accent" : undefined}><span>{label}</span><strong>{value}</strong><small>{detail}</small></article>;
+}
+
+function DashboardRow({ name, context, status, next }: { name: string; context: string; status: string; next: string }) {
+  const className = status.toLowerCase();
+  return <div className="recovery-dashboard-row"><div><strong>{name}</strong><small>{context}</small></div><span className={`dashboard-status ${className}`}>{status}</span><span>{next}</span></div>;
+}
+
+function FunnelRow({ label, value, width }: { label: string; value: string; width: string }) {
+  return <div><span>{label}</span><strong>{value}</strong><i style={{ width }} /></div>;
 }

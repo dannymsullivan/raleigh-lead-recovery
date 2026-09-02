@@ -6787,3 +6787,122 @@ details > summary {
   }
   .auth-form > div > a { margin-bottom: 38px; }
 }
+
+/* The public dashboard preview stays current because it is real UI, not a stale screenshot. */
+.recovery-dashboard-preview {
+  padding: 18px;
+  background: #f5f8fc;
+}
+
+.recovery-dashboard-toolbar {
+  min-height: 58px;
+  padding: 0 16px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px 14px 0 0;
+  background: #fff;
+}
+
+.recovery-dashboard-toolbar .group > span:first-child {
+  width: 30px;
+  height: 30px;
+}
+.recovery-dashboard-toolbar .group svg { width: 30px; height: 30px; }
+.recovery-dashboard-toolbar .group > span:last-child { font-size: .68rem; }
+
+.recovery-dashboard-live {
+  color: #247b6d;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.recovery-dashboard-live > i {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-radius: 50%;
+  background: #27aa93;
+  box-shadow: 0 0 0 4px rgb(39 170 147 / 12%);
+}
+
+.recovery-dashboard-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 24px 22px;
+  border-inline: 1px solid #dce4ef;
+  background: #fff;
+}
+.recovery-dashboard-intro p {
+  margin: 0 0 7px;
+  color: #718099;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.recovery-dashboard-intro h3 {
+  margin: 0;
+  color: #111b35;
+  font-family: "Iowan Old Style", "Baskerville", Georgia, serif;
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -.045em;
+}
+.recovery-dashboard-intro > span {
+  border-radius: 999px;
+  background: #e7f7f3;
+  padding: 7px 10px;
+  color: #226c60;
+  font-size: .58rem;
+  font-weight: 800;
+}
+
+.recovery-dashboard-metrics {
+  gap: 1px;
+  padding: 1px;
+  border: 1px solid #dce4ef;
+  background: #dce4ef;
+}
+.recovery-dashboard-metrics article {
+  min-height: 112px;
+  border: 0;
+  background: #fff;
+}
+.recovery-dashboard-metrics article.accent { background: #e7f7f3; }
+.recovery-dashboard-metrics strong { color: #111b35; }
+
+.recovery-dashboard-body {
+  margin-top: 14px;
+  overflow: hidden;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+}
+.recovery-dashboard-table { border-color: #dce4ef; }
+.recovery-dashboard-table-head { background: #f5f8fc; }
+.recovery-dashboard-table-head,
+.recovery-dashboard-row { border-color: #e5ebf3; }
+.recovery-dashboard-funnel { background: #f8fafc; }
+.recovery-dashboard-funnel i { background: #9fb1c7; }
+.recovery-dashboard-funnel div:nth-child(4) i,
+.recovery-dashboard-funnel div:nth-child(5) i { background: #27aa93; }
+.dashboard-status.interested,
+.dashboard-status.booked { background: #e2f7f1; color: #176c5e; }
+.dashboard-status.later { background: #edf1f6; color: #5f6c80; }
+
+@media (max-width: 700px) {
+  .recovery-dashboard-preview { padding: 10px; }
+  .recovery-dashboard-intro { align-items: start; flex-direction: column; padding: 22px 16px 18px; }
+  .recovery-dashboard-metrics { grid-template-columns: repeat(2, 1fr); }
+  .recovery-dashboard-metrics article { min-height: 100px; padding: 17px; }
+  .recovery-dashboard-body { grid-template-columns: 1fr; }
+  .recovery-dashboard-table { border-right: 0; }
+  .recovery-dashboard-funnel { display: none; }
+  .recovery-dashboard-table-head,
+  .recovery-dashboard-row { grid-template-columns: 1.2fr .8fr; padding-inline: 14px; }
+  .recovery-dashboard-table-head > span:last-child,
+  .recovery-dashboard-row > span:last-child { display: none; }
+}
