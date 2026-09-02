@@ -2,6 +2,7 @@ import { LogOut, Send, Settings2, UsersRound } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { logoutAction } from "@/app/actions";
+import { BrandMark } from "@/app/components/brand-mark";
 
 type AdminSection = "customers" | "outreach" | "settings";
 
@@ -9,13 +10,16 @@ export function AdminHeader({ active }: { active: AdminSection }) {
   return (
     <header className="border-b border-[var(--product-line)] bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-5 px-5 py-4 sm:px-8">
-        <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Founder operations
-          </p>
-          <h1 className="mt-1 truncate text-lg font-bold tracking-[-0.025em] text-slate-900 sm:text-xl">
-            Raleigh Lead Recovery control room
-          </h1>
+        <div className="flex min-w-0 items-center gap-4">
+          <BrandMark />
+          <div className="hidden min-w-0 sm:block">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+              Founder operations
+            </p>
+            <h1 className="mt-1 truncate text-sm font-semibold tracking-[-0.015em] text-slate-700">
+              Control room
+            </h1>
+          </div>
         </div>
         <form action={logoutAction}>
           <button

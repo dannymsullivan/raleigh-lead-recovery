@@ -6338,3 +6338,127 @@ details > summary {
   .voice-orb-sphere::before,
   .voice-orb-wave i { animation: none; }
 }
+
+/* Shared brand refresh: public utility pages, auth, and product workspaces. */
+.auth-ui {
+  color: #111b35;
+  -webkit-font-smoothing: antialiased;
+}
+
+.auth-story {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 24%, rgb(99 230 209 / 25%), transparent 25%),
+    radial-gradient(circle at 18% 78%, rgb(62 116 242 / 28%), transparent 31%),
+    linear-gradient(145deg, #101a34, #173665 64%, #12536b);
+}
+
+.auth-story::after {
+  position: absolute;
+  right: -120px;
+  bottom: -120px;
+  width: 340px;
+  height: 340px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 44px rgb(255 255 255 / 3%), 0 0 0 88px rgb(255 255 255 / 2%);
+  content: "";
+  pointer-events: none;
+}
+
+.auth-ui h1,
+.auth-ui h2 {
+  font-family: "Iowan Old Style", "Baskerville", Georgia, serif;
+}
+
+.auth-ui button,
+.auth-ui [class~="bg-black"],
+.auth-ui [class~="border-2"] { border-radius: 12px; }
+
+.auth-ui button[class~="bg-black"] { background: #111b35; box-shadow: 0 10px 24px rgb(17 27 53 / 15%); }
+.auth-ui [class~="bg-[#d8ff57]"] { border-color: #bcded6; background: #e7f7f3; }
+
+.brand-surface {
+  color: #111b35;
+  -webkit-font-smoothing: antialiased;
+}
+
+.brand-surface > header {
+  border-color: #dce4ef;
+  border-bottom-width: 1px;
+  background: rgb(255 255 255 / 94%);
+}
+
+.brand-surface h1,
+.brand-surface h2 { color: #111b35; }
+.brand-surface .border-2 { border-width: 1px; border-color: #d6e0ec; }
+.brand-surface .border-b-2 { border-bottom-width: 1px; border-bottom-color: #d6e0ec; }
+.brand-surface .border-t-2 { border-top-width: 1px; border-top-color: #d6e0ec; }
+.brand-surface .border-y-2 { border-top-width: 1px; border-bottom-width: 1px; border-color: #d6e0ec; }
+.brand-surface .divide-y-2 > :not(:last-child) { border-bottom-width: 1px; border-color: #dce4ef; }
+.brand-surface [class~="bg-black"] { background-color: #111b35; }
+.brand-surface a[class~="bg-black"],
+.brand-surface [class~="border-2"][class~="bg-white"] { border-radius: 12px; }
+.brand-surface [class~="border-2"][class~="bg-white"] { box-shadow: 0 14px 36px rgb(32 63 105 / 7%); }
+.brand-surface a:focus-visible,
+.auth-ui a:focus-visible,
+.product-ui a:focus-visible { outline-color: #2968e8; }
+
+.product-ui {
+  --product-canvas: #f5f8fc;
+  --product-surface-muted: #eef3f8;
+  --product-ink: #17223a;
+  --product-muted: #66738a;
+  --product-line: #e0e7f0;
+  --product-line-strong: #cfd9e6;
+  --product-accent: #dff7f1;
+}
+
+.product-ui [class~="bg-[#d8ff57]"] {
+  border-color: #9fd7ca;
+  background-color: #dff7f1;
+  color: #173a35;
+}
+
+.product-ui [class~="bg-black"] { background-color: #17223a; }
+.product-ui [class~="border-2"] { border-radius: 12px; }
+.product-ui section[class~="border-2"],
+.product-ui div[class~="border-2"] { overflow: hidden; }
+.product-ui button[class~="bg-black"],
+.product-ui a[class~="bg-black"],
+.product-ui button[class~="bg-white"],
+.product-ui a[class~="bg-white"] { border-radius: 8px; }
+.product-ui [class*="shadow-[4px_4px"],
+.product-ui [class*="shadow-[5px_5px"],
+.product-ui [class*="shadow-[6px_6px"],
+.product-ui [class*="shadow-[8px_8px"] { box-shadow: 0 12px 30px rgb(22 34 58 / 12%); }
+.product-ui table { border-collapse: collapse; }
+
+.recovery-page {
+  --ink: #111b35;
+  --muted: #647087;
+  --paper: #f7f9fc;
+  --line: #dce4ef;
+  --accent: #63e6d1;
+  --lime: #63e6d1;
+}
+
+.recovery-page .button,
+.recovery-page .recovery-demo-trigger,
+.recovery-page .recovery-hero-demo .receptionist-call-button { border-radius: 999px; }
+.recovery-page .public-site-header { background: rgb(255 255 255 / 93%); }
+
+.hvac-page {
+  --hvac-cream: #f6f8fc;
+  --hvac-ink: #111b35;
+  --hvac-lime: #63e6d1;
+  --hvac-blue: #dceeff;
+  --hvac-red: #63e6d1;
+}
+
+.hvac-page .hvac-header { border-bottom-width: 1px; background: rgb(255 255 255 / 92%); }
+.hvac-page .hvac-button,
+.hvac-page .hvac-demo-trigger { border-width: 1px; border-radius: 999px; }
+.hvac-page .hvac-button:hover,
+.hvac-page .hvac-demo-trigger:hover { box-shadow: 0 10px 24px rgb(17 27 53 / 14%); transform: translateY(-2px); }

@@ -23,7 +23,7 @@ export function PublicSiteNav({ items, cta, variant = "standard" }: PublicSiteNa
   return (
     <header className={isHvac ? "hvac-header" : "site-header public-site-header"}>
       <nav className={`page-shell ${isHvac ? "hvac-nav" : "nav-row"}`} aria-label="Primary navigation">
-        <BrandMark accent="#d8ff57" />
+        <BrandMark />
 
         <div className={isHvac ? "hvac-nav-links public-nav-desktop" : "nav-links public-nav-desktop"}>
           {items.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}

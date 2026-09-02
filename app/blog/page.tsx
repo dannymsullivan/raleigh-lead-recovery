@@ -16,7 +16,7 @@ const remainingPosts = blogPosts.slice(1);
 
 export default function BlogIndexPage() {
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
+    <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]">
       <header className="border-b-2 border-black">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
           <BrandMark />

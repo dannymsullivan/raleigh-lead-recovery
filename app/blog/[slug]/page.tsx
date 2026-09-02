@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const FormatIcon = post.format === "video" ? PlayCircle : FileText;
 
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
+    <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

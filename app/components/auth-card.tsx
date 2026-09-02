@@ -14,8 +14,8 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="grid min-h-screen bg-[#f4f1e8] lg:grid-cols-[0.9fr_1.1fr]">
-      <section className="flex flex-col justify-between border-b-2 border-black bg-black p-6 text-white sm:p-10 lg:border-b-0 lg:border-r-2">
+    <main className="auth-ui grid min-h-screen bg-[#f5f8fc] lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="auth-story flex flex-col justify-between border-b border-white/10 p-6 text-white sm:p-10 lg:border-b-0 lg:border-r">
         <BrandMark inverted />
         <div className="my-20 max-w-lg">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/55">Your lead recovery command center</p>
@@ -23,7 +23,7 @@ export function AuthShell({
           <ul className="mt-10 grid gap-4 text-sm font-bold text-white/75">
             {["See what every conversation uncovered", "Get qualified prospects to the right rep", "Track every recovered opportunity"].map((item) => (
               <li className="flex items-center gap-3" key={item}>
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-white text-black"><Check className="h-3.5 w-3.5" /></span>
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#63e6d1] text-[#111b35]"><Check className="h-3.5 w-3.5" /></span>
                 {item}
               </li>
             ))}
@@ -38,7 +38,7 @@ export function AuthShell({
             <ArrowLeft className="h-4 w-4" /> Back home
           </Link>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/50">{eyebrow}</p>
-          <h1 className="mt-4 text-5xl font-black leading-[0.96] tracking-[-0.055em]">{title}</h1>
+          <h1 className="mt-4 text-5xl font-semibold leading-[0.96] tracking-[-0.055em] text-[#111b35]">{title}</h1>
           <p className="mt-5 text-base leading-7 text-black/60">{description}</p>
           <div className="mt-9">{children}</div>
         </div>
@@ -52,7 +52,7 @@ export function AuthField({ label, name, type = "text", placeholder, autoComplet
     <label className="block text-sm font-extrabold">
       {label}
       <input
-        className="mt-2 h-13 w-full rounded-none border-2 border-black bg-white px-4 font-semibold outline-none transition-shadow focus:shadow-[5px_5px_0_#000]"
+        className="mt-2 h-13 w-full rounded-xl border border-[#cfd9e7] bg-white px-4 font-semibold outline-none transition-[border-color,box-shadow] focus:border-[#2968e8] focus:shadow-[0_0_0_4px_rgba(41,104,232,0.1)]"
         name={name}
         type={type}
         placeholder={placeholder}

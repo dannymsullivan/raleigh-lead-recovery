@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Calculator, Check, CircleAlert, DollarSign, ExternalLink, MessageSquareText, PhoneCall, Plus, ShieldCheck, TrendingUp } from "lucide-react";
+import { Calculator, Check, CircleAlert, DollarSign, ExternalLink, MessageSquareText, PhoneCall, Plus, TrendingUp } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { addClientAction, deleteClientAction, loginAction, updateClientAction } from "../actions";
@@ -13,6 +13,7 @@ import { retryTransientCredentialError } from "@/lib/retry";
 import { customerCrmPath } from "@/lib/customer-slug";
 import { isClientDeletionLocked } from "@/lib/client-deletion";
 import { AdminHeader } from "./admin-header";
+import { BrandMark } from "../components/brand-mark";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Admin | Raleigh Lead Recovery", robots: { index: false, follow: false } };
@@ -78,13 +79,10 @@ export default async function AdminPage({ searchParams }: PageProps) {
   if (!authenticated) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-5 py-10">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded bg-neutral-950 text-white">
-            <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-          </div>
+        <div className="mb-8 flex items-center gap-4">
+          <BrandMark />
           <div>
-            <h1 className="text-2xl font-semibold tracking-normal">Raleigh Lead Recovery</h1>
-            <p className="text-sm text-neutral-600">Internal admin</p>
+            <p className="text-sm font-semibold text-neutral-600">Internal admin</p>
           </div>
         </div>
 

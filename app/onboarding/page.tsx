@@ -29,8 +29,8 @@ export default async function OnboardingPage({ searchParams }: PageProps) {
   const error = typeof search.error === "string" ? search.error : null;
 
   return (
-    <main className="min-h-screen bg-[#f4f1e8] text-black">
-      <header className="border-b-2 border-black">
+    <main className="brand-surface product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
+      <header className="border-b border-[var(--product-line)] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
           <BrandMark />
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">14-day trial starts after setup · then $99/mo founding rate</p>
