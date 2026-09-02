@@ -23,12 +23,12 @@ const bookingHref =
 export const metadata: Metadata = {
   title: "AI Missed-Call Coverage for Raleigh Service Businesses",
   description:
-    "Raleigh Lead Recovery answers missed and after-hours calls, captures what each customer needs, and gives your team a clear next step. Try one controlled evening free.",
+    "Raleigh Lead Recovery answers missed and after-hours calls, captures what each customer needs, and gives your team a clear next step. Try a results-focused pilot free.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Every Missed Call Gets a Real Next Step",
     description:
-      "Natural AI call coverage for Raleigh service businesses, with a free controlled evening test.",
+      "Natural AI call coverage for Raleigh service businesses, with a free results-focused pilot.",
     url: "/",
     type: "website",
     images: [{
@@ -64,7 +64,7 @@ const faqs = [
     a: "Yes, if you approve a transfer path. We send transfers to a separate owner or dispatcher number so the call cannot loop back into the forwarded main line.",
   },
   {
-    q: "What happens after the free test?",
+    q: "What happens after the free pilot?",
     a: "We review every outcome together. If the coverage was useful, the founding plan starts at $297 per month. If it was not, you turn forwarding off and owe nothing for the test.",
   },
 ];
@@ -80,7 +80,7 @@ export default function HomePage() {
           { href: "#questions", label: "Questions" },
           { href: "/lead-recovery", label: "Lead recovery" },
         ]}
-        cta={{ href: bookingHref, label: "Book free test" }}
+        cta={{ href: bookingHref, label: "Book free pilot" }}
       />
 
       <section className="rlr-hero">
@@ -95,7 +95,7 @@ export default function HomePage() {
             </p>
             <div className="rlr-hero-actions">
               <a className="rlr-button rlr-button-primary" href={bookingHref} target="_blank" rel="noreferrer">
-                Book a free evening test <ArrowRight aria-hidden="true" />
+                Book a free pilot <ArrowRight aria-hidden="true" />
               </a>
               <a className="rlr-button rlr-button-secondary" href="#how-it-works">See how it works</a>
             </div>
@@ -190,10 +190,11 @@ export default function HomePage() {
       <section className="rlr-pilot page-shell" id="pilot">
         <div className="rlr-pilot-copy">
           <p className="rlr-kicker">Evidence before a subscription</p>
-          <h2>Try one ordinary evening. See every result.</h2>
+          <h2>Give it enough time to produce real evidence.</h2>
           <p>
-            We set up a controlled two-hour window around your existing phone
-            system. Your team works as usual. Only unanswered calls roll over.
+            The free pilot runs for up to seven days or five handled missed
+            calls, whichever comes first. Your team works as usual. Only
+            unanswered calls roll over.
           </p>
           <ul>
             <li><Check aria-hidden="true" /> Greeting and questions approved before launch</li>
@@ -202,15 +203,15 @@ export default function HomePage() {
           </ul>
         </div>
         <div className="rlr-price-card">
-          <p>Controlled evening test</p>
+          <p>Results-focused pilot</p>
           <div><strong>$0</strong><span>No setup fee</span></div>
           <ul>
-            <li><Clock3 aria-hidden="true" /> One two-hour window</li>
+            <li><Clock3 aria-hidden="true" /> Up to seven calendar days</li>
             <li><PhoneForwarded aria-hidden="true" /> Missed calls only</li>
-            <li><MessageSquareText aria-hidden="true" /> Text-back included</li>
+            <li><MessageSquareText aria-hidden="true" /> Up to five handled calls</li>
           </ul>
           <a className="rlr-button rlr-button-light" href={bookingHref} target="_blank" rel="noreferrer">
-            Book the free test <ArrowRight aria-hidden="true" />
+            Book the free pilot <ArrowRight aria-hidden="true" />
           </a>
           <p className="rlr-price-note">If it proves useful, the founding plan starts at $297/month for up to 150 minutes. Cancel anytime.</p>
         </div>
@@ -263,10 +264,10 @@ export default function HomePage() {
         <div className="page-shell">
           <p className="rlr-kicker">One Raleigh pilot opening</p>
           <h2>Let one missed call become a real conversation.</h2>
-          <p>No new phone system. No setup fee. Just one evening and a clear result.</p>
+          <p>No new phone system. No setup fee. Just enough time to see real outcomes.</p>
           <div>
             <a className="rlr-button rlr-button-light" href={bookingHref} target="_blank" rel="noreferrer">
-              Book the free evening <ArrowRight aria-hidden="true" />
+              Book the free pilot <ArrowRight aria-hidden="true" />
             </a>
             <a className="rlr-final-demo-link" href="#talk-now">Talk to Chloe first</a>
           </div>
