@@ -17,6 +17,7 @@ import {
   bulkDeleteOutreachProspectsAction,
   deleteOutreachProspectAction,
   logOutreachCallAction,
+  startOutreachAgentCallAction,
   updateOutreachProspectAction,
 } from "./actions";
 import { ProspectBulkToolbar } from "./prospect-bulk-toolbar";
@@ -34,6 +35,7 @@ import {
   type OutreachStage,
 } from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { outreachCallingConfigured } from "@/lib/outreach-retell";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Outreach | Raleigh Lead Recovery", robots: { index: false, follow: false } };
@@ -83,8 +85,11 @@ export default async function OutreachPage({ searchParams }: PageProps) {
       ? prospects
       : prospects.filter((prospect) => prospect.stage === activeStage);
   const summary = buildOutreachSummary(prospects);
+  const agentConfigured = outreachCallingConfigured();
   const notice = search.created
     ? "Prospect added."
+    : search.agent_call_started
+      ? "Chloe started the call. The result will appear here after Retell analyzes it."
     : search.duplicate
       ? "That company is already in your call list."
     : search.updated
@@ -107,17 +112,31 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                     ? "Select at least one prospect to delete."
                     : search.error === "call_log"
                       ? "The call could not be logged. Try again."
+                      : search.error === "eligibility"
+                        ? "Confirm that this business call is permitted before dialing."
+                        : search.error === "outside_window"
+                          ? "AI outreach calls are limited to weekdays from 9 AM to 5 PM Eastern."
+                          : search.error === "invalid_phone"
+                            ? "Add a valid US phone number before dialing."
+                            : search.error === "call_in_progress"
+                              ? "A call is already in progress for that prospect."
+                              : search.error === "do_not_call"
+                                ? "That prospect is on the do-not-call list."
+                                : search.error === "agent_not_configured"
+                                  ? "The Retell outreach agent is not configured yet."
+                                  : search.error === "agent_call"
+                                    ? "Retell could not start the call. Try again or review the agent configuration."
                       : null;
 
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
       <AdminHeader active="outreach" />
 
-      <div className="mx-auto max-w-[1440px] px-5 py-5 sm:px-8 sm:py-6">
+      <div className="mx-auto max-w-[1320px] px-5 py-7 sm:px-8 sm:py-9">
         {notice ? (
           <div
-            className={`mb-4 border px-4 py-3 text-sm font-black ${
-              search.error ? "border-black bg-black text-white" : "border-[var(--product-line-strong)] bg-white"
+            className={`mb-5 rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm ${
+              search.error ? "border-red-200 bg-red-50 text-red-900" : "border-[var(--product-line)] bg-white"
             }`}
             role="status"
           >
@@ -125,16 +144,16 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           </div>
         ) : null}
 
-        <section className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h2 className="text-xl font-black tracking-[-0.04em] sm:text-2xl">
-            Your daily customer desk.
+        <section>
+          <h2 className="text-2xl font-bold tracking-[-0.035em] text-slate-950 sm:text-3xl">
+            Outreach
           </h2>
-          <p className="text-xs font-semibold text-black/50">
-            Add the company, make the call, tap the result, and let the next action come back to you.
+          <p className="mt-1.5 text-sm text-slate-500">
+            Add a company, start a call, and see the next step without managing a second spreadsheet.
           </p>
         </section>
 
-        <section className="mt-4 grid grid-cols-2 border-l border-t border-[var(--product-line)] bg-white sm:grid-cols-5" aria-label="Outreach summary">
+        <section className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-5" aria-label="Outreach summary">
           <OutreachStat icon={<UsersRound />} label="Prospects" value={summary.total} />
           <OutreachStat icon={<Send />} label="Ready to contact" value={summary.ready} />
           <OutreachStat icon={<CalendarClock />} label="Follow-ups due" value={summary.followUpsDue} accent={summary.followUpsDue > 0} />
@@ -142,22 +161,34 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           <OutreachStat icon={<Target />} label="Pilots booked" value={summary.pilots} />
         </section>
 
+        <section className={`mt-4 flex flex-col gap-2 rounded-xl border px-4 py-3.5 shadow-sm sm:flex-row sm:items-center sm:justify-between ${agentConfigured ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50"}`}>
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Chloe · {agentConfigured ? "Ready to qualify" : "Setup required"}</p>
+            <p className="mt-0.5 text-xs leading-5 text-slate-600">
+              You approve every call. Chloe asks one question at a time and logs the outcome automatically.
+            </p>
+          </div>
+          <span className={`w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold ${agentConfigured ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900"}`}>
+            {agentConfigured ? "Agent online" : "Needs attention"}
+          </span>
+        </section>
+
         <div className="mt-3">
           <QuickAddProspect action={addOutreachProspectAction} />
 
         <details
-          className="mt-3 scroll-mt-5 border border-[var(--product-line-strong)] bg-white"
+          className="mt-3 scroll-mt-5 overflow-hidden rounded-xl border border-[var(--product-line)] bg-white shadow-sm"
           id="bulk-add"
           open={search.error === "bulk"}
         >
           <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2">
             <span className="flex items-center gap-2.5">
-              <span className="grid h-7 w-7 place-items-center bg-black text-white">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-slate-900 text-white">
                 <UsersRound className="h-4 w-4" aria-hidden="true" />
               </span>
-              <span className="text-sm font-black">Paste a call list</span>
+              <span className="text-sm font-semibold">Paste a call list</span>
             </span>
-            <span className="text-xs font-black text-black/45">Open form</span>
+            <span className="text-xs font-medium text-slate-500">Open form</span>
           </summary>
           <form action={bulkAddOutreachProspectsAction} className="border-t border-[var(--product-line)] p-4 sm:p-5">
             <label className="block text-xs font-black">
@@ -179,12 +210,12 @@ export default async function OutreachPage({ searchParams }: PageProps) {
         </details>
         </div>
 
-        <section className="mt-5" aria-labelledby="prospect-list-title">
-          <div className="border-b border-[var(--product-line-strong)] pb-3">
+        <section className="mt-8" aria-labelledby="prospect-list-title">
+          <div className="pb-3">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <h2 className="text-lg font-black tracking-[-0.03em]" id="prospect-list-title">Call list</h2>
-                <p className="mt-1 text-xs font-semibold text-black/45">Search here instead of keeping a second list in Google.</p>
+                <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950" id="prospect-list-title">Call list</h2>
+                <p className="mt-1 text-sm text-slate-500">Choose a company and take the next action.</p>
               </div>
               <ProspectSearch total={visibleProspects.length} />
             </div>
@@ -203,11 +234,11 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           </div>
 
           {loadError ? (
-            <div className="mt-5 border border-red-300 bg-red-50 p-4 text-sm font-semibold text-red-900">
+            <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-900">
               Outreach data could not load: {loadError}
             </div>
           ) : visibleProspects.length === 0 ? (
-            <div className="mt-5 border border-dashed border-[var(--product-line-strong)] bg-white px-5 py-12 text-center">
+            <div className="mt-5 rounded-2xl border border-dashed border-[var(--product-line-strong)] bg-white px-5 py-12 text-center">
               <Send className="mx-auto h-6 w-6 text-black/35" aria-hidden="true" />
               <h3 className="mt-4 text-lg font-black">
                 {prospects.length === 0 ? "Add the first company to your list." : "No prospects in this stage."}
@@ -230,8 +261,8 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                   total={visibleProspects.length}
                 />
               </div>
-              <div className="mt-3 border border-[var(--product-line-strong)] bg-white">
-                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(155px,.9fr)_125px_125px_120px_220px] gap-3 border-b border-[var(--product-line)] bg-[var(--product-surface-muted)] px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/45 lg:grid">
+              <div className="mt-3 overflow-hidden rounded-2xl border border-[var(--product-line)] bg-white shadow-sm">
+                <div className="hidden grid-cols-[minmax(190px,1.25fr)_minmax(155px,.9fr)_125px_125px_120px_220px] gap-3 border-b border-[var(--product-line)] bg-slate-50/80 px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500 lg:grid">
                   <span>Company</span>
                   <span>Contact</span>
                   <span>Last result</span>
@@ -246,6 +277,8 @@ export default async function OutreachPage({ searchParams }: PageProps) {
                       prospect={prospect}
                       bulkFormId="outreach-bulk-delete"
                       logCallAction={logOutreachCallAction.bind(null, prospect.id)}
+                      agentCallAction={startOutreachAgentCallAction.bind(null, prospect.id)}
+                      agentConfigured={agentConfigured}
                       editForm={
                         <>
                           <ProspectForm
@@ -285,10 +318,12 @@ function OutreachStat({
   accent?: boolean;
 }) {
   return (
-    <div className={`flex items-center gap-2.5 border-b border-r border-[var(--product-line)] px-3 py-2.5 ${accent ? "bg-[var(--product-accent)]" : ""}`}>
-      <span className="text-black/45 [&>svg]:h-4 [&>svg]:w-4">{icon}</span>
-      <p className="text-xl font-black tabular-nums tracking-[-0.04em]">{value}</p>
-      <p className="text-[11px] font-bold leading-4 text-black/45">{label}</p>
+    <div className={`rounded-xl border px-4 py-3.5 shadow-sm ${accent ? "border-amber-200 bg-amber-50" : "border-[var(--product-line)] bg-white"}`}>
+      <div className="flex items-center justify-between">
+        <p className="text-2xl font-bold tabular-nums tracking-[-0.04em] text-slate-950">{value}</p>
+        <span className="text-slate-400 [&>svg]:h-4 [&>svg]:w-4">{icon}</span>
+      </div>
+      <p className="mt-1 text-xs font-medium text-slate-500">{label}</p>
     </div>
   );
 }
@@ -298,10 +333,10 @@ function StageFilter({ href, active, children }: { href: string; active: boolean
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`inline-flex min-h-10 shrink-0 items-center border px-3 text-xs font-black ${
+      className={`inline-flex min-h-9 shrink-0 items-center rounded-full px-3 text-xs font-semibold ${
         active
-          ? "border-black bg-black text-white"
-          : "border-[var(--product-line)] bg-white text-black/55 hover:border-black hover:text-black"
+          ? "bg-slate-900 text-white"
+          : "border border-[var(--product-line)] bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
       }`}
     >
       {children}

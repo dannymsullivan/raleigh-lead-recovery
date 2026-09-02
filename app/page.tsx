@@ -87,7 +87,7 @@ export default function HomePage() {
           { href: "#how-it-works", label: "How it works" },
           { href: "#text-back-demo", label: "Text-back demo" },
           { href: "#what-we-measure", label: "What we measure" },
-          { href: "#questions", label: "Questions" },
+          { href: "/lead-recovery", label: "Lead recovery" },
         ]}
         cta={{ href: bookingHref, label: "Book free test" }}
       />

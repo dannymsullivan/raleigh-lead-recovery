@@ -5793,14 +5793,14 @@ details > summary {
 
 /* Product workspace: the warm site identity, tuned for repeated daily use. */
 .product-ui {
-  --product-canvas: #f7f5ef;
+  --product-canvas: #f5f7fa;
   --product-surface: #ffffff;
-  --product-surface-muted: #f1efe8;
-  --product-ink: #151713;
-  --product-muted: #676b61;
-  --product-line: #d9d8d0;
-  --product-line-strong: #b9bbb2;
-  --product-accent: #d8ff57;
+  --product-surface-muted: #f0f3f7;
+  --product-ink: #172033;
+  --product-muted: #667085;
+  --product-line: #e4e8ef;
+  --product-line-strong: #cfd6e1;
+  --product-accent: #dffb72;
   background: var(--product-canvas);
   color: var(--product-ink);
   -webkit-font-smoothing: antialiased;
@@ -5827,7 +5827,7 @@ details > summary {
 .product-ui select,
 .product-ui textarea {
   border-color: var(--product-line-strong);
-  border-radius: 4px;
+  border-radius: 10px;
   background-color: var(--product-surface);
   box-shadow: 0 1px 1px rgb(21 23 19 / 0.03);
 }

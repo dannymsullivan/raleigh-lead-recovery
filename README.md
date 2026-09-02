@@ -32,6 +32,8 @@ Required variables:
 
 For the browser demo, set `RETELL_WEB_DEMO_AGENT_ID` (or `RETELL_DEMO_AGENT_ID`). For outbound phone demos, also set `RETELL_DEMO_PHONE_NUMBER`. Optional owner text alerts use `RETELL_SMS_AGENT_ID` and `RETELL_SMS_FROM_NUMBER` after Retell SMS/A2P approval.
 
+Founder sales outreach uses `RETELL_OUTREACH_AGENT_ID` and `RETELL_OUTREACH_PHONE_NUMBER`. Run `npm run sync:outreach-agent` to create or update the transparent sales-qualification agent. Calls are initiated one at a time from the admin Outreach page and require a per-call business-number/eligibility confirmation; the app does not run an unattended cold-call batch. Opt-outs are stored by normalized phone number so duplicate prospect rows cannot bypass suppression.
+
 ## Retell setup
 
 Point the Retell webhook at:

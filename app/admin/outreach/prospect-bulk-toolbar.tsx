@@ -35,7 +35,7 @@ export function ProspectBulkToolbar({ action, formId, total }: { action: (formDa
   return <form action={action} className="flex flex-wrap items-center gap-2" id={formId} onSubmit={(event) => {
     if (!window.confirm(`Remove ${selected} selected prospect${selected === 1 ? "" : "s"} from the tracker? This cannot be undone.`)) event.preventDefault();
   }}>
-    <label className="inline-flex h-10 cursor-pointer items-center gap-2 border border-[var(--product-line-strong)] bg-white px-3 text-xs font-black"><input className="accent-black" checked={selected > 0 && selected === visibleTotal} onChange={(event) => selectAll(event.target.checked)} type="checkbox" /> Select all shown ({visibleTotal})</label>
-    <button className="inline-flex h-10 items-center gap-2 border-2 border-red-700 px-3 text-xs font-black text-red-700 disabled:cursor-not-allowed disabled:opacity-35" disabled={!selected} type="submit"><Trash2 className="h-3.5 w-3.5" /> Delete selected ({selected})</button>
+    <label className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-[var(--product-line)] bg-white px-3 text-xs font-semibold text-slate-600"><input className="accent-slate-900" checked={selected > 0 && selected === visibleTotal} onChange={(event) => selectAll(event.target.checked)} type="checkbox" /> Select shown ({visibleTotal})</label>
+    <button className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:text-slate-300" disabled={!selected} type="submit"><Trash2 className="h-3.5 w-3.5" /> Delete ({selected})</button>
   </form>;
 }

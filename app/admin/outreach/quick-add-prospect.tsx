@@ -16,31 +16,31 @@ export function QuickAddProspect({
   return (
     <form
       action={action}
-      className="border border-[var(--product-line-strong)] bg-white"
+      className="overflow-hidden rounded-xl border border-[var(--product-line)] bg-white shadow-sm"
       id="add-prospect"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--product-line)] px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center bg-[var(--product-accent)]">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-[var(--product-accent)]">
             <Globe2 className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm font-black">Paste a company website</p>
-            <p className="text-[11px] font-semibold text-black/45">We&apos;ll pull the name from the URL.</p>
+            <p className="text-sm font-semibold text-slate-900">Add one company</p>
+            <p className="text-xs text-slate-500">Paste the website and we&apos;ll fill the name.</p>
           </div>
         </div>
-        <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-black/40">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
           Quick add
         </span>
       </div>
 
       <div className="grid gap-3 p-4 lg:grid-cols-[minmax(240px,1.3fr)_minmax(190px,1fr)_minmax(170px,.72fr)_auto] lg:items-end">
-        <label className="block text-xs font-black">
+        <label className="block text-xs font-semibold text-slate-700">
           Website
           <input
             autoComplete="url"
             autoFocus
-            className="mt-1 min-h-12 w-full border-2 border-black px-3 py-2 text-base font-semibold outline-none focus:shadow-[4px_4px_0_var(--product-accent)]"
+            className="mt-1 min-h-12 w-full border px-3 py-2 text-base font-medium outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
             name="website"
             placeholder="paste company.com"
             required
@@ -52,11 +52,11 @@ export function QuickAddProspect({
             }}
           />
         </label>
-        <label className="block text-xs font-black">
+        <label className="block text-xs font-semibold text-slate-700">
           Company name
           <div className="relative mt-1">
             <input
-              className="min-h-12 w-full border px-3 py-2 pr-9 text-sm font-semibold outline-none focus:border-black"
+              className="min-h-12 w-full border px-3 py-2 pr-9 text-sm font-medium outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
               name="company_name"
               placeholder="Filled from URL"
               value={companyName}
@@ -67,12 +67,12 @@ export function QuickAddProspect({
             ) : null}
           </div>
         </label>
-        <label className="block text-xs font-black">
+        <label className="block text-xs font-semibold text-slate-700">
           Phone <span className="font-semibold text-black/35">optional</span>
           <div className="relative mt-1">
             <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/35" aria-hidden="true" />
             <input
-              className="min-h-12 w-full border py-2 pl-9 pr-3 text-sm outline-none focus:border-black"
+              className="min-h-12 w-full border py-2 pl-9 pr-3 text-sm outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
               name="phone"
               type="tel"
               placeholder="(919) 555-0100"
@@ -80,7 +80,7 @@ export function QuickAddProspect({
           </div>
         </label>
         <button
-          className="inline-flex min-h-12 items-center justify-center gap-2 bg-black px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-35"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-35"
           disabled={!validWebsite}
           type="submit"
         >
@@ -90,4 +90,3 @@ export function QuickAddProspect({
     </form>
   );
 }
-

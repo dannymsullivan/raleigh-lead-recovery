@@ -28,6 +28,12 @@ export type OutreachProspect = {
   email: string | null;
   phone: string | null;
   last_call_outcome: OutreachCallOutcome | null;
+  last_retell_call_id: string | null;
+  potential_customer: OutreachPotentialCustomer | null;
+  last_call_summary: string | null;
+  call_in_progress_at: string | null;
+  do_not_call_at: string | null;
+  automated_call_attempt_count: number;
   stage: OutreachStage;
   last_contacted_on: string | null;
   next_follow_up_on: string | null;
@@ -73,13 +79,26 @@ export function outreachWebsiteHref(value: string): string {
 
 export const outreachCallOutcomes = {
   real_person: "Real person answered",
+  interested: "Interested",
+  follow_up: "Follow up",
+  not_interested: "Not interested",
+  do_not_call: "Do not call",
   voicemail: "Voicemail",
   no_answer: "No answer",
   busy: "Busy",
   wrong_number: "Wrong number",
+  failed: "Call failed",
 } as const;
 
 export type OutreachCallOutcome = keyof typeof outreachCallOutcomes;
+
+export const outreachPotentialCustomerLabels = {
+  yes: "Potential customer",
+  maybe: "Maybe",
+  no: "Not a fit",
+} as const;
+
+export type OutreachPotentialCustomer = keyof typeof outreachPotentialCustomerLabels;
 
 export function isOutreachCallOutcome(value: string): value is OutreachCallOutcome {
   return Object.hasOwn(outreachCallOutcomes, value);
@@ -107,10 +126,15 @@ export function outreachCallUpdate(
 } {
   const followUpDays: Record<OutreachCallOutcome, number | null> = {
     real_person: 1,
+    interested: 1,
+    follow_up: 2,
+    not_interested: null,
+    do_not_call: null,
     voicemail: 2,
     no_answer: 2,
     busy: 1,
     wrong_number: null,
+    failed: 1,
   };
   const days = followUpDays[outcome];
   if (days === null) {

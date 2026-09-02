@@ -15,6 +15,7 @@ import {
   type OutreachStage,
 } from "@/lib/outreach";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { queueOutreachProspectCall } from "@/lib/outreach-retell";
 
 function formString(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -149,6 +150,32 @@ export async function logOutreachCallAction(prospectId: string, formData: FormDa
 
   revalidatePath("/admin/outreach");
   redirect(`/admin/outreach?call_logged=${outcome}`);
+}
+
+export async function startOutreachAgentCallAction(prospectId: string, formData: FormData): Promise<void> {
+  await requireAdminSession();
+  const eligibilityAttested = formData.get("eligibility_attested") === "yes";
+  try {
+    await queueOutreachProspectCall(prospectId, eligibilityAttested);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const code = message.includes("do-not-call")
+      ? "do_not_call"
+      : message.includes("9 AM to 5 PM")
+        ? "outside_window"
+        : message.includes("valid phone")
+          ? "invalid_phone"
+          : message.includes("already in progress")
+            ? "call_in_progress"
+            : message.includes("Confirm call eligibility")
+              ? "eligibility"
+              : message.includes("not configured")
+                ? "agent_not_configured"
+                : "agent_call";
+    redirect(`/admin/outreach?error=${code}`);
+  }
+  revalidatePath("/admin/outreach");
+  redirect("/admin/outreach?agent_call_started=1");
 }
 
 export async function bulkDeleteOutreachProspectsAction(formData: FormData): Promise<void> {
