@@ -6695,3 +6695,24 @@ details > summary {
     padding-inline: 22px;
   }
 }
+
+/* Keep the outcome headline readable as a phrase, not a stack of fragments. */
+.rlr-outcomes-grid {
+  grid-template-columns: minmax(0, .96fr) minmax(440px, 1.04fr);
+  gap: clamp(64px, 7vw, 96px);
+}
+
+.rlr-outcomes h2 {
+  max-width: 650px;
+  font-size: clamp(3rem, 3.8vw, 3.4rem);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+@media (max-width: 1023px) {
+  .rlr-outcomes-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .rlr-outcomes h2 { font-size: clamp(2.8rem, 12vw, 3.5rem); }
+}
