@@ -105,6 +105,7 @@ export default function HomePage() {
               <span>Live voice demo</span>
             </div>
             <div className="rlr-demo-stage">
+              <p className="rlr-demo-business"><span>Fictional demo company</span> Oak City Heating &amp; Air</p>
               <p className="rlr-demo-prompt">Try saying: <strong>“Our AC stopped cooling.”</strong></p>
               <WebVoiceDemo mode="receptionist" label="Talk to Chloe now" visual="orb" />
             </div>

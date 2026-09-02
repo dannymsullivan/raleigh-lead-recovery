@@ -6074,6 +6074,8 @@ details > summary {
 .rlr-demo-topline > div { display: flex; align-items: center; color: #fff; }
 .rlr-demo-topline .rlr-live-dot { background: var(--rlr-teal); box-shadow: 0 0 0 5px rgb(99 230 209 / 12%), 0 0 18px rgb(99 230 209 / 55%); }
 .rlr-demo-stage { min-height: 455px; padding: 28px 24px 18px; text-align: center; }
+.rlr-demo-business { margin: 0 0 8px; color: #fff; font-size: .88rem; font-weight: 700; letter-spacing: -.01em; }
+.rlr-demo-business span { display: inline-flex; margin-right: 7px; padding: 4px 8px; border: 1px solid rgb(99 230 209 / 28%); border-radius: 999px; background: rgb(99 230 209 / 9%); color: var(--rlr-teal); font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; vertical-align: 1px; }
 .rlr-demo-prompt { margin: 0; color: rgb(255 255 255 / 60%); font-size: .76rem; line-height: 1.5; }
 .rlr-demo-prompt strong { color: #fff; font-weight: 700; }
 

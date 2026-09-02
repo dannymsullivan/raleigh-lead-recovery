@@ -6,10 +6,14 @@ import {
 } from "@/lib/public-demo-agent-config";
 
 describe("public HVAC demo agent", () => {
-  it("uses a fixed branded opening without unresolved variables or a persona name", () => {
-    expect(publicDemoAgentName).toBe("Raleigh Lead Recovery — HVAC Demo");
-    expect(publicDemoBeginMessage).toContain("live HVAC call demo");
-    expect(publicDemoBeginMessage).not.toMatch(/\{\{|Chloe|Mabel|AI receptionist/i);
+  it("answers as Chloe for the clearly fictional demo company", () => {
+    expect(publicDemoAgentName).toBe("Oak City Heating & Air — Demo");
+    expect(publicDemoBeginMessage).toBe(
+      "Thanks for calling Oak City Heating & Air. I’m Chloe, their AI assistant. How can I help you today?"
+    );
+    expect(publicDemoBeginMessage).not.toMatch(/\{\{/);
+    expect(publicDemoPrompt).toContain("a fictional company");
+    expect(publicDemoPrompt).toContain("Always be honest that you are an AI assistant");
   });
 
   it("keeps the demo safe, focused, and honest", () => {

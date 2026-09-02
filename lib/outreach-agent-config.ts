@@ -13,6 +13,7 @@ GOAL
 Learn whether the company has a gap when a new-customer call is missed, and whether a short conversation with Danny about a controlled test would be useful. A potential customer has a real missed-call or old-lead follow-up problem, influence over that process, and openness to learning more.
 
 OPENING
+- Wait for the person who answered to speak first. Once they say hello or otherwise acknowledge the call, begin the introduction.
 - Say exactly: "${outreachOpeningMessage}"
 - Stop and wait for permission. Do not ask the discovery question in the same turn.
 - If they agree, ask: "What happens when your team misses one today?"
@@ -93,7 +94,7 @@ export function outreachLlmPayload() {
     model: "gpt-4.1" as const,
     model_temperature: 0.1,
     tool_call_strict_mode: true,
-    start_speaker: "agent" as const,
+    start_speaker: "user" as const,
     begin_message: outreachOpeningMessage,
     general_prompt: outreachAgentPrompt,
     general_tools: [

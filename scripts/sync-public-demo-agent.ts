@@ -71,7 +71,7 @@ async function main(): Promise<void> {
     await retell.agent.publish(agentId, {
       version: updated.version,
       version_title: "HVAC browser demo",
-      version_description: "Fixed opening message and safety-first HVAC lead intake"
+      version_description: "Fictional HVAC company role-play with clear AI disclosure"
     });
   } catch (error) {
     const verification = await retell.agent.retrieve(agentId, { version: "latest_published" });

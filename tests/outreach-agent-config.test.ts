@@ -3,8 +3,12 @@ import { outreachAgentPrompt, outreachLlmPayload, outreachOpeningMessage, outrea
 
 describe("outreach agent configuration", () => {
   it("discloses that Chloe is an AI and prohibits a fake wrong-number exit", () => {
-    expect(outreachLlmPayload().begin_message).toBe(outreachOpeningMessage);
+    expect(outreachLlmPayload()).toMatchObject({
+      start_speaker: "user",
+      begin_message: outreachOpeningMessage,
+    });
     expect(outreachOpeningMessage).toContain("can I ask one quick question?");
+    expect(outreachAgentPrompt).toContain("Wait for the person who answered to speak first");
     expect(outreachAgentPrompt).toContain("Never pretend to be human");
     expect(outreachAgentPrompt).toContain("someone who dialed by accident");
   });
