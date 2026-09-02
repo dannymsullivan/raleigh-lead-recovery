@@ -193,11 +193,11 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           </summary>
           <form action={bulkAddOutreachProspectsAction} className="border-t border-[var(--product-line)] p-4 sm:p-5">
             <label className="block text-xs font-black">
-              One company per line: Company | City | Website | Phone
+              One company per line: Company | City | Address | Website | Phone
               <textarea
                 className="mt-2 min-h-44 w-full resize-y border px-3 py-2 font-mono text-xs leading-6 outline-none"
                 name="bulk_lines"
-                placeholder={"Cool Breeze Heating & Air | Raleigh | coolbreezenc.com | (919) 555-0100\nComfort Pros HVAC | Cary | comfortproshvac.com"}
+                placeholder={"Cool Breeze Heating & Air | Raleigh | 123 Main St, Raleigh, NC 27601 | coolbreezenc.com | (919) 555-0100\nComfort Pros HVAC | Cary | 456 Center St, Cary, NC 27511 | comfortproshvac.com"}
                 required
               />
             </label>
@@ -356,6 +356,7 @@ function ProspectForm({
     <form action={action} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Field label="Company" name="company_name" defaultValue={prospect?.company_name} required />
       <Field label="City" name="city" defaultValue={prospect?.city} placeholder="Raleigh" />
+      <Field label="Street address" name="address" defaultValue={prospect?.address} placeholder="123 Main St, Raleigh, NC 27601" />
       <Field label="Website" name="website" defaultValue={prospect?.website} placeholder="company.com" />
       <SelectField label="Stage" name="stage" value={prospect?.stage ?? "not_contacted"} />
       <Field label="Contact name" name="contact_name" defaultValue={prospect?.contact_name} />

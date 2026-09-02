@@ -5,6 +5,7 @@ import type { OutreachProspect } from "@/lib/outreach";
 const prospect: OutreachProspect = {
   id: "prospect-1",
   company_name: "Cool Breeze HVAC",
+  address: "123 Main St, Raleigh, NC 27601",
   website: "coolbreeze.example",
   city: "Raleigh",
   contact_name: "Morgan",

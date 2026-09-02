@@ -22,6 +22,7 @@ export type OutreachProspect = {
   id: string;
   company_name: string;
   website: string | null;
+  address: string | null;
   city: string | null;
   contact_name: string | null;
   contact_role: string | null;
@@ -207,6 +208,7 @@ function formatCompanyWord(word: string): string {
 export type OutreachBulkRow = {
   company_name: string;
   city: string | null;
+  address: string | null;
   website: string | null;
   phone: string | null;
 };
@@ -214,14 +216,20 @@ export type OutreachBulkRow = {
 export const outreachBulkLineLimit = 100;
 
 // Format: one prospect per line, fields separated by "|" or tabs:
-// Company | City | Website | Phone — only the company is required.
+// Company | City | Address | Website | Phone — only the company is required.
 export function parseOutreachBulkLines(text: string): { rows: OutreachBulkRow[]; skipped: number } {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, outreachBulkLineLimit);
   const seen = new Set<string>();
   const rows: OutreachBulkRow[] = [];
   let skipped = 0;
   for (const line of lines) {
-    const [company, city, website, phone] = line.split(/\||\t/).map((part) => part.trim());
+    const parts = line.split(/\||\t/).map((part) => part.trim());
+    const [company, city] = parts;
+    const hasAddressColumn = parts.length >= 5
+      || (parts.length === 4 && !normalizeOutreachWebsite(parts[2] ?? ""));
+    const [address, website, phone] = hasAddressColumn
+      ? [parts[2], parts[3], parts[4]]
+      : [undefined, parts[2], parts[3]];
     const companyName = (company ?? "").slice(0, 160);
     const key = companyName.toLowerCase();
     if (!companyName || seen.has(key)) {
@@ -232,6 +240,7 @@ export function parseOutreachBulkLines(text: string): { rows: OutreachBulkRow[];
     rows.push({
       company_name: companyName,
       city: city?.slice(0, 100) || null,
+      address: address?.slice(0, 300) || null,
       website: website?.slice(0, 500) || null,
       phone: phone?.slice(0, 60) || null,
     });

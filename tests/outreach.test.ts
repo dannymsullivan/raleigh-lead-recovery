@@ -30,11 +30,11 @@ describe("outreach tracker", () => {
 
   it("parses pasted bulk lines into prospects with optional fields", () => {
     const { rows, skipped } = parseOutreachBulkLines(
-      "Cool Breeze HVAC | Raleigh | coolbreeze.com | (919) 555-0100\nComfort Pros\n\nCool Breeze HVAC | Durham\n| Cary",
+      "Cool Breeze HVAC | Raleigh | 123 Main St, Raleigh, NC 27601 | coolbreeze.com | (919) 555-0100\nComfort Pros\n\nCool Breeze HVAC | Durham\n| Cary",
     );
     expect(rows).toEqual([
-      { company_name: "Cool Breeze HVAC", city: "Raleigh", website: "coolbreeze.com", phone: "(919) 555-0100" },
-      { company_name: "Comfort Pros", city: null, website: null, phone: null },
+      { company_name: "Cool Breeze HVAC", city: "Raleigh", address: "123 Main St, Raleigh, NC 27601", website: "coolbreeze.com", phone: "(919) 555-0100" },
+      { company_name: "Comfort Pros", city: null, address: null, website: null, phone: null },
     ]);
     expect(skipped).toBe(2);
   });
@@ -64,9 +64,16 @@ describe("outreach tracker", () => {
   });
 
   it("accepts tab-separated bulk lines from spreadsheets", () => {
-    const { rows } = parseOutreachBulkLines("Airflow Experts\tApex\tairflowexperts.com");
+    const { rows } = parseOutreachBulkLines("Airflow Experts\tApex\t100 Main St, Apex, NC 27502\tairflowexperts.com");
     expect(rows).toEqual([
-      { company_name: "Airflow Experts", city: "Apex", website: "airflowexperts.com", phone: null },
+      { company_name: "Airflow Experts", city: "Apex", address: "100 Main St, Apex, NC 27502", website: "airflowexperts.com", phone: null },
+    ]);
+  });
+
+  it("keeps the previous four-column bulk format compatible", () => {
+    const { rows } = parseOutreachBulkLines("Airflow Experts | Apex | airflowexperts.com | (919) 555-0100");
+    expect(rows).toEqual([
+      { company_name: "Airflow Experts", city: "Apex", address: null, website: "airflowexperts.com", phone: "(919) 555-0100" },
     ]);
   });
 });

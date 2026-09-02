@@ -48,6 +48,7 @@ async function requireAdminSession(): Promise<void> {
 function prospectValues(formData: FormData) {
   return {
     company_name: formString(formData, "company_name").slice(0, 160),
+    address: nullableText(formData, "address", 300),
     website: nullableText(formData, "website", 500),
     city: nullableText(formData, "city", 100),
     contact_name: nullableText(formData, "contact_name", 160),
@@ -77,6 +78,7 @@ export async function addOutreachProspectAction(formData: FormData): Promise<voi
 
   const { error } = await admin.from("outreach_prospects").insert({
     company_name: companyName,
+    address: nullableText(formData, "address", 300),
     website,
     phone: nullableText(formData, "phone", 60),
     notes: nullableText(formData, "notes", 3000),

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Bot, ChevronDown, Mail, Pencil, Phone, Search } from "lucide-react";
+import { ArrowUpRight, Bot, ChevronDown, Mail, MapPin, Pencil, Phone, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -27,6 +27,7 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction, age
       className="grid gap-3 px-5 py-4 transition-colors hover:bg-slate-50/60 lg:grid-cols-[minmax(190px,1.25fr)_minmax(155px,.9fr)_125px_125px_120px_220px] lg:items-center"
       data-prospect-search={[
         prospect.company_name,
+        prospect.address,
         prospect.website,
         prospect.city,
         prospect.contact_name,
@@ -48,8 +49,9 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction, age
         <div className="min-w-0">
           <p className="font-semibold leading-5 text-slate-950">{prospect.company_name}</p>
           <p className="mt-1 truncate text-xs font-medium text-slate-500">
-            {[prospect.city, prospect.website ? displayWebsite(prospect.website) : null].filter(Boolean).join(" · ") || "Company details not added"}
+            {prospect.address || prospect.city || "Address not added"}
           </p>
+          {prospect.website ? <p className="mt-0.5 truncate text-[11px] text-slate-400">{displayWebsite(prospect.website)}</p> : null}
         </div>
       </div>
       <div className="min-w-0">
@@ -83,13 +85,15 @@ export function ProspectRow({ prospect, editForm, bulkFormId, logCallAction, age
         ) : null}
         <a
           className="grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-          href={`https://www.google.com/search?q=${encodeURIComponent(`${prospect.company_name}${prospect.city ? ` ${prospect.city}` : ""}`)}`}
+          href={prospect.address
+            ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(prospect.address)}`
+            : `https://www.google.com/search?q=${encodeURIComponent(`${prospect.company_name}${prospect.city ? ` ${prospect.city}` : ""}`)}`}
           target="_blank"
           rel="noreferrer"
-          aria-label={`Search Google for ${prospect.company_name}`}
-          title="Research in Google"
+          aria-label={prospect.address ? `Get directions to ${prospect.company_name}` : `Search Google for ${prospect.company_name}`}
+          title={prospect.address ? "Open directions in Google Maps" : "Research in Google"}
         >
-          <Search className="h-4 w-4" aria-hidden="true" />
+          {prospect.address ? <MapPin className="h-4 w-4" aria-hidden="true" /> : <Search className="h-4 w-4" aria-hidden="true" />}
         </a>
         {prospect.phone ? (
           <button
