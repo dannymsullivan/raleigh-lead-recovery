@@ -64,7 +64,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       ) : null}
 
           {!hasCampaign ? (
-            <section className="mb-7 border-2 border-black bg-white p-5 sm:p-6">
+            <section className="product-panel mb-7 border-2 border-black bg-white p-5 sm:p-6">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Your first pilot</p>
@@ -89,7 +89,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <ReceptionistStatus status={receptionist?.status ?? "draft"} />
           </div>
 
-          <div className="mt-6 grid grid-cols-2 border-l border-t border-black xl:grid-cols-5">
+          <div className="product-metrics mt-6 grid grid-cols-2 overflow-hidden border border-black bg-white xl:grid-cols-5">
             <Metric label="New leads" value={String(newLeads)} detail="need a callback" />
             <Metric label="Contacted" value={String(contacted)} detail="follow-up started" />
             <Metric label="Booked" value={String(booked.length)} detail="marked won" />
@@ -98,7 +98,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </div>
 
           <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_320px]">
-            <section className="border-2 border-black bg-white">
+            <section className="product-panel border-2 border-black bg-white">
               <div className="flex flex-col gap-4 border-b-2 border-black p-5 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="text-xl font-black tracking-[-0.03em]">Lead inbox</h2><p className="mt-1 text-xs font-semibold text-black/45">Call back, add context, and mark the outcome.</p></div><div className="flex gap-2 font-mono text-[9px] font-bold uppercase"><span className="bg-black px-2 py-1 text-white">{newLeads} new</span><span className="border border-black px-2 py-1">{calls.length} total</span></div></div>
               {report.calls.length ? <div className="divide-y-2 divide-black">{report.calls.map((call) => <LeadCard call={call} key={call.id} />)}</div> : <EmptyCalls />}
             </section>
@@ -182,7 +182,7 @@ function ChecklistItem({ done, label }: { done: boolean; label: string }) { retu
 function ReceptionistStatus({ status }: { status: CustomerAgent["status"] }) { const ready = status === "ready"; return <div className="flex items-center gap-2 text-sm font-extrabold"><span className={`h-2.5 w-2.5 rounded-full ${ready ? "animate-pulse bg-black" : "border-2 border-black"}`} />{ready ? "Call flow ready" : status === "error" || status === "needs_configuration" ? "Setup needs attention" : status === "draft" || status === "disabled" ? "Call flow not enabled" : "Setting up your call flow"}</div>; }
 function StatusBadge({ status }: { status: string }) { const labels: Record<string, string> = { new: "New lead", contacted: "Contacted", booked: "Booked", lost: "Lost", spam: "Spam" }; return <span className={`border border-black px-2 py-1 font-mono text-[9px] font-bold uppercase ${status === "booked" ? "bg-black text-white" : "bg-white"}`}>{labels[status] ?? status}</span>; }
 function EmptyCalls() { return <div className="grid min-h-72 place-items-center p-8 text-center"><div className="max-w-sm"><PhoneCall className="mx-auto h-10 w-10" strokeWidth={1.5} /><h3 className="mt-5 text-2xl font-black tracking-[-0.04em]">The board is ready.</h3><p className="mt-3 text-sm leading-6 text-black/55">Your first test call will appear here with a summary, urgency, callback details, and recording.</p></div></div>; }
-function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }
+function Metric({ label, value, detail, mobileWide = false }: { label: string; value: string; detail: string; mobileWide?: boolean }) { return <div className={`product-metric border-b border-r border-black bg-white p-3.5 sm:p-4 ${mobileWide ? "col-span-2 xl:col-span-1" : ""}`}><p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">{label}</p><p className="mt-2 text-xl font-black tracking-[-0.045em] sm:text-2xl">{value}</p><p className="mt-1 text-[11px] font-semibold text-black/40">{detail}</p></div>; }
 function SmallStat({ label, value }: { label: string; value: string }) { return <div><p className="text-2xl font-black">{value}</p><p className="mt-1 text-[10px] font-bold uppercase text-black/40">{label}</p></div>; }
 function daypart(): string { const hour = new Date().getHours(); return hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening"; }
 function formatShortDate(value: string): string { const date = value.includes("T") ? new Date(value) : new Date(`${value}T12:00:00`); return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date); }

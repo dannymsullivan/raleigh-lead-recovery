@@ -24,7 +24,7 @@ export function DashboardShell({ active, client, children }: { active: Dashboard
   const daysLeft = trialDaysLeft(client.trial_ends_at ?? client.pilot_end);
   return (
     <main className="product-ui min-h-screen bg-[var(--product-canvas)] text-[var(--product-ink)]">
-      <header className="border-b border-[var(--product-line)] bg-white/95 backdrop-blur">
+      <header className="product-header sticky top-0 z-40 border-b border-[var(--product-line)] bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 sm:px-8">
           <BrandMark />
           <div className="flex items-center gap-3">
@@ -42,10 +42,10 @@ export function DashboardShell({ active, client, children }: { active: Dashboard
         </div>
       </header>
 
-      <nav className="flex overflow-x-auto border-b border-[var(--product-line)] bg-white px-3 lg:hidden" aria-label="Dashboard navigation">
+      <nav className="product-mobile-nav mx-4 mt-4 flex overflow-x-auto rounded-xl border border-[var(--product-line)] bg-white p-1 lg:hidden" aria-label="Dashboard navigation">
         {navItems.map(({ key, href, label, icon: Icon }) => (
           <Link
-            className={`flex h-12 flex-none items-center gap-2 border-b-2 px-3 text-xs font-bold ${active === key ? "border-[#2968e8] text-[#1d4fa9]" : "border-transparent text-slate-500"}`}
+            className={`flex h-11 flex-none items-center gap-2 rounded-lg px-3 text-xs font-bold ${active === key ? "bg-[#e7f7f3] text-[#155f56]" : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"}`}
             aria-current={active === key ? "page" : undefined}
             href={href}
             key={key}
@@ -56,11 +56,11 @@ export function DashboardShell({ active, client, children }: { active: Dashboard
       </nav>
 
       <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[230px_1fr]">
-        <aside className="hidden min-h-[calc(100vh-73px)] border-r border-[var(--product-line)] bg-white/45 p-5 lg:flex lg:flex-col">
+        <aside className="product-sidebar hidden min-h-[calc(100vh-73px)] border-r border-[var(--product-line)] bg-white/55 p-5 lg:flex lg:flex-col">
           <nav className="grid gap-1 text-sm font-semibold" aria-label="Dashboard navigation">
             {navItems.map(({ key, href, label, icon: Icon }) => (
               <Link
-                className={`flex items-center gap-3 rounded-lg px-3 py-3 ${active === key ? "bg-[#111b35] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+                className={`flex items-center gap-3 rounded-xl px-3 py-3 ${active === key ? "bg-[#e7f7f3] text-[#155f56]" : "text-slate-600 hover:bg-white hover:text-slate-900"}`}
                 aria-current={active === key ? "page" : undefined}
                 href={href}
                 key={key}
@@ -69,7 +69,7 @@ export function DashboardShell({ active, client, children }: { active: Dashboard
               </Link>
             ))}
           </nav>
-          <div className="mt-auto rounded-xl border border-[var(--product-line)] bg-white p-4 shadow-sm">
+          <div className="mt-auto rounded-2xl border border-[#cfe8e2] bg-[#eef9f6] p-4">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Need a hand?</p>
             <p className="mt-3 text-sm font-extrabold">Setup is human. Support is too.</p>
             <a className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold underline decoration-2 underline-offset-4" href={contactHref}>
@@ -78,7 +78,7 @@ export function DashboardShell({ active, client, children }: { active: Dashboard
           </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-8 sm:px-8 sm:py-10">{children}</section>
+        <section className="product-workspace min-w-0 px-5 py-8 sm:px-8 sm:py-10">{children}</section>
       </div>
     </main>
   );
