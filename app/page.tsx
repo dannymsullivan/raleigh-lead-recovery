@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     url: "/",
     type: "website",
     images: [{
-      url: "/raleigh-lead-recovery-social.png",
+        url: "/opengraph-image",
       width: 1200,
       height: 630,
       alt: "Raleigh Lead Recovery missed-call coverage",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Every Missed Call Gets a Real Next Step",
     description: "Natural AI call coverage for Raleigh service businesses.",
-    images: ["/raleigh-lead-recovery-social.png"],
+    images: ["/opengraph-image"],
   },
 };
 

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     url: "/lead-recovery",
     images: [
       {
-        url: "/lead-recovery-social.png",
+        url: "/lead-recovery/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Raleigh Lead Recovery turns old leads into new business",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Turn Old Leads Into New Business | Raleigh Lead Recovery",
     description: "Put the leads you already paid for back to work with thoughtful, controlled follow-up.",
-    images: ["/lead-recovery-social.png"],
+    images: ["/lead-recovery/opengraph-image"],
   },
 };
 
