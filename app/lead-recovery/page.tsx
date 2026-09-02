@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  Check,
   Database,
   PhoneCall,
   Sparkles,
@@ -71,36 +72,34 @@ export default function LandingPage() {
         cta={{ href: "#listen-now-form", label: "Try it now" }}
       />
 
-      <section className="recovery-single-demo page-shell" id="listen-now-form">
-        <div className="recovery-demo-copy">
-          <p className="eyebrow"><span /> Live HVAC follow-up</p>
-          <h1>Hear a real HVAC follow-up.</h1>
-          <p>Play the customer. Raleigh Lead Recovery calls about a tune-up, handles the conversation, and gives the human team a clear next step.</p>
-          <div className="recovery-hero-demo"><WebVoiceDemo mode="reactivation" /></div>
-        </div>
-        <div className="receptionist-call-visual recovery-call-visual" aria-label="Illustration of an HVAC tune-up follow-up call">
-          <div className="receptionist-call-visual-top">
-            <span><i /> Live follow-up</span>
-            <span>2:14 PM</span>
-          </div>
-          <div className="receptionist-signal-stage">
-            <div className="receptionist-signal" aria-hidden="true">
-              <span className="receptionist-signal-ring ring-one" />
-              <span className="receptionist-signal-ring ring-two" />
-              <span className="receptionist-signal-core"><PhoneCall /></span>
-            </div>
-            <div>
-              <p>Raleigh Lead Recovery is calling</p>
-              <strong>Seasonal HVAC tune-up</strong>
+      <section className="rlr-hero" id="listen-now-form">
+        <div className="page-shell rlr-hero-grid">
+          <div className="rlr-hero-copy">
+            <p className="rlr-kicker"><span /> Live lead follow-up</p>
+            <h1>Hear a real HVAC follow-up.</h1>
+            <p className="rlr-hero-intro">Play the customer. Chloe follows up about a seasonal tune-up, listens naturally, and gives the human team a clear next step.</p>
+            <div className="rlr-hero-assurances" aria-label="Lead recovery trial details">
+              <span><Check aria-hidden="true" /> 25 approved contacts</span>
+              <span><Check aria-hidden="true" /> 14-day trial</span>
+              <span><Check aria-hidden="true" /> You approve the conversation</span>
             </div>
           </div>
-          <div className="receptionist-transcript">
-            <div className="agent-line"><span>Raleigh Lead Recovery</span><p>Would you like the team to follow up about seasonal maintenance?</p></div>
-            <div className="caller-line"><span>Customer</span><p>Yes, Tuesday morning would be best.</p></div>
-          </div>
-          <div className="receptionist-captured">
-            <p>Sent back to the human team</p>
-            <div><span>Interested</span><span>Tuesday morning</span><span>Callback requested</span></div>
+
+          <div className="rlr-demo-card">
+            <div className="rlr-demo-topline">
+              <div><span className="rlr-live-dot" /><span>Meet Chloe</span></div>
+              <span>Live voice demo</span>
+            </div>
+            <div className="rlr-demo-stage">
+              <p className="rlr-demo-business"><span>Demo scenario</span> Seasonal HVAC tune-up</p>
+              <p className="rlr-demo-prompt">Try saying: <strong>“Yes, I’m still interested.”</strong></p>
+              <WebVoiceDemo mode="reactivation" label="Play the customer" visual="orb" />
+            </div>
+            <div className="rlr-demo-outcome" aria-label="Example lead recovery outcome">
+              <div><span>Original lead</span><strong>Past inquiry</strong></div>
+              <div><span>Signal</span><strong>Still interested</strong></div>
+              <div><span>Next step</span><strong>Human follow-up</strong></div>
+            </div>
           </div>
         </div>
       </section>
