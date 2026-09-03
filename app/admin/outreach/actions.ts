@@ -79,6 +79,7 @@ export async function addOutreachProspectAction(formData: FormData): Promise<voi
   const { error } = await admin.from("outreach_prospects").insert({
     company_name: companyName,
     address: nullableText(formData, "address", 300),
+    city: nullableText(formData, "city", 100),
     website,
     phone: nullableText(formData, "phone", 60),
     notes: nullableText(formData, "notes", 3000),
