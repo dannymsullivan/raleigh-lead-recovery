@@ -11,7 +11,7 @@ import {
 import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
-import { contactEmail } from "@/lib/contact";
+import { contactEmail, contactPhone, contactPhoneHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Lead Recovery for Raleigh Businesses | Raleigh Lead Recovery",
@@ -248,7 +248,7 @@ export default function LandingPage() {
       <footer className="site-footer">
         <div className="page-shell footer-row">
           <div><BrandMark inverted /><p>© 2026 Raleigh Lead Recovery</p></div>
-          <nav aria-label="Footer navigation"><Link href="/">Missed-call pilot</Link><Link href="/blog">Writing</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
+          <nav aria-label="Footer navigation"><Link href="/">Missed-call pilot</Link><Link href="/blog">Writing</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={contactPhoneHref}>{contactPhone}</a><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav>
         </div>
       </footer>
     </main>

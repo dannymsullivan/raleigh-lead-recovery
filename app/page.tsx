@@ -14,7 +14,7 @@ import { BrandMark } from "./components/brand-mark";
 import { PublicSiteNav } from "./components/public-site-nav";
 import { AutoTextBackDemo } from "./components/auto-text-back-demo";
 import { WebVoiceDemo } from "./components/web-voice-demo";
-import { contactEmail } from "@/lib/contact";
+import { contactEmail, contactPhone, contactPhoneHref } from "@/lib/contact";
 
 const bookingHref =
   process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
@@ -277,6 +277,7 @@ export default function HomePage() {
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/login">Sign in</Link>
+            <a href={contactPhoneHref}>{contactPhone}</a>
             <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           </nav>
         </div>
