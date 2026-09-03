@@ -18,4 +18,8 @@ describe("Raleigh Lead Recovery business receptionist", () => {
     expect(transfer?.transfer_destination).toEqual({ type: "predefined", number: "+18455550123" });
     expect(transfer?.transfer_option.type).toBe("warm_transfer");
   });
+
+  it("does not promise an unconfigured missed-transfer alert", () => {
+    expect(businessReceptionistPrompt).toContain("Do not promise that a voicemail or alert was delivered");
+  });
 });
