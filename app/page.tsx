@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Answer customer questions, collect contact details, and see which chats become booked jobs in your dashboard.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Your Website Deserves More Than a Contact Form",
+    title: "Old-school service. New-school tech.",
     description:
       "Website chat that answers customer questions and saves leads for your team to follow up.",
     url: "/",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Website Deserves More Than a Contact Form",
+    title: "Old-school service. New-school tech.",
     description: "Website chat that answers questions and collects leads for service businesses.",
     images: ["/opengraph-image"],
   },
@@ -66,11 +66,11 @@ export default function HomePage() {
         <div className="page-shell rlr-hero-grid">
           <div className="rlr-hero-copy">
             <p className="rlr-kicker"><span /> Website chat for service businesses</p>
-            <h1><span>1995 called.</span><span>It wants its</span><em>contact form back.</em></h1>
+            <h1><span>Old-school service.</span><em>New-school tech.</em></h1>
             <p className="rlr-hero-intro">
-              Answer customer questions, collect contact details, and see where your leads
-              came from. We set up a website chatbot using your business information,
-              so visitors can get help while your team is busy.
+              Keep the personal touch your customers count on. We set up website chat
+              that answers questions, collects contact details, and gives your team
+              what they need to follow up while you’re busy serving customers.
             </p>
             <div className="rlr-hero-actions">
               <a className="rlr-button rlr-button-primary" href="#trial">
