@@ -5,6 +5,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
+    { url: `${siteUrl}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${siteUrl}/voice`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     {
       url: siteUrl,
       lastModified: now,
@@ -18,13 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8
     },
     {
-      url: `${siteUrl}/lead-recovery`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9
-    },
-    {
-      url: `${siteUrl}/signup`,
+      url: `${siteUrl}/get-started`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.9

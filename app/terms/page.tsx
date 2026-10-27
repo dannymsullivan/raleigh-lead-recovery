@@ -1,10 +1,11 @@
+import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import type { Metadata } from "next";
 import { PublicSiteNav } from "../components/public-site-nav";
 
 export const metadata: Metadata = { title: "Terms of Service | Raleigh Lead Recovery", description: "Terms governing Raleigh Lead Recovery and its transactional messaging program." };
 
 export default function TermsPage() {
-  return <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]"><PublicSiteNav cta={{ href: "/signup", label: "Start free" }} /><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated August 19, 2026</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">Terms of Service</h1><div className="mt-12 grid gap-9">
+  return <main className="brand-surface min-h-screen rlr-home rlr-retro retro-editorial"><PublicSiteNav cta={{ href: "/get-started", label: "Try two weeks free" }} /><article className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Legal · Last updated August 19, 2026</p><h1 className="mt-4 text-5xl font-semibold tracking-[-0.055em] sm:text-7xl">Terms of Service</h1><div className="mt-12 grid gap-9">
     <Section title="The service"><p>Raleigh Lead Recovery provides inbound call coverage and lead-recovery workflows, including automated calls, campaign controls, call records, dashboards, and transactional account alerts. Features may change as the service develops.</p></Section>
     <Section title="Customer responsibilities"><p>You may upload or contact only people for whom you have a lawful basis and all permissions required for the selected communication. You are responsible for the accuracy of campaign information, consent evidence, suppression lists, calling windows, recording requirements, and instructions supplied to each agent. You must promptly honor opt-outs and must not use the service for unlawful, deceptive, abusive, or unwanted communications.</p></Section>
     <Section title="Automated calling"><p>The configured outbound flow identifies itself as automated. Automated and prerecorded calls may be regulated by federal and state law. The service&apos;s operational safeguards do not constitute legal advice or replace review of your specific lead sources and jurisdictions.</p></Section>
@@ -14,7 +15,7 @@ export default function TermsPage() {
     <Section title="Data and recordings"><p>You retain responsibility for the data you submit. You authorize us and our service providers to process it to operate the service. Use of recordings and transcripts must comply with applicable notice, consent, privacy, employment, and retention requirements.</p></Section>
     <Section title="Disclaimers and limitation"><p>The service is provided on an as-available basis. We do not guarantee a particular connection, appointment, revenue, delivery, or carrier outcome. To the extent permitted by law, Raleigh Lead Recovery is not liable for indirect, incidental, special, consequential, or lost-profit damages arising from use of the service.</p></Section>
     <Section title="Changes and contact"><p>We may update these terms as the service or legal requirements change. Material changes will be posted here. Questions can be sent to <a href="mailto:danny@raleighleadrecovery.com">danny@raleighleadrecovery.com</a>.</p></Section>
-  </div></article></main>;
+  </div></article><PublicSiteFooter /></main>;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) { return <section className="border-t-2 border-black pt-5"><h2 className="text-2xl font-black tracking-[-0.035em]">{title}</h2><div className="mt-3 grid gap-3 text-sm font-semibold leading-7 text-black/65 [&_a]:font-black [&_a]:text-black [&_a]:underline">{children}</div></section>; }

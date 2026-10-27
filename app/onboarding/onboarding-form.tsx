@@ -91,7 +91,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                   </select>
                 </label>
                 {industry === "other" ? <Field label="What kind of business?" name="other_trade" placeholder="Tell us what you do" defaultValue={initialIndustry === "other" && client.trade !== "service business" ? client.trade : ""} required /> : null}
-                <Field label="Service area" name="service_area" placeholder="Raleigh, Cary, Apex…" defaultValue={client.service_area ?? ""} required />
+                <Field label="Service area" name="service_area" placeholder="Cities, regions, or ZIP codes…" defaultValue={client.service_area ?? ""} required />
                 <Field label="Account email" name="account_email" type="email" defaultValue={email} disabled />
               </div>
             </div>
@@ -103,7 +103,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                   <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} value={services} onChange={(event) => setServices(event.target.value)} />
                 </label>
                 <label className="block text-sm font-black">Describe the business in a sentence
-                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="business_description" placeholder="Family-owned plumbing company serving homes across Wake County." value={businessDescription} onChange={(event) => setBusinessDescription(event.target.value)} />
+                  <textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="business_description" placeholder="Family-owned plumbing company offering residential repairs and installations." value={businessDescription} onChange={(event) => setBusinessDescription(event.target.value)} />
                 </label>
               </div>
             </div>

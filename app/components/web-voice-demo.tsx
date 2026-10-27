@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle, PhoneOff, Radio } from "lucide-react";
-import { RetellWebClient } from "retell-client-js-sdk";
+import { RetellWebClient, type StartCallConfig } from "retell-client-js-sdk";
 import type { WebDemoMode } from "@/lib/web-demo-config";
 
 type DemoState = "idle" | "connecting" | "active" | "error";
@@ -34,8 +34,8 @@ export function WebVoiceDemo({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ website: "", mode })
       });
-      const result = await response.json() as { accessToken?: string; error?: string };
-      if (!response.ok || !result.accessToken) throw new Error(result.error || "Unable to start the conversation.");
+      const result = await response.json() as Partial<StartCallConfig> & { error?: string };
+      if (!response.ok || !result.accessToken || !result.callId || !result.transport || !result.iceServers) throw new Error(result.error || "Unable to start the conversation.");
 
       const client = new RetellWebClient();
       clientRef.current = client;
@@ -45,8 +45,11 @@ export function WebVoiceDemo({
         setState("idle");
         clientRef.current = null;
       });
-      client.on("agent_start_talking", () => setAgentTalking(true));
-      client.on("agent_stop_talking", () => setAgentTalking(false));
+      // v3 gateway audio does not emit the old speaking-boundary events.
+      client.on("audio", (samples: Float32Array) => {
+        const energy = samples.reduce((sum, sample) => sum + sample * sample, 0);
+        setAgentTalking(samples.length > 0 && Math.sqrt(energy / samples.length) > .015);
+      });
       client.on("error", () => {
         client.stopCall();
         clientRef.current = null;
@@ -54,7 +57,7 @@ export function WebVoiceDemo({
         setError("The conversation ended unexpectedly. Please try again.");
         setState("error");
       });
-      await client.startCall({ accessToken: result.accessToken, sampleRate: 24_000 });
+      await client.startCall({ callId: result.callId, accessToken: result.accessToken, transport: result.transport, iceServers: result.iceServers, sampleRate: 24_000, emitRawAudioSamples: true });
     } catch (caught) {
       clientRef.current?.stopCall();
       clientRef.current = null;

@@ -26,7 +26,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   let body: Record<string, unknown> = {};
   try {
-    body = await request.json() as Record<string, unknown>;
+    const parsed = await request.json();
+    body = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
   } catch {
     // An empty body is valid.
   }
@@ -42,6 +43,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: "The live demo is being configured." }, { status: 503 });
   }
 
+  let requestId: string | undefined;
+  try {
   const admin = getSupabaseAdmin();
   const ipHash = createHmac("sha256", hashSecret).update(clientIp(request)).digest("hex");
   const ownerSession = request.cookies.get(adminCookie.name)?.value;
@@ -54,8 +57,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: limited ? "You’ve reached today’s browser-demo limit." : "The live demo is temporarily unavailable." }, { status: limited ? 429 : 503 });
   }
 
-  const requestId = data as string;
-  try {
+  requestId = data as string;
     const call = await getRetellClient().call.createWebCall({
       agent_id: agentId,
       agent_version: "latest_published",
@@ -63,10 +65,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       retell_llm_dynamic_variables: webDemoDynamicVariables(mode)
     });
     await admin.from("public_web_call_requests").update({ retell_call_id: call.call_id, status: "in_progress" }).eq("id", requestId);
-    return NextResponse.json({ ok: true, accessToken: call.access_token });
+    return NextResponse.json({ ok: true, callId: call.call_id, accessToken: call.access_token, transport: call.transport, iceServers: call.ice_servers }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown_error";
-    await admin.from("public_web_call_requests").update({ status: "failed", error: message.slice(0, 300) }).eq("id", requestId);
+    if (requestId) {
+      try { await getSupabaseAdmin().from("public_web_call_requests").update({ status: "failed", error: message.slice(0, 300) }).eq("id", requestId); } catch { /* Preserve the safe response if the database is unavailable. */ }
+    }
     return NextResponse.json({ ok: false, error: "The live demo is temporarily unavailable." }, { status: 503 });
   }
 }

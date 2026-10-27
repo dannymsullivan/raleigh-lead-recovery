@@ -28,6 +28,8 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const { data: clientData } = await admin.from("clients").select("*").eq("user_id", user.id).maybeSingle();
   if (!clientData) redirect("/signup?error=workspace");
   const client = clientData as Client;
+  const search = (await searchParams) ?? {};
+  if (client.product_mode === "website_chat" && search.view !== "voice") redirect("/dashboard/chats");
   if (!client.onboarding_completed_at) redirect("/onboarding");
   const [{ data: callData }, { data: agentData }, { count: campaignCount }] = await Promise.all([
     admin.from("calls").select("*").eq("client_id", client.id).order("created_at", { ascending: false }).limit(50),
@@ -40,10 +42,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const receptionist = agents.find((agent) => agent.agent_type === "receptionist") ?? null;
   const leadRecovery = agents.find((agent) => agent.agent_type === "lead_reactivation") ?? null;
   const report = buildReportModel(client, calls);
-  const search = (await searchParams) ?? {};
   const welcome = search.welcome === "1";
   const guidedWelcome = search.welcome === "guided";
-  const bookingHref = "https://calendly.com/hello-raleighaiguy/raleigh-lead-recovery-pilot-setup";
+  const bookingHref = "/contact";
   const newLeads = calls.filter((call) => (call.lead_status ?? "new") === "new" && call.lead_type !== "spam").length;
   const contacted = calls.filter((call) => call.lead_status === "contacted").length;
   const booked = calls.filter((call) => call.lead_status === "booked");
@@ -53,12 +54,13 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
   return (
     <DashboardShell active="inbox" client={client}>
+      <div className="chat-notice flex flex-wrap items-center justify-between gap-3"><div><strong>Your website conversations have their own home.</strong><p>Review chats, source attribution, and captured leads in Chat analytics.</p></div><Link className="rlr-button rlr-button-primary" href="/dashboard/chats">Open chat analytics <ChevronRight className="h-4 w-4" /></Link></div>
       <ProvisioningPoll active={provisioningActive} />
       {welcome || guidedWelcome ? (
         <WelcomeBanner
           eyebrow={guidedWelcome ? "Guided setup requested" : "Your trial is live"}
           title={guidedWelcome ? "Your business profile is saved. Danny will help tailor the call flow before it goes live." : "We’re building both call flows and getting your number ready now."}
-          body="Next step: book a quick pilot setup with Danny. He’ll review your first 25 contacts, confirm the calling rules, and help launch your first recovery campaign."
+          body="Next step: contact Danny to review your setup. He’ll help confirm your business information, call rules, and any approved contacts before launch."
           bookingHref={bookingHref}
         />
       ) : null}
@@ -73,7 +75,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Link className="inline-flex h-11 items-center gap-2 bg-black px-4 text-sm font-black text-white" href="/dashboard/reactivation">Send 25 contacts <ChevronRight className="h-4 w-4" /></Link>
-                  <a className="inline-flex h-11 items-center gap-2 border-2 border-black px-4 text-sm font-black" href={bookingHref} target="_blank" rel="noreferrer">Book setup call <ArrowUpRight className="h-4 w-4" /></a>
+                  <a className="inline-flex h-11 items-center gap-2 border-2 border-black px-4 text-sm font-black" href={bookingHref}>Get setup help <ArrowUpRight className="h-4 w-4" /></a>
                 </div>
               </div>
               <div className="mt-5 grid gap-3 border-t-2 border-black pt-5 sm:grid-cols-3">
@@ -119,7 +121,7 @@ function WelcomeBanner({ eyebrow, title, body, bookingHref }: { eyebrow: string;
       <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">{eyebrow}</p>
       <p className="mt-2 text-xl font-black">{title}</p>
       <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/70">{body}</p>
-      <a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref} target="_blank" rel="noreferrer">Book pilot setup <ArrowUpRight className="h-4 w-4" /></a>
+      <a className="mt-4 inline-flex h-11 items-center gap-2 bg-white px-4 text-sm font-black text-black" href={bookingHref}>Contact Danny <ArrowUpRight className="h-4 w-4" /></a>
     </div>
   );
 }

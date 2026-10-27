@@ -102,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const call = await getRetellClient().call.createPhoneCall(buildPublicDemoCallRequest(input, { agentId, phoneNumber, requestId }));
     await admin.from("public_demo_call_requests").update({ retell_call_id: call.call_id, status: "in_progress", updated_at: new Date().toISOString() }).eq("id", requestId);
-    return NextResponse.json({ ok: true, message: "Raleigh Lead Recovery is calling now. It may take up to a minute." }, { status: 202 });
+    return NextResponse.json({ ok: true, message: "Lead Recovery is calling now. It may take up to a minute." }, { status: 202 });
   } catch (error) {
     if (admin && requestId) {
       const message = error instanceof Error ? error.message : "unknown_error";

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { pendingEmailCookie, pendingInvitationCookie, pendingModeCookie } from "@/lib/auth-email";
+import { pendingEmailCookie, pendingInvitationCookie, pendingModeCookie, pendingOwnerNameCookie } from "@/lib/auth-email";
 import { hashCustomerInvitationToken, isCustomerInvitationToken } from "@/lib/customer-invitations";
 import { uniqueCustomerSlug } from "@/lib/customer-slug";
 import { getSupabaseAuth } from "@/lib/supabase-auth";
@@ -33,6 +33,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   cookieStore.delete(pendingEmailCookie);
   cookieStore.delete(pendingModeCookie);
   cookieStore.delete(pendingInvitationCookie);
+  cookieStore.delete(pendingOwnerNameCookie);
   const admin = getSupabaseAdmin();
 
   if (mode === "login") {
@@ -57,15 +58,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (!target.user_id) {
       const update: Record<string, unknown> = { user_id: data.user.id, owner_email: data.user.email };
-      if (target.product_mode === "reactivation" && !target.onboarding_completed_at) update.onboarding_completed_at = now;
+      if ((target.product_mode === "reactivation" || target.product_mode === "website_chat") && !target.onboarding_completed_at) update.onboarding_completed_at = now;
       const { data: linked, error: linkError } = await admin.from("clients").update(update).eq("id", target.id).is("user_id", null).select("id").maybeSingle();
       if (linkError || !linked) return go(request, "/login?error=account");
     }
     const { error: acceptError } = await admin.from("customer_workspace_invitations").update({ accepted_at: now, accepted_user_id: data.user.id }).eq("id", invitation.id).is("accepted_at", null);
     if (acceptError) return go(request, "/login?error=account");
     await admin.from("customer_workspace_invitations").update({ revoked_at: now }).eq("client_id", target.id).neq("id", invitation.id).is("accepted_at", null).is("revoked_at", null);
-    return go(request, target.product_mode === "reactivation" ? "/dashboard/reactivation?invited=1" : "/onboarding?invited=1");
+    return go(request, target.product_mode === "website_chat" ? "/dashboard/chats?invited=1" : target.product_mode === "reactivation" ? "/dashboard/reactivation?invited=1" : "/onboarding?invited=1");
   }
+
+  const { data: existingClient, error: lookupError } = await admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle();
+  if (lookupError) return go(request, "/signup?error=workspace");
+  if (existingClient) return go(request, "/dashboard");
 
   const ownerName = typeof data.user.user_metadata.owner_name === "string" ? data.user.user_metadata.owner_name.trim() : "";
   if (!ownerName) return go(request, "/signup?error=missing");
@@ -74,7 +79,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 14);
   const workspaceName = `${ownerName} workspace`;
   const workspaceSlug = await uniqueCustomerSlug(admin, workspaceName);
-  const { error: clientError } = await admin.from("clients").upsert({
+  const { error: clientError } = await admin.from("clients").insert({
     user_id: data.user.id,
     slug: workspaceSlug,
     business_name: workspaceName,
@@ -84,8 +89,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     owner_email: data.user.email ?? null,
     pilot_start: today.toISOString().slice(0, 10),
     pilot_end: pilotEnd.toISOString().slice(0, 10),
-    account_status: "onboarding"
-  }, { onConflict: "user_id" });
+    account_status: "onboarding",
+    product_mode: "website_chat",
+    provisioning_status: "needs_configuration"
+  });
   if (clientError) return go(request, "/signup?error=workspace");
-  return go(request, "/onboarding");
+  return go(request, "/dashboard/settings?welcome=1");
 }

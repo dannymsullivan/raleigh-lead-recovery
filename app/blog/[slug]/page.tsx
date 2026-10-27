@@ -1,8 +1,8 @@
+import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import { ArrowRight, CalendarDays, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BrandMark } from "../../components/brand-mark";
 import { PublicSiteNav } from "../../components/public-site-nav";
 import {
   blogPosts,
@@ -14,7 +14,7 @@ import {
   type BlogBlock,
   type BlogPost
 } from "@/lib/blog";
-import { contactEmail, contactHref } from "@/lib/contact";
+import { contactHref } from "@/lib/contact";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -50,13 +50,13 @@ export default async function BlogPostPage({ params }: PageProps) {
   const FormatIcon = post.format === "video" ? PlayCircle : FileText;
 
   return (
-    <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]">
+    <main className="brand-surface min-h-screen rlr-home rlr-retro retro-editorial">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <PublicSiteNav cta={{ href: "/signup", label: "Start free" }} />
+      <PublicSiteNav cta={{ href: "/get-started", label: "Try two weeks free" }} />
 
       <article>
         <section className="border-b-2 border-black px-5 py-16 sm:px-8 lg:py-24">
@@ -151,12 +151,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </section>
       </article>
 
-      <footer className="border-t-2 border-black bg-black px-5 py-9 text-white sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 sm:flex-row sm:items-end">
-          <div><BrandMark inverted /><p className="mt-5 text-xs font-semibold text-white/42">© 2026 Raleigh Lead Recovery</p></div>
-          <div className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/blog">Field notes</Link><Link href="/signup">Start free</Link><a href={contactHref}>{contactEmail}</a></div>
-        </div>
-      </footer>
+      <PublicSiteFooter />
     </main>
   );
 }

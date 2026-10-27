@@ -81,10 +81,12 @@ export default async function OutreachPage({ searchParams }: PageProps) {
     ? (requestedStage as OutreachStage)
     : "all";
   const { prospects, error: loadError } = await loadProspects();
-  const visibleProspects =
+  const stageProspects =
     activeStage === "all"
       ? prospects
       : prospects.filter((prospect) => prospect.stage === activeStage);
+  const trialOnly = search.source === "website_trial";
+  const visibleProspects = trialOnly ? stageProspects.filter((prospect) => prospect.inbound_source === "website_trial") : stageProspects;
   const summary = buildOutreachSummary(prospects);
   const agentConfigured = outreachCallingConfigured();
   const notice = search.created
@@ -147,11 +149,12 @@ export default async function OutreachPage({ searchParams }: PageProps) {
 
         <section>
           <h2 className="text-2xl font-bold tracking-[-0.035em] text-slate-950 sm:text-3xl">
-            Outreach
+            {trialOnly ? "Trial requests" : "Prospects & outreach"}
           </h2>
           <p className="mt-1.5 text-sm text-slate-500">
-            Add a company, start a call, and see the next step without managing a second spreadsheet.
+            {trialOnly ? "Website trial requests arrive here with their business details and setup goals. Follow up by email, then create their customer workspace when they’re ready." : "Website trial requests and outreach prospects, with every follow-up in one place."}
           </p>
+          <div className="mt-3 flex gap-4 text-sm font-semibold"><Link href="/admin/outreach" className="underline underline-offset-4">All prospects</Link><Link href="/admin/outreach?source=website_trial" className="underline underline-offset-4">Website trial requests</Link></div>
         </section>
 
         <section className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-5" aria-label="Outreach summary">
@@ -215,17 +218,17 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           <div className="pb-3">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950" id="prospect-list-title">Call list</h2>
+                <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950" id="prospect-list-title">{trialOnly ? "Trial requests" : "Call list"}</h2>
                 <p className="mt-1 text-sm text-slate-500">Choose a company and take the next action.</p>
               </div>
               <ProspectSearch total={visibleProspects.length} />
             </div>
             <nav className="mt-3 flex gap-1 overflow-x-auto" aria-label="Filter prospects by stage">
-              <StageFilter href="/admin/outreach" active={activeStage === "all"}>All</StageFilter>
+              <StageFilter href={trialOnly ? "/admin/outreach?source=website_trial" : "/admin/outreach"} active={activeStage === "all"}>All</StageFilter>
               {outreachStages.map((stage) => (
                 <StageFilter
                   key={stage}
-                  href={`/admin/outreach?stage=${stage}`}
+                  href={`/admin/outreach?stage=${stage}${trialOnly ? "&source=website_trial" : ""}`}
                   active={activeStage === stage}
                 >
                   {outreachStageLabels[stage]}

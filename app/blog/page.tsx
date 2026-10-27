@@ -1,14 +1,14 @@
+import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import { ArrowRight, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
 import { blogCategories, blogPosts, siteUrl } from "@/lib/blog";
 import { contactEmail, contactHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Field Notes | Raleigh Lead Recovery",
-  description: "Practical missed-call recovery, call-forwarding, and local lead-capture advice for busy service businesses.",
+  description: "Practical missed-call recovery, call-forwarding, and lead-capture advice for busy service businesses.",
   alternates: { canonical: `${siteUrl}/blog` }
 };
 
@@ -17,13 +17,13 @@ const remainingPosts = blogPosts.slice(1);
 
 export default function BlogIndexPage() {
   return (
-    <main className="brand-surface min-h-screen bg-[#f5f8fc] text-[#111b35]">
-      <PublicSiteNav cta={{ href: "/signup", label: "Start free" }} />
+    <main className="brand-surface min-h-screen rlr-home rlr-retro retro-editorial">
+      <PublicSiteNav cta={{ href: "/get-started", label: "Try two weeks free" }} />
 
       <section className="border-b-2 border-black">
         <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.12fr_0.88fr]">
           <div className="px-5 py-20 sm:px-8 sm:py-28 lg:border-r-2 lg:border-black lg:pr-16">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Raleigh Lead Recovery field notes · Raleigh, NC</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Raleigh Lead Recovery field notes</p>
             <h1 className="mt-8 max-w-4xl text-[clamp(4.3rem,10vw,7.8rem)] font-black leading-[0.81] tracking-[-0.075em]">
               Better calls.<br />Better jobs.
             </h1>
@@ -42,7 +42,7 @@ export default function BlogIndexPage() {
               <dl className="mt-10 grid grid-cols-3 border-l border-t border-white/30">
                 <LedgerStat label="Guides" value={String(blogPosts.length)} />
                 <LedgerStat label="Fluff" value="0" />
-                <LedgerStat label="Focus" value="Local" />
+                <LedgerStat label="Focus" value="Service" />
               </dl>
             </div>
           </div>
@@ -121,12 +121,7 @@ export default function BlogIndexPage() {
         </div>
       </section>
 
-      <footer className="border-t-2 border-black bg-black px-5 py-9 text-white sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 sm:flex-row sm:items-end">
-          <div><BrandMark inverted /><p className="mt-5 text-xs font-semibold text-white/42">© 2026 Raleigh Lead Recovery</p></div>
-          <nav className="flex flex-wrap gap-6 text-sm font-extrabold text-white/70"><Link href="/">Home</Link><Link href="/signup">Start free</Link><a href={contactHref}>Contact</a></nav>
-        </div>
-      </footer>
+      <PublicSiteFooter />
     </main>
   );
 }

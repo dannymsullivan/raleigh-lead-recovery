@@ -23,6 +23,7 @@ export default async function OnboardingPage({ searchParams }: PageProps) {
   if (!data) redirect("/signup?error=workspace");
 
   const client = data as Client;
+  if (client.product_mode === "website_chat") redirect("/dashboard/settings?welcome=1");
   if (client.onboarding_completed_at) redirect("/dashboard");
 
   const search = (await searchParams) ?? {};
@@ -33,7 +34,7 @@ export default async function OnboardingPage({ searchParams }: PageProps) {
       <header className="border-b border-[var(--product-line)] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
           <BrandMark />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">14-day trial starts after setup · then $99/mo founding rate</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/45">Your business setup · Pricing agreed before service begins</p>
         </div>
       </header>
       <OnboardingForm client={client} email={user.email ?? client.owner_email ?? ""} error={error} />

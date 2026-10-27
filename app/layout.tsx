@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./chatbot-sales.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.raleighleadrecovery.com"),
   title: "Raleigh Lead Recovery | Never Lose a Good Lead",
-  description: "Raleigh Lead Recovery answers missed and after-hours calls, captures what the customer needs, and helps service businesses recover qualified past leads.",
+  description: "Website chatbots, business knowledge, and lead attribution for service businesses. Voice agents and lead recovery are available as separate services.",
   openGraph: {
     title: "Raleigh Lead Recovery | Never Lose a Good Lead",
     description: "Answer new demand and recover the demand you already earned.",

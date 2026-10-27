@@ -1,226 +1,102 @@
+import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
   Check,
-  Clock3,
   Headphones,
   MessageSquareText,
   PhoneForwarded,
   ShieldCheck,
 } from "lucide-react";
-import { BrandMark } from "./components/brand-mark";
 import { PublicSiteNav } from "./components/public-site-nav";
-import { AutoTextBackDemo } from "./components/auto-text-back-demo";
-import { WebVoiceDemo } from "./components/web-voice-demo";
-import { contactEmail, contactPhone, contactPhoneHref } from "@/lib/contact";
-
-const bookingHref =
-  process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim() ||
-  "https://calendly.com/hello-raleighaiguy/raleigh-lead-recovery-pilot-setup";
+import { WebsiteChat } from "./components/website-chat";
+import { SalesMotion } from "./components/sales-motion";
+import { SalesGuide } from "./components/sales-guide";
+import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, ProductOverview, TrialBanner } from "./components/chatbot-sales-sections";
+import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "AI Missed-Call Coverage for Raleigh Service Businesses",
+  title: "Website Chatbots for Service Businesses",
   description:
-    "Raleigh Lead Recovery answers missed and after-hours calls, captures what each customer needs, and gives your team a clear next step. Try a results-focused pilot free.",
+    "Answer website questions with your approved business knowledge, capture leads, and track sources and outcomes in your customer dashboard.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Every Missed Call Gets a Real Next Step",
+    title: "Your Website Deserves More Than a Contact Form",
     description:
-      "Natural AI call coverage for Raleigh service businesses, with a free results-focused pilot.",
+      "Website chat, approved business knowledge, and clear lead attribution for service businesses.",
     url: "/",
     type: "website",
     images: [{
         url: "/opengraph-image",
       width: 1200,
       height: 630,
-      alt: "Raleigh Lead Recovery missed-call coverage",
+      alt: "Raleigh Lead Recovery website chat",
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Every Missed Call Gets a Real Next Step",
-    description: "Natural AI call coverage for Raleigh service businesses.",
+    title: "Your Website Deserves More Than a Contact Form",
+    description: "Website chat and lead attribution for service businesses.",
     images: ["/opengraph-image"],
   },
 };
 
 const faqs = [
-  {
-    q: "Do we have to replace our phone system?",
-    a: "No. Your number, provider, and phones stay in place. We use your provider’s no-answer or conditional-forwarding setting, so your team always gets the first chance to answer.",
-  },
-  {
-    q: "What does Chloe say to callers?",
-    a: "Only what you approve. We build the greeting, questions, service area, urgency rules, and callback expectations with you. Chloe identifies herself as an AI assistant and never invents pricing, availability, or arrival times.",
-  },
-  {
-    q: "What happens if someone hangs up?",
-    a: "They can receive an immediate, business-approved text from the coverage number. Their reply and the missed-call context are sent to your team so the lead still has a way in.",
-  },
-  {
-    q: "Can it transfer an urgent call?",
-    a: "Yes, if you approve a transfer path. We send transfers to a separate owner or dispatcher number so the call cannot loop back into the forwarded main line.",
-  },
-  {
-    q: "What happens after the free pilot?",
-    a: "We review every outcome together. If the coverage was useful, the founding plan starts at $297 per month. If it was not, you turn forwarding off and owe nothing for the test.",
-  },
+  { q: "How does the two-week free trial work?", a: "We set up your business knowledge and website chat, then use the 14-day trial to review real conversations and captured leads with you. No card is required. We agree on any ongoing paid plan before it starts." },
+  { q: "Who handles the setup?", a: "You work directly with Danny. Share your services, service area, hours, and common questions; he helps shape the knowledge, install the widget, and test the handoff." },
+  { q: "What does the chatbot know?", a: "It uses the services, hours, and service area already saved in your business profile, plus the custom answers you publish. If it doesn’t have an approved answer, it offers a human follow-up." },
+  { q: "Can I see where a lead came from?", a: "Each conversation keeps its landing page, referrer, and UTM source, medium, and campaign tags. Your dashboard connects that context to captured contact details and outcomes you confirm." },
+  { q: "Does each customer have their own dashboard?", a: "Yes. Each business signs in to its own workspace to review chats, update knowledge, and track leads." },
+  { q: "Does it book appointments?", a: "This version collects the request and contact details for your team to confirm. Your team can mark a lead booked and record its value; the chatbot does not promise availability." },
+  { q: "Do you also offer voice agents?", a: "Yes. Voice is a separate service for missed-call and after-hours coverage. Visit the Voice agents page to try the browser demo and learn how setup works." },
 ];
 
 export default function HomePage() {
   return (
-    <main className="landing-page rlr-home">
+    <main className="landing-page rlr-home rlr-retro" id="sales-page">
+      <SalesMotion />
+      <TrialBanner />
       <PublicSiteNav
-        cta={{ href: bookingHref, label: "Book free pilot" }}
+        cta={{ href: "#trial", label: "Try two weeks free" }}
       />
 
       <section className="rlr-hero">
         <div className="page-shell rlr-hero-grid">
           <div className="rlr-hero-copy">
-            <p className="rlr-kicker"><span /> Missed-call coverage for Raleigh service businesses</p>
-            <h1>A missed call should still feel answered.</h1>
+            <p className="rlr-kicker"><span /> Website chat for service businesses</p>
+            <h1><span>1995 called.</span><span>It wants its</span><em>contact form back.</em></h1>
             <p className="rlr-hero-intro">
-              When your team can&apos;t pick up, Chloe answers naturally, asks one
-              useful question at a time, and sends the opportunity back with a
-              clear next step.
+              Answer customer questions, collect contact details, and see where your leads
+              came from. We set up a website chatbot using your business information,
+              so visitors can get help while your team is busy.
             </p>
             <div className="rlr-hero-actions">
-              <a className="rlr-button rlr-button-primary" href={bookingHref} target="_blank" rel="noreferrer">
-                Book a free pilot <ArrowRight aria-hidden="true" />
+              <a className="rlr-button rlr-button-primary" href="#trial">
+                Try two weeks free <ArrowRight aria-hidden="true" />
               </a>
-              <a className="rlr-button rlr-button-secondary" href="#how-it-works">See how it works</a>
+              <a className="rlr-button rlr-button-secondary" href="#try-chat">Try the chatbot</a>
             </div>
-            <div className="rlr-hero-assurances" aria-label="Pilot assurances">
-              <span><Check aria-hidden="true" /> Keep your number</span>
-              <span><Check aria-hidden="true" /> You approve every rule</span>
-              <span><Check aria-hidden="true" /> Turn it off anytime</span>
+            <div className="rlr-hero-assurances" aria-label="Chatbot features">
+              <span><Check aria-hidden="true" /> Two-week free trial</span>
+              <span><Check aria-hidden="true" /> Your own dashboard</span>
+              <span><Check aria-hidden="true" /> See where leads come from</span>
             </div>
           </div>
 
-          <div className="rlr-demo-card" id="talk-now">
+          <div className="rlr-demo-card" id="try-chat">
+            <SalesGuide />
             <div className="rlr-demo-topline">
-              <div><span className="rlr-live-dot" /><span>Meet Chloe</span></div>
-              <span>Live voice demo</span>
+              <div><span className="rlr-live-dot" /><span>Your / Front desk</span></div>
+              <span>Try it live ↙</span>
             </div>
-            <div className="rlr-demo-stage">
-              <p className="rlr-demo-business"><span>Fictional demo company</span> Oak City Heating &amp; Air</p>
-              <p className="rlr-demo-prompt">Try saying: <strong>“Our AC stopped cooling.”</strong></p>
-              <WebVoiceDemo mode="receptionist" label="Talk to Chloe now" visual="orb" />
+            <WebsiteChat />
+            <div className="rlr-demo-outcome" aria-label="Illustrative handoff example">
+              <div><span>Example need</span><strong>AC not cooling</strong></div>
+              <div><span>Service needed</span><strong>AC repair</strong></div>
+              <div><span>Next step</span><strong>Team to follow up</strong></div>
             </div>
-            <div className="rlr-demo-outcome" aria-label="Example call outcome">
-              <div><span>Need</span><strong>No cooling</strong></div>
-              <div><span>Priority</span><strong>Today</strong></div>
-              <div><span>Next step</span><strong>Call back</strong></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="rlr-trust-band" aria-label="How the service fits your business">
-        <div className="page-shell">
-          <span><Headphones aria-hidden="true" /> Your team answers first</span>
-          <span><PhoneForwarded aria-hidden="true" /> No new phone system</span>
-          <span><MessageSquareText aria-hidden="true" /> Text-back included</span>
-          <span><ShieldCheck aria-hidden="true" /> Every outcome is visible</span>
-        </div>
-      </section>
-
-      <section className="rlr-flow page-shell" id="how-it-works">
-        <div className="rlr-section-heading">
-          <p className="rlr-kicker">A better missed-call experience</p>
-          <h2>Short conversation. Clear handoff.</h2>
-          <p>
-            The goal is not to keep a caller talking. It is to understand the
-            need, protect the customer experience, and give your team something
-            useful to act on.
-          </p>
-        </div>
-        <ol className="rlr-flow-steps">
-          <li><span>01</span><div><h3>Answer naturally</h3><p>Chloe introduces herself, acknowledges why they called, and gives them room to respond.</p></div></li>
-          <li><span>02</span><div><h3>Ask one thing at a time</h3><p>Short, relevant questions capture the service need, urgency, location, and preferred next step.</p></div></li>
-          <li><span>03</span><div><h3>Hand back the opportunity</h3><p>Your team gets a concise summary, contact details, and the action the caller expects next.</p></div></li>
-        </ol>
-      </section>
-
-      <section className="rlr-outcomes" id="outcomes">
-        <div className="page-shell rlr-outcomes-grid">
-          <div className="rlr-outcomes-copy">
-            <p className="rlr-kicker">What your team receives</p>
-            <h2>Not a transcript dump. A next step.</h2>
-            <p>
-              Every handled call becomes a clean, reviewable outcome. Your team
-              can see what the customer needs, how urgent it is, and whether a
-              callback or transfer was requested.
-            </p>
-            <div className="rlr-summary-card">
-              <div className="rlr-summary-header"><span>New opportunity</span><strong>6:43 PM</strong></div>
-              <div className="rlr-summary-person">
-                <span>JM</span>
-                <div><strong>Jordan M.</strong><p>North Raleigh · Returning customer</p></div>
-                <i>Needs callback</i>
-              </div>
-              <dl>
-                <div><dt>Reason</dt><dd>Upstairs AC stopped cooling</dd></div>
-                <div><dt>Urgency</dt><dd>Home getting warm · No safety risk</dd></div>
-                <div><dt>Requested</dt><dd>Tomorrow morning appointment</dd></div>
-              </dl>
-              <div className="rlr-summary-footer"><Check aria-hidden="true" /> Summary sent to owner</div>
-            </div>
-          </div>
-
-          <div className="rlr-text-back-wrap">
-            <div>
-              <p className="rlr-kicker">If they hang up</p>
-              <h3>Keep the door open with an immediate text.</h3>
-              <p>A missed caller who does not want to talk to an assistant can still reply on their own time. The wording and routing are approved by you.</p>
-            </div>
-            <AutoTextBackDemo />
-          </div>
-        </div>
-      </section>
-
-      <section className="rlr-pilot page-shell" id="pilot">
-        <div className="rlr-pilot-copy">
-          <p className="rlr-kicker">Evidence before a subscription</p>
-          <h2>Give it enough time to produce real evidence.</h2>
-          <p>
-            The free pilot runs for up to seven days or five handled missed
-            calls, whichever comes first. Your team works as usual. Only
-            unanswered calls roll over.
-          </p>
-          <ul>
-            <li><Check aria-hidden="true" /> Greeting and questions approved before launch</li>
-            <li><Check aria-hidden="true" /> Immediate summaries after handled calls</li>
-            <li><Check aria-hidden="true" /> Founder-led setup and outcome review</li>
-          </ul>
-        </div>
-        <div className="rlr-price-card">
-          <p>Results-focused pilot</p>
-          <div><strong>$0</strong><span>No setup fee</span></div>
-          <ul>
-            <li><Clock3 aria-hidden="true" /> Up to seven calendar days</li>
-            <li><PhoneForwarded aria-hidden="true" /> Missed calls only</li>
-            <li><MessageSquareText aria-hidden="true" /> Up to five handled calls</li>
-          </ul>
-          <a className="rlr-button rlr-button-light" href={bookingHref} target="_blank" rel="noreferrer">
-            Book the free pilot <ArrowRight aria-hidden="true" />
-          </a>
-          <p className="rlr-price-note">If it proves useful, the founding plan starts at $297/month for up to 150 minutes. Cancel anytime.</p>
-        </div>
-      </section>
-
-      <section className="rlr-safety">
-        <div className="page-shell rlr-safety-grid">
-          <div className="rlr-safety-heading">
-            <p className="rlr-kicker">Designed to earn trust</p>
-            <h2>Your phones stay yours. Your rules stay in control.</h2>
-          </div>
-          <div className="rlr-safety-list">
-            <article><ShieldCheck aria-hidden="true" /><div><h3>No invented promises</h3><p>Chloe follows your approved services, hours, service area, escalation rules, and callback expectations.</p></div></article>
-            <article><PhoneForwarded aria-hidden="true" /><div><h3>No forwarding loops</h3><p>Urgent transfers go to a separate approved number, never back to the forwarded main line.</p></div></article>
-            <article><Headphones aria-hidden="true" /><div><h3>No black box</h3><p>You can review every call outcome, adjust the flow, pause coverage, or turn forwarding off.</p></div></article>
           </div>
         </div>
       </section>
@@ -228,21 +104,112 @@ export default function HomePage() {
       <section className="rlr-founder page-shell">
         <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={112} height={112} />
         <div>
-          <p className="rlr-kicker">Local, founder-led setup</p>
+          <p className="rlr-kicker">Founder-led setup</p>
           <h2>You work directly with me.</h2>
           <p>
-            I&apos;m Danny Sullivan, a Raleigh-based AI product engineer and former
-            service-business owner. I set up the call flow with you and review
-            the real outcomes—not just a dashboard metric.
+            I&apos;m Danny Sullivan, an AI product engineer and former
+            service-business owner. I help turn what your business knows into
+            conversations your customers can use, so your team can see what customers asked for and follow up.
           </p>
         </div>
         <a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a>
       </section>
 
+      <section className="rlr-trust-band" aria-label="How the service fits your business">
+        <div className="page-shell">
+          <span><Headphones aria-hidden="true" /> Questions answered anytime</span>
+          <span><PhoneForwarded aria-hidden="true" /> Your business knowledge</span>
+          <span><MessageSquareText aria-hidden="true" /> Lead sources included</span>
+          <span><ShieldCheck aria-hidden="true" /> Private customer workspaces</span>
+        </div>
+      </section>
+
+      <CustomerProblem />
+      <ProductOverview />
+
+      <section className="rlr-flow page-shell" id="how-it-works">
+        <div className="rlr-section-heading">
+          <p className="rlr-kicker">How it works</p>
+          <h2>We set it up. You review it. Then it goes live.</h2>
+          <p>
+            You don’t need to build a chatbot or learn a new tool to get started.
+            We help you prepare the answers, add it to your site, and check that it works.
+          </p>
+        </div>
+        <ol className="rlr-flow-steps">
+          <li><span>01</span><div><h3>Tell us how your business works</h3><p>Share your services, prices, hours, and service area. We help turn your everyday answers into your chatbot’s knowledge.</p></div></li>
+          <li><span>02</span><div><h3>We build and test your chatbot</h3><p>We add your answers and install the chat widget. You try it, review the responses, and tell us what to change before launch.</p></div></li>
+          <li><span>03</span><div><h3>Go live and review your leads</h3><p>Your trial starts when the chatbot is ready. See each conversation, contact request, and lead source in your dashboard, then record what happens next.</p></div></li>
+        </ol>
+      </section>
+
+      <section className="rlr-outcomes" id="outcomes">
+        <div className="page-shell rlr-outcomes-grid">
+          <div className="rlr-outcomes-copy">
+            <p className="rlr-kicker">Your customer dashboard</p>
+            <h2>See every chat. Track every lead.</h2>
+            <p>
+              Read chat transcripts, review captured contact details, and compare
+              lead sources in your own workspace. Mark leads as new, contacted,
+              booked, or lost, and record the value your team confirms.
+            </p>
+            <div className="rlr-summary-card">
+              <div className="rlr-summary-header"><span>Example lead · Illustrative data</span><strong>Website chat</strong></div>
+              <div className="rlr-summary-person">
+                <span>JM</span>
+                <div><strong>Jordan M.</strong><p>Returning customer · AC repair</p></div>
+                <i>Needs callback</i>
+              </div>
+              <dl>
+                <div><dt>Landing page</dt><dd>/ac-repair</dd></div>
+                <div><dt>Source / medium</dt><dd>Google / CPC</dd></div>
+                <div><dt>Campaign</dt><dd>Summer AC repair</dd></div>
+              </dl>
+              <div className="rlr-summary-footer"><Check aria-hidden="true" /> Conversation and contact details in one place</div>
+            </div>
+          </div>
+
+          <div className="rlr-text-back-wrap" id="business-knowledge">
+            <div>
+              <p className="rlr-kicker">Your knowledge base</p>
+              <h3>Update your answers in one place.</h3>
+              <p>Add your services, hours, prices, and common questions. Save drafts for review, then publish the answers you want your chatbot to use.</p>
+            </div>
+            <Link className="rlr-button rlr-button-primary" href="/dashboard-demo">Preview the customer dashboard <ArrowRight /></Link><a className="rlr-inline-link" href="#try-chat">Try the answers in a chat <ArrowRight /></a>
+          </div>
+        </div>
+      </section>
+
+      <section className="sales-owner-work page-shell">
+        <Image className="retro-scene" src="/illustrations/front-desk-scene.png" alt="A cheerful retro computer assistant organizing customer messages into useful job requests" width={1536} height={1024} sizes="(max-width: 760px) 100vw, 50vw" />
+        <div><p className="rlr-kicker">Built for owners with their hands full</p><h2>Keep doing the work you’re known for.</h2><p>You shouldn’t have to stop a job to answer the same service-area question again. Give customers a helpful first response while you take care of the person in front of you.</p><p>Your chatbot gathers the details. Your team decides the next step. Danny helps you get the knowledge and handoff right before launch.</p><a className="rlr-inline-link" href="#trial">Try two weeks free <ArrowRight /></a></div>
+      </section>
+
+      <IndustryExamples />
+      <ChatPricing />
+
+      <section className="rlr-safety">
+        <div className="page-shell rlr-safety-grid">
+          <div className="rlr-safety-heading">
+            <p className="rlr-kicker">You stay in control</p>
+            <h2>You approve the answers. Your team handles the customer.</h2>
+          </div>
+          <div className="rlr-safety-list">
+            <article><ShieldCheck aria-hidden="true" /><div><h3>Uses your approved information</h3><p>The chatbot answers from your published knowledge and offers human follow-up when an answer is missing.</p></div></article>
+            <article><PhoneForwarded aria-hidden="true" /><div><h3>Sends requests to your team</h3><p>A contact request is a lead, not a confirmed appointment. Your team confirms availability and records the outcome.</p></div></article>
+            <article><Headphones aria-hidden="true" /><div><h3>Lets you review every conversation</h3><p>Read each conversation, update the knowledge, and pause website chat from your customer workspace.</p></div></article>
+          </div>
+        </div>
+      </section>
+
+
+
+      <ChatTrial />
+
       <section className="rlr-faq page-shell" id="questions">
         <div className="rlr-faq-heading">
           <p className="rlr-kicker">Before you try it</p>
-          <h2>Good questions.</h2>
+          <h2>Frequently asked questions.</h2>
         </div>
         <div className="rlr-faq-list">
           {faqs.map((faq) => (
@@ -256,32 +223,19 @@ export default function HomePage() {
 
       <section className="rlr-final">
         <div className="page-shell">
-          <p className="rlr-kicker">One Raleigh pilot opening</p>
-          <h2>Let one missed call become a real conversation.</h2>
-          <p>No new phone system. No setup fee. Just enough time to see real outcomes.</p>
+          <p className="rlr-kicker">Start your free trial</p>
+          <h2>Help your next website visitor become a customer.</h2>
+          <p>Get website chat, setup, and your own dashboard free for two weeks.</p>
           <div>
-            <a className="rlr-button rlr-button-light" href={bookingHref} target="_blank" rel="noreferrer">
-              Book the free pilot <ArrowRight aria-hidden="true" />
+            <a className="rlr-button rlr-button-light" href="#trial">
+              Try two weeks free <ArrowRight aria-hidden="true" />
             </a>
-            <a className="rlr-final-demo-link" href="#talk-now">Talk to Chloe first</a>
+            <a className="rlr-final-demo-link" href="#try-chat">Try the chatbot first</a>
           </div>
         </div>
       </section>
 
-      <footer className="rlr-footer">
-        <div className="page-shell">
-          <div><BrandMark inverted accent="#63e6d1" /><p>© 2026 Raleigh Lead Recovery</p></div>
-          <nav aria-label="Footer navigation">
-            <Link href="/lead-recovery">Lead recovery</Link>
-            <Link href="/blog">Writing</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-            <Link href="/login">Sign in</Link>
-            <a href={contactPhoneHref}>{contactPhone}</a>
-            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-          </nav>
-        </div>
-      </footer>
+      <PublicSiteFooter />
     </main>
   );
 }

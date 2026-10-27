@@ -15,12 +15,12 @@ describe("public demo routes", () => {
   });
 
   it.each([
-    ["/demo", DemoPage],
-    ["/hvac-demo", HvacDemoPage]
-  ])("sends %s to the HVAC follow-up demo", (_route, Page) => {
+    ["/demo", DemoPage, "/voice#talk-now"],
+    ["/hvac-demo", HvacDemoPage, "/hvac#listen"]
+  ] as const)("sends %s directly to its current demo", (_route, Page, destination) => {
     Page();
 
     expect(redirect).toHaveBeenCalledOnce();
-    expect(redirect).toHaveBeenCalledWith("/lead-recovery#listen-now-form");
+    expect(redirect).toHaveBeenCalledWith(destination);
   });
 });

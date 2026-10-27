@@ -75,6 +75,29 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
   const { userId, clientId } = await currentWorkspace();
   const businessName = formValue(formData, "business_name");
   const ownerPhone = formValue(formData, "owner_phone");
+  const admin = getSupabaseAdmin();
+  const { data: workspace, error: workspaceError } = await admin.from("clients").select("product_mode").eq("id", clientId).single();
+  if (workspaceError || !workspace) redirect("/dashboard/settings?error=save");
+  if (workspace.product_mode === "website_chat") {
+    if (!businessName || businessName.length > 160) redirect("/dashboard/settings?error=missing");
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    const timezone = formValue(formData, "timezone") || "America/New_York";
+    if (!["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles"].includes(timezone)) redirect("/dashboard/settings?error=missing");
+    const hours = Object.fromEntries(days.map(day => [day, { closed: formData.get(`${day}_closed`) === "on", open: formValue(formData, `${day}_open`) || "08:00", close: formValue(formData, `${day}_close`) || "17:00" }]));
+    if (Object.values(hours).some(day => !/^([01]\d|2[0-3]):[0-5]\d$/.test(day.open) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(day.close))) redirect("/dashboard/settings?error=missing");
+    const { error } = await admin.from("clients").update({
+      business_name: businessName, owner_phone: ownerPhone.slice(0, 40) || "Not set",
+      trade: formValue(formData, "trade").slice(0, 100) || "service business",
+      service_area: formValue(formData, "service_area").slice(0, 1000) || null,
+      business_description: formValue(formData, "business_description").slice(0, 3000) || null,
+      services: formValue(formData, "services").split(/[\n,]/).map(item => item.trim().slice(0, 200)).filter(Boolean).slice(0, 30),
+      business_hours: hours, timezone, onboarding_completed_at: new Date().toISOString(),
+    }).eq("id", clientId);
+    if (error) redirect("/dashboard/settings?error=save");
+    revalidatePath("/dashboard/settings");
+    revalidatePath("/dashboard/knowledge-base");
+    redirect("/dashboard/settings?saved=1");
+  }
   const alertPhone = normalizePhoneNumber(formValue(formData, "alert_phone") || ownerPhone);
   if (!businessName || !ownerPhone || !alertPhone) redirect("/dashboard/settings?error=missing");
   if (formData.get("alert_sms_consent") !== "on") redirect("/dashboard/settings?error=consent");
@@ -87,7 +110,6 @@ export async function saveAssistantSettingsAction(formData: FormData): Promise<v
   }]));
   const services = formValue(formData, "services").split(/[\n,]/).map((item) => item.trim()).filter(Boolean).slice(0, 30);
 
-  const admin = getSupabaseAdmin();
   const consentedAt = new Date().toISOString();
   const nextTrade = formValue(formData, "trade") || "service business";
   const { data: currentClient } = await admin.from("clients").select("trade").eq("id", clientId).single();

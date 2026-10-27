@@ -175,11 +175,13 @@ export default async function AdminPage({ searchParams }: PageProps) {
                       <td className="px-4 py-3 align-top">
                         <div className="mb-3 flex flex-wrap items-center gap-2">
                           <Link className="inline-flex min-h-10 items-center gap-2 border-2 border-black bg-black px-3 text-xs font-black text-white" href={customerCrmPath(client)}>Open CRM <ExternalLink className="h-3.5 w-3.5" /></Link>
+                          <Link className="inline-flex min-h-10 items-center border-2 border-black px-3 text-xs font-black" href={`${customerCrmPath(client)}?view=chats`}>Chats</Link>
+                          <Link className="inline-flex min-h-10 items-center border-2 border-black px-3 text-xs font-black" href={`${customerCrmPath(client)}?view=knowledge`}>Chatbot setup</Link>
                           <Link className="inline-flex min-h-10 items-center border-2 border-black px-3 text-xs font-black" href={`${customerCrmPath(client)}#lead-import`}>Upload leads</Link>
                           {isClientDeletionLocked(client) ? (
                             <span className="inline-flex min-h-10 items-center border-2 border-black/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-black/45">Demo protected</span>
                           ) : (
-                            <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete" confirmMessage={`Delete ${client.business_name} and all of its call history? This cannot be undone.`} />
+                            <DeleteRecordButton action={deleteClientAction.bind(null, client.id)} label="Delete" confirmMessage={`Delete ${client.business_name} and all of its call, chat, knowledge, and lead history? This cannot be undone.`} />
                           )}
                         </div>
                         <details className="w-[300px]">
@@ -212,12 +214,13 @@ export default async function AdminPage({ searchParams }: PageProps) {
           <div className="border-t-2 border-black p-5 sm:p-6">
             {error === "client" ? <p className="mb-5 border-2 border-black bg-[#d8ff57] p-3 text-sm font-black">Business, trade, owner, and phone are required.</p> : null}
             <form action={addClientAction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <label className="block text-sm font-black">Start with<select className="mt-2 h-12 w-full border border-black bg-white px-3 font-semibold" name="product_mode" defaultValue="website_chat"><option value="website_chat">Website chatbot</option><option value="reactivation">Voice &amp; lead recovery</option></select></label>
               <Field label="Business name" name="business_name" required />
               <Field label="Trade" name="trade" placeholder="plumbing" required />
               <Field label="Owner name" name="owner_name" required />
               <Field label="Owner phone" name="owner_phone" placeholder="+19195550123" required />
               <Field label="Owner email" name="owner_email" type="email" />
-              <p className="border-l-4 border-black bg-[#f4f1e8] p-3 text-xs font-semibold leading-5 text-black/55 sm:col-span-2 xl:col-span-3">This creates one customer workspace and its first campaign. You’ll get a secure access link to send the owner; their verified login attaches to this workspace.</p>
+              <p className="border-l-4 border-black bg-[#f4f1e8] p-3 text-xs font-semibold leading-5 text-black/55 sm:col-span-2 xl:col-span-3">One existing customer workspace for chat, voice, or both. Website-chat setup does not provision a phone agent or number. You’ll get a secure access link for the owner’s verified login.</p>
               <Field label="Pilot start" name="pilot_start" type="date" />
               <Field label="Pilot end" name="pilot_end" type="date" />
               <div className="grid grid-cols-2 gap-3"><Field label="Avg job value" name="avg_job_value" type="number" placeholder="500" /><Field label="Close rate" name="close_rate" type="number" step="0.01" placeholder="0.4" /></div>

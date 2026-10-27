@@ -86,6 +86,7 @@ export async function requestSignupLinkAction(formData: FormData): Promise<void>
 
   if (error) redirect("/signup?error=email");
   await rememberPendingEmail(email, "signup");
+  (await cookies()).set(pendingOwnerNameCookie, ownerName, { httpOnly: true, maxAge: 30 * 60, path: "/", sameSite: "lax", secure: process.env.NODE_ENV === "production" });
   redirect("/check-email");
 }
 
@@ -106,6 +107,26 @@ export async function requestLoginLinkAction(formData: FormData): Promise<void> 
   redirect("/check-email");
 }
 
+export async function resendEmailLinkAction(): Promise<void> {
+  const cookieStore = await cookies();
+  const email = cookieStore.get(pendingEmailCookie)?.value;
+  const mode = cookieStore.get(pendingModeCookie)?.value;
+  if (!email || !validEmail(email)) redirect("/login?error=expired");
+  const formData = new FormData();
+  formData.set("email", email);
+  if (mode === "invite") {
+    const invitationToken = cookieStore.get(pendingInvitationCookie)?.value;
+    if (!invitationToken) redirect("/login?error=invitation");
+    return requestInviteLinkAction(invitationToken, formData);
+  }
+  if (mode === "signup") {
+    formData.set("owner_name", cookieStore.get(pendingOwnerNameCookie)?.value || "");
+    return requestSignupLinkAction(formData);
+  }
+  if (mode !== "login") redirect("/login?error=expired");
+  return requestLoginLinkAction(formData);
+}
+
 export async function requestPhoneOtpAction(formData: FormData): Promise<void> {
   const phone = normalizePhoneNumber(value(formData, "phone"));
   const mode = value(formData, "mode") === "signup" ? "signup" : "login";
@@ -119,7 +140,7 @@ export async function requestPhoneOtpAction(formData: FormData): Promise<void> {
   cookieStore.set(pendingPhoneCookie, phone, options);
   cookieStore.set(pendingModeCookie, mode, options);
   if (mode === "signup") cookieStore.set(pendingOwnerNameCookie, ownerName, options);
-  redirect("/verify-phone");
+  redirect("/verify");
 }
 
 export async function verifyPhoneOtpAction(formData: FormData): Promise<void> {
@@ -131,17 +152,25 @@ export async function verifyPhoneOtpAction(formData: FormData): Promise<void> {
   if (!phone || !/^[0-9]{6}$/.test(token) || (mode !== "login" && mode !== "signup")) redirect("/login?error=expired");
   const supabase = await getSupabaseAuth();
   const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: "sms" });
-  if (error || !data.user) redirect("/verify-phone?error=invalid");
+  if (error || !data.user) redirect("/verify?error=invalid");
   const admin = getSupabaseAdmin();
+  const { data: client, error: lookupError } = await admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle();
+  if (lookupError) redirect(`/${mode === "signup" ? "signup" : "login"}?error=workspace`);
   if (mode === "login") {
-    const { data: client } = await admin.from("clients").select("id").eq("user_id", data.user.id).maybeSingle();
     if (!client) { await supabase.auth.signOut(); redirect("/login?error=account"); }
     cookieStore.delete(pendingPhoneCookie); cookieStore.delete(pendingModeCookie); cookieStore.delete(pendingOwnerNameCookie);
     redirect("/dashboard");
   }
+  if (client) {
+    cookieStore.delete(pendingPhoneCookie); cookieStore.delete(pendingModeCookie); cookieStore.delete(pendingOwnerNameCookie);
+    redirect("/dashboard");
+  }
+  if (!ownerName) redirect("/signup?error=missing");
   const today = new Date();
   const pilotEnd = new Date(today); pilotEnd.setUTCDate(pilotEnd.getUTCDate() + 14);
-  const { error: clientError } = await admin.from("clients").upsert({ user_id: data.user.id, business_name: `${ownerName} workspace`, trade: "service business", owner_name: ownerName, owner_phone: phone, pilot_start: today.toISOString().slice(0, 10), pilot_end: pilotEnd.toISOString().slice(0, 10), account_status: "onboarding" }, { onConflict: "user_id" });
+  const workspaceName = `${ownerName} workspace`;
+  const slug = await uniqueCustomerSlug(admin, workspaceName);
+  const { error: clientError } = await admin.from("clients").insert({ user_id: data.user.id, slug, business_name: workspaceName, trade: "service business", owner_name: ownerName, owner_phone: phone, pilot_start: today.toISOString().slice(0, 10), pilot_end: pilotEnd.toISOString().slice(0, 10), account_status: "onboarding" });
   if (clientError) redirect("/signup?error=workspace");
   cookieStore.delete(pendingPhoneCookie); cookieStore.delete(pendingModeCookie); cookieStore.delete(pendingOwnerNameCookie);
   redirect("/onboarding");
@@ -153,6 +182,11 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   const auth = await getSupabaseAuth();
   const { data: { user } } = await auth.auth.getUser();
   if (!user) redirect("/login");
+
+  const admin = getSupabaseAdmin();
+  const { data: existingClient, error: existingClientError } = await admin.from("clients").select("id,slug,product_mode").eq("user_id", user.id).single();
+  if (existingClientError || !existingClient) redirect("/onboarding?error=save");
+  if (existingClient.product_mode === "website_chat") redirect("/dashboard/settings?welcome=1");
 
   const businessName = value(formData, "business_name");
   const ownerName = value(formData, "owner_name");
@@ -187,9 +221,6 @@ export async function completeOnboardingAction(formData: FormData): Promise<void
   const trialEndsAt = new Date(trialStartedAt);
   trialEndsAt.setUTCDate(trialEndsAt.getUTCDate() + 14);
 
-  const admin = getSupabaseAdmin();
-  const { data: existingClient, error: existingClientError } = await admin.from("clients").select("id,slug").eq("user_id", user.id).single();
-  if (existingClientError || !existingClient) redirect("/onboarding?error=save");
   const slug = await uniqueCustomerSlug(admin, businessName, existingClient.id);
   const { error } = await admin.from("clients").update({
     slug,

@@ -311,7 +311,7 @@ export default async function ReactivationDashboardPage({
             />
             {telephonyReady
               ? `${campaignAgent?.name} ready`
-              : "Set up Lead Recovery agent"}
+              : "Set up Raleigh Lead Recovery agent"}
           </Link>
         </div>
         {message ? (
@@ -958,9 +958,9 @@ function dashboardMessage(
     bucket_selection: "Choose at least one opportunity bucket to import.",
     import: "The lead list could not be imported.",
     telephony:
-      "Calling is not connected yet. Finish the Lead Recovery agent setup before launching.",
+      "Calling is not connected yet. Finish the Raleigh Lead Recovery agent setup before launching.",
     agent_not_ready:
-      "Set up this customer’s Lead Recovery agent before launching the campaign.",
+      "Set up this customer’s Raleigh Lead Recovery agent before launching the campaign.",
   };
   if (error)
     return {

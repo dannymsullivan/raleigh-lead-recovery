@@ -16,8 +16,8 @@ type PublicSiteNavProps = {
 };
 
 const items = [
-  { href: "/", label: "Missed calls" },
-  { href: "/lead-recovery", label: "Lead recovery" },
+  { href: "/", label: "Chatbots" },
+  { href: "/voice", label: "Voice agents" },
   { href: "/login", label: "Sign in" },
 ] as const;
 

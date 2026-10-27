@@ -5,32 +5,20 @@ export function BrandMark({ inverted = false, accent = "#63e6d1" }: { inverted?:
 
   return (
     <Link className="group inline-flex items-center gap-3" href="/" aria-label="Raleigh Lead Recovery home">
-      <span className="grid h-10 w-10 place-items-center transition-transform duration-200 group-hover:-translate-y-0.5">
-        <svg aria-hidden="true" className="h-10 w-10" viewBox="0 0 48 48">
-          <rect
-            x="2"
-            y="2"
-            width="44"
-            height="44"
-            rx="13"
-            fill="#12203f"
-          />
-          <path
-            d="M14.5 34.5V13.5h10.2c5.9 0 9.4 3 9.4 7.7s-3.5 7.6-9.4 7.6H14.5m10.3 0 9.8 7"
-            fill="none"
-            stroke="#ffffff"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="4"
-          />
-          <circle cx="35.5" cy="13" r="4.5" fill={accent} />
-          <path d="M39 34.5v6l5-3.2" fill="none" stroke={accent} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" />
+      <span className="grid h-12 w-12 place-items-center transition-transform duration-200 group-hover:-translate-y-0.5">
+        <svg aria-hidden="true" className="h-12 w-12" viewBox="0 0 56 56">
+          <path d="M8 8h36v30H29l-9 7v-7H8z" fill="#fff9e7" stroke={inverted ? "#ffffff" : "#17232d"} strokeWidth="3" />
+          <path d="M13 13h26v20H13z" fill="#f7fa00" stroke="#17232d" strokeWidth="2" />
+          <path d="M19 20v3m13-3v3" stroke="#17232d" strokeWidth="3" strokeLinecap="round" />
+          <path d="M20 27q6 6 12 0" fill="none" stroke="#17232d" strokeWidth="2" strokeLinecap="round" />
+          <path d="M9 47h36v5H9z" fill={inverted ? accent : "#17232d"} />
+          <path d="M47 11h6m-3-3v6" stroke="#ff4f9a" strokeWidth="2.5" />
         </svg>
       </span>
       <span className="text-sm font-black leading-[1.02] tracking-[-0.035em]" style={{ color: textColor }}>
         Raleigh Lead
         <br />
-        <span style={{ color: inverted ? accent : "#2968e8" }}>Recovery</span>
+        <span style={{ color: inverted ? accent : "#17232d" }}>Recovery</span>
       </span>
     </Link>
   );

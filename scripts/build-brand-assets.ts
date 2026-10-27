@@ -86,7 +86,7 @@ async function main() {
     </text>
     <text x="120" y="430" fill="#425675" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="600">AI call coverage for Triangle service businesses.</text>
     <rect x="120" y="480" width="544" height="66" rx="33" fill="#12203f"/>
-    <text x="392" y="522" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing=".4">(984) 238-9220  ·  RALEIGHLEADRECOVERY.COM</text>
+    <text x="392" y="522" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing=".4">RALEIGHLEADRECOVERY.COM</text>
   </svg>`;
   await render(cover, "facebook-cover", 1640, 624);
 
@@ -95,7 +95,7 @@ async function main() {
     <circle cx="1020" cy="220" r="310" fill="#2968e8" opacity=".08"/><circle cx="140" cy="1560" r="360" fill="#63e6d1" opacity=".12"/>
     ${mark(88, 88, 108)}${wordmark(224, 126, 42)}
     <rect x="88" y="270" width="430" height="46" rx="23" fill="#d8ff57"/>
-    <text x="303" y="301" text-anchor="middle" fill="#12203f" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" letter-spacing="1.5">7 DAYS OR 5 MISSED CALLS FREE</text>
+    <text x="303" y="301" text-anchor="middle" fill="#12203f" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" letter-spacing="1.5">TRY THE LIVE BROWSER DEMO</text>
     <text x="88" y="430" fill="#111b35" font-family="Georgia, 'Times New Roman', serif" font-size="88" font-weight="700" letter-spacing="-3.7">
       <tspan x="88">What happens when</tspan><tspan x="88" dy="96">your team misses a</tspan><tspan x="88" dy="96">new-customer call?</tspan>
     </text>
@@ -113,15 +113,15 @@ async function main() {
     </g>
     <rect x="68" y="1370" width="1064" height="350" rx="38" fill="#12203f"/>
     <text x="118" y="1445" fill="#63e6d1" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" letter-spacing="2">HEAR IT YOURSELF</text>
-    <text x="118" y="1522" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="800">Call (984) 238-9220</text>
-    <text x="118" y="1582" fill="#c8d8f5" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600">or visit raleighleadrecovery.com</text>
-    <text x="118" y="1650" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Concierge setup. Built in Raleigh.</text>
+    <text x="118" y="1522" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="800">Try the browser demo</text>
+    <text x="118" y="1582" fill="#c8d8f5" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600">Visit raleighleadrecovery.com</text>
+    <text x="118" y="1650" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Hands-on setup for your business.</text>
     <rect x="855" y="1418" width="220" height="220" rx="22" fill="#fff"/><image href="${qrUri}" x="875" y="1438" width="180" height="180"/>
     <text x="965" y="1670" text-anchor="middle" fill="#63e6d1" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">SCAN FOR LIVE DEMO</text>
   </svg>`;
   await render(card, "leave-behind-4x6", 1200, 1800);
 
-  console.log("Built Raleigh Lead Recovery logo, Facebook cover, and 4x6 leave-behind assets.");
+  console.log("Built Lead Recovery logo, Facebook cover, and 4x6 leave-behind assets.");
 }
 
 main().catch((error) => {

@@ -69,7 +69,7 @@ export function LaunchChecklist({ agentReady, hasEligibleLeads, attested }: { ag
   return <div className="mt-4 border-2 border-black bg-white p-3">
     <p className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-black/45">Before you can launch</p>
     <ul className="mt-2 grid gap-1.5 text-xs font-bold">
-      <LaunchStep done={agentReady} label="Set up the Lead Recovery agent" />
+      <LaunchStep done={agentReady} label="Set up the Raleigh Lead Recovery agent" />
       <LaunchStep done={hasEligibleLeads} label="Import at least one eligible lead" />
       <LaunchStep done={attested} label="Confirm list eligibility during import" />
     </ul>

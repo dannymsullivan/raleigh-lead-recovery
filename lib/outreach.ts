@@ -19,6 +19,7 @@ export const outreachStageLabels: Record<OutreachStage, string> = {
 };
 
 export type OutreachProspect = {
+  inbound_source?: string | null;
   id: string;
   company_name: string;
   website: string | null;

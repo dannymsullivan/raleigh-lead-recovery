@@ -1,38 +1,36 @@
+import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
-import { BrandMark } from "../components/brand-mark";
 import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
-import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Reactivate Past HVAC Customers | Raleigh Lead Recovery",
-  description: "Hear Raleigh Lead Recovery reconnect with a past HVAC customer about seasonal maintenance, then test it with 25 eligible contacts at no cost.",
+  description: "Hear Raleigh Lead Recovery reconnect with a past HVAC customer about seasonal maintenance, and learn how to set up a campaign for your business.",
   alternates: { canonical: "/hvac" },
   openGraph: {
     title: "Turn Past HVAC Customers Into Tune-Up Calls",
-    description: "Hear the live follow-up, then test Raleigh Lead Recovery with 25 eligible past customers at no cost.",
+    description: "Hear the live follow-up, then request setup for your own seasonal maintenance campaign.",
     url: "/hvac",
     type: "website",
-    images: ["/raleigh-lead-recovery-social.png"],
+    images: ["/lead-recovery/opengraph-image"],
   },
 };
 
 export default function HvacLandingPage() {
   return (
-    <main className="landing-page hvac-page">
+    <main className="landing-page hvac-page rlr-home rlr-retro retro-secondary">
       <PublicSiteNav
-        cta={{ href: `mailto:${contactEmail}?subject=25-contact%20HVAC%20pilot`, label: "Ask about 25 contacts" }}
+        cta={{ href: "/get-started", label: "Request HVAC setup" }}
       />
 
       <section className="page-shell hvac-hero">
         <div className="hvac-hero-copy">
-          <p className="hvac-kicker"><span>SEASONAL MAINTENANCE FOLLOW-UP</span><span>RALEIGH, NC</span></p>
+          <p className="hvac-kicker"><span>SEASONAL MAINTENANCE FOLLOW-UP</span><span>BUILT FOR HVAC TEAMS</span></p>
           <h1>Hear how past HVAC customers become <em>tune-up calls.</em></h1>
           <p className="hvac-hero-lede">Play the homeowner in the exact seasonal-maintenance call. It happens live in your browser.</p>
           <div className="hvac-hero-actions">
@@ -43,7 +41,7 @@ export default function HvacLandingPage() {
           <div className="hvac-illustration-top"><span>WORK ORDER</span><strong>READY</strong></div>
           <div className="hvac-illustration-main"><div className="hvac-illustration-dial">72°</div><div><small>CAMPAIGN MODE</small><h2>SEASONAL<br />TUNE-UP</h2></div></div>
           <div className="hvac-illustration-grid"><div><small>SEGMENT</small><strong>Eligible past customers</strong></div><div><small>REASON</small><strong>Seasonal maintenance</strong></div><div><small>HANDOFF</small><strong>Interested customer + summary</strong></div><div><small>SOURCE</small><strong>Your approved list</strong></div></div>
-          <div className="hvac-illustration-call"><span>●</span><div><small>RALEIGH LEAD RECOVERY IS CALLING</small><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
+          <div className="hvac-illustration-call"><span>●</span><div><small>LEAD RECOVERY IS CALLING</small><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
           <div className="hvac-illustration-result"><span>✓</span><div><small>INTEREST DETECTED</small><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
         </div>
       </section>
@@ -65,14 +63,12 @@ export default function HvacLandingPage() {
 
       <section className="hvac-pilot" id="pilot">
         <div className="page-shell hvac-pilot-grid">
-          <div><p className="eyebrow">A small, founder-led pilot</p><h2>Test it with 25 eligible past customers. Free.</h2><p><ShieldCheck aria-hidden="true" /> You choose the contacts and approve the conversation. Danny reviews the setup and first calls personally.</p></div>
-          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href={`mailto:${contactEmail}?subject=25-contact%20HVAC%20pilot&body=Hi%20Danny%2C%0A%0AI%27d%20like%20to%20talk%20about%20testing%20Raleigh%20Lead%20Recovery%20with%2025%20eligible%20past%20customers.%0A%0ACompany%3A%20`}>Ask Danny about 25 contacts <ArrowRight /></a><span className="hvac-text-link">No card or CRM access to start · Founding rate after: $99/month for your first year</span></div>
+          <div><p className="eyebrow">Setup for your HVAC business</p><h2>Start with the customers you want to reach.</h2><p><ShieldCheck aria-hidden="true" /> You choose the contacts and approve the conversation. Danny reviews the setup and first calls personally.</p></div>
+          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href="/get-started">Request HVAC setup <ArrowRight /></a><span className="hvac-text-link">We agree on the eligible list, usage, and pricing before launch.</span></div>
         </div>
       </section>
 
-      <footer className="hvac-footer">
-        <div className="page-shell"><BrandMark inverted /><p>Seasonal-maintenance reactivation for HVAC companies.</p><nav><Link href="/">Missed-call pilot</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link><a href={`mailto:${contactEmail}`}>{contactEmail}</a></nav></div>
-      </footer>
+      <PublicSiteFooter />
     </main>
   );
 }

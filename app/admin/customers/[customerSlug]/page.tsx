@@ -81,6 +81,9 @@ import { CustomerAccessPanel } from "./customer-access-panel";
 import { RemoveExcludedLeads } from "./remove-excluded-leads";
 import { AgentManager } from "@/app/dashboard/agents/agent-manager";
 import { saveAdminCustomerAgentAction } from "@/app/dashboard/agents/actions";
+import { CustomerChatReport } from "./customer-chat-report";
+import { ChatKnowledgeManager } from "@/app/components/chat-knowledge-manager";
+import { saveAdminKnowledge, toggleAdminChat } from "@/app/dashboard/knowledge-base/actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Customer CRM | Raleigh Lead Recovery", robots: { index: false, follow: false } };
@@ -372,12 +375,14 @@ export default async function CustomerCrmPage({
       ? "setup"
       : campaignSignals.includes(errorKey)
         ? "campaign"
-        : "leads";
+        : client.product_mode === "website_chat" ? "knowledge" : "leads";
   const activeView =
     requestedView === "leads" ||
     requestedView === "setup" ||
     requestedView === "campaign" ||
-    requestedView === "calls"
+    requestedView === "calls" ||
+    requestedView === "chats" ||
+    requestedView === "knowledge"
       ? requestedView
       : defaultView;
 
@@ -487,6 +492,8 @@ export default async function CustomerCrmPage({
           className="mt-8 flex gap-1 overflow-x-auto border-b-2 border-black"
           aria-label="Customer sections"
         >
+          <CrmTab active={activeView === "chats"} href={`${basePath}?view=chats`}>Website chats</CrmTab>
+          <CrmTab active={activeView === "knowledge"} href={`${basePath}?view=knowledge`}>Chatbot &amp; knowledge</CrmTab>
           <CrmTab
             active={activeView === "leads"}
             href={`${basePath}?view=leads`}
@@ -515,6 +522,8 @@ export default async function CustomerCrmPage({
           ) : null}
         </nav>
 
+        {activeView === "chats" ? <CustomerChatReport clientId={client.id} basePath={basePath} requestedPage={search.chat_page} timezone={client.timezone} /> : null}
+        {activeView === "knowledge" ? <section className="mt-6"><ChatKnowledgeManager client={client} search={search} saveAction={saveAdminKnowledge.bind(null, client.id)} toggleAction={toggleAdminChat.bind(null, client.id)} profileHref="/admin" /></section> : null}
         {activeView === "setup" ? (
           <>
             <CustomerAccessPanel
@@ -1346,7 +1355,7 @@ function crmNotice(
 ): { text: string; error: boolean } | null {
   if (search.created === "1")
     return {
-      text: "Customer workspace created. Copy their access link, then prepare the first qualified lead list.",
+      text: "Customer workspace created. Copy their access link, then configure their chatbot knowledge or call flow in this workspace.",
       error: false,
     };
   if (search.campaign_created === "1")
@@ -1401,7 +1410,7 @@ function crmNotice(
     customer_access_active: "This customer already has dashboard access.",
     telephony: "Production Retell calling is not configured.",
     agent_not_ready:
-      "Set up this customer’s Lead Recovery agent before launching the campaign.",
+      "Set up this customer’s Raleigh Lead Recovery agent before launching the campaign.",
     agent_confirmation:
       "Confirm that you want to provision a dedicated inbound phone number.",
     agent_save: "The customer agent settings could not be saved.",

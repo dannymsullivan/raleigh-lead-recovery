@@ -78,6 +78,7 @@ export async function logoutAction(): Promise<void> {
 
 export async function addClientAction(formData: FormData): Promise<void> {
   await requireAdminSession();
+  const chatOnly = formString(formData, "product_mode") === "website_chat";
 
   const businessName = formString(formData, "business_name");
   const trade = formString(formData, "trade");
@@ -93,7 +94,7 @@ export async function addClientAction(formData: FormData): Promise<void> {
   const closeRate = Number(formString(formData, "close_rate") || "0.4");
   const pilotStart = formString(formData, "pilot_start") || new Date().toISOString().slice(0, 10);
   const defaultPilotEnd = new Date(`${pilotStart}T00:00:00.000Z`);
-  defaultPilotEnd.setUTCDate(defaultPilotEnd.getUTCDate() + 7);
+  defaultPilotEnd.setUTCDate(defaultPilotEnd.getUTCDate() + (chatOnly ? 14 : 7));
 
   const supabase = getSupabaseAdmin();
   const slug = await uniqueCustomerSlug(supabase, businessName);
@@ -108,31 +109,33 @@ export async function addClientAction(formData: FormData): Promise<void> {
     pilot_end: formString(formData, "pilot_end") || defaultPilotEnd.toISOString().slice(0, 10),
     avg_job_value: Number.isFinite(avgJobValue) ? avgJobValue : 500,
     close_rate: Number.isFinite(closeRate) ? closeRate : 0.4,
-    product_mode: "reactivation"
+    product_mode: chatOnly ? "website_chat" : "reactivation"
   }).select("id").single();
 
   if (error) {
     throw error;
   }
 
-  const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
-  await ensureDefaultCustomerAgent(client.id, "receptionist");
-  const { error: campaignError } = await supabase.from("reactivation_campaigns").insert({
-    client_id: client.id,
-    agent_id: leadAgent.id,
-    name: `${businessName} lead recovery`.slice(0, 160),
-    service_type: trade.slice(0, 100) || "general service",
-    calling_timezone: "America/New_York",
-    calling_window_start: "09:00",
-    calling_window_end: "18:00",
-    max_attempts: 2,
-    daily_limit: 25
-  });
-  if (campaignError) throw campaignError;
+  if (!chatOnly) {
+    const leadAgent = await ensureDefaultCustomerAgent(client.id, "lead_reactivation");
+    await ensureDefaultCustomerAgent(client.id, "receptionist");
+    const { error: campaignError } = await supabase.from("reactivation_campaigns").insert({
+      client_id: client.id,
+      agent_id: leadAgent.id,
+      name: `${businessName} lead recovery`.slice(0, 160),
+      service_type: trade.slice(0, 100) || "general service",
+      calling_timezone: "America/New_York",
+      calling_window_start: "09:00",
+      calling_window_end: "18:00",
+      max_attempts: 2,
+      daily_limit: 25
+    });
+    if (campaignError) throw campaignError;
+    after(() => provisionCustomerAgent(client.id, "lead_reactivation"));
+  }
 
   const invitationToken = await createWorkspaceInvitation(client.id);
   await rememberAdminInvitation(client.id, invitationToken);
-  after(() => provisionCustomerAgent(client.id, "lead_reactivation"));
 
   revalidatePath("/admin");
   redirect(`/admin/customers/${slug}?created=1#customer-access`);

@@ -14,14 +14,14 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="auth-ui grid min-h-screen bg-[#f5f8fc] lg:grid-cols-[0.9fr_1.1fr]">
+    <main className="auth-ui auth-retro grid min-h-screen bg-[#f5f8fc] lg:grid-cols-[0.9fr_1.1fr]">
       <section className="auth-story flex flex-col justify-between border-b border-white/10 p-6 text-white sm:p-10 lg:border-b-0 lg:border-r">
         <BrandMark inverted />
         <div className="my-20 max-w-lg">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/55">Your lead recovery command center</p>
-          <h2 className="mt-6 text-5xl font-black leading-[0.94] tracking-[-0.055em] sm:text-7xl">Old leads in. Real opportunities out.</h2>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/55">Your customer dashboard</p>
+          <h2 className="mt-6 text-5xl font-black leading-[0.94] tracking-[-0.055em] sm:text-7xl">Every conversation. One place to follow up.</h2>
           <ul className="mt-10 grid gap-4 text-sm font-bold text-white/75">
-            {["See what every conversation uncovered", "Get qualified prospects to the right rep", "Track every recovered opportunity"].map((item) => (
+            {["Read customer chats and call summaries", "Keep your business information up to date", "See lead sources and record bookings"].map((item) => (
               <li className="flex items-center gap-3" key={item}>
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-[#63e6d1] text-[#111b35]"><Check className="h-3.5 w-3.5" /></span>
                 {item}
@@ -29,7 +29,7 @@ export function AuthShell({
             ))}
           </ul>
         </div>
-        <p className="text-xs font-semibold text-white/45">Built in Raleigh. Answers anywhere.</p>
+        <p className="text-xs font-semibold text-white/45">Raleigh Lead Recovery · Hands-on setup and support</p>
       </section>
 
       <section className="auth-form flex items-center justify-center px-5 py-16 sm:px-10">

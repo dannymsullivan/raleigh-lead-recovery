@@ -36,7 +36,7 @@ export function SocialImage({ eyebrow, title, footer }: SocialImageProps) {
             <span style={{ position: "absolute", width: 10, height: 10, margin: "-31px 0 0 31px", borderRadius: 99, background: "#63e6d1" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 20, fontWeight: 800, lineHeight: 1.02 }}>
-            <span>Raleigh Lead</span>
+            <span>Lead</span>
             <span style={{ color: "#2968e8" }}>Recovery</span>
           </div>
         </div>

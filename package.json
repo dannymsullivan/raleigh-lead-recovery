@@ -27,8 +27,8 @@
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "read-excel-file": "9.3.10",
-    "retell-client-js-sdk": "^2.0.8",
-    "retell-sdk": "^5.63.0"
+    "retell-client-js-sdk": "^3.0.3",
+    "retell-sdk": "^6.2.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.2",
