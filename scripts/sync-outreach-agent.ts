@@ -27,7 +27,9 @@ async function main() {
   const agents = await retell.agent.list();
   const agentItems = agents.items ?? [];
   const configuredId = process.env.RETELL_OUTREACH_AGENT_ID?.trim();
-  const existingId = configuredId || agentItems.find((agent) => agent.agent_name === outreachAgentName)?.agent_id;
+  const existingId = configuredId || agentItems.find((agent) =>
+    [outreachAgentName, "Raleigh Lead Recovery — Sales Qualification"].includes(agent.agent_name ?? ""),
+  )?.agent_id;
   const existing = existingId
     ? await retell.agent.retrieve(existingId, { version: "latest_published" })
     : null;
@@ -75,9 +77,11 @@ async function main() {
   let phoneNumber = process.env.RETELL_OUTREACH_PHONE_NUMBER?.trim();
   if (!phoneNumber) {
     const numbers = await retell.phoneNumber.list();
-    const raleighLeadAgent = agentItems.find((agent) => agent.agent_name === "Lead Recovery — Snappy Leads");
+    const leadAgentIds = new Set(agentItems.filter((agent) =>
+      ["Lead Recovery — Snappy Leads", "Lead Recovery — Raleigh Lead Recovery"].includes(agent.agent_name ?? ""),
+    ).map((agent) => agent.agent_id));
     phoneNumber = (numbers.items ?? []).find((number) =>
-      number.outbound_agents?.some((binding) => binding.agent_id === raleighLeadAgent?.agent_id),
+      number.outbound_agents?.some((binding) => leadAgentIds.has(binding.agent_id)),
     )?.phone_number;
   }
   if (!phoneNumber) throw new Error("No existing Snappy Leads outbound number was found. Set RETELL_OUTREACH_PHONE_NUMBER before syncing.");
