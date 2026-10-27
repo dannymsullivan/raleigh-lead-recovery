@@ -54,12 +54,24 @@ export function IndustryExamples() {
 }
 
 export function ChatPricing() {
-  return <section className="sales-pricing" id="pricing"><div className="page-shell sales-offer-grid">
-    <div className="sales-section-title"><p className="rlr-kicker">Pricing</p><h2>Try website chat free for two weeks.</h2><p>Setup is included. No card is required. Your 14 days start when your chatbot is ready to go live.</p><h3 className="sales-price-subheading">What happens after the trial?</h3><p>We review your needs and agree on a monthly price with you before paid service starts. Voice coverage and lead follow-up are scoped separately, including usage and any integrations.</p></div>
-    <article className="sales-plan sales-plan-featured"><span className="sales-trial-tag">14-day website chat trial</span><h3>Everything you need to try it.</h3><div className="sales-plan-price"><strong>Free</strong><span>No card required</span></div><ul>{["Setup, installation, and testing with Danny", "Answers based on your business information", "Website chat and contact collection", "Your own dashboard with full chat transcripts", "Lead sources, follow-up status, and recorded booking value"].map((feature) => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul><a className="rlr-button rlr-button-primary" href="#trial">Try two weeks free <ArrowRight aria-hidden="true" /></a></article>
+  const plans = [
+    { name: "Website Chat", service: "chat", description: "Help website visitors get answers and take the next step.", features: ["Answers from your approved business information", "Contact details and service requests", "Full chat transcripts in your dashboard", "Lead sources, follow-up status, and booking value"] },
+    { name: "Voice AI", service: "voice", description: "Give callers a helpful answer when your team is busy.", features: ["A greeting tailored to your business", "Service needs, urgency, and callback details", "Call summaries and transcripts", "Call forwarding and rules you approve"] },
+    { name: "Chat + Voice", service: "both", description: "Cover your website and phone with a setup built around your business.", features: ["Everything in Website Chat and Voice AI", "Business information prepared for both channels", "Website inquiries and missed-call coverage", "Setup and support for both services"] },
+  ];
+  return <section className="sales-pricing" id="pricing"><div className="page-shell">
+    <div className="sales-section-title"><p className="rlr-kicker">Choose your coverage</p><h2>The right setup. A price built around your business.</h2><p>Start with chat, voice, or both. We’ll discuss your goals, expected volume, and integrations, then agree on a price before paid service starts.</p></div>
+    <div className="sales-card-grid">{plans.map((plan) => <article className={`sales-plan${plan.service === "both" ? " sales-plan-featured" : ""}`} key={plan.service}>
+      <h3>{plan.name}</h3><p>{plan.description}</p>
+      <div className="sales-plan-price"><strong>Custom</strong><span>pricing</span></div>
+      <ul>{plan.features.map((feature) => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul>
+      <Link className="rlr-button rlr-button-primary" href={`/get-started?service=${plan.service}`} aria-label={`Let’s talk about ${plan.name}`}>Let’s talk <ArrowRight aria-hidden="true" /></Link>
+    </article>)}</div>
+    <p className="sales-pricing-trial"><strong>Want to try website chat first?</strong> Get 14 days free, with setup included and no card required. <a href="#trial">Request your chat trial <ArrowRight size={16} aria-hidden="true" /></a></p>
   </div></section>;
 }
 
-export function ChatTrial() {
+export function ChatTrial({ service }: { service?: string } = {}) {
+  if (service) return <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Let’s talk · {service}</p><h2>A setup that fits your business.</h2><p>Tell us what you need. Danny will email you to discuss your goals, expected usage, and any integrations. We’ll agree on the scope and price before getting started.</p><p>Website chat includes a two-week free trial after setup. Voice coverage and usage are quoted separately or as part of your combined plan.</p></div><TrialRequestForm key={service} service={service} /></section>;
   return <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Get started</p><h2>Tell us about your business. We’ll handle the setup.</h2><p>Fill out the form and Danny will email you to arrange setup. We’ll prepare your business information, install the chatbot, and test it with you before your two-week trial begins.</p><div className="sales-trial-details"><span><BookOpen /> Your approved business information</span><span><Clock3 /> 14 days free after setup</span><span><MessageSquareText /> Your own chat dashboard</span></div></div><TrialRequestForm /></section>;
 }

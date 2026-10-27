@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { contactEmail } from "@/lib/contact";
 
-export function TrialRequestForm() {
+export function TrialRequestForm({ service }: { service?: string } = {}) {
   const submissionId = useRef<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -20,7 +20,7 @@ export function TrialRequestForm() {
     try {
       const response = await fetch("/api/trial-request", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...Object.fromEntries(form), consent: form.get("consent") === "on", submissionId: submissionId.current }),
+        body: JSON.stringify({ ...Object.fromEntries(form), needs: service ? `Service: ${service}\n${form.get("needs")}` : form.get("needs"), consent: form.get("consent") === "on", submissionId: submissionId.current }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Your request couldn’t be saved. Please try again.");
@@ -29,21 +29,21 @@ export function TrialRequestForm() {
     finally { setBusy(false); }
   }
 
-  if (sent) return <div className="trial-form trial-form-success" role="status"><CheckCircle2 size={38} aria-hidden="true" /><h3>Your request has been received.</h3><p>Danny will email you to get your setup started. Your two-week trial begins when your chatbot is ready to go live.</p><Link className="rlr-inline-link" href="/dashboard-demo">Preview the customer dashboard <ArrowRight aria-hidden="true" /></Link></div>;
+  if (sent) return <div className="trial-form trial-form-success" role="status"><CheckCircle2 size={38} aria-hidden="true" /><h3>Your request has been received.</h3><p>{service ? "Danny will email you to discuss your business and put together a custom quote." : "Danny will email you to get your setup started. Your two-week trial begins when your chatbot is ready to go live."}</p><Link className="rlr-inline-link" href="/dashboard-demo">Preview the customer dashboard <ArrowRight aria-hidden="true" /></Link></div>;
 
-  return <form className="trial-form" onSubmit={submit} aria-label="Request your two-week free trial">
-    <div className="trial-form-heading"><span>14-DAY WEBSITE CHAT TRIAL</span><h3>Request your free trial.</h3><p>Tell us where to reach you and what your business needs.</p></div>
+  return <form className="trial-form" onSubmit={submit} aria-label={service ? `Ask about ${service}` : "Request your two-week free trial"}>
+    <div className="trial-form-heading"><span>{service || "14-DAY WEBSITE CHAT TRIAL"}</span><h3>{service ? "Let’s talk about your business." : "Request your free trial."}</h3><p>Tell us where to reach you and what your business needs.</p></div>
     <div className="trial-form-fields">
       <label>Your name<input name="name" autoComplete="name" required maxLength={100} /></label>
       <label>Business name<input name="business" autoComplete="organization" required maxLength={160} /></label>
       <label className="trial-form-wide">Email<input name="email" type="email" autoComplete="email" required maxLength={200} /></label>
       <label className="trial-form-wide">Website <span>(optional)</span><input name="website" inputMode="url" autoComplete="url" placeholder="yourbusiness.com" maxLength={500} /></label>
-      <label className="trial-form-wide">What would you like help with?<textarea name="needs" required rows={3} maxLength={2000} placeholder="Answering questions, capturing leads, following up…" /></label>
+      <label className="trial-form-wide">What would you like help with?<textarea name="needs" required rows={3} maxLength={service ? 1900 : 2000} placeholder="Answering questions, capturing leads, following up…" /></label>
     </div>
     <div className="trial-form-trap" aria-hidden="true"><label>Leave this blank<input name="fax" tabIndex={-1} autoComplete="off" /></label></div>
-    <label className="trial-form-consent"><input name="consent" type="checkbox" required /> <span>Danny can email me about my trial request. <Link href="/privacy">Privacy policy</Link></span></label>
+    <label className="trial-form-consent"><input name="consent" type="checkbox" required /> <span>Danny can email me about my {service ? "inquiry" : "trial request"}. <Link href="/privacy">Privacy policy</Link></span></label>
     {error ? <p className="trial-form-error" role="alert">{error} You can also <a href={`mailto:${contactEmail}`}>email Danny</a>.</p> : null}
-    <button className="rlr-button rlr-button-primary" type="submit" disabled={busy}>{busy ? "Sending your request…" : "Request my free trial"} <ArrowRight aria-hidden="true" /></button>
-    <p className="trial-form-note">No card required. Your trial starts after setup.</p>
+    <button className="rlr-button rlr-button-primary" type="submit" disabled={busy}>{busy ? "Sending your request…" : (service ? "Request a custom quote" : "Request my free trial")} <ArrowRight aria-hidden="true" /></button>
+    <p className="trial-form-note">{service ? "No commitment. We’ll agree on pricing before paid service starts." : "No card required. Your trial starts after setup."}</p>
   </form>;
 }

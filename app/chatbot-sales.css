@@ -450,3 +450,6 @@
   .auth-retro .auth-form { padding-block: 35px 55px; align-items: flex-start; }
   .auth-retro .auth-form > div > a:first-child { margin-bottom: 28px; }
 }
+
+.sales-pricing-trial { margin-top: 38px; font-size: 16px; line-height: 1.8; }
+.sales-pricing-trial a { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
