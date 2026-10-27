@@ -1,37 +1,30 @@
-# Raleigh Lead Recovery
+# Snappy Leads
 
-Raleigh Lead Recovery is a missed-call recovery service for Raleigh-area plumbing shops.
+Snappy Leads sets up website chatbots and optional AI voice agents for service businesses. The founder, Danny Sullivan, handles setup and support.
 
-The service helps plumbers catch calls that would otherwise go to voicemail. Customers keep calling the plumber's normal shop number. Busy, unanswered, or after-hours calls can forward to Raleigh Lead Recovery, which captures the plumbing issue, callback number, address, urgency, and timing, then alerts the owner.
+## Website chat
 
-## Audience
+The chatbot answers questions using approved business information, collects contact details and service requests, and saves conversations in each customer's private dashboard. Customers can review lead sources, mark outcomes, and record the value of booked jobs. Appointment requests need confirmation from the business.
 
-- Raleigh plumbers
-- Cary, Apex, Garner, Wake Forest, Durham, and Chapel Hill plumbing shops
-- Small owner-operated service businesses that miss calls while the crew is on jobs
+Website chat starts at $399 per month. The 14-day free trial starts after setup and requires no card. Final pricing and included usage are confirmed before payment.
 
-## Offer
+## Voice agents
 
-- Free 7-day missed-call audit
-- No customer-facing number change
-- Owner text alerts with captured lead details
-- End-of-week report showing calls answered, urgent issues, lead summaries, and estimated pipeline value
+Voice AI is a separate service starting at $799 per month. It greets callers, gathers their needs and callback details, and provides summaries and transcripts. Call forwarding and transfer rules are configured with the business. Chat and voice together have custom pricing.
 
-## Important Pages
+## Pages
 
-- Home: https://raleigh-lead-recovery.vercel.app/
-- Blog: https://raleigh-lead-recovery.vercel.app/blog
-- Missed-call voicemail guide: https://raleigh-lead-recovery.vercel.app/blog/plumbing-calls-going-to-voicemail
-- Missed-call forwarding guide: https://raleigh-lead-recovery.vercel.app/blog/missed-call-forwarding-for-plumbers
-- Missed plumbing call value guide: https://raleigh-lead-recovery.vercel.app/blog/how-much-is-a-missed-plumbing-call-worth
-- Video demo script: https://raleigh-lead-recovery.vercel.app/blog/video-demo-missed-call-recovery
+- Website chat: https://snappyleads.xyz/
+- Voice agents: https://snappyleads.xyz/voice
+- Request setup: https://snappyleads.xyz/get-started
+- Dashboard preview: https://snappyleads.xyz/dashboard-demo
+- Resources: https://snappyleads.xyz/blog
+- Contact: https://snappyleads.xyz/contact
+- Privacy: https://snappyleads.xyz/privacy
+- Terms: https://snappyleads.xyz/terms
 
-## Founder
+## Contact
 
-Danny Sullivan, Raleigh.
+Danny Sullivan: danny@snappyleads.xyz
 
-LinkedIn: https://www.linkedin.com/in/danny-sullivan-raleigh
-
-## Positioning
-
-Raleigh Lead Recovery does not replace a plumbing company's phone system or dispatcher. It starts as a simple missed-call forwarding pilot. The goal is to prove whether useful calls are currently slipping to voicemail.
+The public chatbot and dashboard previews use fictional sample businesses and data.

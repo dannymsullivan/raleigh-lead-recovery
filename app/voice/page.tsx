@@ -16,9 +16,9 @@ import { WebVoiceDemo } from "../components/web-voice-demo";
 import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "AI Missed-Call Coverage for Service Businesses",
+  title: "AI Missed-Call Coverage for Service Businesses | Snappy Leads",
   description:
-    "Raleigh Lead Recovery answers missed and after-hours calls, captures what each customer needs, and gives your team a clear next step. Try the browser demo and ask about setup.",
+    "Snappy Leads answers missed and after-hours calls, captures what each customer needs, and gives your team a clear next step. Try the browser demo and ask about setup.",
   alternates: { canonical: "/voice" },
   openGraph: {
     title: "Every Missed Call Gets a Real Next Step",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         url: "/voice/opengraph-image",
       width: 1200,
       height: 630,
-      alt: "Raleigh Lead Recovery missed-call coverage",
+      alt: "Snappy Leads missed-call coverage",
     }],
   },
   twitter: {
@@ -198,7 +198,7 @@ export default function VoicePage() {
       </section>
 
       <section className="rlr-founder page-shell">
-        <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={112} height={112} />
+        <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} />
         <div>
           <p className="rlr-kicker">Founder-led setup</p>
           <h2>You work directly with me.</h2>

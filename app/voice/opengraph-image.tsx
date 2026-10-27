@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { SocialImage } from "@/lib/social-image";
 
-export const alt = "Raleigh Lead Recovery — missed-call voice coverage";
+export const alt = "Snappy Leads — missed-call voice coverage";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

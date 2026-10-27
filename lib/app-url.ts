@@ -1,4 +1,4 @@
-const productionOrigin = "https://www.raleighleadrecovery.com";
+const productionOrigin = "https://snappyleads.xyz";
 
 type AppEnvironment = Record<string, string | undefined>;
 

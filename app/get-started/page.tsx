@@ -3,7 +3,7 @@ import { PublicSiteNav } from "@/app/components/public-site-nav";
 import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import { ChatTrial } from "@/app/components/chatbot-sales-sections";
 
-export const metadata: Metadata = { title: "Get Started | Chat & Voice AI", description: "Request your website chatbot trial. Setup included, no card required. Tell us about your business and we’ll help you get started.", alternates: { canonical: "/get-started" } };
+export const metadata: Metadata = { title: "Get Started | Snappy Leads", description: "Request your website chatbot trial. Setup included, no card required. Tell us about your business and we’ll help you get started.", alternates: { canonical: "/get-started" } };
 export default async function GetStartedPage({ searchParams }: { searchParams: Promise<{ service?: string | string[] }> }) {
   const requested = (await searchParams).service;
   const service = requested === "chat" ? "Website Chat" : requested === "voice" ? "Voice AI" : requested === "both" ? "Chat + Voice" : undefined;

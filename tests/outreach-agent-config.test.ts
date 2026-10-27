@@ -14,7 +14,7 @@ describe("outreach agent configuration", () => {
   });
 
   it("uses short permission-based turns instead of pitching after the first answer", () => {
-    expect(outreachAgentPrompt).toContain("Do not explain or pitch Raleigh Lead Recovery immediately after their first answer");
+    expect(outreachAgentPrompt).toContain("Do not explain or pitch Snappy Leads immediately after their first answer");
     expect(outreachAgentPrompt).toContain("Do you know if most callers leave a message?");
     expect(outreachAgentPrompt).toContain("speak no more than twenty-five words");
     expect(outreachAgentPrompt).toContain("Never ask a compound");

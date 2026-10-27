@@ -18,7 +18,7 @@ import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, ProductOverv
 import { contactEmail } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "Website Chatbots for Service Businesses",
+  title: "Website Chatbots for Service Businesses | Snappy Leads",
   description:
     "Answer customer questions, collect contact details, and see which chats become booked jobs in your dashboard.",
   alternates: { canonical: "/" },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
       width: 1200,
       height: 630,
-      alt: "Raleigh Lead Recovery website chat",
+      alt: "Snappy Leads website chat",
     }],
   },
   twitter: {
@@ -102,7 +102,7 @@ export default function HomePage() {
       </section>
 
       <section className="rlr-founder page-shell">
-        <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Raleigh Lead Recovery" width={112} height={112} />
+        <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} />
         <div>
           <p className="rlr-kicker">Founder-led setup</p>
           <h2>You work directly with me.</h2>

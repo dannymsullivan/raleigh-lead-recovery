@@ -9,14 +9,14 @@ describe("application URLs", () => {
     };
 
     expect(getEmailConfirmationRedirect(environment)).toBe(
-      "https://www.raleighleadrecovery.com/login?confirmed=1"
+      "https://snappyleads.xyz/login?confirmed=1"
     );
   });
 
   it("strips paths from configured application URLs", () => {
     expect(getAppOrigin({
-      NEXT_PUBLIC_APP_URL: "https://raleighleadrecovery.com/api/webhooks/retell"
-    })).toBe("https://raleighleadrecovery.com");
+      NEXT_PUBLIC_APP_URL: "https://snappyleads.xyz/api/webhooks/retell"
+    })).toBe("https://snappyleads.xyz");
   });
 
   it("uses the local app during local development", () => {

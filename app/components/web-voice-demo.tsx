@@ -135,7 +135,7 @@ export function WebVoiceDemo({
       )}
       {!compact ? (
         <p className={`web-voice-status ${state}`} aria-live="polite">
-          {state === "active" ? <><Radio className={agentTalking ? "talking" : ""} aria-hidden="true" /> {agentTalking ? "Raleigh Lead Recovery is speaking" : "Listening—go ahead"}</> : "Live browser demo · Uses your microphone · No phone number"}
+          {state === "active" ? <><Radio className={agentTalking ? "talking" : ""} aria-hidden="true" /> {agentTalking ? "Snappy Leads is speaking" : "Listening—go ahead"}</> : "Live browser demo · Uses your microphone · No phone number"}
         </p>
       ) : null}
       {error ? <p className="web-voice-error" role="alert">{error}</p> : null}

@@ -5,7 +5,7 @@ import {
   businessReceptionistPrompt,
 } from "@/lib/business-receptionist-agent-config";
 
-describe("Raleigh Lead Recovery business receptionist", () => {
+describe("Snappy Leads business receptionist", () => {
   it("discloses that Chloe is an AI assistant in the opening", () => {
     expect(businessReceptionistOpeningMessage).toContain("AI assistant");
     expect(businessReceptionistOpeningMessage).toContain("Chloe");

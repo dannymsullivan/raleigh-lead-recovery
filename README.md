@@ -1,4 +1,4 @@
-# Raleigh Lead Recovery
+# Snappy Leads
 
 Website chat and voice-assistant software for service businesses. The homepage leads with website chat; `/voice` covers missed-call reception. Customer workspaces include chat analytics and an editable knowledge base; voice-enabled workspaces also use separate Retell voice agents. Supabase stores accounts, knowledge, conversations, attribution, leads, and call outcomes.
 
@@ -128,4 +128,4 @@ Retell web calls now use the v3 create-web-call endpoint and pass all four conne
 
 ### Supporting documents
 
-Asset sources and research: [illustration prompts](docs/illustration-prompts.md), [retro naming research](docs/retro-lead-naming-research.md). The current product remains Raleigh Lead Recovery. Earlier sales material is retained for reference: [reactivation action plan](docs/dead-lead-reactivation-action-plan.md), [HVAC email sequence](docs/smartlead-hvac-website-sequence.md), [HVAC prospect list](docs/raleigh-hvac-call-list.md), and [voice-pilot lifecycle email drafts](docs/customer-lifecycle-email-templates.md). Those campaign notes and email drafts do not define the current chat-first onboarding or establish current campaign/service status.
+Asset sources and research: [illustration prompts](docs/illustration-prompts.md), [retro naming research](docs/retro-lead-naming-research.md). The product is now Snappy Leads at https://snappyleads.xyz, with support at danny@snappyleads.xyz. The repository and Vercel project retain their original internal names. Earlier sales material is retained for reference: [reactivation action plan](docs/dead-lead-reactivation-action-plan.md), [HVAC email sequence](docs/smartlead-hvac-website-sequence.md), [HVAC prospect list](docs/raleigh-hvac-call-list.md), and [voice-pilot lifecycle email drafts](docs/customer-lifecycle-email-templates.md). Those campaign notes and email drafts do not define the current chat-first onboarding or establish current campaign/service status.

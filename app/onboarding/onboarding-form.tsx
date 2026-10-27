@@ -9,8 +9,8 @@ import { industryKeyForTrade, industryOptions, industryPresets, type IndustryKey
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 const stepContent = [
-  { icon: BriefcaseBusiness, label: "Your business", description: "The basics Raleigh Lead Recovery needs to greet callers correctly." },
-  { icon: Database, label: "What you do", description: "Services and coverage, so Raleigh Lead Recovery can qualify callers." },
+  { icon: BriefcaseBusiness, label: "Your business", description: "The basics Snappy Leads needs to greet callers correctly." },
+  { icon: Database, label: "What you do", description: "Services and coverage, so Snappy Leads can qualify callers." },
   { icon: Clock3, label: "Hours & rules", description: "When to answer, what is urgent, and where alerts go." }
 ];
 
@@ -49,7 +49,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
     <div className="mx-auto grid max-w-6xl lg:grid-cols-[300px_1fr]">
       <aside className="border-b-2 border-black px-5 py-8 sm:px-8 lg:min-h-[calc(100vh-82px)] lg:border-b-0 lg:border-r-2 lg:py-12">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">Quick setup</p>
-        <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em]">Set up Raleigh Lead Recovery.</h1>
+        <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.055em]">Set up Snappy Leads.</h1>
         <p className="mt-5 text-sm font-semibold leading-6 text-black/55">Three short steps. Nothing technical. You can change all of this later.</p>
 
         <ol className="mt-9 grid gap-3 lg:mt-14">
@@ -80,7 +80,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
 
           <form action={completeOnboardingAction} ref={formRef}>
             <div className={step === 1 ? "block" : "hidden"} data-onboarding-step="1">
-              <StepHeading eyebrow="Step 1 of 3" title="First, who are we answering for?" body="This is how Raleigh Lead Recovery introduces the business and how we identify your workspace." />
+              <StepHeading eyebrow="Step 1 of 3" title="First, who are we answering for?" body="This is how Snappy Leads introduces the business and how we identify your workspace." />
               <div className="mt-9 grid gap-5 sm:grid-cols-2">
                 <Field label="Business name" name="business_name" defaultValue={client.business_name === "New workspace" ? "" : client.business_name} autoComplete="organization" required />
                 <Field label="Your name" name="owner_name" defaultValue={client.owner_name} autoComplete="name" required />
@@ -97,7 +97,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             </div>
 
             <div className={step === 2 ? "block" : "hidden"} data-onboarding-step="2">
-              <StepHeading eyebrow="Step 2 of 3" title="What should Raleigh Lead Recovery know?" body="Plain English is perfect. This becomes the starting point for customer conversations." />
+              <StepHeading eyebrow="Step 2 of 3" title="What should Snappy Leads know?" body="Plain English is perfect. This becomes the starting point for customer conversations." />
               <div className="mt-9 grid gap-6">
                 <label className="block text-sm font-black">Your services <span className="font-semibold text-black/40">· one per line or separated by commas</span>
                   <textarea className="mt-2 min-h-44 w-full border-2 border-black bg-white p-4 font-semibold leading-7 outline-none focus:shadow-[5px_5px_0_#000]" name="services" placeholder={"Emergency repairs\nWater heater installation\nDrain cleaning"} value={services} onChange={(event) => setServices(event.target.value)} />
@@ -109,7 +109,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
             </div>
 
             <div className={step === 3 ? "block" : "hidden"} data-onboarding-step="3">
-              <StepHeading eyebrow="Step 3 of 3" title="When are you open—and what can’t wait?" body="Raleigh Lead Recovery uses this to set honest expectations and flag the calls that need attention now." />
+              <StepHeading eyebrow="Step 3 of 3" title="When are you open—and what can’t wait?" body="Snappy Leads uses this to set honest expectations and flag the calls that need attention now." />
               <div className="mt-9 border-l-2 border-t-2 border-black">
                 {days.map((day, index) => <HourRow day={day} weekend={index > 4} key={day} />)}
               </div>
@@ -128,7 +128,7 @@ export function OnboardingForm({ client, email, error }: { client: Client; email
                 </label>
                 <label className="flex items-start gap-3 border-2 border-black bg-white p-4 text-xs font-semibold leading-5 text-black/65">
                   <input className="mt-1 h-4 w-4 flex-none accent-black" name="alert_sms_consent" type="checkbox" required />
-                  <span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Raleigh Lead Recovery may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is not a condition of purchase.</span>
+                  <span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Snappy Leads may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help. Consent is not a condition of purchase.</span>
                 </label>
               </div>
 

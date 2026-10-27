@@ -32,12 +32,12 @@ export function SocialImage({ eyebrow, title, footer }: SocialImageProps) {
       <div style={{ display: "flex", width: "64%", flexDirection: "column", padding: "62px 0 54px 68px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div style={{ position: "relative", display: "flex", width: 58, height: 58, alignItems: "center", justifyContent: "center", borderRadius: 17, background: "#12203f" }}>
-            <span style={{ color: "#fff", fontSize: 36, fontWeight: 800, letterSpacing: -4 }}>R</span>
+            <span style={{ color: "#fff", fontSize: 36, fontWeight: 800, letterSpacing: -4 }}>S</span>
             <span style={{ position: "absolute", width: 10, height: 10, margin: "-31px 0 0 31px", borderRadius: 99, background: "#63e6d1" }} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 20, fontWeight: 800, lineHeight: 1.02 }}>
-            <span>Lead</span>
-            <span style={{ color: "#2968e8" }}>Recovery</span>
+            <span>Snappy</span>
+            <span style={{ color: "#2968e8" }}>Leads</span>
           </div>
         </div>
         <div style={{ display: "flex", marginTop: 74, color: "#355173", fontSize: 17, fontWeight: 800, letterSpacing: 2.4, textTransform: "uppercase" }}>

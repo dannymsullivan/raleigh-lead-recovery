@@ -10,7 +10,7 @@ import type { Client } from "@/lib/types";
 import { saveAssistantSettingsAction } from "../actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Settings | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Settings | Snappy Leads", robots: { index: false, follow: false } };
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
@@ -48,7 +48,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               <label className="block text-sm font-black">Services<textarea className="mt-2 min-h-36 w-full border-2 border-black bg-white p-3 font-semibold leading-6" name="services" defaultValue={client.services?.join("\n") ?? ""} placeholder="One service per line" /></label>
               {!chatOnly ? <>              <label className="mt-5 block text-sm font-black">What counts as an emergency?<textarea className="mt-2 min-h-28 w-full border-2 border-black bg-white p-3 font-semibold leading-6" name="emergency_rules" defaultValue={client.emergency_rules ?? ""} /></label>
               <div className="mt-5 grid gap-5 sm:grid-cols-2"><Field label="Callback expectation" name="callback_window" defaultValue={client.callback_window ?? ""} /><Field label="Send lead alerts to" name="alert_phone" type="tel" defaultValue={client.alert_phone ?? client.owner_phone} /></div>
-              <label className="mt-5 flex items-start gap-3 border-2 border-black bg-white p-4 text-xs font-semibold leading-5 text-black/65"><input className="mt-1 h-4 w-4 flex-none accent-black" name="alert_sms_consent" type="checkbox" required /><span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Raleigh Lead Recovery may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help.</span></label></> : null}
+              <label className="mt-5 flex items-start gap-3 border-2 border-black bg-white p-4 text-xs font-semibold leading-5 text-black/65"><input className="mt-1 h-4 w-4 flex-none accent-black" name="alert_sms_consent" type="checkbox" required /><span>I confirm that I control the alert number or have the recipient&apos;s express consent, and I agree that Snappy Leads may send transactional lead alerts and account notifications to it. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe or HELP for help.</span></label></> : null}
             </SettingsSection>
 
             <SettingsSection number="03" title="Weekly hours">

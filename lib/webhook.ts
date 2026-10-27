@@ -39,7 +39,7 @@ export function buildOwnerSms(call: ExtractedRetellCall): string {
   const address = call.serviceAddress ?? "No address captured";
   const timing = call.requestedTiming ?? "Timing not captured";
 
-  return `Raleigh Lead Recovery alert: CAUGHT MISSED CALL (${call.urgency}): ${caller} - ${issue}. Call: ${callback}. Addr: ${address}. Wants: ${timing}. Reply STOP to unsubscribe; HELP for help.`;
+  return `Snappy Leads alert: CAUGHT MISSED CALL (${call.urgency}): ${caller} - ${issue}. Call: ${callback}. Addr: ${address}. Wants: ${timing}. Reply STOP to unsubscribe; HELP for help.`;
 }
 
 export async function processRetellWebhook(payload: unknown, deps: WebhookDeps): Promise<WebhookProcessingResult> {

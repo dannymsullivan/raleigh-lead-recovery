@@ -6,7 +6,7 @@ import { DashboardShell } from "../dashboard-shell";
 import { saveKnowledge, toggleChat } from "./actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Knowledge base | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Knowledge base | Snappy Leads", robots: { index: false, follow: false } };
 
 export default async function KnowledgePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const client = await requireCustomerWorkspace();

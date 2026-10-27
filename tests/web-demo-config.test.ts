@@ -28,7 +28,7 @@ describe("browser demo routing", () => {
 
   it("provides every variable used by the reactivation opening and prompt", () => {
     expect(webDemoDynamicVariables("reactivation")).toMatchObject({
-      business_name: "Raleigh Lead Recovery",
+      business_name: "Snappy Leads",
       contact_name: "there",
       service_type: "seasonal HVAC tune-up",
       lead_source: "a previous seasonal maintenance inquiry",

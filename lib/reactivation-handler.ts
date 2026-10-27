@@ -66,7 +66,7 @@ export async function processReactivationReport(
 
   const { data: claimed } = await admin.from("reactivation_attempts").update({ owner_alert_sent_at: now.toISOString() }).eq("id", attempt.id).is("owner_alert_sent_at", null).select("id").maybeSingle();
   if (!claimed) return { status: "processed", alert: "already_sent" };
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.raleighleadrecovery.com").replace(/\/$/, "");
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://snappyleads.xyz").replace(/\/$/, "");
   try {
     await sendSms({
       to: client.alert_phone || client.owner_phone,

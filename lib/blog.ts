@@ -27,7 +27,7 @@ export type BlogPost = {
   blocks: BlogBlock[];
 };
 
-export const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.raleighleadrecovery.com";
+export const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://snappyleads.xyz";
 
 export const blogPosts: BlogPost[] = [
   {
@@ -365,7 +365,7 @@ export function getBlogMetadata(post: BlogPost): Metadata {
   const url = getBlogPostUrl(post);
 
   return {
-    title: `${post.title} | Raleigh Lead Recovery`,
+    title: `${post.title} | Snappy Leads`,
     description: post.description,
     alternates: {
       canonical: url
@@ -379,10 +379,10 @@ export function getBlogMetadata(post: BlogPost): Metadata {
       modifiedTime: post.updatedAt,
       images: [
         {
-          url: "/raleigh-lead-recovery-social.png",
+          url: "/opengraph-image",
           width: 1200,
           height: 630,
-          alt: "Raleigh Lead Recovery turns old leads into new business"
+          alt: "Snappy Leads turns old leads into new business"
         }
       ]
     },
@@ -390,7 +390,7 @@ export function getBlogMetadata(post: BlogPost): Metadata {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/raleigh-lead-recovery-social.png"]
+      images: ["/opengraph-image"]
     }
   };
 }

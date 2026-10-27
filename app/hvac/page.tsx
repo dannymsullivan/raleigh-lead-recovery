@@ -9,8 +9,8 @@ import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
 
 export const metadata: Metadata = {
-  title: "Follow Up with Past HVAC Customers | Raleigh Lead Recovery",
-  description: "Hear Raleigh Lead Recovery reconnect with a past HVAC customer about seasonal maintenance, and learn how to set up a campaign for your business.",
+  title: "Follow Up with Past HVAC Customers | Snappy Leads",
+  description: "Hear Snappy Leads reconnect with a past HVAC customer about seasonal maintenance, and learn how to set up a campaign for your business.",
   alternates: { canonical: "/hvac" },
   openGraph: {
     title: "Turn Past HVAC Customers Into Tune-Up Calls",
@@ -41,7 +41,7 @@ export default function HvacLandingPage() {
           <div className="hvac-illustration-top"><span>WORK ORDER</span><strong>READY</strong></div>
           <div className="hvac-illustration-main"><div className="hvac-illustration-dial">72°</div><div><small>CAMPAIGN MODE</small><h2>SEASONAL<br />TUNE-UP</h2></div></div>
           <div className="hvac-illustration-grid"><div><small>SEGMENT</small><strong>Eligible past customers</strong></div><div><small>REASON</small><strong>Seasonal maintenance</strong></div><div><small>HANDOFF</small><strong>Interested customer + summary</strong></div><div><small>SOURCE</small><strong>Your approved list</strong></div></div>
-          <div className="hvac-illustration-call"><span>●</span><div><small>LEAD RECOVERY IS CALLING</small><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
+          <div className="hvac-illustration-call"><span>●</span><div><small>SNAPPY LEADS IS CALLING</small><strong>“Is now a good time to talk about seasonal maintenance?”</strong></div></div>
           <div className="hvac-illustration-result"><span>✓</span><div><small>INTEREST DETECTED</small><strong>Preferred window: Tuesday morning</strong></div><ArrowRight aria-hidden="true" /></div>
         </div>
       </section>

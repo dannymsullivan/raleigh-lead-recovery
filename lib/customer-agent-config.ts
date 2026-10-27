@@ -21,7 +21,7 @@ export function customerAgentReady(agent: Pick<CustomerAgent, "status" | "retell
 
 export function defaultFirstMessage(type: CustomerAgentType, client: Pick<Client, "business_name">): string {
   if (type === "receptionist") {
-    return `Thanks for calling ${client.business_name}. Raleigh Lead Recovery is helping with calls while the team is unavailable. What can I help you with?`;
+    return `Thanks for calling ${client.business_name}. Snappy Leads is helping with calls while the team is unavailable. What can I help you with?`;
   }
   return "Hi {{contact_name}}, I'm an automated calling assistant for {{business_name}} following up on an earlier {{service_type}} inquiry. Is now an okay time for a quick question?";
 }

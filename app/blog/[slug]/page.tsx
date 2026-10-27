@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!post) {
     return {
-      title: "Post not found | Raleigh Lead Recovery"
+      title: "Post not found | Snappy Leads"
     };
   }
 
@@ -230,7 +230,7 @@ function buildBlogSchema(post: BlogPost) {
     },
     publisher: {
       "@type": "Organization",
-      name: "Raleigh Lead Recovery",
+      name: "Snappy Leads",
       url: siteUrl
     },
     image: `${siteUrl}/plumber.webp`

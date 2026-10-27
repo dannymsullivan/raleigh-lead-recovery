@@ -86,7 +86,7 @@ import { ChatKnowledgeManager } from "@/app/components/chat-knowledge-manager";
 import { saveAdminKnowledge, toggleAdminChat } from "@/app/dashboard/knowledge-base/actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Customer CRM | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Customer CRM | Snappy Leads", robots: { index: false, follow: false } };
 type PageProps = {
   params: Promise<{ customerSlug: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -644,7 +644,7 @@ export default async function CustomerCrmPage({
                   Call through the real customer pipeline.
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-black/60">
-                  Raleigh Lead Recovery receives this account’s business name, owner, service,
+                  Snappy Leads receives this account’s business name, owner, service,
                   lead source, age, and notes. The safety guard only permits the
                   configured owner or alert phone.
                 </p>
@@ -716,7 +716,7 @@ export default async function CustomerCrmPage({
             <div className="border-t border-black bg-[#faf9f5]">
               <div className="border-b border-black px-4 py-3 text-xs font-semibold leading-5 text-black/55 sm:px-5">
                 <strong className="text-black/75">How calling works:</strong>{" "}
-                Raleigh Lead Recovery enforces schedule, pacing, eligibility, and suppression
+                Snappy Leads enforces schedule, pacing, eligibility, and suppression
                 rules here. The assigned customer agent places each approved
                 call through Retell.
               </div>
@@ -772,7 +772,7 @@ export default async function CustomerCrmPage({
               Lead workspace
             </p>
             <h2 className="mt-1 text-2xl font-black">
-              Who should Raleigh Lead Recovery contact first?
+              Who should Snappy Leads contact first?
             </h2>
             <p className="mt-1.5 text-xs font-semibold leading-5 text-black/45">
               Segment the qualified audience by event timing and type. Rich
@@ -1370,12 +1370,12 @@ function crmNotice(
     };
   if (search.called === "1")
     return {
-      text: "Raleigh Lead Recovery queued a test call with this customer and lead data.",
+      text: "Snappy Leads queued a test call with this customer and lead data.",
       error: false,
     };
   if (search.launched === "1")
     return {
-      text: "Campaign launched. Raleigh Lead Recovery will work through eligible leads within the configured limits.",
+      text: "Campaign launched. Snappy Leads will work through eligible leads within the configured limits.",
       error: false,
     };
   if (typeof search.agent_saved === "string")
@@ -1410,7 +1410,7 @@ function crmNotice(
     customer_access_active: "This customer already has dashboard access.",
     telephony: "Production Retell calling is not configured.",
     agent_not_ready:
-      "Set up this customer’s Raleigh Lead Recovery agent before launching the campaign.",
+      "Set up this customer’s Snappy Leads agent before launching the campaign.",
     agent_confirmation:
       "Confirm that you want to provision a dedicated inbound phone number.",
     agent_save: "The customer agent settings could not be saved.",
@@ -1422,7 +1422,7 @@ function crmNotice(
     file: "Choose a CSV or XLSX file smaller than 10 MB.",
     spreadsheet: "That spreadsheet could not be read.",
     too_many_rows:
-      "This spreadsheet has more than 25,000 rows. Split it into smaller files so Raleigh Lead Recovery never imports or replaces a list from a partial analysis.",
+      "This spreadsheet has more than 25,000 rows. Split it into smaller files so Snappy Leads never imports or replaces a list from a partial analysis.",
     campaign: "The recovery campaign could not be found.",
     campaign_name: "Give the recovery campaign a name.",
     campaign_save: "The campaign change could not be saved.",

@@ -3,8 +3,8 @@ import { normalizePhoneNumber } from "./phone";
 type JsonRecord = Record<string, unknown>;
 export type DemoType = "general" | "hvac" | "plumbing" | "roofing" | "real_estate" | "home_services" | "events";
 
-export const PUBLIC_DEMO_CONSENT_VERSION = "demo-call-v1-2026-08-19";
-export const PUBLIC_DEMO_CONSENT_TEXT = "I confirm I control this number or am authorized to use it. I request one automated demo call from Raleigh Lead Recovery and consent to the call being recorded and transcribed for demonstration and quality purposes. Consent is not a condition of purchase.";
+export const PUBLIC_DEMO_CONSENT_VERSION = "demo-call-v2-2026-10-27";
+export const PUBLIC_DEMO_CONSENT_TEXT = "I confirm I control this number or am authorized to use it. I request one automated demo call from Snappy Leads and consent to the call being recorded and transcribed for demonstration and quality purposes. Consent is not a condition of purchase.";
 
 const ELEVATED_PUBLIC_DEMO_NUMBERS = new Set([
   "+18455481569",

@@ -22,11 +22,11 @@ async function main() {
   const phone = configuredNumber
     ? (numbers.items ?? []).find((number) => number.phone_number === configuredNumber)
     : (numbers.items ?? []).find((number) =>
-        number.inbound_agents?.some((binding) => agentNames.get(binding.agent_id)?.includes("Raleigh Lead Recovery")),
+        number.inbound_agents?.some((binding) => /Snappy Leads|Raleigh Lead Recovery/.test(agentNames.get(binding.agent_id) ?? "")),
       );
-  if (!phone) throw new Error("No Raleigh Lead Recovery business phone number was found.");
+  if (!phone) throw new Error("No Snappy Leads business phone number was found.");
   const inbound = phone.inbound_agents?.[0];
-  if (!inbound) throw new Error("The Raleigh Lead Recovery number has no inbound agent.");
+  if (!inbound) throw new Error("The Snappy Leads number has no inbound agent.");
 
   const published = await retell.agent.retrieve(inbound.agent_id, { version: "latest_published" });
   const draft = await retell.agent.createVersion(published.agent_id, { base_version: published.version });
@@ -52,14 +52,14 @@ async function main() {
   try {
     await retell.agent.publish(updated.agent_id, {
       version: updated.version,
-      version_title: "Raleigh Lead Recovery business receptionist",
+      version_title: "Snappy Leads business receptionist",
       version_description: "Chloe answers inbound business calls and warm-transfers qualified callers to Danny.",
     });
   } catch (error) {
     const verification = await retell.agent.retrieve(updated.agent_id, { version: "latest_published" });
     if (verification.version !== updated.version) throw error;
   }
-  await retell.phoneNumber.update(phone.phone_number, { nickname: "Raleigh Lead Recovery business line" });
+  await retell.phoneNumber.update(phone.phone_number, { nickname: "Snappy Leads business line" });
   console.log(JSON.stringify({ phoneNumber: phone.phone_number, agentId: updated.agent_id, version: updated.version, transfer: "configured" }, null, 2));
 }
 

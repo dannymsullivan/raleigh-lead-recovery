@@ -55,7 +55,7 @@ async function main(): Promise<void> {
     version: draft.version,
     agent_name: publicDemoAgentName,
     begin_message_delay_ms: 350,
-    boosted_keywords: ["Raleigh Lead Recovery", "HVAC", "thermostat", "heat pump"],
+    boosted_keywords: ["Snappy Leads", "HVAC", "thermostat", "heat pump"],
     enable_dynamic_responsiveness: true,
     enable_dynamic_voice_speed: true,
     end_call_after_silence_ms: 60_000,

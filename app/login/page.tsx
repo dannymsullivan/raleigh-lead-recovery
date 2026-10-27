@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
   const error = typeof search.error === "string" ? search.error : null;
 
   return (
-    <AuthShell eyebrow="Welcome back" title="Open your customer dashboard." description="Sign in to Raleigh Lead Recovery with a secure email link. No password to remember.">
+    <AuthShell eyebrow="Welcome back" title="Open your customer dashboard." description="Sign in to Snappy Leads with a secure email link. No password to remember.">
       {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{error === "configuration" ? "Sign-in is temporarily unavailable. Please contact support." : error === "phone" ? "Enter a valid mobile phone number." : error === "sms" ? "We could not send a text to that number. Try again." : error === "email" ? "We could not send a link. Check your email address, or wait a minute before trying again." : error === "account" ? "No customer workspace is connected to that account yet. Use your invitation or create an account." : error === "expired" ? "That sign-in link expired or was opened in a different browser. Request a new one here." : error === "invitation" ? "That customer access link is invalid or expired." : "We could not sign you in."}</p> : null}
       <form action={requestLoginLinkAction} className="grid gap-5">
         <AuthField label="Email address" name="email" type="email" placeholder="you@yourbusiness.com" autoComplete="email" />

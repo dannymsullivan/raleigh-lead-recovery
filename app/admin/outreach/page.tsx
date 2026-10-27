@@ -39,7 +39,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { outreachCallingConfigured } from "@/lib/outreach-retell";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Outreach | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Outreach | Snappy Leads", robots: { index: false, follow: false } };
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

@@ -1,2 +1,2 @@
-export const contactEmail = "danny@raleighleadrecovery.com";
+export const contactEmail = "danny@snappyleads.xyz";
 export const contactHref = `mailto:${contactEmail}`;

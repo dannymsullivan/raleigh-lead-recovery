@@ -23,7 +23,7 @@ export function webDemoDynamicVariables(mode: WebDemoMode): Record<string, strin
     return {
       demo_channel: "website",
       demo_mode: mode,
-      business_name: "Raleigh Lead Recovery",
+      business_name: "Snappy Leads",
       contact_name: "there",
       service_type: "seasonal HVAC tune-up",
       lead_source: "a previous seasonal maintenance inquiry",

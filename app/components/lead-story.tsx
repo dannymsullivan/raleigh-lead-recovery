@@ -94,7 +94,7 @@ export function LeadStory() {
         <div className="recovery-connector"><span /><PhoneCall aria-hidden="true" /><span /></div>
 
         <div className="recovery-conversation">
-          <div className="recovery-bubble agent-bubble"><span>Raleigh Lead Recovery · automated call</span><p>{story.opener}</p></div>
+          <div className="recovery-bubble agent-bubble"><span>Snappy Leads · automated call</span><p>{story.opener}</p></div>
           <div className="recovery-bubble lead-bubble"><span>{story.name}</span><p>{story.reply}</p></div>
         </div>
 

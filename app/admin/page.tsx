@@ -16,7 +16,7 @@ import { AdminHeader } from "./admin-header";
 import { BrandMark } from "../components/brand-mark";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Admin | Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Admin | Snappy Leads", robots: { index: false, follow: false } };
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;

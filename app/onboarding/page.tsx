@@ -7,7 +7,7 @@ import type { Client } from "@/lib/types";
 import { OnboardingForm } from "./onboarding-form";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Set up Raleigh Lead Recovery", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Set up Snappy Leads", robots: { index: false, follow: false } };
 
 type PageProps = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 

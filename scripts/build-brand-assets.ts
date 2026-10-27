@@ -29,7 +29,7 @@ function wordmark(x: number, y: number, size = 48, inverted = false) {
   const primary = inverted ? "#fff" : "#111b35";
   const accent = inverted ? "#63e6d1" : "#2968e8";
   return `<text x="${x}" y="${y}" fill="${primary}" font-family="Arial, Helvetica, sans-serif" font-size="${size}" font-weight="800" letter-spacing="-1.8">
-    <tspan x="${x}">Raleigh Lead</tspan><tspan x="${x}" dy="${size * 0.94}" fill="${accent}">Recovery</tspan>
+    <tspan x="${x}">Snappy</tspan><tspan x="${x}" dy="${size * 0.94}" fill="${accent}">Leads</tspan>
   </text>`;
 }
 
@@ -114,14 +114,14 @@ async function main() {
     <rect x="68" y="1370" width="1064" height="350" rx="38" fill="#12203f"/>
     <text x="118" y="1445" fill="#63e6d1" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" letter-spacing="2">HEAR IT YOURSELF</text>
     <text x="118" y="1522" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="800">Try the browser demo</text>
-    <text x="118" y="1582" fill="#c8d8f5" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600">Visit raleighleadrecovery.com</text>
+    <text x="118" y="1582" fill="#c8d8f5" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600">Visit snappyleads.xyz</text>
     <text x="118" y="1650" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Hands-on setup for your business.</text>
     <rect x="855" y="1418" width="220" height="220" rx="22" fill="#fff"/><image href="${qrUri}" x="875" y="1438" width="180" height="180"/>
     <text x="965" y="1670" text-anchor="middle" fill="#63e6d1" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">SCAN FOR LIVE DEMO</text>
   </svg>`;
   await render(card, "leave-behind-4x6", 1200, 1800);
 
-  console.log("Built Lead Recovery logo, Facebook cover, and 4x6 leave-behind assets.");
+  console.log("Built Snappy Leads logo, Facebook cover, and 4x6 leave-behind assets.");
 }
 
 main().catch((error) => {

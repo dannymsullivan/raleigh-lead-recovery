@@ -4,7 +4,7 @@ import { contactEmail } from "@/lib/contact";
 
 export function PublicSiteFooter() {
   return <footer className="rlr-footer"><div className="page-shell">
-    <div><BrandMark inverted accent="#f7fa00" /><p>© 2026 Raleigh Lead Recovery</p></div>
+    <div><BrandMark inverted accent="#f7fa00" /><p>Snappy Leads · Hands-on setup and support</p></div>
     <nav aria-label="Footer navigation">
       <Link href="/">Chatbots</Link><Link href="/voice">Voice agents</Link>
       <Link href="/dashboard-demo">Dashboard preview</Link>

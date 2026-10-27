@@ -3,7 +3,7 @@ import { buildLeadAlertSms, buildVerificationSms, hasAlertSmsConsent } from "@/l
 
 describe("messaging compliance helpers", () => {
   it("identifies the sender and includes opt-out and help instructions", () => {
-    expect(buildVerificationSms("123456")).toContain("Raleigh Lead Recovery");
+    expect(buildVerificationSms("123456")).toContain("Snappy Leads");
     expect(buildVerificationSms("123456")).toContain("Reply STOP to unsubscribe; HELP for help.");
     expect(buildLeadAlertSms({ businessName: "Oak City Roofing", contactName: "Sarah", phone: "+19195550123", requestedTiming: null, dashboardUrl: "https://example.com/dashboard" })).toContain("Reply STOP to unsubscribe; HELP for help.");
   });

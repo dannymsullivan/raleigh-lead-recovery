@@ -77,7 +77,7 @@ export function DemoDashboard() {
               <p className="mt-4 max-w-2xl text-sm font-semibold leading-6 text-black/50">Follow the campaign from uploaded records to conversations, qualified customers, and booked appointments.</p>
             </div>
             <div className="flex items-center gap-3 border-2 border-black bg-white px-4 py-3 text-sm font-black shadow-[4px_4px_0_#000]">
-              <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#769000]" /> Raleigh Lead Recovery is calling
+              <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#769000]" /> Snappy Leads is calling
             </div>
           </div>
 
@@ -176,7 +176,7 @@ function DemoLeadRow({ lead }: { lead: DemoLead }) {
       </summary>
       <div className="grid gap-6 border-t border-black/15 bg-[#faf9f5] p-5 lg:grid-cols-[0.8fr_1.2fr]">
         <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.13em] text-black/35">Call summary</p><p className="mt-3 text-sm font-semibold leading-6 text-black/65">{lead.summary}</p><div className="mt-5 border-l-4 border-[#a8ca22] bg-white p-4"><p className="font-mono text-[8px] font-bold uppercase text-black/35">Next step</p><p className="mt-1 text-sm font-black">{lead.nextStep}</p></div></div>
-        <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.13em] text-black/35">Conversation excerpt</p>{lead.transcript.length ? <div className="mt-3 grid gap-2">{lead.transcript.map((line, index) => <div className={`max-w-[90%] p-3 text-xs font-semibold leading-5 ${line.speaker === "Raleigh Lead Recovery" ? "bg-[#eef5d6]" : "ml-auto bg-[#e8e8e2]"}`} key={`${lead.id}-${index}`}><strong className="mb-1 block font-mono text-[8px] uppercase text-black/40">{line.speaker}</strong>{line.text}</div>)}</div> : <p className="mt-3 border border-dashed border-black/20 p-5 text-sm font-semibold text-black/40">No conversation yet. The first attempt reached voicemail.</p>}</div>
+        <div><p className="font-mono text-[8px] font-bold uppercase tracking-[0.13em] text-black/35">Conversation excerpt</p>{lead.transcript.length ? <div className="mt-3 grid gap-2">{lead.transcript.map((line, index) => <div className={`max-w-[90%] p-3 text-xs font-semibold leading-5 ${line.speaker === "Snappy Leads" ? "bg-[#eef5d6]" : "ml-auto bg-[#e8e8e2]"}`} key={`${lead.id}-${index}`}><strong className="mb-1 block font-mono text-[8px] uppercase text-black/40">{line.speaker}</strong>{line.text}</div>)}</div> : <p className="mt-3 border border-dashed border-black/20 p-5 text-sm font-semibold text-black/40">No conversation yet. The first attempt reached voicemail.</p>}</div>
       </div>
     </details>
   );

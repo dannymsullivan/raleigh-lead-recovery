@@ -71,11 +71,11 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
     <section className={`demo-call-section page-shell ${handout ? "demo-call-section-handout" : ""}`} id="listen-now" aria-labelledby="listen-now-heading">
       <div className="demo-call-copy">
         <p className="eyebrow"><span /> {hvacFocused ? "Live HVAC tune-up demo" : handout ? "A live, industry-tuned phone demo" : "Lead recovery for growing North Carolina businesses"}</p>
-        <h1 id="listen-now-heading">{hvacFocused ? <>Hear one HVAC follow-up—<em>live.</em></> : handout ? <>Hear Raleigh Lead Recovery call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
-        <p>{hvacFocused ? "Enter your number and play a past customer due for seasonal maintenance. Raleigh Lead Recovery will call you once so you can hear the exact conversation." : handout ? "Choose your business type, then enter your name and number. Raleigh Lead Recovery will call as if you were one of that business's old leads." : "You already paid to generate the leads. Raleigh Lead Recovery follows up with old and unresponsive prospects, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
+        <h1 id="listen-now-heading">{hvacFocused ? <>Hear one HVAC follow-up—<em>live.</em></> : handout ? <>Hear Snappy Leads call you—<em>live.</em></> : <>Turn old leads into <em>new business.</em></>}</h1>
+        <p>{hvacFocused ? "Enter your number and play a past customer due for seasonal maintenance. Snappy Leads will call you once so you can hear the exact conversation." : handout ? "Choose your business type, then enter your name and number. Snappy Leads will call as if you were one of that business's old leads." : "You already paid to generate the leads. Snappy Leads follows up with old and unresponsive prospects, finds the ones who are still interested, and sends qualified opportunities back to your team. Hear the real experience on your own phone."}</p>
         <div className="demo-call-expectation">
           <PhoneIncoming aria-hidden="true" />
-          <div><strong>{hvacFocused ? "You play the customer." : "Hear the real conversation."}</strong><span>{hvacFocused ? "Answer like a homeowner whose HVAC tune-up is due." : "Raleigh Lead Recovery uses your name, business, and selected industry in a one-time lead follow-up call."}</span></div>
+          <div><strong>{hvacFocused ? "You play the customer." : "Hear the real conversation."}</strong><span>{hvacFocused ? "Answer like a homeowner whose HVAC tune-up is due." : "Snappy Leads uses your name, business, and selected industry in a one-time lead follow-up call."}</span></div>
         </div>
         <div className="demo-call-expectation">
           <ShieldCheck aria-hidden="true" />
@@ -89,7 +89,7 @@ export function DemoCallForm({ bookingUrl, analyticsLocation = "homepage_live_de
             <span className="demo-call-success-icon"><PhoneIncoming aria-hidden="true" /></span>
             <p className="eyebrow">Your demo is on the way</p>
             <h3>Like what you hear? Try it on 25 real leads.</h3>
-            <p>{message} The next step maps Raleigh Lead Recovery to your lead source, sales process, and handoff rules.</p>
+            <p>{message} The next step maps Snappy Leads to your lead source, sales process, and handoff rules.</p>
             <div className="demo-call-offer" aria-label="Starter trial details">
               <span><strong>25</strong> eligible leads</span>
               <span><strong>14 days</strong> to test</span>

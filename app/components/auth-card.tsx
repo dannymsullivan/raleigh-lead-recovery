@@ -29,7 +29,7 @@ export function AuthShell({
             ))}
           </ul>
         </div>
-        <p className="text-xs font-semibold text-white/45">Raleigh Lead Recovery · Hands-on setup and support</p>
+        <p className="text-xs font-semibold text-white/45">Snappy Leads · Hands-on setup and support</p>
       </section>
 
       <section className="auth-form flex items-center justify-center px-5 py-16 sm:px-10">

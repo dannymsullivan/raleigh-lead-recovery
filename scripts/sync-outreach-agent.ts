@@ -75,12 +75,12 @@ async function main() {
   let phoneNumber = process.env.RETELL_OUTREACH_PHONE_NUMBER?.trim();
   if (!phoneNumber) {
     const numbers = await retell.phoneNumber.list();
-    const raleighLeadAgent = agentItems.find((agent) => agent.agent_name === "Lead Recovery — Raleigh Lead Recovery");
+    const raleighLeadAgent = agentItems.find((agent) => agent.agent_name === "Lead Recovery — Snappy Leads");
     phoneNumber = (numbers.items ?? []).find((number) =>
       number.outbound_agents?.some((binding) => binding.agent_id === raleighLeadAgent?.agent_id),
     )?.phone_number;
   }
-  if (!phoneNumber) throw new Error("No existing Raleigh Lead Recovery outbound number was found. Set RETELL_OUTREACH_PHONE_NUMBER before syncing.");
+  if (!phoneNumber) throw new Error("No existing Snappy Leads outbound number was found. Set RETELL_OUTREACH_PHONE_NUMBER before syncing.");
 
   console.log(JSON.stringify({ agentId, llmId, phoneNumber, version: agentVersion }, null, 2));
 }

@@ -75,7 +75,7 @@ export function AutoTextBackDemo() {
           <div className="text-back-phone-header">
             <span className="text-back-avatar">RLR</span>
             <div>
-              <strong>Raleigh Lead Recovery</strong>
+              <strong>Snappy Leads</strong>
               <span>Text message · Just now</span>
             </div>
           </div>

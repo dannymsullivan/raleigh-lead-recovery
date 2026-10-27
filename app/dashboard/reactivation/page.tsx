@@ -58,7 +58,7 @@ import {
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Lead Reactivation | Raleigh Lead Recovery",
+  title: "Lead Reactivation | Snappy Leads",
   robots: { index: false, follow: false },
 };
 type PageProps = {
@@ -298,7 +298,7 @@ export default async function ReactivationDashboardPage({
               Turn the old list back on.
             </h1>
             <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-black/55">
-              Import eligible prior inquiries, let Raleigh Lead Recovery reopen the
+              Import eligible prior inquiries, let Snappy Leads reopen the
               conversation, and move interested people to your team immediately.
             </p>
           </div>
@@ -311,7 +311,7 @@ export default async function ReactivationDashboardPage({
             />
             {telephonyReady
               ? `${campaignAgent?.name} ready`
-              : "Set up Raleigh Lead Recovery agent"}
+              : "Set up Snappy Leads agent"}
           </Link>
         </div>
         {message ? (
@@ -561,7 +561,7 @@ export default async function ReactivationDashboardPage({
                       Lead workspace
                     </p>
                     <h2 className="mt-1 text-xl font-black tracking-[-0.035em] sm:text-2xl">
-                      Who should Raleigh Lead Recovery contact first?
+                      Who should Snappy Leads contact first?
                     </h2>
                     <p className="mt-1.5 text-xs font-semibold text-black/45">
                       Use event timing and type to build a focused audience.
@@ -958,9 +958,9 @@ function dashboardMessage(
     bucket_selection: "Choose at least one opportunity bucket to import.",
     import: "The lead list could not be imported.",
     telephony:
-      "Calling is not connected yet. Finish the Raleigh Lead Recovery agent setup before launching.",
+      "Calling is not connected yet. Finish the Snappy Leads agent setup before launching.",
     agent_not_ready:
-      "Set up this customer’s Raleigh Lead Recovery agent before launching the campaign.",
+      "Set up this customer’s Snappy Leads agent before launching the campaign.",
   };
   if (error)
     return {
@@ -974,7 +974,7 @@ function dashboardMessage(
     };
   if (search.welcome === "1")
     return {
-      text: "Your workspace is ready. Load the lead spreadsheet you already have. Raleigh Lead Recovery will organize it before anything is contacted.",
+      text: "Your workspace is ready. Load the lead spreadsheet you already have. Snappy Leads will organize it before anything is contacted.",
       error: false,
     };
   if (search.created === "1")
@@ -984,7 +984,7 @@ function dashboardMessage(
     };
   if (search.launched === "1")
     return {
-      text: "Campaign launched. Raleigh Lead Recovery is beginning with a controlled batch.",
+      text: "Campaign launched. Snappy Leads is beginning with a controlled batch.",
       error: false,
     };
   return null;
