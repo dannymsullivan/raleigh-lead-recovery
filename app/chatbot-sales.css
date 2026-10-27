@@ -253,7 +253,7 @@
 .trial-form a { text-decoration: underline; text-underline-offset: 3px; }
 .trial-form .rlr-button { width: 100%; }
 .trial-form .rlr-button:disabled { opacity: .6; cursor: wait; transform: none; }
-.trial-form-note { font-size: 11px; line-height: 1.7; margin-top: 18px; }
+.trial-form .trial-form-note { font-size: 11px; line-height: 1.7; margin: 22px 0 0; }
 .trial-form-error { padding: 12px; border: 1px solid #a7194d; background: #fff0f6; font-size: 13px; line-height: 1.7; margin-bottom: 20px; }
 .trial-form-success { background: #f7fa00; }
 .trial-form-success > p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
