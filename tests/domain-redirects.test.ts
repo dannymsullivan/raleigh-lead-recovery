@@ -21,8 +21,8 @@ describe("Snappy Leads domain migration", () => {
     expect(getRedirectUrl(await route(`https://www.raleighleadrecovery.com${path}`))).toBeNull();
   });
 
-  it("starts new sign-ins on the same domain as their email callback", async () => {
-    expect(getRedirectUrl(await route("https://www.raleighleadrecovery.com/login"))).toBe("https://snappyleads.xyz/login");
+  it.each(["www.raleighleadrecovery.com", "raleigh-lead-recovery.vercel.app"])("starts sign-ins from %s on the same domain as their email callback", async (host) => {
+    expect(getRedirectUrl(await route(`https://${host}/login`))).toBe("https://snappyleads.xyz/login");
   });
 
   it.each(["https://snappyleads.xyz/voice", "http://localhost:3000/voice"])("does not redirect %s", async (url) => {

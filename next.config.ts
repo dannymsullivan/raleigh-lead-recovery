@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     const publicPaths = ["/", "/voice", "/get-started", "/contact", "/blog/:path*", "/privacy", "/terms", "/hvac", "/lead-recovery", "/dashboard-demo", "/pricing", "/knowledge-base", "/login", "/signup", "/invite/:token"];
     return [
       { source: "/:path*", has: [{ type: "host" as const, value: "www.snappyleads.xyz" }], destination: "https://snappyleads.xyz/:path*", permanent: true },
-      ...["raleighleadrecovery.com", "www.raleighleadrecovery.com"].flatMap((host) =>
+      ...["raleighleadrecovery.com", "www.raleighleadrecovery.com", "raleigh-lead-recovery.vercel.app"].flatMap((host) =>
         publicPaths.map((source) => ({ source, has: [{ type: "host" as const, value: host }], destination: `https://snappyleads.xyz${source}`, permanent: true }))
       ),
     ];
