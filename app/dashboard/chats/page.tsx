@@ -14,7 +14,7 @@ export default async function ChatsPage({ searchParams }: { searchParams: Promis
   const search = await searchParams;
   const { page, unavailable, records, metrics, total } = await loadChatReport(client.id, search.page);
   return <DashboardShell active="chats" client={client}>
-    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Website chat · Last 30 days</p><h1>See the conversation. Follow the lead.</h1><p>First-touch attribution connects each conversation to its source. Bookings and value are confirmed by your team.</p></div><Link className="rlr-button rlr-button-primary" href="/dashboard/knowledge-base">Manage chatbot</Link></div>
+    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Website chat · Last 30 days</p><h1>See the conversation. Follow the lead.</h1><p>See where each chat started and which website or campaign brought the visitor, when available. Mark booked jobs and add their value as you follow up.</p></div><Link className="rlr-button rlr-button-primary" href="/dashboard/knowledge-base">Manage chatbot</Link></div>
     {unavailable ? <div className="chat-notice" role="alert">We couldn’t load your conversations. Try refreshing, or contact Danny for help.</div> : <>
       {search.error ? <p className="chat-notice" role="alert">We couldn’t save that lead. Check the values and try again.</p> : null}
       {search.saved ? <p className="chat-notice" role="status">Lead outcome saved.</p> : null}

@@ -215,7 +215,8 @@
 .sales-plan .sales-placeholder-label { align-self: flex-start; }
 .sales-plan h3 { font-family: 'RLR Display',sans-serif; font-size: 43px; font-weight: 400; text-transform: uppercase; margin: 26px 0 14px; line-height: 1; }
 .sales-plan > p { font-size: 16px; line-height: 1.75; color: #354845; min-height: 112px; }
-.sales-plan-price { display: flex; align-items: baseline; gap: 8px; margin: 22px 0 18px; }
+.sales-plan-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 22px 0 18px; }
+.sales-pricing .sales-pricing-note { margin: 38px 0 0; font-size: 14px; line-height: 1.8; max-width: 850px; }
 .sales-plan-price strong { font-family: 'RLR Display',sans-serif; font-size: 63px; font-weight: 400; line-height: 1; text-transform: uppercase; }
 .sales-plan-price span { font-size: 14px; }
 .sales-trial-tag { color: #17232d; border-bottom: 2px solid #ff4f9a; padding: 5px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; align-self: flex-start; margin-bottom: 25px; }
@@ -451,5 +452,5 @@
   .auth-retro .auth-form > div > a:first-child { margin-bottom: 28px; }
 }
 
-.sales-pricing-trial { margin-top: 38px; font-size: 16px; line-height: 1.8; }
+.sales-pricing .sales-pricing-trial { margin-top: 24px; font-size: 16px; line-height: 1.8; }
 .sales-pricing-trial a { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }

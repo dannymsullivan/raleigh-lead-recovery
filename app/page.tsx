@@ -20,12 +20,12 @@ import { contactEmail } from "@/lib/contact";
 export const metadata: Metadata = {
   title: "Website Chatbots for Service Businesses",
   description:
-    "Answer website questions with your approved business knowledge, capture leads, and track sources and outcomes in your customer dashboard.",
+    "Answer customer questions, collect contact details, and see which chats become booked jobs in your dashboard.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Your Website Deserves More Than a Contact Form",
     description:
-      "Website chat, approved business knowledge, and clear lead attribution for service businesses.",
+      "Website chat that answers customer questions and saves leads for your team to follow up.",
     url: "/",
     type: "website",
     images: [{
@@ -38,18 +38,18 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Your Website Deserves More Than a Contact Form",
-    description: "Website chat and lead attribution for service businesses.",
+    description: "Website chat that answers questions and collects leads for service businesses.",
     images: ["/opengraph-image"],
   },
 };
 
 const faqs = [
-  { q: "How does the two-week free trial work?", a: "We set up your business knowledge and website chat, then use the 14-day trial to review real conversations and captured leads with you. No card is required. We agree on any ongoing paid plan before it starts." },
-  { q: "Who handles the setup?", a: "You work directly with Danny. Share your services, service area, hours, and common questions; he helps shape the knowledge, install the widget, and test the handoff." },
-  { q: "What does the chatbot know?", a: "It uses the services, hours, and service area already saved in your business profile, plus the custom answers you publish. If it doesn’t have an approved answer, it offers a human follow-up." },
-  { q: "Can I see where a lead came from?", a: "Each conversation keeps its landing page, referrer, and UTM source, medium, and campaign tags. Your dashboard connects that context to captured contact details and outcomes you confirm." },
-  { q: "Does each customer have their own dashboard?", a: "Yes. Each business signs in to its own workspace to review chats, update knowledge, and track leads." },
-  { q: "Does it book appointments?", a: "This version collects the request and contact details for your team to confirm. Your team can mark a lead booked and record its value; the chatbot does not promise availability." },
+  { q: "How does the two-week free trial work?", a: "We add your business information and install the chatbot on your website. Your 14 days start when it goes live. No card is required. Website chat starts at $399/month after the trial; we confirm your price with you before paid service starts." },
+  { q: "Who handles the setup?", a: "You work directly with Danny. Share your services, service area, hours, and common questions; he prepares the answers, installs the chatbot, and checks that customer requests reach your dashboard." },
+  { q: "What does the chatbot know?", a: "It uses the services, hours, and service area already saved in your business profile, plus the custom answers you publish. If it doesn’t have an answer, it tells the visitor to check with your business. Visitors can also leave their details for your team." },
+  { q: "Can I see where a lead came from?", a: "Yes. You can see the page where a chat started and, when available, the website or campaign that brought the visitor there. Mark the leads you book and add the job value to compare results." },
+  { q: "Does each customer have their own dashboard?", a: "Yes. Each business signs in to its own workspace to read conversations, update chatbot answers, and track leads." },
+  { q: "Does it book appointments?", a: "The chatbot collects appointment requests. Your team confirms the time with the customer, then marks the lead as booked in the dashboard." },
   { q: "Do you also offer voice agents?", a: "Yes. Voice is a separate service for missed-call and after-hours coverage. Visit the Voice agents page to try the browser demo and learn how setup works." },
 ];
 
@@ -88,7 +88,7 @@ export default function HomePage() {
           <div className="rlr-demo-card" id="try-chat">
             <SalesGuide />
             <div className="rlr-demo-topline">
-              <div><span className="rlr-live-dot" /><span>Your / Front desk</span></div>
+              <div><span className="rlr-live-dot" /><span>Your website assistant</span></div>
               <span>Try it live ↙</span>
             </div>
             <WebsiteChat />
@@ -108,8 +108,7 @@ export default function HomePage() {
           <h2>You work directly with me.</h2>
           <p>
             I&apos;m Danny Sullivan, an AI product engineer and former
-            service-business owner. I help turn what your business knows into
-            conversations your customers can use, so your team can see what customers asked for and follow up.
+            service-business owner. I set up chatbots and voice agents that answer customer questions, collect job details, and help your team follow up.
           </p>
         </div>
         <a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a>
@@ -118,9 +117,9 @@ export default function HomePage() {
       <section className="rlr-trust-band" aria-label="How the service fits your business">
         <div className="page-shell">
           <span><Headphones aria-hidden="true" /> Questions answered anytime</span>
-          <span><PhoneForwarded aria-hidden="true" /> Your business knowledge</span>
-          <span><MessageSquareText aria-hidden="true" /> Lead sources included</span>
-          <span><ShieldCheck aria-hidden="true" /> Private customer workspaces</span>
+          <span><PhoneForwarded aria-hidden="true" /> Your services and answers</span>
+          <span><MessageSquareText aria-hidden="true" /> See where leads come from</span>
+          <span><ShieldCheck aria-hidden="true" /> Your own private dashboard</span>
         </div>
       </section>
 
@@ -137,7 +136,7 @@ export default function HomePage() {
           </p>
         </div>
         <ol className="rlr-flow-steps">
-          <li><span>01</span><div><h3>Tell us how your business works</h3><p>Share your services, prices, hours, and service area. We help turn your everyday answers into your chatbot’s knowledge.</p></div></li>
+          <li><span>01</span><div><h3>Tell us how your business works</h3><p>Share your services, prices, hours, and service area. We use that information to prepare your chatbot’s answers.</p></div></li>
           <li><span>02</span><div><h3>We build and test your chatbot</h3><p>We add your answers and install the chat widget. You try it, review the responses, and tell us what to change before launch.</p></div></li>
           <li><span>03</span><div><h3>Go live and review your leads</h3><p>Your trial starts when the chatbot is ready. See each conversation, contact request, and lead source in your dashboard, then record what happens next.</p></div></li>
         </ol>
@@ -149,12 +148,10 @@ export default function HomePage() {
             <p className="rlr-kicker">Your customer dashboard</p>
             <h2>See every chat. Track every lead.</h2>
             <p>
-              Read chat transcripts, review captured contact details, and compare
-              lead sources in your own workspace. Mark leads as new, contacted,
-              booked, or lost, and record the value your team confirms.
+              Read conversations, find customer contact details, and see where leads came from. Mark each lead as new, contacted, booked, or lost, and add the value of jobs you book.
             </p>
             <div className="rlr-summary-card">
-              <div className="rlr-summary-header"><span>Example lead · Illustrative data</span><strong>Website chat</strong></div>
+              <div className="rlr-summary-header"><span>Example lead · Sample data</span><strong>Website chat</strong></div>
               <div className="rlr-summary-person">
                 <span>JM</span>
                 <div><strong>Jordan M.</strong><p>Returning customer · AC repair</p></div>
@@ -162,7 +159,7 @@ export default function HomePage() {
               </div>
               <dl>
                 <div><dt>Landing page</dt><dd>/ac-repair</dd></div>
-                <div><dt>Source / medium</dt><dd>Google / CPC</dd></div>
+                <div><dt>Where they came from</dt><dd>Google paid ad</dd></div>
                 <div><dt>Campaign</dt><dd>Summer AC repair</dd></div>
               </dl>
               <div className="rlr-summary-footer"><Check aria-hidden="true" /> Conversation and contact details in one place</div>
@@ -182,7 +179,7 @@ export default function HomePage() {
 
       <section className="sales-owner-work page-shell">
         <Image className="retro-scene" src="/illustrations/front-desk-scene.png" alt="A cheerful retro computer assistant organizing customer messages into useful job requests" width={1536} height={1024} sizes="(max-width: 760px) 100vw, 50vw" />
-        <div><p className="rlr-kicker">Built for owners with their hands full</p><h2>Keep doing the work you’re known for.</h2><p>You shouldn’t have to stop a job to answer the same service-area question again. Give customers a helpful first response while you take care of the person in front of you.</p><p>Your chatbot gathers the details. Your team decides the next step. Danny helps you get the knowledge and handoff right before launch.</p><a className="rlr-inline-link" href="#trial">Try two weeks free <ArrowRight /></a></div>
+        <div><p className="rlr-kicker">Built for owners with their hands full</p><h2>Keep doing the work you’re known for.</h2><p>You shouldn’t have to stop a job to answer the same service-area question again. Give customers a helpful first response while you take care of the person in front of you.</p><p>Your chatbot gathers the details. Your team decides the next step. Danny checks the answers and makes sure requests reach your dashboard before launch.</p><a className="rlr-inline-link" href="#trial">Try two weeks free <ArrowRight /></a></div>
       </section>
 
       <IndustryExamples />
@@ -195,9 +192,9 @@ export default function HomePage() {
             <h2>You approve the answers. Your team handles the customer.</h2>
           </div>
           <div className="rlr-safety-list">
-            <article><ShieldCheck aria-hidden="true" /><div><h3>Uses your approved information</h3><p>The chatbot answers from your published knowledge and offers human follow-up when an answer is missing.</p></div></article>
-            <article><PhoneForwarded aria-hidden="true" /><div><h3>Sends requests to your team</h3><p>A contact request is a lead, not a confirmed appointment. Your team confirms availability and records the outcome.</p></div></article>
-            <article><Headphones aria-hidden="true" /><div><h3>Lets you review every conversation</h3><p>Read each conversation, update the knowledge, and pause website chat from your customer workspace.</p></div></article>
+            <article><ShieldCheck aria-hidden="true" /><div><h3>Uses your approved information</h3><p>The chatbot uses the answers you approve. Visitors can leave their details when they need help from your team.</p></div></article>
+            <article><PhoneForwarded aria-hidden="true" /><div><h3>Sends requests to your team</h3><p>A contact request is a lead, not a confirmed appointment. Your team confirms the appointment and marks it as booked.</p></div></article>
+            <article><Headphones aria-hidden="true" /><div><h3>Lets you review every conversation</h3><p>Read conversations, change chatbot answers, or pause chat from your dashboard.</p></div></article>
           </div>
         </div>
       </section>

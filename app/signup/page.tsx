@@ -21,7 +21,7 @@ export default async function SignupPage({ searchParams }: PageProps) {
   const error = typeof search.error === "string" ? search.error : null;
 
   return (
-    <AuthShell eyebrow="Customer workspace" title="Set up Raleigh Lead Recovery." description="Create your business workspace with a secure email link. No password or text message required.">
+    <AuthShell eyebrow="Customer workspace" title="Create your customer account." description="Use an email link to create your account. You can add your business information next; creating an account does not turn on chat or phone coverage.">
       {error ? <p className="mb-5 border-2 border-black bg-black p-4 text-sm font-bold text-white">{errors[error] ?? errors.signup}</p> : null}
       <form action={requestSignupLinkAction} className="grid gap-5">
         <AuthField label="Your name" name="owner_name" autoComplete="name" />

@@ -12,7 +12,7 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Pr
   const client = await requireCustomerWorkspace();
   const search = await searchParams;
   return <DashboardShell active="knowledge" client={client}>
-    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Your chatbot’s knowledge</p><h1>Your business. Your answers.</h1><p>The business profile you already maintain supplies common facts. Add custom answers here and keep incomplete entries as drafts.</p></div><Link className="rlr-button rlr-button-secondary" href="/dashboard/chats">Chat analytics →</Link></div>
+    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Your chatbot’s knowledge</p><h1>Your business. Your answers.</h1><p>Your business profile supplies your services, hours, and service area. Add answers to other customer questions here. Publish an answer when it’s ready for visitors to see.</p></div><Link className="rlr-button rlr-button-secondary" href="/dashboard/chats">Chat analytics →</Link></div>
     <ChatKnowledgeManager client={client} search={search} saveAction={saveKnowledge} toggleAction={toggleChat} />
   </DashboardShell>;
 }

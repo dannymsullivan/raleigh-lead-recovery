@@ -34,7 +34,7 @@ export const blogPosts: BlogPost[] = [
     slug: "plumbing-calls-going-to-voicemail",
     title: "What happens when plumbing calls go to voicemail?",
     description:
-      "A practical breakdown for Raleigh plumbers on why missed calls are expensive, which calls matter most, and how to catch them without changing the shop number.",
+      "A practical guide for plumbing businesses on why missed calls are expensive, which calls matter most, and how to catch them without changing the shop number.",
     category: "Missed calls",
     format: "article",
     publishedAt: "2026-07-09",
@@ -51,7 +51,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "paragraph",
         text:
-          "For a small plumbing shop, the risk is not just a missed conversation. It is a missed water heater, drain backup, leak repair, or emergency callback that could have been captured with a fast response."
+          "For a small plumbing shop, the risk is not just a missed conversation. It is a missed water heater, drain backup, leak repair, or emergency callback that could have been saved for follow-up with a quick response."
       },
       {
         type: "heading",
@@ -99,7 +99,7 @@ export const blogPosts: BlogPost[] = [
           },
           {
             title: "The plumbing issue gets captured",
-            text: "Name, callback number, address, issue, urgency, and timing are collected before the lead cools off."
+            text: "Name, callback number, address, issue, urgency, and timing are collected so the team can call back with the right information."
           },
           {
             title: "The owner gets the summary",
@@ -157,7 +157,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "paragraph",
         text:
-          "Instead of a missed call dropping into voicemail, an intake assistant answers and asks plumbing-specific questions. The owner receives the lead details by text or email."
+          "Instead of a missed call dropping into voicemail, an intake assistant answers and asks plumbing-specific questions. The owner can review a call summary and use any notifications included in their setup."
       },
       {
         type: "steps",
@@ -217,7 +217,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "paragraph",
         text:
-          "A missed plumbing call is worth the expected value of the job, not the full invoice amount. The clean way to estimate it is captured call value multiplied by close rate."
+          "A missed plumbing call is worth the expected value of the job, not the full invoice amount. Estimate it by multiplying the likely job value by the chance of booking the work."
       },
       {
         type: "callout",
@@ -232,7 +232,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "paragraph",
         text:
-          "Do not treat every call like a guaranteed sale. A better report groups captured calls into rough bands: small repair, standard job, urgent job, and unknown. That keeps the audit credible."
+          "Do not treat every call like a guaranteed sale. A better report groups captured calls into rough bands: small repair, standard job, urgent job, and unknown. That makes it easier to separate estimates from booked jobs."
       },
       {
         type: "list",
@@ -245,7 +245,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "heading",
-        text: "What the 7-day audit should prove"
+        text: "What to review during a call-coverage test"
       },
       {
         type: "steps",
@@ -271,76 +271,68 @@ export const blogPosts: BlogPost[] = [
       {
         type: "quote",
         text:
-          "The honest claim is pipeline captured, not revenue closed. That distinction builds trust with owners."
+          "Track potential job value separately from booked work. A customer inquiry is not a completed sale."
       }
     ]
   },
   {
-    slug: "video-demo-missed-call-recovery",
-    title: "Video script: show a plumber the missed-call demo in 60 seconds",
-    description:
-      "A short video outline you can record for Facebook, Instagram, LinkedIn, or YouTube Shorts to explain Raleigh Lead Recovery to local plumbers.",
-    category: "Video",
-    format: "video",
-    publishedAt: "2026-07-09",
-    updatedAt: "2026-07-09",
-    readMinutes: 3,
-    targetQuery: "missed call recovery demo for plumbers",
-    buyerStage: "Consideration",
-    blocks: [
+    "slug": "video-demo-missed-call-recovery",
+    "title": "How to try the voice agent demo",
+    "description": "Try a sample customer call in your browser and see what to check before adding a voice agent to your business.",
+    "category": "Operations",
+    "format": "article",
+    "publishedAt": "2026-07-09",
+    "updatedAt": "2026-10-27",
+    "readMinutes": 3,
+    "targetQuery": "missed call recovery demo for plumbers",
+    "buyerStage": "Consideration",
+    "blocks": [
       {
-        type: "paragraph",
-        text:
-          "This is a short video script for explaining missed-call recovery to plumbing owners. Record it vertically for Instagram Reels, Facebook, YouTube Shorts, and LinkedIn."
+        "type": "paragraph",
+        "text": "The voice demo lets you play the customer in a sample call. You speak through your browser’s microphone, so you don’t need to call a phone number."
       },
       {
-        type: "heading",
-        text: "Hook"
+        "type": "heading",
+        "text": "Try a realistic customer question"
       },
       {
-        type: "quote",
-        text:
-          "Raleigh plumbers: what happens when a customer calls while your hands are under a sink?"
+        "type": "paragraph",
+        "text": "Open the Voice agents page and select Try the voice demo. Allow microphone access when your browser asks. Describe a sample problem, such as an AC unit that has stopped cooling. Use fictional details while testing."
       },
       {
-        type: "heading",
-        text: "60-second outline"
+        "type": "heading",
+        "text": "What to listen for"
       },
       {
-        type: "steps",
-        items: [
-          {
-            title: "Show the problem",
-            text: "Hold up your phone or show the demo page. Say that urgent calls often arrive when the owner cannot answer."
-          },
-          {
-            title: "Show the demo number",
-            text: "Ask viewers to call 984-299-2155 and pretend they have a leak, backed-up drain, or water heater issue."
-          },
-          {
-            title: "Explain the flow",
-            text: "The assistant captures the issue, address, callback number, urgency, and timing."
-          },
-          {
-            title: "Make the offer",
-            text: "You are looking for 3 Raleigh-area plumbing shops to test it free for 7 days."
-          }
+        "type": "list",
+        "items": [
+          "Does the agent explain who it is?",
+          "Does it understand the service the caller needs?",
+          "Does it ask clear questions, one at a time?",
+          "Does it collect enough detail for a useful callback?",
+          "Does it explain the next step without promising an unconfirmed appointment?"
         ]
       },
       {
-        type: "heading",
-        text: "Caption"
+        "type": "heading",
+        "text": "Set it up for your business"
       },
       {
-        type: "paragraph",
-        text:
-          "I built Raleigh Lead Recovery for plumbers who miss calls while they are on jobs. Your current number stays the same. Only missed calls roll over. Want to test it for a week?"
+        "type": "paragraph",
+        "text": "Your own agent uses the services, hours, service area, and call instructions you approve. Danny helps prepare the answers and test calls before you turn on forwarding."
       },
       {
-        type: "callout",
-        title: "Publishing note",
-        text:
-          "After you upload the video to YouTube, replace this post with the embed URL and keep the transcript on the page for SEO."
+        "type": "callout",
+        "title": "Ask about voice coverage",
+        "text": "Voice AI starts at $799/month. We confirm your included minutes, setup, and any extra costs before service begins. You can also ask for a combined chat and voice quote."
+      },
+      {
+        "type": "heading",
+        "text": "If the demo won’t connect"
+      },
+      {
+        "type": "paragraph",
+        "text": "Check that your browser can use your microphone, then try again. If the demo says it is unavailable, contact Danny using the email link on the site."
       }
     ]
   }

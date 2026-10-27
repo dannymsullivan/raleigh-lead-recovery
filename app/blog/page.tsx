@@ -7,7 +7,7 @@ import { blogCategories, blogPosts, siteUrl } from "@/lib/blog";
 import { contactEmail, contactHref } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "Field Notes | Raleigh Lead Recovery",
+  title: "Guides for Service Businesses | Raleigh Lead Recovery",
   description: "Practical missed-call recovery, call-forwarding, and lead-capture advice for busy service businesses.",
   alternates: { canonical: `${siteUrl}/blog` }
 };
@@ -28,7 +28,7 @@ export default function BlogIndexPage() {
               Better calls.<br />Better jobs.
             </h1>
             <p className="mt-9 max-w-2xl text-lg font-semibold leading-8 text-black/60 sm:text-xl">
-              Plain-English guides for service businesses that would rather capture the next customer than listen to another mystery voicemail.
+              Practical guides to answering missed calls, collecting job details, and following up with customers.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function BlogIndexPage() {
 
       <section className="border-b-2 border-black bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-5 py-5 sm:px-8">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/40">Browse the board</span>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black/40">Topics</span>
           {blogCategories.map((category, index) => (
             <span className="inline-flex items-center gap-2 text-sm font-black" key={category}>
               <span className="font-mono text-[9px] text-black/35">{String(index + 1).padStart(2, "0")}</span>{category}
@@ -65,7 +65,7 @@ export default function BlogIndexPage() {
           <div className="mb-8 flex items-end justify-between gap-6">
             <div>
               <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Start here</p>
-              <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">The lead story.</h2>
+              <h2 className="mt-4 text-4xl font-black tracking-[-0.055em] sm:text-5xl">Start with missed calls.</h2>
             </div>
             <span className="hidden font-mono text-xs font-bold text-black/35 sm:block">UPDATED {featuredPost.updatedAt}</span>
           </div>
@@ -88,9 +88,9 @@ export default function BlogIndexPage() {
         <div className="mx-auto max-w-6xl">
           <div className="grid lg:grid-cols-[0.72fr_1fr]">
             <div className="border-b-2 border-black bg-black p-7 text-white sm:p-10 lg:border-b-0 lg:border-r-2">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/45">The rest of the board</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-white/45">More guides</p>
               <h2 className="mt-6 text-5xl font-black leading-[0.9] tracking-[-0.06em] sm:text-6xl">Notes from the front desk.</h2>
-              <p className="mt-7 max-w-md text-base font-semibold leading-7 text-white/58">Forwarding, job value, voicemail, and the small operational choices that decide whether a missed ring becomes revenue.</p>
+              <p className="mt-7 max-w-md text-base font-semibold leading-7 text-white/58">Learn how call forwarding works, what details to collect, and how to measure booked jobs.</p>
             </div>
             <div className="divide-y-2 divide-black">
               {remainingPosts.map((post, index) => (

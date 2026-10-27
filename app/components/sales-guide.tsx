@@ -7,11 +7,11 @@ import { createPortal } from "react-dom";
 
 const stops = [
   { selector: ".rlr-founder", title: "Meet your human", tip: "Danny handles setup. I handle the waving." },
-  { selector: ".sales-problem", title: "Sound familiar?", tip: "Good customers have questions. Let’s catch them while they’re asking." },
+  { selector: ".sales-problem", title: "Sound familiar?", tip: "Help customers get answers while your team is busy." },
   { selector: "#products", title: "Pick your front desk", tip: "Start with website chat. Add voice when you need it." },
-  { selector: "#how-it-works", title: "Three easy steps", tip: "Your answers in. Helpful conversations out." },
+  { selector: "#how-it-works", title: "Three easy steps", tip: "Share your business details. We set it up, and you test it." },
   { selector: "#outcomes", title: "Follow the lead", tip: "See the conversation, where it came from, and what happened next." },
-  { selector: "#pricing", title: "Take a test drive", tip: "Two weeks to see it work for your business." },
+  { selector: "#pricing", title: "Pick your coverage", tip: "Chat, voice, or both. Try website chat free for two weeks." },
   { selector: "#trial", title: "Ready when you are", tip: "Bring your questions. We’ll help with the setup." },
   { selector: "#questions", title: "A few good answers", tip: "Still curious? These are the questions people usually ask." },
 ] as const;
@@ -64,7 +64,7 @@ export function SalesGuide() {
   return createPortal(<aside className={`sales-guide sales-guide-position-${position.stop % 3}${expanded ? " is-expanded" : ""}`} aria-label="Page guide">
     <div className="sales-guide-bubble" id="sales-guide-tip">
       <button className="sales-guide-dismiss" aria-label="Dismiss page guide" onClick={() => setDismissed(true)}><X size={15} /></button>
-      <span className="sales-guide-eyebrow">Your friendly page guide</span>
+      <span className="sales-guide-eyebrow">I’m Snappy. Let me show you around.</span>
       <strong>{stop.title}</strong><p>{stop.tip}</p>
       <button className="sales-guide-next" onClick={() => visit(position.stop + 1)}>{position.stop === stops.length - 1 ? "Back to the demo" : "Next stop"} <ArrowDown size={14} aria-hidden="true" /></button>
     </div>

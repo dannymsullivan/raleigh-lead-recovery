@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
         <p className="text-sm font-black">Want to try the chatbot first?</p>
         <Link className="mt-2 inline-flex items-center gap-2 text-sm font-black underline decoration-2 underline-offset-4" href="/#try-chat">Try it live <ArrowRight className="h-4 w-4" /></Link>
       </div>
-      <p className="mt-7 text-sm font-semibold text-black/55">New here? <Link className="font-extrabold text-black underline decoration-2 underline-offset-4" href="/signup">Start free</Link></p>
+      <p className="mt-7 text-sm font-semibold text-black/55">New here? <Link className="font-extrabold text-black underline decoration-2 underline-offset-4" href="/signup">Create an account</Link></p>
     </AuthShell>
   );
 }

@@ -44,15 +44,15 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Do we have to replace our phone system?",
-    a: "No. Your number, provider, and phones stay in place. We use your provider’s no-answer or conditional-forwarding setting, so your team always gets the first chance to answer.",
+    a: "You can usually keep your current number and phones. We check your provider’s call-forwarding options and set up the agent to answer when your team can’t.",
   },
   {
     q: "What does Chloe say to callers?",
-    a: "Only what you approve. We build the greeting, questions, service area, urgency rules, and callback expectations with you. Chloe identifies herself as an AI assistant and never invents pricing, availability, or arrival times.",
+    a: "You approve the greeting, business information, and questions before launch. Chloe introduces herself as an AI assistant and asks for the details your team needs to follow up. We set rules for prices, appointment requests, and urgent calls.",
   },
   {
     q: "What happens if someone hangs up?",
-    a: "With messaging enabled, eligible missed callers can receive a business-approved text. We configure the number and reply routing as part of your voice setup.",
+    a: "Optional text messages let eligible missed callers reply with what they need. We confirm messaging requirements, costs, and where replies go before turning this on.",
   },
   {
     q: "Can it transfer an urgent call?",
@@ -60,7 +60,7 @@ const faqs = [
   },
   {
     q: "How much does voice coverage cost?",
-    a: "We scope voice coverage separately from website chat. Before setup, we agree on your call volume, included usage, routing, and price. The two-week website chat trial is described on the homepage.",
+    a: "Voice AI starts at $799/month. Your quote confirms included minutes, call forwarding, and any extra costs. Website chat starts at $399/month after a two-week free trial. We can quote both services together.",
   },
 ];
 
@@ -68,7 +68,7 @@ export default function VoicePage() {
   return (
     <main className="landing-page rlr-home rlr-retro">
       <PublicSiteNav
-        cta={{ href: "/get-started", label: "Request voice setup" }}
+        cta={{ href: "/get-started?service=voice", label: "Request voice setup" }}
       />
 
       <section className="rlr-hero">
@@ -82,7 +82,7 @@ export default function VoicePage() {
               so they can follow up without starting over.
             </p>
             <div className="rlr-hero-actions">
-              <a className="rlr-button rlr-button-primary" href="/get-started">
+              <a className="rlr-button rlr-button-primary" href="/get-started?service=voice">
                 Request voice setup <ArrowRight aria-hidden="true" />
               </a>
               <a className="rlr-button rlr-button-secondary" href="#talk-now">Try the voice demo</a>
@@ -118,7 +118,7 @@ export default function VoicePage() {
           <span><Headphones aria-hidden="true" /> Your team answers first</span>
           <span><PhoneForwarded aria-hidden="true" /> No new phone system</span>
           <span><MessageSquareText aria-hidden="true" /> Optional text-back</span>
-          <span><ShieldCheck aria-hidden="true" /> Every outcome is visible</span>
+          <span><ShieldCheck aria-hidden="true" /> Read call summaries</span>
         </div>
       </section>
 
@@ -127,15 +127,13 @@ export default function VoicePage() {
           <p className="rlr-kicker">A better missed-call experience</p>
           <h2>Your caller gets an answer. Your team gets the details.</h2>
           <p>
-            The goal is not to keep a caller talking. It is to understand the
-            need, protect the customer experience, and give your team something
-            useful to act on.
+            The agent asks what the caller needs and how to reach them. Your team gets the details in one place, ready for a callback.
           </p>
         </div>
         <ol className="rlr-flow-steps">
           <li><span>01</span><div><h3>Answer naturally</h3><p>Chloe introduces herself, acknowledges why they called, and gives them room to respond.</p></div></li>
           <li><span>02</span><div><h3>Ask one thing at a time</h3><p>Short, relevant questions capture the service need, urgency, location, and preferred next step.</p></div></li>
-          <li><span>03</span><div><h3>Hand back the opportunity</h3><p>Your team gets a concise summary, contact details, and the action the caller expects next.</p></div></li>
+          <li><span>03</span><div><h3>Get the details for a callback</h3><p>Your team gets a concise summary, contact details, and the action the caller expects next.</p></div></li>
         </ol>
       </section>
 
@@ -145,9 +143,7 @@ export default function VoicePage() {
             <p className="rlr-kicker">What your team receives</p>
             <h2>See who called, what they need, and how to follow up.</h2>
             <p>
-              Every handled call becomes a clean, reviewable outcome. Your team
-              can see what the customer needs, how urgent it is, and whether a
-              callback or transfer was requested.
+              Read the call summary to see what the customer needs, how urgent it is, and whether they asked for a callback or a transfer.
             </p>
             <div className="rlr-summary-card">
               <div className="rlr-summary-header"><span>Example call summary</span><strong>6:43 PM</strong></div>
@@ -169,7 +165,7 @@ export default function VoicePage() {
             <div>
               <p className="rlr-kicker">If they hang up</p>
               <h3>Add a text-back option for missed callers.</h3>
-              <p>When messaging is enabled for your business, missed callers can reply on their own time. We agree on the wording, routing, and messaging setup with you.</p>
+              <p>When messaging is enabled for your business, missed callers can reply on their own time. You approve the text, and we confirm where replies go and what messaging costs.</p>
             </div>
             <AutoTextBackDemo />
           </div>
@@ -184,7 +180,7 @@ export default function VoicePage() {
           <li><span>03</span><div><h3>Turn on coverage and review calls</h3><p>We help configure forwarding. Review summaries and transcripts, then adjust the call flow as needed.</p></div></li>
         </ol>
         <p className="voice-setup-note"><Clock3 size={18} aria-hidden="true" /> Setup timing, included minutes, and pricing are agreed before service starts.</p>
-        <a className="rlr-button rlr-button-primary" href="/get-started">Request voice setup <ArrowRight aria-hidden="true" /></a>
+        <a className="rlr-button rlr-button-primary" href="/get-started?service=voice">Request voice setup <ArrowRight aria-hidden="true" /></a>
       </section>
 
       <section className="rlr-safety">
@@ -194,9 +190,9 @@ export default function VoicePage() {
             <h2>Your phones stay yours. Your rules stay in control.</h2>
           </div>
           <div className="rlr-safety-list">
-            <article><ShieldCheck aria-hidden="true" /><div><h3>No invented promises</h3><p>Chloe follows your approved services, hours, service area, escalation rules, and callback expectations.</p></div></article>
-            <article><PhoneForwarded aria-hidden="true" /><div><h3>No forwarding loops</h3><p>Urgent transfers go to a separate approved number, never back to the forwarded main line.</p></div></article>
-            <article><Headphones aria-hidden="true" /><div><h3>No black box</h3><p>You can review every call outcome, adjust the flow, pause coverage, or turn forwarding off.</p></div></article>
+            <article><ShieldCheck aria-hidden="true" /><div><h3>You approve what it says</h3><p>Chloe follows your approved services, hours, service area, escalation rules, and callback expectations.</p></div></article>
+            <article><PhoneForwarded aria-hidden="true" /><div><h3>Urgent calls go to the right person</h3><p>Urgent transfers go to a separate approved number, never back to the forwarded main line.</p></div></article>
+            <article><Headphones aria-hidden="true" /><div><h3>You can review the calls</h3><p>You can review every call outcome, adjust the flow, pause coverage, or turn forwarding off.</p></div></article>
           </div>
         </div>
       </section>
@@ -208,8 +204,7 @@ export default function VoicePage() {
           <h2>You work directly with me.</h2>
           <p>
             I&apos;m Danny Sullivan, an AI product engineer and former
-            service-business owner. I set up the call flow with you and review
-            the real outcomes—not just a dashboard metric.
+            service-business owner. I set up the call flow with you and help you review calls and improve the answers over time.
           </p>
         </div>
         <a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a>
@@ -236,7 +231,7 @@ export default function VoicePage() {
           <h2>Give callers help when you can’t pick up.</h2>
           <p>Tell us how your business handles calls. We’ll help you set up the right coverage.</p>
           <div>
-            <a className="rlr-button rlr-button-light" href="/get-started">
+            <a className="rlr-button rlr-button-light" href="/get-started?service=voice">
               Request voice setup <ArrowRight aria-hidden="true" />
             </a>
             <a className="rlr-final-demo-link" href="#talk-now">Talk to Chloe first</a>

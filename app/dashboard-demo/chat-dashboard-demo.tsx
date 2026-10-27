@@ -15,7 +15,7 @@ export function ChatDashboardDemo() {
   const [chats, setChats] = useState(samples);
   const metrics = chatMetrics(chats);
   return <>
-    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Dashboard preview · Fictional sample data</p><h1>See what your chatbot brings in.</h1><p>Explore sources, read chats, and try updating a lead outcome. Changes in this preview stay in this tab.</p></div><Link className="rlr-button rlr-button-secondary" href="/#business-knowledge">How your chatbot learns your business →</Link></div>
+    <div className="chat-dashboard-heading"><div><p className="rlr-kicker">Dashboard preview · Fictional sample data</p><h1>See what your chatbot brings in.</h1><p>Read sample conversations, see where leads came from, and try marking a lead as booked. Changes stay in this browser tab.</p></div><Link className="rlr-button rlr-button-secondary" href="/#business-knowledge">How to add your business information →</Link></div>
     <div className="chat-notice">This is an interactive product preview. Your live customer dashboard uses your private workspace and actual conversations.</div>
     <ChatReport records={chats} metrics={metrics} preview action={(form) => { const id = form.get("id"); const status = form.get("status") as ChatRecord["lead_status"]; const value = Number(form.get("booked_value")) || 0; setChats((previous) => previous.map((item) => item.id === id ? { ...item, lead_status: status, booked_value: status === "booked" ? value : null } : item)); }} />
     <button className="rlr-button rlr-button-secondary" type="button" onClick={() => setChats(samples)}>Reset sample data</button>

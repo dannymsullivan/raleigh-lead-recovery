@@ -42,7 +42,7 @@ export function AutoTextBackDemo() {
       <div className="text-back-demo-bar">
         <div>
           <span className="text-back-demo-dot" />
-          Live workflow preview
+          Example text conversation
         </div>
         <span>Tuesday · 6:42 PM</span>
       </div>

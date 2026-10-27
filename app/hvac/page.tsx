@@ -9,7 +9,7 @@ import { PublicSiteNav } from "../components/public-site-nav";
 import { WebVoiceDemo } from "../components/web-voice-demo";
 
 export const metadata: Metadata = {
-  title: "Reactivate Past HVAC Customers | Raleigh Lead Recovery",
+  title: "Follow Up with Past HVAC Customers | Raleigh Lead Recovery",
   description: "Hear Raleigh Lead Recovery reconnect with a past HVAC customer about seasonal maintenance, and learn how to set up a campaign for your business.",
   alternates: { canonical: "/hvac" },
   openGraph: {
@@ -25,14 +25,14 @@ export default function HvacLandingPage() {
   return (
     <main className="landing-page hvac-page rlr-home rlr-retro retro-secondary">
       <PublicSiteNav
-        cta={{ href: "/get-started", label: "Request HVAC setup" }}
+        cta={{ href: "/get-started?service=voice", label: "Request HVAC setup" }}
       />
 
       <section className="page-shell hvac-hero">
         <div className="hvac-hero-copy">
           <p className="hvac-kicker"><span>SEASONAL MAINTENANCE FOLLOW-UP</span><span>BUILT FOR HVAC TEAMS</span></p>
           <h1>Hear how past HVAC customers become <em>tune-up calls.</em></h1>
-          <p className="hvac-hero-lede">Play the homeowner in the exact seasonal-maintenance call. It happens live in your browser.</p>
+          <p className="hvac-hero-lede">Try a sample maintenance reminder call. You play the homeowner and speak to the agent through your browser.</p>
           <div className="hvac-hero-actions">
             <a className="hvac-text-link" href="#listen">Jump to the live call <ArrowDown aria-hidden="true" /></a>
           </div>
@@ -51,7 +51,7 @@ export default function HvacLandingPage() {
           <div className="hvac-demo-copy">
             <p className="eyebrow"><span /> Live browser demo</p>
             <h2>Hear the call before a customer does.</h2>
-            <p>No CRM access or customer data. Answer naturally and decide whether you would trust the conversation with your list.</p>
+            <p>Use your microphone to try a sample conversation. You don’t need to connect your customer list or share real customer details.</p>
           </div>
           <div className="hvac-demo-console">
             <div className="hvac-demo-console-top"><span>LIVE SCENARIO</span><strong>SEASONAL TUNE-UP</strong></div>
@@ -64,7 +64,7 @@ export default function HvacLandingPage() {
       <section className="hvac-pilot" id="pilot">
         <div className="page-shell hvac-pilot-grid">
           <div><p className="eyebrow">Setup for your HVAC business</p><h2>Start with the customers you want to reach.</h2><p><ShieldCheck aria-hidden="true" /> You choose the contacts and approve the conversation. Danny reviews the setup and first calls personally.</p></div>
-          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href="/get-started">Request HVAC setup <ArrowRight /></a><span className="hvac-text-link">We agree on the eligible list, usage, and pricing before launch.</span></div>
+          <div className="hvac-pilot-card"><a className="hvac-button hvac-button-dark" href="/get-started?service=voice">Request HVAC setup <ArrowRight /></a><span className="hvac-text-link">We confirm who can be called, how many calls are included, and the price before launch.</span></div>
         </div>
       </section>
 

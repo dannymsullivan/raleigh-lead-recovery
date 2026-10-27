@@ -130,7 +130,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">Talk to Danny</p>
                 <h2 className="mt-4 text-2xl font-black tracking-[-0.04em]">Have a missed-call question?</h2>
                 <p className="mt-4 text-sm font-semibold leading-6 text-white/58">
-                  Send it directly. No form, no funnel, no mystery inbox.
+                  Email Danny with your question and the type of business you run.
                 </p>
                 <a className="mt-6 inline-flex w-full items-center justify-center gap-2 border-2 border-white bg-white px-4 py-4 text-sm font-black text-black hover:bg-transparent hover:text-white" href={contactHref}><Mail className="h-4 w-4" /> Email Danny</a>
               </div>
@@ -222,7 +222,7 @@ function buildBlogSchema(post: BlogPost) {
     dateModified: post.updatedAt,
     mainEntityOfPage: url,
     articleSection: post.category,
-    keywords: [post.targetQuery, post.category, "Raleigh plumbers", "missed call recovery"],
+    keywords: [post.targetQuery, post.category, "service businesses", "missed call recovery"],
     author: {
       "@type": "Person",
       name: "Danny Sullivan",
