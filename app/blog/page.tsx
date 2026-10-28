@@ -1,3 +1,4 @@
+import styles from "./blog.module.css";
 import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import { ArrowRight, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
@@ -17,10 +18,10 @@ const remainingPosts = blogPosts.slice(1);
 
 export default function BlogIndexPage() {
   return (
-    <main className="brand-surface min-h-screen rlr-home rlr-retro retro-editorial">
+    <main className={`${styles.blog} min-h-screen rlr-home rlr-retro retro-editorial`}>
       <PublicSiteNav cta={{ href: "/get-started", label: "Try two weeks free" }} />
 
-      <section className="border-b-2 border-black">
+      <section className={`${styles.hero} border-b-2 border-black`}>
         <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.12fr_0.88fr]">
           <div className="px-5 py-20 sm:px-8 sm:py-28 lg:border-r-2 lg:border-black lg:pr-16">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Snappy Leads field notes</p>
@@ -32,7 +33,7 @@ export default function BlogIndexPage() {
             </p>
           </div>
 
-          <div className="flex min-h-[390px] flex-col justify-between bg-black p-7 text-white sm:p-10 lg:min-h-0">
+          <div className={`${styles.issue} flex min-h-[390px] flex-col justify-between bg-black p-7 text-white sm:p-10 lg:min-h-0`}>
             <div className="flex items-start justify-between gap-6">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/45">Issue 001</span>
               <span className="h-3 w-3 rounded-full bg-white" />
@@ -70,7 +71,7 @@ export default function BlogIndexPage() {
             <span className="hidden font-mono text-xs font-bold text-black/35 sm:block">UPDATED {featuredPost.updatedAt}</span>
           </div>
 
-          <Link className="group grid border-2 border-black bg-white lg:grid-cols-[1fr_0.36fr]" href={`/blog/${featuredPost.slug}`}>
+          <Link className={`${styles.featured} group grid border-2 border-black bg-white lg:grid-cols-[1fr_0.36fr]`} href={`/blog/${featuredPost.slug}`}>
             <div className="p-7 sm:p-10 lg:border-r-2 lg:border-black">
               <PostMeta post={featuredPost} />
               <h3 className="mt-12 max-w-4xl text-4xl font-black leading-[0.96] tracking-[-0.055em] sm:text-6xl">{featuredPost.title}</h3>
@@ -115,7 +116,7 @@ export default function BlogIndexPage() {
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-black/45">Have a missed-call question?</p>
             <h2 className="mt-5 max-w-3xl text-4xl font-black leading-[0.95] tracking-[-0.055em] sm:text-6xl">Send it to the person building Snappy Leads.</h2>
           </div>
-          <a className="inline-flex h-14 items-center justify-center gap-3 bg-black px-6 font-extrabold text-white transition-transform hover:-translate-y-1" href={contactHref}>
+          <a className="rlr-button rlr-button-primary inline-flex items-center justify-center gap-3" href={contactHref}>
             <Mail className="h-4 w-4" aria-hidden="true" /> {contactEmail}
           </a>
         </div>

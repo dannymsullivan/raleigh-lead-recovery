@@ -1,0 +1,66 @@
+.blog {
+  --blog-ink: #17232d;
+  --blog-paper: #fff9e7;
+}
+
+.blog h2 {
+  font-family: 'RLR Display', Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+
+.blog h3 { letter-spacing: -.025em; line-height: 1.12; }
+.blog :global(.border-black) { border-color: var(--blog-ink); }
+.blog :global(.divide-black) > * + * { border-color: var(--blog-ink); }
+.blog :global(.bg-white) { background-color: #fffdf4; }
+.blog :global(.bg-black) { background-color: var(--blog-ink); }
+.blog :global([class~="bg-[#f4f1e8]"]) { background-color: #a9edff; }
+
+/* Keep metadata and body copy readable on both paper and dark panels. */
+.blog :global([class*="text-black/"]) { color: #4e5a58; }
+.blog :global([class*="text-white/"]) { color: #e1e7dc; }
+.blog :global(.text-white) h2 { color: #f7fa00; }
+
+.blog .hero { background: #2155ff; color: var(--blog-paper); }
+.hero h1 { color: var(--blog-paper); font-size: clamp(3.8rem, 8vw, 7rem); line-height: .98; }
+.hero :global([class*="text-black/"]) { color: #fff9e7; }
+.hero :global(.text-black) { color: #f7fa00; }
+.hero > div > div > p:first-child { color: #f7fa00; }
+.hero a:focus-visible { outline-color: #f7fa00; }
+
+.blog .issue { background: #f7fa00; color: var(--blog-ink); }
+.issue :global([class*="text-white/"]) { color: #354845; }
+.issue :global(.bg-white) { background: #ff4f9a; border-radius: 0; }
+.issue dl, .issue dl > div { border-color: #17232d55; }
+.issue > div:last-child > p {
+  font-family: 'RLR Display', Impact, sans-serif;
+  font-size: clamp(3.5rem, 5vw, 5rem);
+  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: -.01em;
+}
+
+.featured { box-shadow: 7px 7px 0 var(--blog-ink); transition: box-shadow 150ms; }
+.featured:hover { box-shadow: 7px 7px 0 #ff4f9a; }
+.featured h3 { font-family: 'RLR Display', Impact, sans-serif; font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 400; text-transform: uppercase; }
+.blog a:hover h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.blog a:focus-visible { outline: 3px solid #ff4f9a; outline-offset: 5px; }
+.blog :global(.prose-like) { max-width: 65ch; color: #354845; font-size: 17px; line-height: 1.85; }
+.blog :global(.prose-like) h2 { margin-top: 2.2rem; font-size: clamp(2rem, 4vw, 2.8rem); color: var(--blog-ink); }
+.blog :global(.prose-like) > :first-child { margin-top: 0; }
+.blog :global(.prose-like) blockquote { background: #f7fa00; border-color: var(--blog-ink); color: var(--blog-ink); }
+.blog :global(.prose-like) li::marker { color: #2155ff; }
+.blog :global(.prose-like) :global([class~="bg-[#f4f1e8]"]) { background: #eaf6f6; }
+
+@media (max-width: 639px) {
+  .hero h1 { font-size: clamp(3.4rem, 13vw, 4.8rem); }
+  .blog .issue { min-height: 300px; }
+  .blog h3 { overflow-wrap: anywhere; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured { transition: none; }
+}

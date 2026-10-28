@@ -1,3 +1,4 @@
+import styles from "../blog.module.css";
 import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import { ArrowRight, CalendarDays, Clock3, FileText, Mail, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
@@ -50,7 +51,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const FormatIcon = post.format === "video" ? PlayCircle : FileText;
 
   return (
-    <main className="brand-surface min-h-screen rlr-home rlr-retro retro-editorial">
+    <main className={`${styles.blog} min-h-screen rlr-home rlr-retro retro-editorial`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
@@ -59,7 +60,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       <PublicSiteNav cta={{ href: "/get-started", label: "Try two weeks free" }} />
 
       <article>
-        <section className="border-b-2 border-black px-5 py-16 sm:px-8 lg:py-24">
+        <section className={`${styles.hero} border-b-2 border-black px-5 py-16 sm:px-8 lg:py-24`}>
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.74fr_0.26fr] lg:items-end">
             <div>
               <Link className="mb-8 inline-flex items-center gap-2 text-sm font-black text-black/50 hover:text-black" href="/blog">
@@ -96,7 +97,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </section>
 
         {post.video ? (
-          <section className="px-5 pb-12">
+          <section className="px-5 pt-12 pb-12">
             <div className="mx-auto max-w-5xl overflow-hidden border-2 border-black bg-black">
               <div className="aspect-video">
                 <iframe
@@ -115,7 +116,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        <section className="px-5 pb-20">
+        <section className="px-5 pt-12 pb-20">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.72fr_0.28fr]">
             <div className="border-2 border-black bg-white px-6 py-8 sm:px-10 sm:py-12">
               <div className="prose-like">

@@ -13,7 +13,6 @@ import {
 import { PublicSiteNav } from "./components/public-site-nav";
 import { WebsiteChat } from "./components/website-chat";
 import { SalesMotion } from "./components/sales-motion";
-import { SalesGuide } from "./components/sales-guide";
 import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, ProductOverview, TrialBanner } from "./components/chatbot-sales-sections";
 import { contactEmail } from "@/lib/contact";
 
@@ -86,7 +85,6 @@ export default function HomePage() {
           </div>
 
           <div className="rlr-demo-card" id="try-chat">
-            <SalesGuide />
             <div className="rlr-demo-topline">
               <div><span className="rlr-live-dot" /><span>Your website assistant</span></div>
               <span>Try it live ↙</span>
