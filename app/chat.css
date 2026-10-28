@@ -109,14 +109,16 @@
 .product-ui .rlr-button { border-radius: 6px; min-height: 44px; }
 @media (max-width: 520px) { .chat-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .chat-metrics > div:last-child { grid-column: 1 / -1; } .chat-report-panel { padding: 18px; } .chat-outcome-form :is(select,input) { max-width: 100%; width: 100%; } .chat-outcome-form label { flex: 1 1 130px; } }
 
-/* A roomier, source-backed public demo; customer embeds keep their existing layout. */
-.rlr-retro .website-chat-demo .website-chat-log { height: 340px; }
+/* The demo grows for a conversation, without reserving an empty transcript. */
+.rlr-retro .website-chat-demo .website-chat-log { height: auto; padding: 14px 16px; }
+.rlr-retro .website-chat-demo[data-has-messages="true"] .website-chat-log { height: clamp(260px, 42svh, 340px); }
+.rlr-retro .website-chat-demo .website-chat-heading { padding: 14px 16px; }
 .website-chat-demo .chat-message-text { white-space: pre-wrap; }
 .website-chat-demo .website-chat-heading > div { min-width: 0; }
 .website-chat-demo .website-chat-heading strong { display: block; }
 .website-chat .chat-reset { margin-left: auto; display: grid; place-items: center; min-width: 36px; height: 36px; border: 1px solid #17232d; background: #fff9e7; color: #17232d; cursor: pointer; }
 .website-chat .chat-reset:focus-visible, .website-chat-demo summary:focus-visible, .website-chat-demo button:focus-visible { outline: 3px solid #2155ff; outline-offset: 3px; }
-.website-chat-demo .chat-demo-prompts > p { margin: 0; padding: 10px 20px 9px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #475965; }
+.website-chat-demo .chat-demo-prompts > p { margin: 0; padding: 3px 16px 7px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #475965; }
 .website-chat-demo .chat-suggestions { gap: 8px; align-items: center; }
 .website-chat-demo .chat-suggestions a { color: #17232d; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
 .website-chat-demo .chat-suggestions button { white-space: normal; text-align: left; }
@@ -130,12 +132,16 @@
 .website-chat-demo .chat-sources p { margin: 8px 0; white-space: pre-wrap; line-height: 1.65; font-size: 11px; }
 .website-chat-demo .chat-sources a { color: #1746db; text-decoration: underline; }
 .website-chat-demo .chat-pending { margin: 0; }
-.website-chat-demo .chat-disclosure { font-size: 10px; line-height: 1.5; }
+.website-chat-demo .chat-disclosure { padding: 8px 16px 10px; font-size: 10px; line-height: 1.5; }
 @media (max-width: 760px) {
-  .rlr-retro .website-chat-demo .website-chat-log { height: 330px; padding: 15px; }
+  .rlr-retro .website-chat-demo .website-chat-log { padding: 12px; }
+  .rlr-retro .website-chat-demo[data-has-messages="true"] .website-chat-log { height: clamp(240px, 38svh, 300px); }
+  .website-chat-demo .chat-message { max-width: 100%; }
   .website-chat-demo .chat-compose input { font-size: 16px; }
-  .website-chat-demo .chat-suggestions { padding-inline: 15px; }
-  .website-chat-demo .chat-demo-prompts > p { padding-inline: 15px; }
+  .website-chat-demo .chat-suggestions { padding: 0 12px 12px; }
+  .website-chat-demo[data-has-messages="false"] .chat-suggestions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .website-chat-demo .chat-demo-prompts > p { padding-inline: 12px; }
+  .website-chat-demo .chat-compose { margin-inline: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .website-chat-log { scroll-behavior: auto; } }
 

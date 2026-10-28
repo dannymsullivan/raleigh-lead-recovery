@@ -20,7 +20,16 @@ export function WebsiteChat({ workspace, businessName = demoBusinessName, knowle
   const [scenario, setScenario] = useState<string | null>(null);
   const token = useRef<string | undefined>(undefined);
   const log = useRef<HTMLDivElement>(null);
-  useEffect(() => { log.current?.scrollTo({ top: log.current.scrollHeight, behavior: "smooth" }); }, [messages, busy]);
+  useEffect(() => {
+    const container = log.current;
+    if (!container) return;
+    const latest = container.querySelector<HTMLElement>(".chat-message:last-of-type");
+    const answerStarted = isDemo && messages.at(-1)?.role === "assistant";
+    const top = answerStarted && latest
+      ? container.scrollTop + latest.getBoundingClientRect().top - container.getBoundingClientRect().top - 12
+      : container.scrollHeight;
+    container.scrollTo({ top, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }, [messages, busy, isDemo]);
 
   async function request(payload: Record<string, unknown>) {
     const params = Object.fromEntries(new URLSearchParams(window.location.search));
@@ -76,12 +85,12 @@ export function WebsiteChat({ workspace, businessName = demoBusinessName, knowle
     finally { setBusy(false); }
   }
 
-  return <div className={`website-chat${isDemo ? " website-chat-demo" : ""}`}>
+  return <div className={`website-chat${isDemo ? " website-chat-demo" : ""}`} data-has-messages={messages.length > 0}>
     <div className="website-chat-heading"><span className="chat-avatar"><MessageSquareText size={21} /></span><div><strong>{businessName}</strong><p>{workspace ? "Website assistant" : preview ? "Private knowledge preview" : "AI service advisor · Available 24/7"}</p></div>{isDemo ? <button className="chat-reset" type="button" onClick={reset} disabled={busy || rateLimited} aria-label="Start a new conversation" title="Start a new conversation"><RotateCcw size={16} /></button> : <span className="rlr-live-dot" />}</div>
     {isDemo ? <a className="chat-knowledge-link" href="/knowledge-base#knowledge-library" target="_blank" rel="noreferrer"><BookOpen size={15} aria-hidden="true" /><span>Explore the knowledge base</span><strong>{demoKnowledge.length} topics ↗</strong></a> : null}
-    {isDemo ? <p className="chat-demo-allowance">Try up to 6 AI questions per conversation. Browse the knowledge base free, without limits.</p> : null}
+    {isDemo ? <p className="chat-demo-allowance">6 AI questions per chat · Knowledge library always free</p> : null}
     <div className="website-chat-log" role="log" aria-label="Chat messages" aria-live="polite" ref={log}>
-      <div className="chat-message assistant">{isDemo ? "Hi, I’m Oak City’s AI service advisor. Tell me what’s happening with your heating or cooling. I can walk through options, explain costs, compare our plans, and help you work out what to do next." : "Hi! I can help with services, hours, and service-area questions. What would you like to know?"}{!workspace ? <small>{preview ? "Preview · Answers from your published knowledge" : "Fictional HVAC business · Real AI conversation · Sample prices & policies"}</small> : null}</div>
+      <div className="chat-message assistant">{isDemo ? "Hi, I’m Oak City’s AI advisor. Ask about pricing, compare plans, or tell me what’s happening with your heating or cooling." : "Hi! I can help with services, hours, and service-area questions. What would you like to know?"}{!workspace ? <small>{preview ? "Preview · Answers from your published knowledge" : "Fictional HVAC business · Sample prices & policies"}</small> : null}</div>
       {messages.map((message, index) => <div className={`chat-message ${message.role}`} key={index}>
         <div className="chat-message-text">{message.content}</div>
         {message.sources?.length ? <details className="chat-sources"><summary><BookOpen size={13} aria-hidden="true" />{message.sources.length} knowledge {message.sources.length === 1 ? "source" : "sources"}</summary><div>{message.sources.map((source) => <details key={source.id}><summary>{source.title}</summary><p>{source.content}</p><a href={`/knowledge-base#knowledge-${source.id}`} target="_blank" rel="noreferrer">View in the knowledge base ↗</a></details>)}</div></details> : message.source ? <small>Source: {message.source}</small> : null}
