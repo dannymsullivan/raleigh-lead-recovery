@@ -24,6 +24,7 @@ vi.mock("retell-sdk", () => ({
 const voice = {
   agent_id: "oak-city-agent", agent_name: publicDemoAgentName, version: 1, voice_id: "voice",
   max_call_duration_ms: 120_000, end_call_after_silence_ms: 30_000,
+  contact_memory_config: { enable_read: false, enable_update: false },
   response_engine: { type: "retell-llm", llm_id: "voice-llm", version: 1 }
 };
 
@@ -92,6 +93,23 @@ describe.each(["legacy", "shared knowledge"] as const)("%s public voice sync", (
     expect(mocks.agentCreateVersion).not.toHaveBeenCalled();
     expect(mocks.agentUpdate).not.toHaveBeenCalled();
     expect(mocks.agentPublish).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { enable_read: true, enable_update: false },
+    { enable_read: false, enable_update: true },
+    undefined,
+  ])("disables contact memory when a public demo inherits an enabled or unspecified setting: %j", async (memory) => {
+    mocks.agentRetrieve.mockResolvedValue({ ...voice, contact_memory_config: memory, data_storage_retention_days: 30 });
+    await runSync();
+    expect(failed).not.toHaveBeenCalled();
+    expect(mocks.agentCreateVersion).toHaveBeenCalledWith("oak-city-agent", { base_version: 1 });
+    expect(mocks.agentUpdate).toHaveBeenCalledWith("oak-city-agent", expect.objectContaining({
+      contact_memory_config: { enable_read: false, enable_update: false }
+    }));
+    expect(mocks.agentUpdate.mock.calls[0][1]).not.toHaveProperty("data_storage_retention_days");
+    expect(mocks.agentUpdate.mock.calls[0][1]).not.toHaveProperty("end_call_after_silence_ms");
+    expect(mocks.agentPublish).toHaveBeenCalledWith("oak-city-agent", expect.objectContaining({ version: 2 }));
   });
 
   it("refuses to modify a different configured voice agent", async () => {

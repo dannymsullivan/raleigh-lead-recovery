@@ -32,6 +32,8 @@ async function main(): Promise<void> {
   if (
     published.agent_name === publicDemoAgentName
     && published.max_call_duration_ms === publicDemoMaxCallDurationMs
+    && published.contact_memory_config?.enable_read === false
+    && published.contact_memory_config?.enable_update === false
     && publishedLlm.begin_message === publicDemoBeginMessage
     && publishedLlm.general_prompt === publicDemoPrompt
   ) {
@@ -65,6 +67,7 @@ async function main(): Promise<void> {
     enable_dynamic_responsiveness: true,
     enable_dynamic_voice_speed: true,
     max_call_duration_ms: publicDemoMaxCallDurationMs,
+    contact_memory_config: { enable_read: false, enable_update: false },
     response_engine: {
       type: "retell-llm",
       llm_id: llm.llm_id,
