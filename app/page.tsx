@@ -50,9 +50,11 @@ const faqs = [
   { q: "How much can it know about my business?", a: "We build your knowledge base around the information you approve: service details, pricing and exclusions, maintenance plans, warranties, safe troubleshooting, policies, and more. The live demo uses a detailed fictional HVAC business so you can explore what that depth looks like. Your own setup is scoped and tested with you." },
   { q: "Does every question have to go to a person?", a: "No. Published answers can resolve routine questions about your services and policies right in the chat. Your team is needed for work that requires a person, such as inspecting equipment, confirming an appointment, or answering a question outside the approved knowledge. The demo shows how an AI advisor can connect information across a conversation." },
   { q: "What happens when it doesn’t know?", a: "It should say so, explain what it can answer, and offer the appropriate next step. We define those boundaries with you. It shouldn’t make up a price, promise availability, or claim a technician is on the way." },
+  { q: "How does a chat turn into a lead?", a: "Visitors can get answers first. When they want help from your team, they choose ‘Ask the team to follow up’ and share their name, email, optional phone number, and request. With their permission, those details are saved with the full conversation in your dashboard. The public demo uses a fictional business and doesn’t collect customer requests." },
+  { q: "How does my team take over?", a: "During setup, we configure where requests go and who gets notified. Alerts and routing are part of your setup, with the recipients and follow-up process agreed before launch. Your team can review the conversation, contact the customer, and track the result in the dashboard." },
   { q: "Can I see where a lead came from?", a: "Yes. You can see the page where a chat started and, when available, the website or campaign that brought the visitor there. Mark the leads you book and add the job value to compare results." },
   { q: "Does each customer have their own dashboard?", a: "Yes. Each business signs in to its own workspace to read conversations, update chatbot answers, and track leads." },
-  { q: "Does it book appointments?", a: "The chatbot collects appointment requests. Your team confirms the time with the customer, then marks the lead as booked in the dashboard." },
+  { q: "Does it book appointments?", a: "It captures appointment requests so your team can follow up with the details already in hand. Your team confirms availability and the appointment time with the customer, then marks the lead as booked and records the job value in the dashboard." },
   { q: "Do you also offer voice agents?", a: "Yes. Voice is a separate service for missed-call and after-hours coverage. Visit the Voice agents page to try the browser demo and learn how setup works." },
 ];
 
@@ -145,7 +147,7 @@ export default function HomePage() {
           </p>
         </div>
         <ol className="rlr-flow-steps">
-          <li><span>01</span><div><h3>Build your business playbook</h3><p>Services, pricing rules, memberships, warranties, and the details that make your business yours. We help organize it into clear, approved knowledge.</p></div></li>
+          <li id="business-knowledge"><span>01</span><div><h3>Build your business playbook</h3><p>Services, pricing rules, memberships, warranties, and the details that make your business yours. We help organize it into clear, approved knowledge.</p></div></li>
           <li><span>02</span><div><h3>Test the real questions</h3><p>Try the everyday questions and the tricky ones. Review the answers, clarify the boundaries, and approve the setup before it reaches customers.</p></div></li>
           <li><span>03</span><div><h3>Go live and review your leads</h3><p>Your trial starts when the chatbot is ready. See each conversation, contact request, and lead source in your dashboard, then record what happens next.</p></div></li>
         </ol>
@@ -154,34 +156,36 @@ export default function HomePage() {
       <section className="rlr-outcomes" id="outcomes">
         <div className="page-shell rlr-outcomes-grid">
           <div className="rlr-outcomes-copy">
-            <p className="rlr-kicker">Your customer dashboard</p>
-            <h2>See every chat. Track every lead.</h2>
+            <p className="rlr-kicker">From answers to action</p>
+            <h2>From a question to a real inquiry.</h2>
             <p>
-              Read conversations, find customer contact details, and see where leads came from. Mark each lead as new, contacted, booked, or lost, and add the value of jobs you book.
+              Useful answers build confidence. When a visitor wants your help, give your team the request, the context, and a clear next step.
             </p>
+            <ol className="lead-flow">
+              <li><strong>Answer the question</strong><p>Help visitors understand your services, prices, and policies using information you approve.</p></li>
+              <li><strong>Capture the request</strong><p>Visitors leave their name, contact details, and what they need, with permission to follow up.</p></li>
+              <li><strong>Notify the right person</strong><p>We configure alerts and routing during setup, so requests reach the people who handle your follow-up.</p></li>
+              <li><strong>Follow up and track the job</strong><p>Your team confirms appointments, tracks each lead, and records the value of booked work.</p></li>
+            </ol>
+          </div>
+
+          <div className="lead-preview">
             <div className="rlr-summary-card">
               <div className="rlr-summary-header"><span>Example lead · Sample data</span><strong>Website chat</strong></div>
               <div className="rlr-summary-person">
                 <span>JM</span>
-                <div><strong>Jordan M.</strong><p>Returning customer · AC repair</p></div>
-                <i>Needs callback</i>
+                <div><strong>Jordan M.</strong><p>AC repair request</p></div>
+                <i>New inquiry</i>
               </div>
               <dl>
-                <div><dt>Landing page</dt><dd>/ac-repair</dd></div>
-                <div><dt>Where they came from</dt><dd>Google paid ad</dd></div>
-                <div><dt>Campaign</dt><dd>Summer AC repair</dd></div>
+                <div><dt>Contact</dt><dd>jordan@example.com</dd></div>
+                <div><dt>Request</dt><dd>“My upstairs AC isn’t cooling. Can we arrange a visit?”</dd></div>
+                <div><dt>Source</dt><dd>Google paid ad → /ac-repair</dd></div>
               </dl>
-              <div className="rlr-summary-footer"><Check aria-hidden="true" /> Conversation and contact details in one place</div>
+              <div className="rlr-summary-footer"><Check aria-hidden="true" /> Contact details and the full conversation, together</div>
             </div>
-          </div>
-
-          <div className="rlr-text-back-wrap" id="business-knowledge">
-            <div>
-              <p className="rlr-kicker">Your knowledge base</p>
-              <h3>Your business playbook. Ready to answer.</h3>
-              <p>The useful details belong here: what a diagnostic visit includes, how a maintenance plan works, what a warranty covers, and what happens after hours. Save drafts for review, then publish the information you approve.</p>
-            </div>
-            <Link className="rlr-button rlr-button-primary" href="/knowledge-base">Explore the demo knowledge base <ArrowRight aria-hidden="true" /></Link><Link className="rlr-inline-link" href="/dashboard-demo">Preview the customer dashboard <ArrowRight aria-hidden="true" /></Link>
+            <p className="lead-preview-note">See the conversation and source, then move leads from new to contacted, booked, or lost.</p>
+            <Link className="rlr-button rlr-button-primary" href="/dashboard-demo">Preview the lead dashboard <ArrowRight aria-hidden="true" /></Link>
           </div>
         </div>
       </section>

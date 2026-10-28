@@ -109,6 +109,15 @@
 .rlr-retro .rlr-flow-steps p { font-size: 15px; line-height: 1.75; }
 .rlr-retro .rlr-outcomes { background: #a9edff; border-block: 2px solid #17232d; padding-block: 76px; }
 .rlr-retro .rlr-outcomes-copy > p:not(.rlr-kicker) { font-size: 16px; color: #354845; }
+.lead-flow { display: grid; gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: lead-step; }
+.lead-flow li { display: grid; grid-template-columns: 24px minmax(0,1fr); column-gap: 12px; padding-top: 12px; border-top: 1px solid #17232d40; counter-increment: lead-step; }
+.lead-flow li::before { content: counter(lead-step, decimal-leading-zero); grid-row: 1 / 3; color: #2155ff; font: 24px 'RLR Display', sans-serif; line-height: 1; }
+.lead-flow strong { font-size: 14px; line-height: 1.4; }
+.rlr-retro .lead-flow p { margin: 4px 0 0; color: #354845; font-size: 13px; line-height: 1.6; }
+.lead-preview { min-width: 0; align-self: center; }
+.rlr-retro .lead-preview-note { margin: 22px 0 18px; color: #354845; font-size: 14px; line-height: 1.6; }
+.lead-preview > .rlr-button { max-width: 100%; white-space: normal; }
+.rlr-retro .rlr-outcomes-grid { gap: clamp(32px, 6vw, 80px); }
 .rlr-retro .rlr-summary-card { border: 2px solid #17232d; border-radius: 0; background: #fffef6; box-shadow: 7px 7px 0 #17232d; }
 .rlr-retro .rlr-summary-header { background: #17232d; color: #fffef6; border-color: #17232d; }
 .rlr-retro .rlr-summary-person > span { border: 1px solid #17232d; border-radius: 0; color: #17232d; background: #f7fa00; }

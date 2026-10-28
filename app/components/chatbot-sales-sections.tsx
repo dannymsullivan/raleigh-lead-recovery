@@ -39,8 +39,8 @@ export function ProductOverview() {
       <article><MessageSquareText aria-hidden="true" /><p className="rlr-kicker">Website assistant</p><h3>Your business knowledge, ready when customers need it.</h3><ul>
         <li><Check /> A knowledge base prepared around your services, prices, plans, policies, and common questions</li>
         <li><Check /> Approved answers that help customers understand their options and prepare for service</li>
-        <li><Check /> Saves the conversation and tracks the visitor’s page and campaign when available</li>
-        <li><Check /> Collects appointment requests for your team to confirm</li>
+        <li><Check /> Captures contact details and requests, with the full conversation in your dashboard</li>
+        <li><Check /> Alerts and lead routing configured around your team’s follow-up process</li>
         <li><Check /> Includes installation and testing on your website</li>
       </ul><a className="rlr-button rlr-button-primary" href="#try-chat">Try the chatbot <ArrowRight /></a></article>
       <article><PhoneForwarded aria-hidden="true" /><p className="rlr-kicker">Voice agent · Optional service</p><h3>Answer callers when your team can’t get to the phone.</h3><ul>
@@ -68,9 +68,9 @@ export function IndustryExamples() {
 
 export function ChatPricing() {
   const plans = [
-    { name: "Website Chat", service: "chat", price: "$399", description: "Help website visitors get answers and take the next step.", features: ["Answers from your approved business information", "Contact details and service requests", "Full chat transcripts in your dashboard", "Where leads came from and which jobs you booked"] },
+    { name: "Website Chat", service: "chat", price: "$399", description: "Help website visitors get answers and take the next step.", features: ["Answers from your approved business information", "Contact requests and full chat transcripts", "Alerts and routing configured during setup", "Lead sources, follow-up status, and booked job value"] },
     { name: "Voice AI", service: "voice", price: "$799", description: "Give callers a helpful answer when your team is busy.", features: ["A greeting tailored to your business", "Service needs, urgency, and callback details", "Call summaries and transcripts", "Call forwarding and rules you approve"] },
-    { name: "Chat + Voice", service: "both", price: null, description: "Cover your website and phone with a setup built around your business.", features: ["Everything in Website Chat and Voice AI", "Your services, hours, and answers used in both", "Website inquiries and missed-call coverage", "Setup and support for both services"] },
+    { name: "Chat + Voice", service: "both", price: null, description: "Cover your website and phone with a setup built around your business.", features: ["Everything in Website Chat and Voice AI", "Your services, hours, and answers used in both", "Website inquiries and missed-call coverage", "Alerts, routing, and support configured for your team"] },
   ];
   return <section className="sales-pricing" id="pricing"><div className="page-shell">
     <div className="sales-section-title"><p className="rlr-kicker">Choose your coverage</p><h2>Choose chat, voice, or both.</h2><p>Start with the coverage you need. We’ll confirm your setup, included usage, and monthly price before you pay.</p></div>
