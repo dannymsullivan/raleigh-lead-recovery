@@ -144,3 +144,10 @@
 .website-chat-demo .chat-knowledge-link strong { margin-left: auto; white-space: nowrap; font-size: 10px; }
 .website-chat-demo .chat-knowledge-link:focus-visible { outline: 3px solid #2155ff; outline-offset: -3px; }
 .website-chat-demo .chat-restart-action { margin: 8px 0 12px; padding: 8px 12px; border: 1px solid #17232d; background: #f7fa00; color: #17232d; font: inherit; cursor: pointer; }
+
+.website-chat-demo .chat-demo-allowance { margin: 0; padding: 9px 18px; background: #fff9e7; color: #475965; font-size: 11px; line-height: 1.5; border-bottom: 1px solid #e5e4d5; }
+.website-chat-demo .chat-limit-actions { display: grid; gap: 10px; padding: 0 18px 12px; }
+.website-chat-demo .chat-limit-actions a { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 10px 12px; border: 1px solid #17232d; background: #f7fa00; color: #17232d; font-size: 12px; font-weight: 700; text-decoration: none; }
+.website-chat-demo .chat-limit-actions a + a { background: #fff9e7; }
+.website-chat-demo .chat-limit-actions a:focus-visible { outline: 3px solid #2155ff; outline-offset: 3px; }
+.website-chat-demo button:disabled { opacity: .45; cursor: not-allowed; }

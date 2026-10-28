@@ -1,6 +1,7 @@
 import { demoHandbook, sharedDemoRules } from "./demo-agent-config";
 
 export const publicDemoAgentName = "Oak City Heating & Air — Demo";
+export const publicDemoMaxCallDurationMs = 120_000;
 
 export const publicDemoBeginMessage =
   "Thanks for calling Oak City Heating & Air. I’m Chloe, their AI assistant. How can I help you today?";

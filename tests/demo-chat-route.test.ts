@@ -91,6 +91,7 @@ describe("durable demo claims", () => {
   });
   it.each([
     ["demo_session_expired", 401], ["demo_session_busy", 409], ["demo_message_replayed", 409], ["demo_rate_limit", 429],
+    ["demo_rate_limit_session", 429], ["demo_rate_limit_ip", 429], ["demo_rate_limit_global", 429],
   ])("rejects %s before provider work", async (message, status) => {
     mocks.rpc.mockResolvedValue({ data: null, error: { message } });
     const response = await POST(request({ message: "Hello", sessionToken: token }));
@@ -101,12 +102,31 @@ describe("durable demo claims", () => {
     expect(body.sessionToken).toBe(token);
     if (status === 401) expect(body.resetSession).toBe(true);
   });
-  it("does not hand the browser an unallocated session when a new request exceeds quota", async () => {
-    mocks.rpc.mockResolvedValue({ data: null, error: { message: "demo_rate_limit" } });
+  it.each(["demo_rate_limit", "demo_rate_limit_ip", "demo_rate_limit_global"])("does not allocate a fresh provider session when a new conversation hits %s", async (message) => {
+    mocks.rpc.mockResolvedValue({ data: null, error: { message } });
     const response = await POST(request({ message: "Hello" }));
     expect(response.status).toBe(429);
     expect((await response.json()).sessionToken).toBeUndefined();
     expect(mocks.getRetell).not.toHaveBeenCalled();
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.complete).not.toHaveBeenCalled();
+  });
+  it.each([
+    ["demo_rate_limit_session", "6-question limit"],
+    ["demo_rate_limit_ip", "daily AI demo limit"],
+    ["demo_rate_limit_global", "live AI demo allowance"],
+  ])("explains %s with a free knowledge-base alternative, without asking visitors to reset", async (message, expected) => {
+    mocks.rpc.mockResolvedValue({ data: null, error: { message } });
+    const response = await POST(request({ message: "One more question", sessionToken: token }));
+    const body = await response.json();
+    expect(response.status).toBe(429);
+    expect(body.error).toContain(expected);
+    expect(body.error).toMatch(/free knowledge base|knowledge base is still free/i);
+    expect(body.error).not.toMatch(/40|new conversation/i);
+    expect(body.resetSession).toBeUndefined();
+    expect(mocks.getRetell).not.toHaveBeenCalled();
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.complete).not.toHaveBeenCalled();
   });
   it("creates and durably attaches a provider session before sending any message", async () => {
     mocks.rpc.mockImplementation(async (name: string) => ({ data: name === "claim_public_demo_chat_turn" ? { chat_id: null } : true, error: null }));
@@ -196,6 +216,11 @@ describe("provider answer source boundary", () => {
     expect(answer.content.length).toBeLessThanOrEqual(3500);
     expect(answer.content).toMatch(/^Details here /);
     expect(answer.content).not.toMatch(/<b>|untrusted/);
+  });
+  it("removes markdown headings and bold markers while preserving readable prices and arithmetic", () => {
+    const answer = parseDemoCompletion({ messages: [{ role: "agent", content: "## Your options\n**Two systems:** $378 per year.\n2 * $189 = $378.\nReference #89.\nSOURCES: diagnostic-fee" }] });
+    expect(answer.content).toBe("Your options\nTwo systems: $378 per year.\n2 * $189 = $378.\nReference #89.");
+    expect(answer.sources?.[0].id).toBe("diagnostic-fee");
   });
   it.each([null, {}, { messages: [] }, { messages: [{ role: "tool_call_result", content: "only a tool" }] }, { messages: [{ role: "agent", content: "SOURCES: diagnostic-fee" }] }])("fails instead of fabricating an answer for %j", (value) => {
     expect(() => parseDemoCompletion(value)).toThrow();

@@ -21,7 +21,7 @@ describe("Retell v3 browser connection", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(await response.json()).toEqual({ ok: true, callId: "call-1", accessToken: "short-lived-token", transport: "gateway", iceServers });
-    expect(createWebCall).toHaveBeenCalledWith(expect.objectContaining({ agent_id: "agent-demo", agent_version: "latest_published" }));
+    expect(createWebCall).toHaveBeenCalledWith(expect.objectContaining({ agent_id: "agent-demo", agent_version: "latest_published" }), { timeout: 20_000, maxRetries: 0 });
   });
   it("keeps quotas in front of paid call creation", async () => {
     rpc.mockResolvedValue({ error: { message: "rate_limit" } });
@@ -41,5 +41,7 @@ describe("Retell v3 browser connection", () => {
     expect(response.status).toBe(503);
     expect(await response.text()).not.toContain("Credit balance");
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: "failed" }));
+    expect(createWebCall).toHaveBeenCalledTimes(1);
+    expect(createWebCall).toHaveBeenCalledWith(expect.any(Object), { timeout: 20_000, maxRetries: 0 });
   });
 });

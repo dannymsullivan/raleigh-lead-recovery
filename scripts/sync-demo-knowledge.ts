@@ -4,7 +4,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import Retell from "retell-sdk";
 import { demoKnowledge } from "../lib/demo-knowledge";
 import { demoChatAgentName, demoChatPrompt, demoKnowledgeBaseName } from "../lib/demo-agent-config";
-import { publicDemoPrompt, publicDemoAgentName, publicDemoBeginMessage } from "../lib/public-demo-agent-config";
+import { publicDemoPrompt, publicDemoAgentName, publicDemoBeginMessage, publicDemoMaxCallDurationMs } from "../lib/public-demo-agent-config";
 import { webDemoAgentId } from "../lib/web-demo-config";
 
 loadEnvConfig(process.cwd());
@@ -78,13 +78,13 @@ async function main() {
   const voiceId = webDemoAgentId("receptionist");
   if (!voiceId) throw new Error("Missing configured receptionist demo voice agent");
   const voice = await retell.agent.retrieve(voiceId, { version: "latest_published" });
-  if (voice.response_engine.type !== "retell-llm" || !voice.agent_name?.includes("Oak City")) throw new Error("Refusing to alter a non-Oak City voice agent");
+  if (voice.response_engine.type !== "retell-llm" || voice.agent_name !== publicDemoAgentName) throw new Error("Refusing to alter a non-Oak City voice agent");
   const oldLlm = await retell.llm.retrieve(voice.response_engine.llm_id, { version: voice.response_engine.version ?? undefined });
-  if (oldLlm.general_prompt !== publicDemoPrompt || !oldLlm.knowledge_base_ids?.includes(resources.knowledgeBaseId!)) {
+  if (voice.max_call_duration_ms !== publicDemoMaxCallDurationMs || oldLlm.general_prompt !== publicDemoPrompt || !oldLlm.knowledge_base_ids?.includes(resources.knowledgeBaseId!)) {
     const draft = await retell.agent.createVersion(voiceId, { base_version: voice.version });
     if (draft.response_engine.type !== "retell-llm" || !("voice_id" in draft)) throw new Error("Expected voice draft");
     const llm = await retell.llm.update(draft.response_engine.llm_id, { version: draft.response_engine.version ?? undefined, general_prompt: publicDemoPrompt, begin_message: publicDemoBeginMessage, knowledge_base_ids: [resources.knowledgeBaseId!], kb_config: { top_k: 6, filter_score: 0.4 } });
-    const updated = await retell.agent.update(voiceId, { version: draft.version, agent_name: publicDemoAgentName, response_engine: { type: "retell-llm", llm_id: llm.llm_id, version: llm.version } });
+    const updated = await retell.agent.update(voiceId, { version: draft.version, agent_name: publicDemoAgentName, max_call_duration_ms: publicDemoMaxCallDurationMs, response_engine: { type: "retell-llm", llm_id: llm.llm_id, version: llm.version } });
     try {
       await retell.agent.publish(voiceId, { version: updated.version, version_title: "Shared chat and voice knowledge", version_description: "Detailed fictional HVAC handbook shared with website chat" });
     } catch (error) {

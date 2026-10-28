@@ -4,6 +4,6 @@
   "chatLlmId": "llm_32a694a898498a01e357799a705c",
   "chatAgentId": "agent_76417a168e75ede2a7ffc590ca",
   "chatVersion": 0,
-  "voiceVersion": 1,
+  "voiceVersion": 2,
   "voiceAgentId": "agent_56cd1e30eccdfcb7cd102b3be5"
 }

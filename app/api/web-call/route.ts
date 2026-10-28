@@ -63,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       agent_version: "latest_published",
       metadata: { app: "public-web-demo", requestId, mode },
       retell_llm_dynamic_variables: webDemoDynamicVariables(mode)
-    });
+    }, { timeout: 20_000, maxRetries: 0 });
     await admin.from("public_web_call_requests").update({ retell_call_id: call.call_id, status: "in_progress" }).eq("id", requestId);
     return NextResponse.json({ ok: true, callId: call.call_id, accessToken: call.access_token, transport: call.transport, iceServers: call.ice_servers }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {

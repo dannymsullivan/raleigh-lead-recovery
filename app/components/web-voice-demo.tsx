@@ -22,6 +22,7 @@ export function WebVoiceDemo({
   const [state, setState] = useState<DemoState>("idle");
   const [agentTalking, setAgentTalking] = useState(false);
   const [error, setError] = useState("");
+  const demoLimits = `${mode === "receptionist" ? "Up to 2 minutes · " : ""}2 demo starts per network every 24 hours`;
 
   useEffect(() => () => clientRef.current?.stopCall(), []);
 
@@ -112,6 +113,7 @@ export function WebVoiceDemo({
           <span aria-hidden="true" /> {statusLabel}
         </p>
         <p className="voice-orb-privacy">Live browser demo · Uses your microphone · No phone number needed</p>
+        <p className="voice-orb-privacy">{demoLimits}</p>
         {error ? <p className="web-voice-error" role="alert">{error}</p> : null}
       </div>
     );
@@ -138,6 +140,7 @@ export function WebVoiceDemo({
           {state === "active" ? <><Radio className={agentTalking ? "talking" : ""} aria-hidden="true" /> {agentTalking ? "Snappy Leads is speaking" : "Listening—go ahead"}</> : "Live browser demo · Uses your microphone · No phone number"}
         </p>
       ) : null}
+      <p className="web-voice-status">{demoLimits}</p>
       {error ? <p className="web-voice-error" role="alert">{error}</p> : null}
     </div>
   );

@@ -29,7 +29,8 @@ export function parseDemoCompletion(value: unknown): DemoAnswer {
   const ids = new Set((marker?.[1] ?? "").split(",").map((id) => id.trim()).filter((id) => /^[a-z0-9-]+$/.test(id)));
   if (marker) content = content.slice(0, marker.index).trim();
   // This is plain text, never model-supplied HTML or a markdown link destination.
-  content = content.replace(/^SOURCES:.*$/gim, "").replace(/<[^>]*>/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").trim();
+  content = content.replace(/^SOURCES:.*$/gim, "").replace(/<[^>]*>/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1").replace(/^#{1,6}\s+/gm, "").trim();
   if (!content) throw new Error("Empty provider response");
   if (content.length > 3500) content = `${content.slice(0, 3499).trimEnd()}…`;
   const sources = demoKnowledge.filter((entry) => entry.published !== false && ids.has(entry.id)).slice(0, 6)
@@ -43,7 +44,10 @@ function failure(caught: unknown, sessionToken?: string): DemoChatError {
   if (/demo_session_expired/.test(detail)) return new DemoChatError("This demo conversation has expired. Start a new conversation to continue.", 401, sessionToken, true);
   if (/demo_session_busy/.test(detail)) return new DemoChatError("Your previous question is still being answered. Please wait a moment.", 409, sessionToken);
   if (/demo_message_replayed/.test(detail)) return new DemoChatError("That question was just answered. Please wait a moment before sending it again.", 409, sessionToken);
-  if (/demo_rate_limit/.test(detail)) return new DemoChatError("This demo has reached its question limit. Please try again later; each conversation allows up to 40 questions.", 429, sessionToken);
+  if (/demo_rate_limit_session/.test(detail)) return new DemoChatError("You’ve reached this demo’s 6-question limit. Keep exploring the free knowledge base, or see what this could do for your business.", 429, sessionToken);
+  if (/demo_rate_limit_ip/.test(detail)) return new DemoChatError("This network has reached the daily AI demo limit. Please try again in 24 hours. The knowledge base is still free to browse.", 429, sessionToken);
+  if (/demo_rate_limit_global/.test(detail)) return new DemoChatError("Today’s live AI demo allowance has been used. Please try again tomorrow. You can still explore every topic in the free knowledge base.", 429, sessionToken);
+  if (/demo_rate_limit/.test(detail)) return new DemoChatError("Live AI demo access is temporarily limited. Keep exploring the free knowledge base, or get in touch about your own assistant.", 429, sessionToken);
   const status = caught && typeof caught === "object" && "status" in caught ? caught.status : null;
   if ((status === 400 || status === 404 || status === 409) && /chat.{0,100}(ended|expired|not found|not ongoing|does not exist)|(?:ended|expired|invalid).{0,40}chat/i.test(detail)) {
     return new DemoChatError("This demo conversation has ended. Start a new conversation to continue.", 401, sessionToken, true);

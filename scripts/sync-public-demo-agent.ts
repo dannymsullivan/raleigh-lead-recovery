@@ -2,6 +2,7 @@ import Retell from "retell-sdk";
 import {
   publicDemoAgentName,
   publicDemoBeginMessage,
+  publicDemoMaxCallDurationMs,
   publicDemoPrompt
 } from "../lib/public-demo-agent-config";
 
@@ -17,6 +18,10 @@ async function main(): Promise<void> {
   const retell = new Retell({ apiKey, timeout: 20_000, maxRetries: 2 });
   const published = await retell.agent.retrieve(agentId, { version: "latest_published" });
 
+  if (published.agent_name !== publicDemoAgentName) {
+    throw new Error("Refusing to alter a non-Oak City demo voice agent");
+  }
+
   if (published.response_engine.type !== "retell-llm") {
     throw new Error(`Expected a Retell LLM response engine, received ${published.response_engine.type}`);
   }
@@ -26,6 +31,7 @@ async function main(): Promise<void> {
   });
   if (
     published.agent_name === publicDemoAgentName
+    && published.max_call_duration_ms === publicDemoMaxCallDurationMs
     && publishedLlm.begin_message === publicDemoBeginMessage
     && publishedLlm.general_prompt === publicDemoPrompt
   ) {
@@ -58,8 +64,7 @@ async function main(): Promise<void> {
     boosted_keywords: ["Snappy Leads", "HVAC", "thermostat", "heat pump"],
     enable_dynamic_responsiveness: true,
     enable_dynamic_voice_speed: true,
-    end_call_after_silence_ms: 60_000,
-    max_call_duration_ms: 300_000,
+    max_call_duration_ms: publicDemoMaxCallDurationMs,
     response_engine: {
       type: "retell-llm",
       llm_id: llm.llm_id,
