@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { TrialRequestForm } from "./trial-request-form";
 import { ArrowRight, BookOpen, Check, Clock3, MessageSquareText, PhoneForwarded } from "lucide-react";
+import { demoKnowledge, demoKnowledgeCategories } from "@/lib/demo-knowledge";
+import { DemoScenarioCards } from "./demo-knowledge-library";
 
 export function TrialBanner() {
   return <div className="sales-trial-banner"><a href="#trial">Try website chat free for 14 days. <span>· No card required · Setup included</span> <ArrowRight size={14} aria-hidden="true" /></a></div>;
@@ -8,24 +10,35 @@ export function TrialBanner() {
 
 export function CustomerProblem() {
   const problems = [
-    ["01", "Visitors leave without an answer.", "They want to know whether you offer a service, cover their area, or are open today. If they can’t find the answer, they may try another business."],
-    ["02", "Calls and messages wait.", "You’re on a job or helping another customer. A voicemail or contact form can sit unanswered until you have time to check it."],
-    ["03", "Your team has to ask again.", "A message that says “call me” leaves out the job, the urgency, and the best way to reach the customer. The follow-up starts with more questions."],
+    ["01", "The good questions come after hours.", "It’s 9 PM. A homeowner wants to know what a service visit costs, whether their membership helps, and what they can safely check tonight. They need useful answers now."],
+    ["02", "Your best answers live in your head.", "The details that make you helpful—what’s included, what to expect, and which option fits—aren’t always easy to find on a website. We help put that knowledge to work."],
+    ["03", "Your team repeats itself all day.", "Explaining service fees, coverage, preparation, and policies takes time. Give customers a place to get those answers so your team can focus on solving the actual problem."],
   ];
   return <section className="sales-problem"><div className="page-shell">
-    <div className="sales-section-title"><p className="rlr-kicker">The problem</p><h2>Customers need answers while you’re busy working.</h2><p>Give them a way to ask questions and leave the details your team needs to follow up.</p></div>
+    <div className="sales-section-title"><p className="rlr-kicker">The opportunity</p><h2>Your expertise shouldn’t clock out at five.</h2><p>Your customers have more questions than “What are your hours?” Give them help that gets into the details.</p></div>
     <div className="sales-card-grid">{problems.map(([number, title, body]) => <article className="sales-problem-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    <div className="sales-solution-band"><p><strong>Answer customer questions while you work.</strong> The chatbot uses your business information, collects the request, and saves the conversation for your team.</p><div><span><strong>24/7</strong>Website chat</span><span><strong>Setup included</strong>We install and test it</span><span><strong>Your dashboard</strong>Chats, contacts &amp; sources</span></div></div>
+    <div className="sales-solution-band"><p><strong>Put your business knowledge to work.</strong> Build helpful answers around your services, your rules, and the questions your customers actually ask.</p><div><span><strong>24/7</strong>Help beyond office hours</span><span><strong>Your knowledge</strong>Prepared and approved with you</span><span><strong>Your dashboard</strong>Chats, contacts &amp; sources</span></div></div>
   </div></section>;
+}
+
+export function KnowledgeInAction() {
+  return <section className="knowledge-story page-shell" aria-labelledby="knowledge-story-title">
+    <div className="knowledge-story-heading">
+      <div><p className="rlr-kicker">Go ahead. Ask a follow-up.</p><h2 id="knowledge-story-title">The impressive part?<br /><em>It knows the details.</em></h2></div>
+      <div><p>Meet the assistant for Oak City Heating &amp; Air, our fictional demo business. Ask about a problem, compare options, then change the details. See how a deep knowledge base makes the conversation useful.</p><Link className="rlr-inline-link" href="/knowledge-base">Explore all {demoKnowledge.length} knowledge articles <ArrowRight aria-hidden="true" /></Link></div>
+    </div>
+    <DemoScenarioCards limit={3} />
+    <div className="knowledge-story-footnote"><BookOpen aria-hidden="true" /><p><strong>{demoKnowledge.length} articles across {demoKnowledgeCategories.length} topic areas.</strong> Sample prices, plans, troubleshooting, warranties, and service policies. Fictional business; no appointments or dispatches are made in the demo.</p></div>
+  </section>;
 }
 
 export function ProductOverview() {
   return <section className="sales-section page-shell" id="products">
-    <div className="sales-section-title"><p className="rlr-kicker">What you get</p><h2>Answer website visitors. Handle missed calls.</h2><p>Start with a website chatbot. Add a voice agent for phone coverage. We set up both to answer customer questions using your business information and collect the details your team needs to follow up.</p></div>
+    <div className="sales-section-title"><p className="rlr-kicker">What you get</p><h2>Helpful on your website. Helpful on the phone.</h2><p>Start with an assistant built around your business knowledge. Add a voice agent for phone coverage. We shape the information, behavior, and next steps around how you work.</p></div>
     <div className="sales-product-grid">
-      <article><MessageSquareText aria-hidden="true" /><p className="rlr-kicker">Website chatbot</p><h3>Turn website questions into leads you can follow up with.</h3><ul>
-        <li><Check /> Answers questions about your services, pricing, hours, and service area using information you approve</li>
-        <li><Check /> Collects the customer’s name, contact details, and what they need help with</li>
+      <article><MessageSquareText aria-hidden="true" /><p className="rlr-kicker">Website assistant</p><h3>Your business knowledge, ready when customers need it.</h3><ul>
+        <li><Check /> A knowledge base prepared around your services, prices, plans, policies, and common questions</li>
+        <li><Check /> Approved answers that help customers understand their options and prepare for service</li>
         <li><Check /> Saves the conversation and tracks the visitor’s page and campaign when available</li>
         <li><Check /> Collects appointment requests for your team to confirm</li>
         <li><Check /> Includes installation and testing on your website</li>
@@ -43,14 +56,14 @@ export function ProductOverview() {
 
 export function IndustryExamples() {
   const industries = [
-    ["HVAC", "Repairs and maintenance", "Answer service-area questions and collect repair or tune-up requests."],
-    ["Plumbing", "Service calls and estimates", "Collect the issue, location, and details for your team to review."],
-    ["Dental", "New-patient inquiries", "Answer office questions and collect appointment requests for staff to confirm."],
-    ["Auto repair", "Shop hours and service requests", "Explain your services and drop-off process, then collect vehicle and contact details."],
-    ["Contractors", "Projects and quotes", "Collect project scope, timing, and contact details before an estimate call."],
-    ["Other service businesses", "Your customers’ everyday questions", "We’ll help you decide what to answer and when to pass a request to your team."],
+    ["HVAC", "“Would a maintenance plan help?”", "Explain visit fees, member benefits, safe checks, and what a warranty actually covers."],
+    ["Plumbing", "“What happens during the visit?”", "Explain diagnostic pricing, access requirements, service options, and your after-hours process."],
+    ["Dental", "“What should I know before I come in?”", "Share approved new-patient requirements, office policies, payment options, and appointment preparation."],
+    ["Auto repair", "“Can I leave my car overnight?”", "Explain key-drop instructions, inspection fees, estimate approvals, and repair warranty policies."],
+    ["Contractors", "“Is this the kind of project you take on?”", "Explain project fit, estimate preparation, service boundaries, and how your process works."],
+    ["Other service businesses", "“How does your business handle this?”", "Turn the answers your team gives every day into a useful, accessible business playbook."],
   ];
-  return <section className="sales-industries"><div className="page-shell"><div className="sales-section-title"><p className="rlr-kicker">Industries we help</p><h2>Built for businesses like yours.</h2><p>We help service businesses answer common questions and collect requests for repairs, appointments, and estimates.</p></div><div className="sales-industry-grid">{industries.map(([industry, title, body]) => <article key={industry}><span>{industry}</span><h3>{title}</h3><p>{body}</p></article>)}</div><Link className="rlr-inline-link" href="/get-started">Tell us about your business <ArrowRight /></Link></div></section>;
+  return <section className="sales-industries"><div className="page-shell"><div className="sales-section-title"><p className="rlr-kicker">Your expertise, in conversation</p><h2>Every business has a playbook.</h2><p>These are the kinds of questions we build your knowledge around. Your information, your policies, and your approved answers.</p></div><div className="sales-industry-grid">{industries.map(([industry, title, body]) => <article key={industry}><span>{industry}</span><h3>{title}</h3><p>{body}</p></article>)}</div><Link className="rlr-inline-link" href="/get-started">Tell us about your business <ArrowRight aria-hidden="true" /></Link></div></section>;
 }
 
 export function ChatPricing() {

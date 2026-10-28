@@ -129,3 +129,14 @@ Retell web calls now use the v3 create-web-call endpoint and pass all four conne
 ### Supporting documents
 
 Asset sources and research: [illustration prompts](docs/illustration-prompts.md), [retro naming research](docs/retro-lead-naming-research.md). The product is now Snappy Leads at https://snappyleads.xyz, with support at danny@snappyleads.xyz. The repository and Vercel project retain their original internal names. Earlier sales material is retained for reference: [reactivation action plan](docs/dead-lead-reactivation-action-plan.md), [HVAC email sequence](docs/smartlead-hvac-website-sequence.md), [HVAC prospect list](docs/raleigh-hvac-call-list.md), and [voice-pilot lifecycle email drafts](docs/customer-lifecycle-email-templates.md). Those campaign notes and email drafts do not define the current chat-first onboarding or establish current campaign/service status.
+
+
+### Shared public knowledge demo
+
+The homepage and `/knowledge-base` use a real Retell chat agent through `/api/chat/demo`. The fictional Oak City handbook lives in `lib/demo-knowledge.ts`; its 38 published articles drive the searchable library, chat citations, and both channel prompts. Technical references are linked in the articles; prices and business policies are explicitly sample data.
+
+Run `npm run sync:demo-knowledge` after editing the handbook. The script saves non-secret resource IDs in `config/demo-retell.json`, waits for all article sources to be indexed (rerun if indexing is still in progress), and publishes the dedicated chat agent and the existing Oak City receptionist voice demo against the same Retell knowledge base. Set `RETELL_CHAT_DEMO_AGENT_ID` to the resulting chat agent ID in the hosting environment. Existing phone bindings and other business/outreach agents are not changed. `npm run sync:public-demo` also preserves the shared handbook in the voice prompt.
+
+Apply `supabase/migrations/20261028150000_public_demo_chat.sql` before serving the new endpoint. Its service-role-only session records contain hashes, counters, and the provider chat ID, not transcripts. Atomic claims enforce 40 turns per session, 60 per IP/hour, 400 globally/hour, and 10 new sessions per IP/hour before paid inference. Provider failures still consume an attempt. Run `tests/demo-chat-sql.sql` with psql and `ON_ERROR_STOP=1` to exercise protections inside a rolled-back transaction.
+
+The public AI demo is separate from tenant website chat and private knowledge previews, which continue to use their own approved tenant entries. It does not book appointments, dispatch, or send leads. Demo chat history is processed by Retell with 7-day retention; disclosures appear in the widget and privacy page. The source content is versioned in this repository; the public library is browse/search only. Customer knowledge editing remains in each authenticated workspace.

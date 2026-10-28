@@ -4,8 +4,8 @@ import { answerFromKnowledge, attributionSource, chatMetrics, demoKnowledge, par
 describe("approved website chat knowledge", () => {
   it("returns an approved answer and source without fabricating prices", () => {
     const answer = answerFromKnowledge("How much does AC repair cost?", demoKnowledge);
-    expect(answer.source).toBe("Pricing & estimates");
-    expect(answer.content).toBe(demoKnowledge.find((entry) => entry.id === "pricing")!.content);
+    expect(answer.source).toBe("Repair approval and transparent cost examples");
+    expect(answer.content).toBe(demoKnowledge.find((entry) => entry.id === "repair-pricing")!.content);
   });
   it("keeps drafts out of answers", () => {
     expect(answerFromKnowledge("secret discount", [{ id: "draft", title: "Secret discount", keywords: "discount", content: "Unapproved offer", published: false }]).source).toBeUndefined();

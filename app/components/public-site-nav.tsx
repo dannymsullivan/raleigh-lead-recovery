@@ -18,6 +18,7 @@ type PublicSiteNavProps = {
 const items = [
   { href: "/", label: "Chatbots" },
   { href: "/voice", label: "Voice agents" },
+  { href: "/knowledge-base", label: "Knowledge base" },
   { href: "/login", label: "Sign in" },
 ] as const;
 

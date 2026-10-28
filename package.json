@@ -14,7 +14,8 @@
     "sync:public-demo": "tsx scripts/sync-public-demo-agent.ts",
     "sync:outreach-agent": "tsx scripts/sync-outreach-agent.ts",
     "sync:business-receptionist": "tsx scripts/sync-business-receptionist-agent.ts",
-    "brand:build": "tsx scripts/build-brand-assets.ts"
+    "brand:build": "tsx scripts/build-brand-assets.ts",
+    "sync:demo-knowledge": "tsx scripts/sync-demo-knowledge.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.4",
