@@ -211,6 +211,12 @@ describe("provider answer source boundary", () => {
   it("does not invent citations when the provider supplies none", () => {
     expect(parseDemoCompletion({ messages: [{ role: "agent", content: "What would you like to know?" }] })).toEqual({ content: "What would you like to know?" });
   });
+  it("handles a source marker appended to the last sentence without exposing unknown or draft IDs", () => {
+    const answer = parseDemoCompletion({ messages: [{ role: "agent", content: "The sample visit costs $89. SOURCES: diagnostic-fee, draft, invented-source" }] });
+    expect(answer.content).toBe("The sample visit costs $89.");
+    expect(answer.sources).toEqual([{ id: "diagnostic-fee", title: "Diagnostic visit", content: "The sample diagnostic fee is $89." }]);
+    expect(JSON.stringify(answer)).not.toMatch(/SOURCES|draft|invented-source/);
+  });
   it("returns bounded plain text rather than model HTML or link destinations", () => {
     const answer = parseDemoCompletion({ messages: [{ role: "agent", content: '<b>Details</b> [here](https://untrusted.example) ' + "x".repeat(4000) + '\nSOURCES: diagnostic-fee' }] });
     expect(answer.content.length).toBeLessThanOrEqual(3500);

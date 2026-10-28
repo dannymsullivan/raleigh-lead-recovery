@@ -6,7 +6,7 @@ Website chat and voice-assistant software for service businesses. The homepage l
 
 - Next.js 16 / React 19
 - Supabase database and email magic-link authentication
-- Retell voice agents, managed phone numbers, web calls, recordings, and optional SMS alerts
+- Retell chat and voice agents, knowledge bases, managed phone numbers, web calls, recordings, and optional SMS alerts
 - Vercel deployment and cron
 
 The application uses Retell as its only telephony and voice-agent provider.
@@ -27,7 +27,7 @@ Core workspace variables:
 - `NEXT_PUBLIC_APP_URL`
 - `ADMIN_PASSWORD`
 
-Website chat also requires `CHAT_SESSION_SECRET` or `DEMO_CALL_HASH_SECRET`. Voice features require `RETELL_API_KEY`, and public voice demos require `DEMO_CALL_HASH_SECRET`. Set `CRON_SECRET` when enabling scheduled jobs. A chat-only workspace does not require Retell credentials.
+Website chat also requires `CHAT_SESSION_SECRET` or `DEMO_CALL_HASH_SECRET`. AI chat and voice features require `RETELL_API_KEY`, and public voice demos require `DEMO_CALL_HASH_SECRET`. Set `CRON_SECRET` when enabling scheduled jobs. The local approved-answer chat engine does not require Retell credentials. Optional consented lead alerts use an existing verified Resend sender; see [lead alert setup](docs/chat-lead-alerts.md).
 
 For the receptionist browser demo, set `RETELL_RECEPTIONIST_DEMO_AGENT_ID` (fallback: `RETELL_WEB_DEMO_AGENT_ID` or `RETELL_DEMO_AGENT_ID`). Set `RETELL_REACTIVATION_DEMO_AGENT_ID` separately for the HVAC follow-up demo. Both require a published Retell agent, available Retell credits, `DEMO_CALL_HASH_SECRET`, and a reachable migrated Supabase database for abuse limits. Browser demos use a microphone and do not require a Twilio account or purchased phone number. For outbound phone demos, also set `RETELL_DEMO_PHONE_NUMBER`. Optional owner text alerts use `RETELL_SMS_AGENT_ID` and `RETELL_SMS_FROM_NUMBER` after Retell SMS/A2P approval.
 
@@ -46,7 +46,9 @@ Apply `supabase/migrations/20261027170000_website_chat.sql` after the existing m
 
 Admin CRM reports, customer reports, and the public `/dashboard-demo` preview reuse the same report component and analytics calculations. The admin and customer knowledge editors also share one manager and save logic.
 
-The current chat engine retrieves published FAQ text using weighted keyword matching. It does not call an LLM, infer unsupported answers, run tools, or make real bookings. Each answer displays its source. The public homepage uses a fictional, browser-only chat demo; messages and contact details entered inside that demo are not persisted or sent to a business. The separate free-trial request form saves real requests as described below.
+New and existing customer workspaces default to a local approved-answer engine using weighted keyword matching. Operators can explicitly activate Retell AI for one customer using `npm run sync:customer-chat -- --workspace <slug> --monthly-attempts <allowance> --daily-attempts <allowance> --dry-run`, then replace `--dry-run` with `--activate` after reviewing the plan. Each customer receives a separate agent and knowledge base containing only approved information. See [customer AI setup](docs/customer-chat-retell.md) for the required migration, provisioning, updates, retention, and usage controls. AI activation does not enable a paused widget.
+
+Both engines use the separate consented follow-up form to capture a lead. Neither claims to book appointments or perform actions it cannot execute. Optional email alerts route captured requests to the business's configured inbox and expose provider acceptance/failure and manual retry status; see [lead alerts](docs/chat-lead-alerts.md). The public homepage is a real Retell conversation for fictional Oak City HVAC, with no actual bookings, dispatches, or lead submission. The separate free-trial request form saves real requests as described below.
 
 Production conversations store their initial landing page, referrer, and UTM source, medium, campaign, content, and term. Page URL queries/fragments are removed; only named UTM fields are retained separately. These are visitor-reported conversation-level attribution, not verified ad-platform conversions, cross-device identity, or sitewide visitor analytics. The widget captures them when loaded; preserve UTM tags on the page that loads it. Metrics cover the latest 1,000 conversations started in the last 30 days and explicitly display that cap. The transcript list is paginated. A lead means a submitted contact request with follow-up permission; booked value is manually confirmed by the owner.
 
@@ -122,7 +124,7 @@ Requests are saved to the existing `outreach_prospects` ledger with `inbound_sou
 
 ### Public pages
 
-The public navigation contains Chatbots, Voice agents, Sign in, and the trial CTA. Pricing and business-knowledge explanations live on the homepage; knowledge editing stays in `/dashboard/knowledge-base`. `/voice` explains phone coverage and `/dashboard-demo` previews chat reporting. `/get-started` handles trial requests; `/contact` provides support by email. Blog, legal pages, and the existing `/hvac` industry example remain available. Shared navigation and footer avoid duplicate menus. Retired public `/knowledge-base` and `/lead-recovery` pages redirect to the homepage knowledge section and `/voice`, respectively. Legacy `/demo`, `/hvac-demo`, and `/example-report` redirect directly to the appropriate demo. Account and admin routes remain separate workspaces.
+The public navigation contains Chatbots, Voice agents, Sign in, and the trial CTA. Pricing and business-knowledge explanations live on the homepage; knowledge editing stays in `/dashboard/knowledge-base`. `/knowledge-base` is the free searchable fictional demo library. `/voice` explains phone coverage and `/dashboard-demo` previews chat reporting. `/get-started` handles trial requests; `/contact` provides support by email. Blog, legal pages, and the existing `/hvac` industry example remain available. Shared navigation and footer avoid duplicate menus. `/lead-recovery` redirects to `/voice`; legacy `/demo`, `/hvac-demo`, and `/example-report` redirect directly to the appropriate demo. Account and admin routes remain separate workspaces.
 
 Retell web calls now use the v3 create-web-call endpoint and pass all four connection fields to SDK 3. The existing Retell workspace must have a positive credit balance, and the quota database must be available, before the public voice demo can connect.
 
@@ -133,7 +135,7 @@ Asset sources and research: [illustration prompts](docs/illustration-prompts.md)
 
 ### Shared public knowledge demo
 
-The homepage and `/knowledge-base` use a real Retell chat agent through `/api/chat/demo`. The fictional Oak City handbook lives in `lib/demo-knowledge.ts`; its 38 published articles drive the searchable library, chat citations, and both channel prompts. Technical references are linked in the articles; prices and business policies are explicitly sample data.
+The homepage and `/knowledge-base` use a real Retell chat agent through `/api/chat/demo`. The fictional Oak City handbook lives in `lib/demo-knowledge.ts`; its 38 published articles drive the searchable library, chat citations, and shared Retell knowledge base. Chat uses a compact prompt and retrieves relevant articles. Voice retains the full handbook in its prompt as well as the shared KB; a retrieval-only voice candidate failed a policy check and was not published. Technical references are linked in the articles; prices and business policies are explicitly sample data.
 
 Run `npm run sync:demo-knowledge` after editing the handbook. The script saves non-secret resource IDs in `config/demo-retell.json`, waits for all article sources to be indexed (rerun if indexing is still in progress), and publishes the dedicated chat agent and the existing Oak City receptionist voice demo against the same Retell knowledge base. Set `RETELL_CHAT_DEMO_AGENT_ID` to the resulting chat agent ID in the hosting environment. Existing phone bindings and other business/outreach agents are not changed. `npm run sync:public-demo` also preserves the shared handbook in the voice prompt.
 
@@ -143,4 +145,16 @@ The widget explains the 6-question allowance and stops accepting questions after
 
 Apply `supabase/migrations/20261028213000_public_web_demo_budget.sql` for the browser voice demo budgets: 2 attempts per IP over a rolling 24 hours, 10 public demo attempts globally over a rolling 24 hours, and a separate shared total of 10 authenticated owner test attempts over a rolling 24 hours. These checks happen before requesting a paid voice session. The Oak City demo agent also has a 2-minute call duration limit; publish its updated configuration with `npm run sync:public-demo`. Voice attempt and duration limits reduce spending exposure but do not promise an exact dollar ceiling.
 
-The public AI demo is separate from tenant website chat and private knowledge previews, which continue to use their own approved tenant entries. It does not book appointments, dispatch, or send leads. Demo chat history is processed by Retell with 7-day retention; disclosures appear in the widget and privacy page. The source content is versioned in this repository; the public library is browse/search only. Customer knowledge editing remains in each authenticated workspace.
+Apply `supabase/migrations/20261028222000_public_demo_chat_end.sql` for explicit demo conversation reset. Reset closes the mapped Retell chat using the server-held session capability and retains quota rows, so starting over never refunds paid attempts. A transient provider close failure can be retried safely.
+
+The public AI demo is separate from tenant website chat and private knowledge previews, which use only their own approved entries. It does not book appointments, dispatch, or send leads. Demo chat and opted-in customer AI history are processed by Retell with 7-day provider retention; disclosures appear in the widget and privacy page. Customer transcripts and consented lead records are stored separately in the app. The source content is versioned in this repository; the public library is browse/search only. Customer knowledge editing remains in each authenticated workspace.
+
+### Customer AI and alert migrations
+
+After the existing chat/demo migrations, apply these in timestamp order:
+
+1. `20261028220000_customer_retell_chat.sql` — isolated provider mapping, explicit activation, knowledge revisions, and atomic usage claims.
+2. `20261028221000_chat_lead_notifications.sql` — consented lead outbox, destination settings, and retry controls.
+3. `20261028222000_public_demo_chat_end.sql` — public demo session closure without quota refunds.
+
+Run `tests/customer-chat-sql.sql` and `tests/chat-lead-notifications-sql.sql` with `psql -v ON_ERROR_STOP=1` after the migrations. Both fixtures roll back their fictional test data and make no provider requests. Deployment alone neither activates customer AI nor enables email alerts; these require deliberate workspace configuration and the appropriate existing provider credentials.

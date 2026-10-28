@@ -73,19 +73,28 @@ export function ChatPricing() {
     { name: "Chat + Voice", service: "both", price: null, description: "Cover your website and phone with a setup built around your business.", features: ["Everything in Website Chat and Voice AI", "Your services, hours, and answers used in both", "Website inquiries and missed-call coverage", "Alerts, routing, and support configured for your team"] },
   ];
   return <section className="sales-pricing" id="pricing"><div className="page-shell">
-    <div className="sales-section-title"><p className="rlr-kicker">Choose your coverage</p><h2>Choose chat, voice, or both.</h2><p>Start with the coverage you need. We’ll confirm your setup, included usage, and monthly price before you pay.</p></div>
+    <div className="sales-section-title"><p className="rlr-kicker">Choose your coverage</p><h2>Choose chat, voice, or both.</h2><p>Knowledge, setup, and a follow-up process built around your business. Starting prices cover one business at one location.</p></div>
     <div className="sales-card-grid">{plans.map((plan) => <article className={`sales-plan${plan.service === "both" ? " sales-plan-featured" : ""}`} key={plan.service}>
       <h3>{plan.name}</h3><p>{plan.description}</p>
       <div className="sales-plan-price">{plan.price ? <><span>From</span><strong>{plan.price}</strong><span>/month</span></> : <><strong>Custom</strong><span>pricing</span></>}</div>
       <ul>{plan.features.map((feature) => <li key={feature}><Check aria-hidden="true" />{feature}</li>)}</ul>
       <Link className="rlr-button rlr-button-primary" href={`/get-started?service=${plan.service}`} aria-label={`Let’s talk about ${plan.name}`}>Let’s talk <ArrowRight aria-hidden="true" /></Link>
     </article>)}</div>
-    <p className="sales-pricing-note">Final pricing depends on your conversation volume, locations, and connections to other tools. We’ll include usage limits and any extra costs in your quote.</p>
+    <p className="sales-pricing-note">We agree on your setup, monthly usage, ongoing support, and total price before work begins. Paid service starts only after you approve it.</p>
+    <details className="sales-pricing-scope">
+      <summary>What’s included, and what changes the price?</summary>
+      <div>
+        <p><strong>Setup included.</strong> We organize the agreed business knowledge, configure one website or phone flow, test it with you, and set up the agreed lead alerts and routing.</p>
+        <p><strong>Usage made clear.</strong> Your quote lists the monthly AI reply allowance or voice minutes, plus the rate or usage pack for anything beyond it.</p>
+        <p><strong>Ongoing care with a clear scope.</strong> We agree on the knowledge updates, answer reviews, and support included in your monthly plan.</p>
+        <p><strong>Custom work quoted separately.</strong> Additional locations, CRM or calendar connections, and new workflows are scoped and priced before we build them.</p>
+      </div>
+    </details>
     <p className="sales-pricing-trial"><strong>Want to try website chat first?</strong> Get 14 days free, with setup included and no card required. <a href="#trial">Request your chat trial <ArrowRight size={16} aria-hidden="true" /></a></p>
   </div></section>;
 }
 
 export function ChatTrial({ service }: { service?: string } = {}) {
   if (service) return <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Let’s talk · {service}</p><h2>A setup that fits your business.</h2><p>Tell us what you need help with. Danny will email you to discuss your business, expected chat or call volume, and any tools you want to connect. You’ll receive a quote before setup begins.</p><p>Website chat starts at $399/month after a two-week free trial. Voice AI starts at $799/month. Need both? We’ll put together a combined quote.</p></div><TrialRequestForm key={service} service={service} /></section>;
-  return <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Get started</p><h2>Tell us about your business. We’ll handle the setup.</h2><p>Fill out the form and Danny will email you to arrange setup. We’ll prepare your business information, install the chatbot, and test it with you before your two-week trial begins.</p><div className="sales-trial-details"><span><BookOpen /> Your approved business information</span><span><Clock3 /> 14 days free after setup</span><span><MessageSquareText /> Your own chat dashboard</span></div></div><TrialRequestForm /></section>;
+  return <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Get started</p><h2>Tell us about your business. We’ll handle the setup.</h2><p>Danny will email you to agree on the knowledge, website, and follow-up process for your trial. We’ll prepare the information, install the chatbot, and test it with you. Your 14 free days begin when it’s ready.</p><div className="sales-trial-details"><span><BookOpen /> Your approved business information</span><span><Clock3 /> 14 days free after setup</span><span><MessageSquareText /> Your own chat dashboard</span></div></div><TrialRequestForm /></section>;
 }

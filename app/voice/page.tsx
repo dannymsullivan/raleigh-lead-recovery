@@ -60,7 +60,7 @@ const faqs = [
   },
   {
     q: "How much does voice coverage cost?",
-    a: "Voice AI starts at $799/month. Your quote confirms included minutes, call forwarding, and any extra costs. Website chat starts at $399/month after a two-week free trial. We can quote both services together.",
+    a: "Voice AI starts at $799/month for one business location and one phone flow. Setup includes your approved knowledge, call rules, testing, and agreed handoff destinations. Your quote lists included minutes, ongoing updates and support, and any additional usage costs. Extra locations and custom integrations are quoted separately. Website chat starts at $399/month, and we can quote both services together.",
   },
 ];
 

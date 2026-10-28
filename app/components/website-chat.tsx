@@ -6,7 +6,7 @@ import { answerFromKnowledge, parseAttribution, type ChatMessage, type Knowledge
 
 import { demoKnowledge, demoScenarios, demoBusinessName } from "@/lib/demo-knowledge";
 
-export function WebsiteChat({ workspace, businessName = demoBusinessName, knowledge = demoKnowledge, preview = false }: { workspace?: string; businessName?: string; knowledge?: KnowledgeEntry[]; preview?: boolean }) {
+export function WebsiteChat({ workspace, businessName = demoBusinessName, knowledge = demoKnowledge, preview = false, aiEnabled = false }: { workspace?: string; businessName?: string; knowledge?: KnowledgeEntry[]; preview?: boolean; aiEnabled?: boolean }) {
   const isDemo = !workspace && !preview;
   const sending = useRef(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -69,10 +69,26 @@ export function WebsiteChat({ workspace, businessName = demoBusinessName, knowle
     return () => window.removeEventListener("snappy-demo-question", listener);
   }, [isDemo]);
 
-  function reset() {
+  async function reset() {
     if (sending.current || rateLimited) return;
-    token.current = undefined;
-    setMessages([]); setScenario(null); setNeedsRestart(false); setError(""); setInput(""); setCaptured(false); setShowLead(false);
+    sending.current = true;
+    setBusy(true); setError("");
+    try {
+      if (isDemo && token.current) {
+        const response = await fetch("/api/chat/demo/end", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionToken: token.current }) });
+        // An unknown/expired binding is already unusable. Other errors retain
+        // the token so the visitor can retry closing the same conversation.
+        if (!response.ok && response.status !== 401) {
+          const result = await response.json();
+          throw new Error(result.error || "Unable to close this conversation. Please try again.");
+        }
+      }
+      token.current = undefined;
+      setMessages([]); setScenario(null); setNeedsRestart(false); setError(""); setInput(""); setCaptured(false); setShowLead(false);
+    } catch (caught) {
+      setNeedsRestart(true);
+      setError(caught instanceof Error ? caught.message : "Unable to close this conversation. Please try again.");
+    } finally { sending.current = false; setBusy(false); }
   }
 
   async function capture(form: FormData) {
@@ -93,7 +109,7 @@ export function WebsiteChat({ workspace, businessName = demoBusinessName, knowle
       <div className="chat-message assistant">{isDemo ? "Hi, I’m Oak City’s AI advisor. Ask about pricing, compare plans, or tell me what’s happening with your heating or cooling." : "Hi! I can help with services, hours, and service-area questions. What would you like to know?"}{!workspace ? <small>{preview ? "Preview · Answers from your published knowledge" : "Fictional HVAC business · Sample prices & policies"}</small> : null}</div>
       {messages.map((message, index) => <div className={`chat-message ${message.role}`} key={index}>
         <div className="chat-message-text">{message.content}</div>
-        {message.sources?.length ? <details className="chat-sources"><summary><BookOpen size={13} aria-hidden="true" />{message.sources.length} knowledge {message.sources.length === 1 ? "source" : "sources"}</summary><div>{message.sources.map((source) => <details key={source.id}><summary>{source.title}</summary><p>{source.content}</p><a href={`/knowledge-base#knowledge-${source.id}`} target="_blank" rel="noreferrer">View in the knowledge base ↗</a></details>)}</div></details> : message.source ? <small>Source: {message.source}</small> : null}
+        {message.sources?.length ? <details className="chat-sources"><summary><BookOpen size={13} aria-hidden="true" />{message.sources.length} knowledge {message.sources.length === 1 ? "source" : "sources"}</summary><div>{message.sources.map((source) => <details key={source.id}><summary>{source.title}</summary><p>{source.content}</p>{isDemo ? <a href={`/knowledge-base#knowledge-${source.id}`} target="_blank" rel="noreferrer">View in the knowledge base ↗</a> : null}</details>)}</div></details> : message.source ? <small>Source: {message.source}</small> : null}
       </div>)}
       {busy ? <p className="chat-pending" role="status">{isDemo ? "Checking the business handbook…" : "One moment…"}</p> : null}
       {captured ? <div className="chat-message assistant"><Check size={16} /> {workspace ? "Your details are saved for the team to follow up. An appointment has not been booked." : "That’s how contact capture works. This demo hasn’t saved or sent your details."}</div> : null}
@@ -103,6 +119,6 @@ export function WebsiteChat({ workspace, businessName = demoBusinessName, knowle
     {(workspace || preview) && !showLead && !captured ? <button className="chat-handoff" type="button" onClick={() => setShowLead(true)} disabled={busy}>{workspace ? "Ask the team to follow up" : "Try the contact form"} <span aria-hidden="true">↗</span></button> : null}
     {error ? <div className="chat-error" role="alert"><p>{error}</p>{needsRestart && !rateLimited ? <button className="chat-restart-action" type="button" onClick={reset}>Start a new conversation</button> : null}</div> : null}
     {isDemo && rateLimited ? <div className="chat-limit-actions"><a href="/knowledge-base#knowledge-library" target="_blank" rel="noreferrer"><BookOpen size={15} aria-hidden="true" />Browse all {demoKnowledge.length} topics free ↗</a><a href="/get-started">Build this for my business →</a></div> : null}
-    <p className="chat-disclosure">{workspace ? <>Chats and contact requests are saved for this business. <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a></> : isDemo ? <>AI demo · No real bookings. Messages are processed by Retell and retained for up to 7 days. <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a></> : "Private preview. Your messages stay in this tab."}</p>
+    <p className="chat-disclosure">{workspace ? <>{aiEnabled ? "AI answers are processed by Retell and retained there for up to 7 days. " : ""}Chats and contact requests are saved for this business. <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a></> : isDemo ? <>AI demo · No real bookings. Messages are processed by Retell and retained for up to 7 days. <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a></> : "Private preview. Your messages stay in this tab."}</p>
   </div>;
 }

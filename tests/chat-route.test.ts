@@ -2,9 +2,13 @@ import { createHash } from "node:crypto";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
-const { getAdmin } = vi.hoisted(() => ({ getAdmin: vi.fn() }));
+const { getAdmin, answerCustomer } = vi.hoisted(() => ({ getAdmin: vi.fn(), answerCustomer: vi.fn() }));
 vi.mock("@/lib/supabase-server", () => ({ getSupabaseAdmin: getAdmin }));
+vi.mock("next/server", async importOriginal => ({ ...(await importOriginal<typeof import("next/server")>()), after: vi.fn() }));
+vi.mock("@/lib/chat-lead-notifications", () => ({ processChatLeadNotification: vi.fn() }));
+vi.mock("@/lib/customer-chat-server", async importOriginal => ({ ...(await importOriginal<typeof import("@/lib/customer-chat-server")>()), answerCustomerChat: answerCustomer }));
 import { POST } from "@/app/api/chat/route";
+import { CustomerChatError } from "@/lib/customer-chat-server";
 
 function request(body: unknown, origin = "https://example.com") {
   return new NextRequest("https://example.com/api/chat", { method: "POST", headers: { origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -51,6 +55,53 @@ describe("website chat boundary", () => {
     const response = await POST(request({ workspace: "tenant-a", message: "Hi" }));
     expect(response.status).toBe(503);
     expect(JSON.stringify(await response.json())).not.toContain("secret");
+  });
+});
+
+describe("configured customer AI routing", () => {
+  function store(engine: string) {
+    const data: Record<string, unknown> = {
+      clients: { id: "resolved-customer", business_name: "Customer A", services: [] },
+      website_chat_settings: { enabled: true, use_business_profile: false, engine },
+      website_knowledge: [{ id: "customer-source", title: "Hours", content: "Weekdays", keywords: "hours" }],
+      website_chats: { id: "saved-lead" },
+    };
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
+    const from = vi.fn((table: string) => {
+      const q: Record<string, unknown> = {};
+      for (const key of ["select", "eq", "update", "is", "gte"]) q[key] = vi.fn(() => q);
+      q.limit = q.maybeSingle = vi.fn(async () => ({ data: data[table], error: null }));
+      return q;
+    });
+    getAdmin.mockReturnValue({ from, rpc });
+    return { rpc };
+  }
+  beforeEach(() => { vi.clearAllMocks(); vi.stubEnv("CHAT_SESSION_SECRET", "test-chat-secret"); answerCustomer.mockResolvedValue({ content: "AI customer answer" }); });
+  it("routes only explicitly configured AI using server-selected customer and published knowledge", async () => {
+    const { rpc } = store("retell");
+    const response = await POST(request({ workspace: "customer-a", message: "Hours?", sessionToken: "b".repeat(64), agent_id: "demo-or-foreign", client_id: "forged" }));
+    expect(response.status).toBe(200);
+    expect(answerCustomer).toHaveBeenCalledWith(expect.objectContaining({ clientId: "resolved-customer", businessName: "Customer A", knowledge: [expect.objectContaining({ id: "customer-source" })], message: "Hours?" }));
+    expect(JSON.stringify(answerCustomer.mock.calls)).not.toContain("demo-or-foreign");
+    expect(rpc).not.toHaveBeenCalledWith("record_website_chat_turn", expect.anything());
+  });
+  it("keeps a legacy workspace on the local engine", async () => {
+    store("local");
+    expect((await POST(request({ workspace: "customer-a", message: "Hours?", sessionToken: "b".repeat(64) }))).status).toBe(200);
+    expect(answerCustomer).not.toHaveBeenCalled();
+  });
+  it("preserves contact capture without requiring the AI provider", async () => {
+    store("retell"); answerCustomer.mockRejectedValue(new Error("Provider is down"));
+    const response = await POST(request({ workspace: "customer-a", sessionToken: "b".repeat(64), lead: { name: "Example", email: "example@example.com", request: "Callback", consent: true } }));
+    expect(response.status).toBe(200);
+    expect(answerCustomer).not.toHaveBeenCalled();
+  });
+  it("returns a restart instruction without provider internals or a local fallback", async () => {
+    store("retell");
+    answerCustomer.mockRejectedValue(new CustomerChatError("Start a new conversation", 401, "b".repeat(64), true));
+    const response = await POST(request({ workspace: "customer-a", message: "Hours?", sessionToken: "b".repeat(64) }));
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ error: "Start a new conversation", sessionToken: "b".repeat(64), resetSession: true });
   });
 });
 

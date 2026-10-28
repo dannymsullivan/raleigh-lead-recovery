@@ -239,7 +239,7 @@ function SystemOverview({ integrations }: { integrations: IntegrationStatus[] })
       <div className="max-w-3xl">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-black/45">System &amp; costs</p>
         <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] sm:text-4xl">Usage, spend, and connections.</h2>
-        <p className="mt-3 text-sm font-semibold leading-6 text-black/50">Live customer usage with planning estimates—not provider invoices.</p>
+        <p className="mt-3 text-sm font-semibold leading-6 text-black/50">Planning estimates for voice, SMS, and phone numbers. AI chat, knowledge-base fees, email, setup, and support labor are not included. Check provider invoices for actual totals.</p>
       </div>
 
       <div className="mt-5 overflow-hidden border-2 border-black bg-white">

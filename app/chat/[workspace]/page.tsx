@@ -10,16 +10,17 @@ export default async function ChatPage({ params }: { params: Promise<{ workspace
   const { workspace } = await params;
   if (!/^[a-z0-9-]{1,100}$/.test(workspace)) notFound();
   let client;
+  let aiEnabled = false;
   try {
     const admin = getSupabaseAdmin();
     const { data, error } = await admin.from("clients").select("id,business_name").eq("slug", workspace).maybeSingle();
     if (error) throw error;
     if (data) {
-      const { data: settings, error: settingsError } = await admin.from("website_chat_settings").select("enabled").eq("client_id", data.id).maybeSingle();
+      const { data: settings, error: settingsError } = await admin.from("website_chat_settings").select("enabled,engine").eq("client_id", data.id).maybeSingle();
       if (settingsError) throw settingsError;
-      if (settings?.enabled) client = data;
+      if (settings?.enabled) { client = data; aiEnabled = settings.engine === "retell"; }
     }
   } catch { return <main className="chat-embed"><p>Chat is temporarily unavailable. Please contact the business directly.</p></main>; }
   if (!client) notFound();
-  return <main className="chat-embed"><WebsiteChat workspace={workspace} businessName={client.business_name} /></main>;
+  return <main className="chat-embed"><WebsiteChat workspace={workspace} businessName={client.business_name} aiEnabled={aiEnabled} /></main>;
 }

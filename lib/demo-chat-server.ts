@@ -25,7 +25,9 @@ export function parseDemoCompletion(value: unknown): DemoAnswer {
   let content = messages.filter((message): message is { role: "agent"; content: string } =>
     Boolean(message && typeof message === "object" && message.role === "agent" && typeof message.content === "string")
   ).map((message) => message.content.trim()).filter(Boolean).join("\n\n");
-  const marker = content.match(/(?:^|\n)SOURCES:\s*([^\r\n]*)\s*$/i);
+  // Retell can append the marker to the last sentence despite the newline
+  // instruction. Accept either spacing while still allowing only source IDs.
+  const marker = content.match(/(?:^|\s)SOURCES:\s*([a-z0-9-]+(?:\s*,\s*[a-z0-9-]+)*)\s*$/i);
   const ids = new Set((marker?.[1] ?? "").split(",").map((id) => id.trim()).filter((id) => /^[a-z0-9-]+$/.test(id)));
   if (marker) content = content.slice(0, marker.index).trim();
   // This is plain text, never model-supplied HTML or a markdown link destination.
@@ -101,5 +103,34 @@ export async function answerDemoChat(message: string, existingToken: string | un
       try { await admin.rpc("finish_public_demo_chat_turn", { p_token_hash: tokenHash, p_claim_id: claimId, p_success: false }); } catch { /* Never leak provider or storage details. */ }
     }
     throw failure(caught, allocated ? sessionToken : existingToken);
+  }
+}
+
+/** Close only the provider session bound to this capability and network. */
+export async function endDemoChat(sessionToken: string, ip: string): Promise<void> {
+  const secret = process.env.CHAT_SESSION_SECRET?.trim() || process.env.DEMO_CALL_HASH_SECRET?.trim();
+  if (!secret || !process.env.RETELL_API_KEY?.trim()) throw new DemoChatError("The demo could not close this conversation. Please try again shortly.", 503);
+  try {
+    const { data: session, error } = await getSupabaseAdmin().rpc("end_public_demo_chat", {
+      p_token_hash: digest(sessionToken),
+      p_ip_hash: createHmac("sha256", secret).update(ip).digest("hex"),
+    });
+    if (error) throw error;
+    if (!session || typeof session !== "object" || !("chat_id" in session)) throw new Error("Invalid demo session");
+    // The database expires this capability without deleting the attempts that
+    // enforce network/site budgets. A repeated close can retry provider cleanup.
+    if (session.chat_id === null) return;
+    if (typeof session.chat_id !== "string" || !session.chat_id || session.chat_id.length > 200) throw new Error("Invalid provider chat");
+    try {
+      await getRetellClient().chat.end(session.chat_id, providerOptions);
+    } catch (caught) {
+      const detail = caught && typeof caught === "object" && "message" in caught ? String(caught.message) : "";
+      const status = caught && typeof caught === "object" && "status" in caught ? caught.status : null;
+      if (!((status === 400 || status === 404 || status === 409) && /chat.{0,100}(ended|expired|not found|not ongoing|does not exist)|(?:ended|expired|invalid).{0,40}chat/i.test(detail))) throw caught;
+    }
+  } catch (caught) {
+    const mapped = failure(caught);
+    if (mapped.status === 503) throw new DemoChatError("The demo could not close this conversation. Please try again shortly.", 503);
+    throw mapped;
   }
 }
