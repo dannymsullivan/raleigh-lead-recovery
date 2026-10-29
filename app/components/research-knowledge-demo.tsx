@@ -15,6 +15,6 @@ export function ResearchKnowledgeDemo({ niche }: { niche?: ResearchNiche }) {
     {!niche && <label className="research-demo-select">Explore an industry<select value={slug} onChange={(event) => { setSlug(event.target.value); setQuestionIndex(0); }}>{researchNiches.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}</select></label>}
     <div className="research-question-list" aria-label="Choose an example buyer question">{selected.questions.map((item, index) => <button type="button" key={item.question} aria-pressed={questionIndex === index} onClick={() => setQuestionIndex(index)}>{item.question}<ArrowRight size={16} aria-hidden="true" /></button>)}</div>
     <div className="research-answer" aria-live="polite" aria-atomic="true"><p className="research-eyebrow">Example answer</p><p>{example.answer}</p><div className="research-source"><BookOpen size={15} aria-hidden="true" /><span>Sample knowledge: {example.source}</span></div></div>
-    <p className="research-demo-note">Prewritten examples, not live AI or technical advice. Your assistant would use the information your team approves.</p>
+    <p className="research-demo-note">Prewritten examples, not a live assistant or technical advice. Your assistant would use the information your team approves.</p>
   </div>;
 }
