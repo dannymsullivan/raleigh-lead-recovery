@@ -19,14 +19,14 @@ import { demoKnowledge, demoKnowledgeCategories } from "@/lib/demo-knowledge";
 import "./knowledge-demo.css";
 
 export const metadata: Metadata = {
-  title: "AI Website Assistants That Know Your Business | Snappy Leads",
+  title: "Website Chat & AI Call Answering for Service Businesses | Snappy Leads",
   description:
-    "Turn your business knowledge into helpful answers, 24/7. Try an AI service advisor with detailed pricing, membership, troubleshooting, and policy knowledge.",
+    "Answer calls and website questions, capture job requests, and give your team the details to follow up—even after hours. We handle the setup.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Old-school service. New-school tech.",
+    title: "Answer calls. Capture leads. Even at 2 AM.",
     description:
-      "A helpful service advisor, built around your business knowledge. Try detailed answers about pricing, memberships, troubleshooting, and policies.",
+      "Website chat and AI voice agents answer customer questions and capture job requests while you’re busy or off the clock. We handle the setup.",
     url: "/",
     type: "website",
     images: [{
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Old-school service. New-school tech.",
-    description: "Turn your business knowledge into helpful customer answers, 24/7.",
+    title: "Answer calls. Capture leads. Even at 2 AM.",
+    description: "Website chat and AI voice agents answer customer questions and capture job requests while you’re busy or off the clock. We handle the setup.",
     images: ["/opengraph-image"],
   },
 };
@@ -70,12 +70,13 @@ export default function HomePage() {
       <section className="rlr-hero knowledge-home-hero">
         <div className="page-shell rlr-hero-grid">
           <div className="rlr-hero-copy">
-            <p className="rlr-kicker"><span /> Your business knowledge. On call 24/7.</p>
-            <h1><span>Old-school service.</span><em>New-school tech.</em></h1>
+            <p className="rlr-kicker"><span /> Website chat + AI voice for service businesses</p>
+            <h1><span>Answer calls.</span>{" "}<span>Capture leads.</span>{" "}<em>Even at 2 AM.</em></h1>
             <p className="rlr-hero-intro">
-              Give customers the kind of help your best service advisor would give.
-              Detailed answers about your services, prices, memberships, and policies—
-              built around how your business actually works, even after you’ve closed.
+              Turn customer questions into your next job. Our website chat answers
+              questions and collects contact details and service requests, day or night.
+              Add an AI voice agent to cover missed calls. We handle the setup;
+              your team follows up and confirms the booking.
             </p>
             <div className="rlr-hero-actions">
               <a className="rlr-button rlr-button-primary" href="#trial">
