@@ -13,7 +13,7 @@ import {
 import { PublicSiteNav } from "./components/public-site-nav";
 import { WebsiteChat } from "./components/website-chat";
 import { SalesMotion } from "./components/sales-motion";
-import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, KnowledgeInAction, ProductOverview, TrialBanner } from "./components/chatbot-sales-sections";
+import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, KnowledgeInAction, ProductOverview } from "./components/chatbot-sales-sections";
 import { contactEmail } from "@/lib/contact";
 import { demoKnowledge, demoKnowledgeCategories } from "@/lib/demo-knowledge";
 import "./knowledge-demo.css";
@@ -62,7 +62,7 @@ export default function HomePage() {
   return (
     <main className="landing-page rlr-home rlr-retro" id="sales-page">
       <SalesMotion />
-      <TrialBanner />
+      <div className="sales-trial-banner"><Link href="/raleigh-pilot" data-analytics-event="hvac_pilot_promo_clicked" data-analytics-location="homepage_banner">Raleigh-area HVAC business? <span>Apply for three months of website chat, on us.</span> <ArrowRight size={14} aria-hidden="true" /></Link></div>
       <PublicSiteNav
         cta={{ href: "#trial", label: "Try two weeks free" }}
       />

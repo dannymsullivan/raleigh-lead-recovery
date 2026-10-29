@@ -37,4 +37,17 @@ describe("website trial requests", () => {
     rpc.mockResolvedValue({ error: { message: "rate_limit" } });
     expect((await POST(request(valid))).status).toBe(429);
   });
+  it("stores qualified pilot applications separately with campaign tags", async () => {
+    const response = await POST(request({ ...valid, offer: "raleigh_hvac_pilot", needs: undefined,
+      pilot: { serviceArea: "Raleigh", leadSource: "Google Ads", traffic: "100–499", responseGap: "Office closes at five", followUpOwner: "Owner", participation: true, pricing: true, attribution: { utm_source: "facebook" } } }));
+    expect(response.status).toBe(200);
+    expect(rpc).toHaveBeenCalledWith("submit_hvac_pilot_application", expect.objectContaining({ p_needs: expect.stringContaining("utm_source: facebook") }));
+  });
+  it("rejects incomplete pilot applications and unknown offers before storage", async () => {
+    for (const change of [{ offer: "unknown" }, { offer: "raleigh_hvac_pilot", pilot: {} }, { offer: "raleigh_hvac_pilot", website: "" }]) {
+      expect((await POST(request({ ...valid, ...change }))).status).toBe(400);
+    }
+    expect(getAdmin).not.toHaveBeenCalled();
+  });
+
 });

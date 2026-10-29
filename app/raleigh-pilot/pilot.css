@@ -1,0 +1,79 @@
+.rlr-home.hvac-pilot { padding-top: 0; background: #fff9e7; color: #17232d; }
+.pilot-announcement { padding: 12px 20px; text-align: center; background: #f7fa00; border-bottom: 2px solid #17232d; font: 700 12px/1.5 ui-monospace, monospace; }
+.pilot-announcement span { margin-inline: 10px; }
+.pilot-nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 18px; }
+.pilot-hero { background: #2155ff; color: #fff9e7; padding: 65px 0 72px; border-block: 2px solid #17232d; }
+.pilot-hero-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,.85fr); gap: 65px; align-items: center; }
+.hvac-pilot h1,.hvac-pilot h2 { font-family: 'RLR Display', Impact, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: -.015em; }
+.hvac-pilot h1 { font-size: clamp(3.6rem,6.3vw,6.2rem); line-height: .98; margin: 20px 0 28px; }
+.hvac-pilot h1 em { font-style: normal; color: #f7fa00; }
+.hvac-pilot h2 { font-size: clamp(2.7rem,4.2vw,4rem); line-height: 1.03; margin: 16px 0 22px; }
+.hvac-pilot p { line-height: 1.7; }
+.pilot-hero .rlr-kicker { color: #f7fa00; }
+.pilot-lede { font-size: 18px; max-width: 550px; margin-bottom: 28px; }
+.pilot-hero .rlr-button { background: #f7fa00; color: #17232d; }
+.pilot-hero-note { font-size: 12px; margin-top: 20px; }
+.pilot-demo-link { display: inline-block; margin-top: 15px; color: #fff9e7; text-decoration: underline; text-underline-offset: 5px; font-weight: 650; }
+.pilot-offer { background: #fff9e7; color: #17232d; padding: 30px; border: 3px solid #17232d; box-shadow: 10px 10px 0 #17232d; transform: rotate(1deg); }
+.pilot-stamp { font: 750 11px/1.5 ui-monospace, monospace; letter-spacing: .06em; }
+.pilot-offer .pilot-offer-number { display: flex; gap: 20px; align-items: center; font-family: 'RLR Display',Impact,sans-serif; font-size: 150px; line-height: 1; margin: 18px 0; }
+.pilot-offer-number span { font-size: 52px; text-transform: uppercase; }
+.pilot-offer ul,.pilot-fit ul { list-style: none; padding: 0; }
+.pilot-offer li,.pilot-fit li { display: flex; align-items: flex-start; gap: 12px; margin-block: 16px; line-height: 1.6; }
+.pilot-offer li svg,.pilot-fit li svg { flex-shrink: 0; width: 20px; margin-top: 3px; }
+.pilot-offer-bottom { border-top: 2px solid #17232d; padding-top: 18px; margin-top: 22px; font-size: 12px; line-height: 1.7; }
+.pilot-section { padding-block: 80px; }
+.pilot-benefits { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 30px; margin-top: 40px; }
+.pilot-benefits article { border-top: 2px solid #17232d; padding-top: 25px; }
+.pilot-benefits article > svg { width: 32px; height: 32px; color: #2155ff; }
+.pilot-benefits h3 { font-size: 21px; line-height: 1.3; margin: 20px 0 12px; }
+.pilot-demo-section { padding-block: 65px; background: #e5eafa; border-block: 2px solid #17232d; scroll-margin-top: 20px; }
+.pilot-demo-grid,.pilot-fit { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 65px; align-items: center; }
+.pilot-demo-grid p + p { margin-top: 16px; }
+.pilot-chat { min-width: 0; border: 2px solid #17232d; box-shadow: 8px 8px 0 #17232d; background: #fffef6; }
+.pilot-small { font-size: 13px; color: #445456; }
+.pilot-fit ul { background: #f7fa00; border: 2px solid #17232d; padding: 16px 25px; }
+.pilot-founder { display: flex; gap: 28px; align-items: center; padding: 28px; border: 2px solid #17232d; margin-bottom: 80px; }
+.pilot-founder img { flex-shrink: 0; object-fit: cover; border: 2px solid #17232d; }
+.pilot-founder h2 { font-size: 36px; margin-block: 8px 12px; }
+.pilot-application { background: #e4ebdf; padding-block: 75px; border-block: 2px solid #17232d; scroll-margin-top: 20px; }
+.pilot-application-grid { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr); gap: 65px; align-items: start; }
+.pilot-application ol { padding-left: 22px; margin: 30px 0; }
+.pilot-application li { padding-left: 8px; margin-bottom: 22px; line-height: 1.7; }
+.pilot-form { min-width: 0; }
+.pilot-form select { width: 100%; min-width: 0; min-height: 48px; border: 2px solid #17232d; background: #fffef6; border-radius: 0; font: inherit; padding: 10px; }
+.hvac-pilot :is(a,button,input,select,textarea,summary):focus-visible { outline: 3px solid #d31b72; outline-offset: 4px; }
+.pilot-faq { max-width: 850px; }
+.pilot-faq details { border-top: 1px solid #85918c; padding: 22px 0; }
+.pilot-faq summary { cursor: pointer; font-size: 18px; font-weight: 700; }
+.pilot-faq details p { margin-top: 15px; }
+.pilot-footer { border-top: 2px solid #17232d; padding-block: 30px; }
+.pilot-footer .page-shell { display: flex; align-items: center; gap: 25px; justify-content: space-between; flex-wrap: wrap; }
+.pilot-footer p { font-size: 12px; }
+.pilot-footer nav { display: flex; gap: 20px; font-size: 13px; }
+@media (max-width: 900px) {
+ .pilot-hero-grid,.pilot-demo-grid,.pilot-fit,.pilot-application-grid { grid-template-columns: 1fr; gap: 38px; }
+ .pilot-offer { max-width: 540px; transform: none; }
+ .pilot-hero-grid > div { max-width: 650px; }
+ .pilot-benefits { gap: 22px; }
+}
+@media (max-width: 600px) {
+ .pilot-nav { gap: 12px; }
+ .pilot-nav .rlr-button { width: auto; min-height: 44px; padding-inline: 10px; font-size: 10px; }
+ .pilot-announcement { font-size: 10px; }
+ .pilot-hero { padding-block: 38px 48px; }
+ .hvac-pilot h1 { font-size: clamp(3.1rem,13vw,4.8rem); }
+ .pilot-lede { font-size: 16px; }
+ .pilot-offer { padding: 22px; margin-right: 10px; }
+ .pilot-offer .pilot-offer-number { font-size: 115px; }
+ .pilot-offer-number span { font-size: 42px; }
+ .pilot-section { padding-block: 48px; }
+ .pilot-benefits { grid-template-columns: 1fr; }
+ .pilot-demo-section,.pilot-application { padding-block: 48px; }
+ .pilot-chat { margin-right: 8px; }
+ .pilot-founder { align-items: flex-start; flex-direction: column; margin-bottom: 48px; }
+ .pilot-form .trial-form-fields { grid-template-columns: 1fr; }
+ .pilot-form .trial-form-wide { grid-column: auto; }
+ .pilot-form { padding: 22px; }
+ .pilot-footer .page-shell { align-items: flex-start; flex-direction: column; }
+}

@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { pilotApplicationNotes } from "@/lib/hvac-pilot";
 
 export const runtime = "nodejs";
 const reply = (body: object, status = 200) => NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
@@ -16,7 +17,11 @@ export async function POST(request: NextRequest) {
   } catch { return reply({ error: "Please check your details and try again." }, 400); }
   const value = (key: string) => typeof body[key] === "string" ? (body[key] as string).trim() : "";
   if (value("fax")) return reply({ error: "Unable to submit this request." }, 400);
-  const name = value("name"), business = value("business"), email = value("email").toLowerCase(), needs = value("needs"), submissionId = value("submissionId");
+  const pilot = body.offer === "raleigh_hvac_pilot";
+  if (body.offer !== undefined && !pilot) return reply({ error: "Please select a valid offer." }, 400);
+  const name = value("name"), business = value("business"), email = value("email").toLowerCase(), submissionId = value("submissionId");
+  const needs = pilot ? pilotApplicationNotes(body.pilot) : value("needs");
+  if (pilot && (!needs || !value("website"))) return reply({ error: "Complete the pilot questions, website, and participation acknowledgments." }, 400);
   if (!name || name.length > 100 || !business || business.length > 160 || !needs || needs.length > 2000 || email.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || body.consent !== true || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(submissionId)) {
     return reply({ error: "Enter your name, business, valid email, what you need, and permission to follow up." }, 400);
   }
@@ -33,7 +38,7 @@ export async function POST(request: NextRequest) {
   if (!secret) return reply({ error: "Trial requests are temporarily unavailable." }, 503);
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-    const { error } = await getSupabaseAdmin().rpc("submit_website_trial_request", {
+    const { error } = await getSupabaseAdmin().rpc(pilot ? "submit_hvac_pilot_application" : "submit_website_trial_request", {
       p_submission_id: submissionId, p_ip_hash: createHmac("sha256", secret).update(ip).digest("hex"),
       p_name: name, p_business: business, p_email: email, p_website: website || null, p_needs: needs,
     });

@@ -158,3 +158,19 @@ After the existing chat/demo migrations, apply these in timestamp order:
 3. `20261028222000_public_demo_chat_end.sql` — public demo session closure without quota refunds.
 
 Run `tests/customer-chat-sql.sql` and `tests/chat-lead-notifications-sql.sql` with `psql -v ON_ERROR_STOP=1` after the migrations. Both fixtures roll back their fictional test data and make no provider requests. Deployment alone neither activates customer AI nor enables email alerts; these require deliberate workspace configuration and the appropriate existing provider credentials.
+
+### Raleigh HVAC pilot
+
+`/raleigh-pilot` is the application page for five qualifying HVAC businesses. The offer is three months of website chat from launch, one location and website, and 1,000 AI replies per month. Continuing is $399/month at the same allowance, by explicit agreement. Selection, provisioning, and billing remain manual; this page does not activate customer resources.
+
+Before accepting real applications, apply `supabase/migrations/20261029120000_hvac_pilot_applications.sql` after the existing website trial migration. It adds a service-role-only RPC using the existing prospect table. The existing trial-request server secret and Supabase configuration are required. Applications appear at `/admin/outreach?source=hvac_pilot`; the qualification answers and bounded UTM tags are stored in notes. Email follow-up is manual; application submission does not send an email or automatically enroll anyone.
+
+Verification: run `npx vitest run tests/trial-request-route.test.ts tests/hvac-pilot.test.ts`, and run `tests/hvac-pilot-sql.sql` in a migrated test database. The SQL fixture rolls back its records.
+
+For a Meta test, use a direct campaign URL such as:
+
+```
+https://snappyleads.xyz/raleigh-pilot?utm_source=facebook&utm_medium=paid_social&utm_campaign=raleigh_hvac_pilot&utm_content=after_hours
+```
+
+Existing PostHog configuration enables `hvac_pilot_promo_clicked`, `hvac_pilot_apply_clicked`, `hvac_pilot_application_started`, and `hvac_pilot_application_submitted`. The submitted event fires only after a successful API response. Application fields are excluded from autocapture, and custom event properties contain no applicant contact information. No Meta Pixel, Conversions API, ad account, campaign, or spend is configured by this feature. Treat Meta conversion optimization as a separate setup step before a paid launch.
