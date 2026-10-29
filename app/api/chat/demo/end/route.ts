@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DemoChatError, endDemoChat } from "@/lib/demo-chat-server";
+import { getResearchNiche } from "@/lib/research-niches";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -16,9 +17,10 @@ export async function POST(request: NextRequest) {
     body = parsed as Record<string, unknown>;
   } catch { return reply({ error: "Please try closing the conversation again." }, 400); }
   if (typeof body.sessionToken !== "string" || !/^[a-f0-9]{64}$/.test(body.sessionToken)) return reply({ error: "This demo conversation has expired." }, 401);
+  if (body.niche !== undefined && (typeof body.niche !== "string" || !getResearchNiche(body.niche))) return reply({ error: "Please choose an available industry demo." }, 400);
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
   try {
-    await endDemoChat(body.sessionToken, ip);
+    await endDemoChat(body.sessionToken, ip, body.niche as string | undefined);
     return reply({ ok: true });
   } catch (caught) {
     if (caught instanceof DemoChatError) return reply({ error: caught.message }, caught.status);

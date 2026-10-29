@@ -59,6 +59,21 @@
 .research-footer nav { display: flex; gap: 20px; }
 .research-page :is(a,button,select):focus-visible,.research-demo :is(button,select):focus-visible { outline: 3px solid #ce176b; outline-offset: 4px; }
 .research-home-demo { min-width: 0; scroll-margin-top: 20px; padding-right: 8px; }
+.research-demo-live .research-demo-select { margin-bottom: 18px; }
+.research-demo-live .website-chat { width: 100%; max-width: none; margin: 0; border: 0; box-shadow: none; border-radius: 0; }
+.research-demo-live .website-chat-log { height: 300px; min-height: 220px; max-height: 440px; }
+.research-demo-live .website-chat[data-has-messages="false"] .website-chat-log { height: auto; min-height: 0; }
+.research-demo-live .chat-demo-prompts { padding-block: 12px; }
+.research-demo-live .chat-suggestions { flex-wrap: wrap; }
+.research-demo-live .chat-suggestions button { white-space: normal; text-align: left; }
+.research-demo-live .chat-compose { min-width: 0; }
+.research-demo-live .chat-compose input { min-width: 0; }
+.research-live-library { border-top: 1px solid #b0b9c0; padding: 16px 20px; scroll-margin-top: 24px; }
+.research-live-library summary { font-size: 12px; font-weight: 700; cursor: pointer; line-height: 1.6; }
+.research-live-library > summary svg { display: inline; vertical-align: middle; margin-right: 6px; }
+.research-live-library p { font-size: 12px; line-height: 1.7; margin: 12px 0; }
+.research-live-library details { border-top: 1px solid #d4d8d9; padding: 12px 0; scroll-margin-top: 24px; }
+.research-demo-live :is(input,textarea,summary):focus-visible { outline: 3px solid #ce176b; outline-offset: 3px; }
 .research-home-demo > a { display: inline-flex; margin-top: 20px; gap: 8px; font-size: 12px; font-weight: 650; color: #fff9e7; text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 900px) { .research-hero-grid,.research-example-grid,.research-columns { grid-template-columns: 1fr; gap: 38px; } .research-blueprint { max-width: 600px; margin-right: 10px; } .research-example-grid > .research-demo { margin-right: 8px; } }
 @media (max-width: 600px) { .research-shell { width: calc(100% - 36px); } .research-nav { gap: 12px; } .research-nav > a:last-child { max-width: 140px; font-size: 11px; } .research-hero { padding-block: 42px 50px; } .research-page h1 { font-size: clamp(3rem,12vw,4rem); } .research-lede { font-size: 16px; } .research-section { padding-block: 48px; } .research-blueprint { padding: 22px; } .research-founder { align-items: flex-start; flex-direction: column; } .research-footer { flex-wrap: wrap; } .research-footer > span { width: 100%; } .research-feedback blockquote { font-size: 20px; } .research-question-list { padding: 16px; } .research-answer { margin-inline: 16px; padding: 15px; } }

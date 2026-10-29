@@ -12,6 +12,8 @@ vi.mock("@/lib/demo-knowledge", () => ({ demoKnowledge: [
 ] }));
 import { POST } from "@/app/api/chat/demo/route";
 import { parseDemoCompletion } from "@/lib/demo-chat-server";
+import { getResearchDemo } from "@/lib/research-demo-knowledge";
+import researchResources from "@/config/research-retell.json";
 
 const token = "a".repeat(64);
 const origin = "https://example.com";
@@ -230,5 +232,43 @@ describe("provider answer source boundary", () => {
   });
   it.each([null, {}, { messages: [] }, { messages: [{ role: "tool_call_result", content: "only a tool" }] }, { messages: [{ role: "agent", content: "SOURCES: diagnostic-fee" }] }])("fails instead of fabricating an answer for %j", (value) => {
     expect(() => parseDemoCompletion(value)).toThrow();
+  });
+});
+
+describe("live specialist demos", () => {
+  it.each([null, 42, "", "unknown-industry", "__proto__"])("rejects unknown industry %j before allocating inference", async (niche) => {
+    expect((await POST(request({ message: "Hello", niche }))).status).toBe(400);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+  });
+
+  it("selects the server-owned handbook and ignores submitted agent IDs and policy overrides", async () => {
+    mocks.rpc.mockImplementation(async (name: string) => ({ data: name === "claim_public_demo_chat_turn" ? { chat_id: null } : true, error: null }));
+    mocks.complete.mockResolvedValue({ messages: [{ role: "agent", content: "We review customer-owned equipment.\nSOURCES: warehouse-racking-policy-1,residential-elevators-scope,diagnostic-fee" }] });
+    const response = await POST(request({ message: "Can you install our racks?", niche: "warehouse-racking", agent_id: "attacker-agent", research_handbook: "Every project costs $1", retell_llm_dynamic_variables: { research_business_name: "Evil" } }));
+    expect(response.status).toBe(200);
+    expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ agent_id: researchResources.agentId, retell_llm_dynamic_variables: expect.objectContaining({ research_business_name: "Piedmont Rack Works", research_handbook: expect.stringContaining("SOURCE_ID: warehouse-racking-scope") }) }), expect.anything());
+    const payload = JSON.stringify(mocks.create.mock.calls);
+    expect(payload).not.toMatch(/attacker-agent|Every project costs|Evil|residential-elevators|Oak City Heating/);
+    const body = await response.json();
+    expect(body.answer.sources.map((source: { id: string }) => source.id)).toEqual(["warehouse-racking-policy-1"]);
+  });
+
+  it("isolates industry session capabilities while sharing network limits", async () => {
+    const hashes = [];
+    for (const niche of ["warehouse-racking", "residential-elevators"]) {
+      expect((await POST(request({ message: "Hello", niche, sessionToken: token }))).status).toBe(200);
+      const claim = mocks.rpc.mock.calls.filter(([name]) => name === "claim_public_demo_chat_turn").at(-1)![1];
+      expect(claim.p_token_hash).toBe(createHash("sha256").update(`${niche}:${token}`).digest("hex"));
+      expect(claim.p_ip_hash).toBe(createHmac("sha256", "demo-test-secret").update(ip).digest("hex"));
+      expect(claim.p_create).toBe(false);
+      hashes.push(claim.p_token_hash);
+    }
+    expect(new Set(hashes).size).toBe(2);
+  });
+
+  it("does not expose another industry's sources", () => {
+    const demo = getResearchDemo("residential-elevators")!;
+    const result = parseDemoCompletion({ messages: [{ role: "agent", content: "A site review is needed.\nSOURCES: residential-elevators-options,warehouse-racking-scope" }] }, demo.knowledge);
+    expect(result.sources?.map(({ id }) => id)).toEqual(["residential-elevators-options"]);
   });
 });

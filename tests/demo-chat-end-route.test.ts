@@ -28,6 +28,15 @@ beforeEach(() => {
 });
 
 describe("ending the public demo conversation", () => {
+  it("closes only the session in the selected industry namespace", async () => {
+    const response = await POST(request({ sessionToken: token, niche: "warehouse-racking" }));
+    expect(response.status).toBe(200);
+    expect(mocks.rpc).toHaveBeenCalledWith("end_public_demo_chat", expect.objectContaining({ p_token_hash: createHash("sha256").update(`warehouse-racking:${token}`).digest("hex") }));
+  });
+  it("rejects an unknown industry before closing any session", async () => {
+    expect((await POST(request({ sessionToken: token, niche: "unknown" }))).status).toBe(400);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+  });
   it.each([{ origin: "https://attacker.example" }, { noOrigin: true }])("requires the same origin before accessing storage: %j", async (options) => {
     expect((await POST(request({ sessionToken: token }, options))).status).toBe(403);
     expect(mocks.getAdmin).not.toHaveBeenCalled();

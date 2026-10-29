@@ -4,6 +4,9 @@ import { createHash, createHmac, randomBytes, randomUUID } from "node:crypto";
 import { getSupabaseAdmin } from "./supabase-server";
 import { getRetellClient } from "./retell";
 import { demoKnowledge } from "@/lib/demo-knowledge";
+import { getResearchDemo } from "./research-demo-knowledge";
+import type { KnowledgeEntry } from "./chat";
+import researchResources from "@/config/research-retell.json";
 
 type Source = { id: string; title: string; content: string };
 export type DemoAnswer = { content: string; source?: string; sources?: Source[] };
@@ -19,7 +22,7 @@ const digest = (value: string) => createHash("sha256").update(value).digest("hex
 const providerOptions = { timeout: 20_000, maxRetries: 0 };
 
 /** Only agent text and IDs present in our public demo library cross this boundary. */
-export function parseDemoCompletion(value: unknown): DemoAnswer {
+export function parseDemoCompletion(value: unknown, knowledge: KnowledgeEntry[] = demoKnowledge): DemoAnswer {
   const messages = value && typeof value === "object" && "messages" in value ? value.messages : null;
   if (!Array.isArray(messages)) throw new Error("Invalid provider response");
   let content = messages.filter((message): message is { role: "agent"; content: string } =>
@@ -35,7 +38,7 @@ export function parseDemoCompletion(value: unknown): DemoAnswer {
     .replace(/\*\*([^*]+)\*\*/g, "$1").replace(/^#{1,6}\s+/gm, "").trim();
   if (!content) throw new Error("Empty provider response");
   if (content.length > 3500) content = `${content.slice(0, 3499).trimEnd()}…`;
-  const sources = demoKnowledge.filter((entry) => entry.published !== false && ids.has(entry.id)).slice(0, 6)
+  const sources = knowledge.filter((entry) => entry.published !== false && ids.has(entry.id)).slice(0, 6)
     .map(({ id, title, content: sourceContent }) => ({ id, title, content: sourceContent }));
   return { content, ...(sources.length ? { sources, source: sources.map((entry) => entry.title).join(" · ") } : {}) };
 }
@@ -57,12 +60,16 @@ function failure(caught: unknown, sessionToken?: string): DemoChatError {
   return new DemoChatError("The demo could not finish this answer. Please try again in a moment.", 503, sessionToken);
 }
 
-export async function answerDemoChat(message: string, existingToken: string | undefined, ip: string): Promise<{ answer: DemoAnswer; sessionToken: string }> {
+export async function answerDemoChat(message: string, existingToken: string | undefined, ip: string, niche?: string): Promise<{ answer: DemoAnswer; sessionToken: string }> {
+  const research = niche ? getResearchDemo(niche) : undefined;
+  if (niche && !research) throw new DemoChatError("Please choose one of the available industry demos.", 400);
   const secret = process.env.CHAT_SESSION_SECRET?.trim() || process.env.DEMO_CALL_HASH_SECRET?.trim();
-  const agentId = process.env.RETELL_CHAT_DEMO_AGENT_ID?.trim();
+  const agentId = research ? (researchResources as { agentId?: string }).agentId : process.env.RETELL_CHAT_DEMO_AGENT_ID?.trim();
   if (!secret || !agentId || !process.env.RETELL_API_KEY?.trim()) throw new DemoChatError("The live demo is temporarily unavailable. Please try again shortly.", 503, existingToken);
   const sessionToken = existingToken || randomBytes(32).toString("hex");
-  const tokenHash = digest(sessionToken);
+  // Namespace the capability by industry, while retaining the shared IP/global
+  // budget. A token from another demo cannot resume or close this conversation.
+  const tokenHash = digest(niche ? `${niche}:${sessionToken}` : sessionToken);
   const ipHash = createHmac("sha256", secret).update(ip).digest("hex");
   const claimId = randomUUID();
   let claimed = false;
@@ -85,14 +92,17 @@ export async function answerDemoChat(message: string, existingToken: string | un
     const retell = getRetellClient();
     let chatId = typeof claim.chat_id === "string" && claim.chat_id ? claim.chat_id : undefined;
     if (!chatId) {
-      const created = await retell.chat.create({ agent_id: agentId, agent_version: "latest_published" }, providerOptions);
+      const created = await retell.chat.create({ agent_id: agentId, agent_version: "latest_published", ...(research ? { retell_llm_dynamic_variables: {
+        research_business_name: research.name,
+        research_handbook: research.knowledge.map((entry) => `SOURCE_ID: ${entry.id}\nTITLE: ${entry.title}\n${entry.content}`).join("\n\n---\n\n"),
+      } } : {}) }, providerOptions);
       chatId = created.chat_id;
       if (typeof chatId !== "string" || !chatId || chatId.length > 200) throw new Error("Invalid provider chat");
       const { data: attached, error: attachError } = await admin.rpc("attach_public_demo_chat", { p_token_hash: tokenHash, p_claim_id: claimId, p_chat_id: chatId });
       if (attachError || attached !== true) throw attachError || new Error("Demo claim expired");
     }
     const completion = await retell.chat.createChatCompletion({ chat_id: chatId, content: message }, providerOptions);
-    const answer = parseDemoCompletion(completion);
+    const answer = parseDemoCompletion(completion, research?.knowledge ?? demoKnowledge);
     const { data: released, error: releaseError } = await admin.rpc("finish_public_demo_chat_turn", { p_token_hash: tokenHash, p_claim_id: claimId, p_success: true });
     if (releaseError || released !== true) throw releaseError || new Error("Demo claim expired");
     claimed = false;
@@ -102,17 +112,20 @@ export async function answerDemoChat(message: string, existingToken: string | un
       // Failed attempts still consume quota. A failed release expires with the lease.
       try { await admin.rpc("finish_public_demo_chat_turn", { p_token_hash: tokenHash, p_claim_id: claimId, p_success: false }); } catch { /* Never leak provider or storage details. */ }
     }
-    throw failure(caught, allocated ? sessionToken : existingToken);
+    const mapped = failure(caught, allocated ? sessionToken : existingToken);
+    if (research) mapped.message = mapped.message.replaceAll("AI demo", "demo").replaceAll("free knowledge base", "sample knowledge base");
+    throw mapped;
   }
 }
 
 /** Close only the provider session bound to this capability and network. */
-export async function endDemoChat(sessionToken: string, ip: string): Promise<void> {
+export async function endDemoChat(sessionToken: string, ip: string, niche?: string): Promise<void> {
+  if (niche && !getResearchDemo(niche)) throw new DemoChatError("Please choose one of the available industry demos.", 400);
   const secret = process.env.CHAT_SESSION_SECRET?.trim() || process.env.DEMO_CALL_HASH_SECRET?.trim();
   if (!secret || !process.env.RETELL_API_KEY?.trim()) throw new DemoChatError("The demo could not close this conversation. Please try again shortly.", 503);
   try {
     const { data: session, error } = await getSupabaseAdmin().rpc("end_public_demo_chat", {
-      p_token_hash: digest(sessionToken),
+      p_token_hash: digest(niche ? `${niche}:${sessionToken}` : sessionToken),
       p_ip_hash: createHmac("sha256", secret).update(ip).digest("hex"),
     });
     if (error) throw error;

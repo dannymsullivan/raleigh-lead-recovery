@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { answerDemoChat, DemoChatError } from "@/lib/demo-chat-server";
+import { getResearchNiche } from "@/lib/research-niches";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -16,13 +17,14 @@ export async function POST(request: NextRequest) {
     body = parsed as Record<string, unknown>;
   } catch { return reply({ error: "Please check your message and try again." }, 400); }
   const message = typeof body.message === "string" ? body.message.trim() : "";
+  if (body.niche !== undefined && (typeof body.niche !== "string" || !getResearchNiche(body.niche))) return reply({ error: "Please choose an available industry demo." }, 400);
   if (!message || message.length > 1000) return reply({ error: "Please enter a message of up to 1,000 characters." }, 400);
   if (body.sessionToken !== undefined && (typeof body.sessionToken !== "string" || !/^[a-f0-9]{64}$/.test(body.sessionToken))) {
     return reply({ error: "Please start a new demo conversation.", resetSession: true }, 401);
   }
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
   try {
-    return reply(await answerDemoChat(message, body.sessionToken as string | undefined, ip));
+    return reply(await answerDemoChat(message, body.sessionToken as string | undefined, ip, body.niche as string | undefined));
   } catch (caught) {
     if (caught instanceof DemoChatError) return reply({ error: caught.message, ...(caught.sessionToken ? { sessionToken: caught.sessionToken } : {}), ...(caught.resetSession ? { resetSession: true } : {}) }, caught.status);
     return reply({ error: "The live demo is temporarily unavailable. Please try again shortly." }, 503);
