@@ -5,19 +5,19 @@ import "./chatbot-sales.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://snappyleads.xyz"),
-  title: "Snappy Leads | Never Lose a Good Lead",
-  description: "Website chatbots and voice agents that answer customer questions, collect job details, and help service businesses follow up.",
+  title: "Snappy Leads | Turn Cold Traffic into Warm Leads",
+  description: "Your team's approved knowledge, ready for complex buying questions. Help visitors understand their options before requesting a quote.",
   openGraph: {
-    title: "Snappy Leads | Never Lose a Good Lead",
-    description: "Answer customer questions and collect the details your team needs to follow up.",
+    title: "Snappy Leads | Turn Cold Traffic into Warm Leads",
+    description: "The right answers, fast. Put your team's knowledge to work before the quote.",
     type: "website",
     url: "/",
     siteName: "Snappy Leads",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Snappy Leads | Never Lose a Good Lead",
-    description: "Answer customer questions and collect the details your team needs to follow up.",
+    title: "Snappy Leads | Turn Cold Traffic into Warm Leads",
+    description: "The right answers, fast. Put your team's knowledge to work before the quote.",
   },
 };
 

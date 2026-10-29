@@ -1,252 +1,62 @@
-import { PublicSiteFooter } from "@/app/components/public-site-footer";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Check,
-  Headphones,
-  MessageSquareText,
-  PhoneForwarded,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Check, FileText, MessageSquareText, ShieldCheck } from "lucide-react";
 import { PublicSiteNav } from "./components/public-site-nav";
-import { WebsiteChat } from "./components/website-chat";
+import { PublicSiteFooter } from "./components/public-site-footer";
 import { SalesMotion } from "./components/sales-motion";
-import { ChatPricing, ChatTrial, CustomerProblem, IndustryExamples, KnowledgeInAction, ProductOverview } from "./components/chatbot-sales-sections";
+import { ResearchKnowledgeDemo } from "./components/research-knowledge-demo";
+import { TrialRequestForm } from "./components/trial-request-form";
+import { researchNiches } from "@/lib/research-niches";
 import { contactEmail } from "@/lib/contact";
-import { demoKnowledge, demoKnowledgeCategories } from "@/lib/demo-knowledge";
 import "./knowledge-demo.css";
+import "./research/research.css";
 
+const description = "Turn cold traffic into warm leads with the right answers, fast. Put your team's approved knowledge to work for buyers with complex questions before they request a quote.";
 export const metadata: Metadata = {
-  title: "Website Chat & AI Call Answering for Service Businesses | Snappy Leads",
-  description:
-    "Answer calls and website questions, capture job requests, and give your team the details to follow up—even after hours. We handle the setup.",
+  title: "Turn Cold Traffic into Warm Leads | Snappy Leads", description,
   alternates: { canonical: "/" },
-  openGraph: {
-    title: "Answer calls. Capture leads. Even at 2 AM.",
-    description:
-      "Website chat and AI voice agents answer customer questions and capture job requests while you’re busy or off the clock. We handle the setup.",
-    url: "/",
-    type: "website",
-    images: [{
-        url: "/opengraph-image",
-      width: 1200,
-      height: 630,
-      alt: "Snappy Leads website chat",
-    }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Answer calls. Capture leads. Even at 2 AM.",
-    description: "Website chat and AI voice agents answer customer questions and capture job requests while you’re busy or off the clock. We handle the setup.",
-    images: ["/opengraph-image"],
-  },
+  openGraph: { title: "Cold traffic. Warm leads. The right answers, fast.", description, url: "/", type: "website", images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Snappy Leads: cold traffic, warm leads, the right answers fast" }] },
+  twitter: { card: "summary_large_image", title: "Turn cold traffic into warm leads | Snappy Leads", description, images: ["/opengraph-image"] },
 };
-
 const faqs = [
-  { q: "How does the two-week free trial work?", a: "We agree on your business knowledge, website, and follow-up setup before we begin. Setup is included, and your 14 days start when the chatbot goes live. No card is required. Website chat starts at $399/month after the trial. You approve the monthly price, usage allowance, and support scope before paid service starts." },
-  { q: "Who handles the setup?", a: "You work directly with Danny. Together, we map your services, pricing rules, memberships, service area, policies, and the questions customers actually ask. You review the knowledge and test realistic conversations before launch." },
-  { q: "How much can it know about my business?", a: "We build your knowledge base around the information you approve: service details, pricing and exclusions, maintenance plans, warranties, safe troubleshooting, policies, and more. The live demo uses a detailed fictional HVAC business so you can explore what that depth looks like. Your own setup is scoped and tested with you." },
-  { q: "Does every question have to go to a person?", a: "No. Published answers can resolve routine questions about your services and policies right in the chat. Your team is needed for work that requires a person, such as inspecting equipment, confirming an appointment, or answering a question outside the approved knowledge. The demo shows how an AI advisor can connect information across a conversation." },
-  { q: "What happens when it doesn’t know?", a: "It should say so, explain what it can answer, and offer the appropriate next step. We define those boundaries with you. It shouldn’t make up a price, promise availability, or claim a technician is on the way." },
-  { q: "How does a chat turn into a lead?", a: "Visitors can get answers first. When they want help from your team, they choose ‘Ask the team to follow up’ and share their name, email, optional phone number, and request. With their permission, those details are saved with the full conversation in your dashboard. The public demo uses a fictional business and doesn’t collect customer requests." },
-  { q: "How does my team take over?", a: "During setup, we configure where requests go and who gets notified. Alerts and routing are part of your setup, with the recipients and follow-up process agreed before launch. Your team can review the conversation, contact the customer, and track the result in the dashboard." },
-  { q: "Can I see where a lead came from?", a: "Yes. You can see the page where a chat started and, when available, the website or campaign that brought the visitor there. Mark the leads you book and add the job value to compare results." },
-  { q: "Does each customer have their own dashboard?", a: "Yes. Each business signs in to its own workspace to read conversations, update chatbot answers, and track leads." },
-  { q: "Does it book appointments?", a: "It captures appointment requests so your team can follow up with the details already in hand. Your team confirms availability and the appointment time with the customer, then marks the lead as booked and records the job value in the dashboard." },
-  { q: "Do you also offer voice agents?", a: "Yes. Voice is a separate service for missed-call and after-hours coverage. Visit the Voice agents page to try the browser demo and learn how setup works." },
+  ["Who is this for?", "Businesses selling considered purchases: projects, equipment, and specialist services where buyers have meaningful questions before requesting a quote. The best fit has useful website traffic, knowledge to share, and a team that follows up. We check that fit with you; a knowledge assistant cannot create demand where there is none."],
+  ["What goes into the knowledge base?", "Your approved service descriptions, product guides, scope boundaries, process explanations, FAQs, pricing rules, warranties, and the experience your team shares with customers. We organize the information, resolve gaps with you, and test realistic questions before launch."],
+  ["How is this different from a contact form?", "A form collects information from someone who is already ready to get in touch. A knowledge assistant helps a visitor understand their options first. They can explore your services and process, then choose to share their contact details and project request when they are ready."],
+  ["What stays with my team?", "Your people own recommendations that need professional judgment, site assessments, engineering decisions, firm quotes, availability, and the customer relationship. The assistant explains the information you approve and gives your team the conversation context for follow-up."],
+  ["What if the answer is not in our knowledge base?", "The assistant should acknowledge what it does not know and explain how to ask your team. It should not invent specifications, prices, credentials, or commitments. You can review conversations and update the approved knowledge as you learn what buyers ask."],
+  ["How does a visitor become a lead?", "When a visitor chooses to request follow-up, they share their name, email, optional phone number, and request with permission for your team to contact them. The request and conversation are saved in your workspace. We configure the agreed email alerts during setup; your team follows up and confirms next steps."],
+  ["Are the industry examples live customer deployments?", "No. They are research examples showing how a specialist company's knowledge could answer buying questions. The answers are prewritten sample policies, not live AI, technical advice, or claims about any real business. Your own assistant uses information you approve and test."],
+  ["How does the trial work?", "We agree on the knowledge, website, and follow-up process before setup. Your 14 days begin when the assistant goes live. No card is required. Plans start at $399/month afterward, with the knowledge scope, monthly AI reply allowance, and support agreed before you choose paid service. Custom integrations and additional locations are quoted separately."],
 ];
 
 export default function HomePage() {
-  return (
-    <main className="landing-page rlr-home rlr-retro" id="sales-page">
-      <SalesMotion />
-      <div className="sales-trial-banner"><Link href="/raleigh-pilot" data-analytics-event="hvac_pilot_promo_clicked" data-analytics-location="homepage_banner">Raleigh-area HVAC business? <span>Apply for three months of website chat, on us.</span> <ArrowRight size={14} aria-hidden="true" /></Link></div>
-      <PublicSiteNav
-        cta={{ href: "#trial", label: "Try two weeks free" }}
-      />
-
-      <section className="rlr-hero knowledge-home-hero">
-        <div className="page-shell rlr-hero-grid">
-          <div className="rlr-hero-copy">
-            <p className="rlr-kicker"><span /> Website chat + AI voice for service businesses</p>
-            <h1><span>Answer calls.</span>{" "}<span>Capture leads.</span>{" "}<em>Even at 2 AM.</em></h1>
-            <p className="rlr-hero-intro">
-              Turn customer questions into your next job. Our website chat answers
-              questions and collects contact details and service requests, day or night.
-              Add an AI voice agent to cover missed calls. We handle the setup;
-              your team follows up and confirms the booking.
-            </p>
-            <div className="rlr-hero-actions">
-              <a className="rlr-button rlr-button-primary" href="#trial">
-                Try two weeks free <ArrowRight aria-hidden="true" />
-              </a>
-              <a className="rlr-button rlr-button-secondary" href="#try-chat">Put it to the test</a>
-            </div>
-            <div className="rlr-hero-assurances" aria-label="Chatbot features">
-              <span><Check aria-hidden="true" /> Two-week free trial</span>
-              <span><Check aria-hidden="true" /> Knowledge you approve</span>
-              <span><Check aria-hidden="true" /> Helpful around the clock</span>
-            </div>
-          </div>
-
-          <div className="rlr-demo-card" id="try-chat">
-            <div className="rlr-demo-topline">
-              <div><span className="rlr-live-dot" /><span>Meet your AI service advisor</span></div>
-              <span>Ask the hard questions ↙</span>
-            </div>
-            <WebsiteChat />
-            <div className="rlr-demo-outcome" aria-label="Knowledge demo features">
-              <div><span>Demo knowledge</span><strong>{demoKnowledge.length} detailed articles</strong></div>
-              <div><span>Business depth</span><strong>{demoKnowledgeCategories.length} topic areas</strong></div>
-              <div><span>Keep asking</span><strong>It follows the conversation</strong></div>
-            </div>
-            <Link className="knowledge-demo-source-link" href="/knowledge-base">Open the knowledge behind the answers <ArrowRight size={15} aria-hidden="true" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="rlr-founder page-shell">
-        <Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} />
-        <div>
-          <p className="rlr-kicker">Founder-led setup</p>
-          <h2>Your whole business. At their fingertips.</h2>
-          <p>
-            I&apos;m Danny Sullivan, an AI product engineer and former
-            service-business owner. I help put your company’s collective knowledge to work.
-            We bring together the information across your website, documents, and experienced
-            team, then organize and test it with you. Your services, prices, policies, and
-            processes become one knowledgeable AI assistant. It connects those details to answer
-            complicated questions and help customers understand their options through chat
-            or voice—24 hours a day, even at 2 AM.
-          </p>
-        </div>
-        <a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a>
-      </section>
-
-      <section className="rlr-trust-band" aria-label="How the service fits your business">
-        <div className="page-shell">
-          <span><Headphones aria-hidden="true" /> Questions answered anytime</span>
-          <span><PhoneForwarded aria-hidden="true" /> Your prices. Your policies.</span>
-          <span><MessageSquareText aria-hidden="true" /> Answers with useful detail</span>
-          <span><ShieldCheck aria-hidden="true" /> Your own private dashboard</span>
-        </div>
-      </section>
-
-      <KnowledgeInAction />
-      <CustomerProblem />
-      <ProductOverview />
-
-      <section className="rlr-flow page-shell" id="how-it-works">
-        <div className="rlr-section-heading">
-          <p className="rlr-kicker">How it works</p>
-          <h2>We set it up. You review it. Then it goes live.</h2>
-          <p>
-            You don’t need to build a chatbot or learn a new tool to get started.
-            We help turn your business information into useful knowledge, add the assistant to your site, and put it through its paces.
-          </p>
-        </div>
-        <ol className="rlr-flow-steps">
-          <li id="business-knowledge"><span>01</span><div><h3>Build your business playbook</h3><p>Services, pricing rules, memberships, warranties, and the details that make your business yours. We help organize it into clear, approved knowledge.</p></div></li>
-          <li><span>02</span><div><h3>Test the real questions</h3><p>Try the everyday questions and the tricky ones. Review the answers, clarify the boundaries, and approve the setup before it reaches customers.</p></div></li>
-          <li><span>03</span><div><h3>Go live and review your leads</h3><p>Your trial starts when the chatbot is ready. See each conversation, contact request, and lead source in your dashboard, then record what happens next.</p></div></li>
-        </ol>
-      </section>
-
-      <section className="rlr-outcomes" id="outcomes">
-        <div className="page-shell rlr-outcomes-grid">
-          <div className="rlr-outcomes-copy">
-            <p className="rlr-kicker">From answers to action</p>
-            <h2>From a question to a real inquiry.</h2>
-            <p>
-              Useful answers build confidence. When a visitor wants your help, give your team the request, the context, and a clear next step.
-            </p>
-            <ol className="lead-flow">
-              <li><strong>Answer the question</strong><p>Help visitors understand your services, prices, and policies using information you approve.</p></li>
-              <li><strong>Capture the request</strong><p>Visitors leave their name, contact details, and what they need, with permission to follow up.</p></li>
-              <li><strong>Notify the right person</strong><p>We configure alerts and routing during setup, so requests reach the people who handle your follow-up.</p></li>
-              <li><strong>Follow up and track the job</strong><p>Your team confirms appointments, tracks each lead, and records the value of booked work.</p></li>
-            </ol>
-          </div>
-
-          <div className="lead-preview">
-            <div className="rlr-summary-card">
-              <div className="rlr-summary-header"><span>Example lead · Sample data</span><strong>Website chat</strong></div>
-              <div className="rlr-summary-person">
-                <span>JM</span>
-                <div><strong>Jordan M.</strong><p>AC repair request</p></div>
-                <i>New inquiry</i>
-              </div>
-              <dl>
-                <div><dt>Contact</dt><dd>jordan@example.com</dd></div>
-                <div><dt>Request</dt><dd>“My upstairs AC isn’t cooling. Can we arrange a visit?”</dd></div>
-                <div><dt>Source</dt><dd>Google paid ad → /ac-repair</dd></div>
-              </dl>
-              <div className="rlr-summary-footer"><Check aria-hidden="true" /> Contact details and the full conversation, together</div>
-            </div>
-            <p className="lead-preview-note">See the conversation and source, then move leads from new to contacted, booked, or lost.</p>
-            <Link className="rlr-button rlr-button-primary" href="/dashboard-demo">Preview the lead dashboard <ArrowRight aria-hidden="true" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="sales-owner-work page-shell">
-        <Image className="retro-scene" src="/illustrations/front-desk-scene.png" alt="A cheerful retro computer assistant organizing customer messages into useful job requests" width={1536} height={1024} sizes="(max-width: 760px) 100vw, 50vw" />
-        <div><p className="rlr-kicker">Built for owners with their hands full</p><h2>Keep doing the work you’re known for.</h2><p>You shouldn’t have to stop a job to explain the maintenance plan again. Let customers explore their options, understand your pricing, and get ready for a service visit while you take care of the person in front of you.</p><p>When a question does need your team, the conversation provides context. Routine information can be answered right away, and your people can focus on the work that needs them.</p><a className="rlr-inline-link" href="#trial">Try two weeks free <ArrowRight aria-hidden="true" /></a></div>
-      </section>
-
-      <IndustryExamples />
-      <ChatPricing />
-
-      <section className="rlr-safety">
-        <div className="page-shell rlr-safety-grid">
-          <div className="rlr-safety-heading">
-            <p className="rlr-kicker">You stay in control</p>
-            <h2>Useful answers. Clear boundaries. Your standards.</h2>
-          </div>
-          <div className="rlr-safety-list">
-            <article><ShieldCheck aria-hidden="true" /><div><h3>Knowledge with your stamp of approval</h3><p>You decide what it can explain, from prices and exclusions to service policies. We review the details with you before launch.</p></div></article>
-            <article><PhoneForwarded aria-hidden="true" /><div><h3>A person when a person is needed</h3><p>Routine questions deserve answers. Inspections, exact repair quotes, and appointment confirmations need your team. The assistant makes that distinction clear.</p></div></article>
-            <article><Headphones aria-hidden="true" /><div><h3>Lets you review every conversation</h3><p>Read conversations, change chatbot answers, or pause chat from your dashboard.</p></div></article>
-          </div>
-        </div>
-      </section>
-
-
-
-      <ChatTrial />
-
-      <section className="rlr-faq page-shell" id="questions">
-        <div className="rlr-faq-heading">
-          <p className="rlr-kicker">Before you try it</p>
-          <h2>Frequently asked questions.</h2>
-        </div>
-        <div className="rlr-faq-list">
-          {faqs.map((faq) => (
-            <details key={faq.q}>
-              <summary>{faq.q}<span>+</span></summary>
-              <p>{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="rlr-final">
-        <div className="page-shell">
-          <p className="rlr-kicker">Start your free trial</p>
-          <h2>Help your next website visitor become a customer.</h2>
-          <p>Get website chat, setup, and your own dashboard free for two weeks.</p>
-          <div>
-            <a className="rlr-button rlr-button-light" href="#trial">
-              Try two weeks free <ArrowRight aria-hidden="true" />
-            </a>
-            <a className="rlr-final-demo-link" href="#try-chat">Try the chatbot first</a>
-          </div>
-        </div>
-      </section>
-
-      <PublicSiteFooter />
-    </main>
-  );
+  return <main className="landing-page rlr-home rlr-retro" id="sales-page">
+    <SalesMotion />
+    <div className="sales-trial-banner"><a href="#industries">Big purchases start with good questions. <span>Explore six specialist industries.</span> <ArrowRight size={14} aria-hidden="true" /></a></div>
+    <PublicSiteNav knowledgeOnly cta={{ href: "#trial", label: "Build your knowledge base" }} />
+    <section className="rlr-hero knowledge-home-hero"><div className="page-shell rlr-hero-grid">
+      <div className="rlr-hero-copy"><p className="rlr-kicker"><span /> Your expertise, ready for every buyer</p><h1><span>Turn cold traffic</span>{" "}<span>into warm leads.</span>{" "}<em>The right answers, fast.</em></h1><p className="rlr-hero-intro">Big purchases come with complicated questions. Give visitors access to your team’s expertise through an AI knowledge assistant that explains your options, process, and scope—so they can take the next step with confidence.</p><div className="rlr-hero-actions"><a className="rlr-button rlr-button-primary" href="#try-knowledge">See the answers <ArrowRight aria-hidden="true" /></a><a className="rlr-button rlr-button-secondary" href="#trial">Build your knowledge base</a></div><div className="rlr-hero-assurances"><span><Check aria-hidden="true" /> Knowledge your team approves</span><span><Check aria-hidden="true" /> Help before the quote</span><span><Check aria-hidden="true" /> Context for your sales team</span></div></div>
+      <div className="research-home-demo" id="try-knowledge"><ResearchKnowledgeDemo /><Link href="/knowledge-base">Explore a live knowledge-base demo <ArrowRight size={15} aria-hidden="true" /></Link></div>
+    </div></section>
+    <section className="sales-problem"><div className="page-shell"><div className="sales-section-title"><p className="rlr-kicker">The gap before the quote</p><h2>They’re interested. They still have questions.</h2><p>“Will this work in our space?” “What does installation include?” “Do you handle the whole project?” Give buyers a useful starting point while they decide who to contact.</p></div><div className="sales-card-grid">
+      <article className="sales-problem-card"><span>01</span><h3>Your expertise helps them choose.</h3><p>Your best salesperson knows the details that reassure a buyer. Bring those approved explanations to your website, where the decision often starts.</p></article>
+      <article className="sales-problem-card"><span>02</span><h3>Good answers need real knowledge.</h3><p>Product guides, scope exclusions, project examples, service policies, and the questions your team hears every day. We organize them into a knowledge base you can review.</p></article>
+      <article className="sales-problem-card"><span>03</span><h3>Your team gets a better conversation.</h3><p>When the buyer asks for follow-up, your people can read what they asked, what they learned, and what they need. Start with context and move toward the right quote.</p></article>
+    </div></div></section>
+    <section className="sales-industries" id="industries"><div className="page-shell"><div className="sales-section-title"><p className="rlr-kicker">High-value decisions. Specific questions.</p><h2>Built for businesses with more to explain.</h2><p>We’re researching these specialist industries because the questions before a quote matter. Explore each concept and tell us what your customers really need.</p></div><div className="sales-industry-grid">{researchNiches.map((niche) => <article key={niche.slug}><span>{niche.name}</span><h3>“{niche.questions[0].question}”</h3><p>{niche.description}</p><Link className="rlr-inline-link" href={`/research/${niche.slug}`}>Explore the concept <ArrowRight size={16} aria-hidden="true" /></Link></article>)}</div><p className="research-small">Illustrative research concepts, not customer testimonials or claims of industry certification.</p></div></section>
+    <section className="rlr-founder page-shell"><Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} /><div><p className="rlr-kicker">Founder-led setup</p><h2>Your team’s knowledge is the advantage.</h2><p>I’m Danny Sullivan, an AI product engineer and former service-business owner. I work with you to bring together what your website, documents, and experienced people know. We turn it into clear answers, test the details, and keep your team in charge of the customer relationship.</p></div><a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a></section>
+    <section className="rlr-flow page-shell" id="how-it-works"><div className="rlr-section-heading"><p className="rlr-kicker">Start with the knowledge</p><h2>Capture the expertise. Test the answers. Help the buyer.</h2><p>The setup starts with what your customers need to understand before they can make an informed inquiry.</p></div><ol className="rlr-flow-steps">
+      <li><span>01</span><div><h3>Build your knowledge base</h3><p>Bring your guides, service details, process, policies, and frequently asked questions. We help organize the information and identify gaps for your team to fill.</p></div></li>
+      <li><span>02</span><div><h3>Put real buying questions to it</h3><p>Test comparisons, exceptions, and follow-up questions. Approve what the assistant can explain and when it should refer someone to your team.</p></div></li>
+      <li><span>03</span><div><h3>Learn from the conversations</h3><p>See what visitors ask, review follow-up requests, and improve the knowledge over time. Track qualified opportunities and booked work in your dashboard.</p></div></li>
+    </ol></section>
+    <section className="rlr-outcomes" id="outcomes"><div className="page-shell rlr-outcomes-grid"><div className="rlr-outcomes-copy"><p className="rlr-kicker">From curiosity to a useful inquiry</p><h2>Help buyers get ready for your team.</h2><p>A visitor may need to understand your approach before sharing a phone number. Give them room to ask, then a clear way to move forward.</p><ol className="lead-flow"><li><strong>Understand the question</strong><p>Let buyers explain their situation and explore the options you support.</p></li><li><strong>Answer from approved knowledge</strong><p>Explain your scope, process, and requirements with the detail the buyer needs.</p></li><li><strong>Invite the next conversation</strong><p>When they are ready, collect their contact details and request with permission to follow up.</p></li><li><strong>Support the person closing the work</strong><p>Your team reviews the conversation, confirms project fit, and handles the quote.</p></li></ol></div><div className="lead-preview"><div className="rlr-summary-card"><div className="rlr-summary-header"><span>Example inquiry · Sample data</span><strong>Warehouse racking</strong></div><div className="rlr-summary-person"><span>JM</span><div><strong>Jordan M.</strong><p>Warehouse expansion</p></div><i>New inquiry</i></div><dl><div><dt>Contact</dt><dd>jordan@example.com</dd></div><div><dt>Request</dt><dd>“We’re expanding our warehouse in Raleigh. We own some racking and want to discuss phased installation.”</dd></div><div><dt>Discussed</dt><dd>Customer-owned equipment, site review, and installation scope</dd></div><div><dt>Next step</dt><dd>Project team to review and arrange a conversation</dd></div></dl><div className="rlr-summary-footer"><Check aria-hidden="true" /> The request and full conversation, together</div></div><p className="lead-preview-note">Illustrative handoff. Your team confirms specifications, availability, and pricing.</p></div></div></section>
+    <section className="rlr-safety"><div className="page-shell rlr-safety-grid"><div className="rlr-safety-heading"><p className="rlr-kicker">Expertise with clear boundaries</p><h2>Your people bring the judgment.</h2></div><div className="rlr-safety-list"><article><BookOpen aria-hidden="true" /><div><h3>Answers your team approves</h3><p>You decide what the assistant can explain. We review your information and test it before launch.</p></div></article><article><ShieldCheck aria-hidden="true" /><div><h3>Specialist decisions stay with specialists</h3><p>Site assessments, engineering, firm quotes, and project commitments belong with your qualified team.</p></div></article><article><FileText aria-hidden="true" /><div><h3>Knowledge you can keep improving</h3><p>Review conversations, update answers, and see which buying questions your website needs to address.</p></div></article></div></div></section>
+    <section className="sales-pricing" id="pricing"><div className="page-shell"><div className="sales-section-title"><p className="rlr-kicker">Knowledge, setup, and support</p><h2>One assistant. Your business expertise.</h2><p>Start with one website and a knowledge base prepared with your team.</p></div><div className="sales-product-grid"><article className="sales-plan"><h3>Website knowledge assistant</h3><div className="sales-plan-price"><span>From</span><strong>$399</strong><span>/month</span></div><ul>{["Approved knowledge and realistic answer testing", "Website installation and a 14-day free trial", "Contact requests and full conversation history", "Agreed email alerts and lead source tracking"].map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul><a className="rlr-button rlr-button-primary" href="#trial">Discuss your knowledge base <ArrowRight aria-hidden="true" /></a></article><article><p className="rlr-kicker">Scope agreed before launch</p><h3>A setup that fits your buying process.</h3><p>We agree on your knowledge scope, monthly AI reply allowance, updates, and support before you start. Your trial begins after setup, with no card required.</p><p>Paid service begins only if you approve it. Additional locations and custom integrations are scoped separately.</p><p>We’ll also check whether your website gets the inquiries this can help with.</p></article></div></div></section>
+    <section className="sales-trial page-shell" id="trial"><div><p className="rlr-kicker">Build on what your team knows</p><h2>What do buyers ask before they ask for a quote?</h2><p>Tell us about your business and the questions that matter. Danny will email you to discuss your knowledge, website, and follow-up process.</p><p>We prepare and test the assistant with you. Your 14 free days begin when it goes live.</p><div className="sales-trial-details"><span><BookOpen /> Your approved knowledge</span><span><MessageSquareText /> More informed inquiries</span><span><Check /> Hands-on setup</span></div></div><TrialRequestForm /></section>
+    <section className="rlr-faq page-shell" id="questions"><div className="rlr-faq-heading"><p className="rlr-kicker">Before you begin</p><h2>A few useful answers.</h2></div><div className="rlr-faq-list">{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div></section>
+    <section className="rlr-final"><div className="page-shell"><p className="rlr-kicker">Your expertise is worth sharing</p><h2>The right answers can start the right conversation.</h2><p>Help buyers understand your value before your team prepares the quote.</p><div><a className="rlr-button rlr-button-light" href="#trial">Build your knowledge base <ArrowRight aria-hidden="true" /></a><a className="rlr-final-demo-link" href="#try-knowledge">Explore the examples</a></div></div></section>
+    <PublicSiteFooter knowledgeOnly />
+  </main>;
 }

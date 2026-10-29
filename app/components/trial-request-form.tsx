@@ -29,10 +29,10 @@ export function TrialRequestForm({ service }: { service?: string } = {}) {
     finally { setBusy(false); }
   }
 
-  if (sent) return <div className="trial-form trial-form-success" role="status"><CheckCircle2 size={38} aria-hidden="true" /><h3>Your request has been received.</h3><p>{service ? "Danny will email you to discuss your business and put together a custom quote." : "Danny will email you to get your setup started. Your two-week trial begins when your chatbot is ready to go live."}</p><Link className="rlr-inline-link" href="/dashboard-demo">Preview the customer dashboard <ArrowRight aria-hidden="true" /></Link></div>;
+  if (sent) return <div className="trial-form trial-form-success" role="status"><CheckCircle2 size={38} aria-hidden="true" /><h3>Your request has been received.</h3><p>{service ? "Danny will email you to discuss your business and put together a custom quote." : "Danny will email you to get your setup started. Your two-week trial begins when your knowledge assistant is ready to go live."}</p><Link className="rlr-inline-link" href="/dashboard-demo">Preview the customer dashboard <ArrowRight aria-hidden="true" /></Link></div>;
 
   return <form className="trial-form" onSubmit={submit} aria-label={service ? `Ask about ${service}` : "Request your two-week free trial"}>
-    <div className="trial-form-heading"><span>{service || "14-DAY WEBSITE CHAT TRIAL"}</span><h3>{service ? "Let’s talk about your business." : "Request your free trial."}</h3><p>Tell us where to reach you and what your business needs.</p></div>
+    <div className="trial-form-heading"><span>{service || "14-DAY KNOWLEDGE ASSISTANT TRIAL"}</span><h3>{service ? "Let’s talk about your business." : "Request your free trial."}</h3><p>Tell us where to reach you and what your business needs.</p></div>
     <div className="trial-form-fields">
       <label>Your name<input name="name" autoComplete="name" required maxLength={100} /></label>
       <label>Business name<input name="business" autoComplete="organization" required maxLength={160} /></label>

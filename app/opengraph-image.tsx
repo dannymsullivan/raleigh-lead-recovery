@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { SnappySocialImage } from "@/lib/snappy-social-image";
 
-export const alt = "Snappy Leads. Knows your business. Works 24/7. Deep business knowledge, 24/7 answers, chat and voice.";
+export const alt = "Snappy Leads. Cold traffic. Warm leads. The right answers, fast. Your team's knowledge, ready before the quote.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

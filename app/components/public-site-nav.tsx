@@ -13,6 +13,7 @@ type NavItem = {
 
 type PublicSiteNavProps = {
   cta: NavItem;
+  knowledgeOnly?: boolean;
 };
 
 const items = [
@@ -22,9 +23,15 @@ const items = [
   { href: "/login", label: "Sign in" },
 ] as const;
 
-export function PublicSiteNav({ cta }: PublicSiteNavProps) {
+export function PublicSiteNav({ cta, knowledgeOnly = false }: PublicSiteNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const navItems = knowledgeOnly ? [
+    { href: "/", label: "Knowledge assistant" },
+    { href: "/#industries", label: "Industries" },
+    { href: "/knowledge-base", label: "Knowledge base" },
+    { href: "/login", label: "Sign in" },
+  ] : items;
 
   function isActive(href: string): boolean {
     if (href === "/") return pathname === "/";
@@ -37,7 +44,7 @@ export function PublicSiteNav({ cta }: PublicSiteNavProps) {
         <BrandMark />
 
         <div className="nav-links public-nav-desktop">
-          {items.map((item) => (
+          {navItems.map((item) => (
             <Link
               aria-current={isActive(item.href) ? "page" : undefined}
               className="public-nav-link"
@@ -64,7 +71,7 @@ export function PublicSiteNav({ cta }: PublicSiteNavProps) {
             {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
           <div className="public-mobile-nav-panel" id="public-mobile-nav-panel" hidden={!open}>
-            {items.map((item) => (
+            {navItems.map((item) => (
               <Link
                 aria-current={isActive(item.href) ? "page" : undefined}
                 key={item.href}
