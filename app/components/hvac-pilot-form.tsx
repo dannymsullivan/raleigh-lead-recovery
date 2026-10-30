@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import posthog from "posthog-js";
 import { contactEmail } from "@/lib/contact";
-import { pilotLeadSources, pilotTrafficLevels, pilotUtmKeys } from "@/lib/hvac-pilot";
+import { crawlPilotLeadSources, pilotLeadSources, pilotTrafficLevels, pilotUtmKeys } from "@/lib/hvac-pilot";
 
 function track(event: string, crawlSpace: boolean) {
   if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN?.trim()) {
@@ -58,7 +58,7 @@ export function HvacPilotForm({ crawlSpace = false }: { crawlSpace?: boolean }) 
       <label>Email<input name="email" type="email" required maxLength={200} autoComplete="email" /></label>
       <label>Website<input name="website" required maxLength={500} inputMode="url" autoComplete="url" placeholder="yourbusiness.com" /></label>
       <label className="trial-form-wide">Which Triangle communities do you serve?<input name="serviceArea" required maxLength={120} placeholder="Raleigh, Cary, Apex…" /></label>
-      <label>Where do you pay for leads?<select name="leadSource" required defaultValue=""><option value="" disabled>Select a source</option>{pilotLeadSources.map(value => <option key={value}>{value}</option>)}</select></label>
+      <label>{crawlSpace ? "How do customers mainly find you?" : "Where do you pay for leads?"}<select name="leadSource" required defaultValue=""><option value="" disabled>Select a source</option>{(crawlSpace ? crawlPilotLeadSources : pilotLeadSources).map(value => <option key={value}>{value}</option>)}</select></label>
       <label>Monthly website visits<select name="traffic" required defaultValue=""><option value="" disabled>Choose an estimate</option>{pilotTrafficLevels.map(value => <option key={value}>{value}</option>)}</select></label>
       <label className="trial-form-wide">What happens to website inquiries when you’re busy or closed?<textarea name="responseGap" required maxLength={300} rows={3} placeholder="Forms wait until morning, the office handles repeated questions…" /></label>
       <label className="trial-form-wide">Who would follow up with new leads?<input name="followUpOwner" required maxLength={100} placeholder="Me, our office manager, our dispatcher…" /></label>

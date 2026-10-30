@@ -25,7 +25,7 @@ const included = [
   [Wrench, "Setup handled with you", "Danny prepares your business knowledge, installs the widget, configures lead alerts, and tests the answers with you before launch."],
 ] as const;
 const faqs = [
-  ["Who is this pilot for?", "Crawl space businesses serving Raleigh and nearby Triangle communities, including Cary, Apex, Garner, Wake Forest, and Durham. We’re looking for active paid lead generation, website traffic, capacity for more jobs, and an owner or manager willing to test AI with us. We review fit on a short call; applying doesn’t guarantee selection."],
+  ["Who is this pilot for?", "Crawl space businesses serving Raleigh and nearby Triangle communities, including Cary, Apex, Garner, Wake Forest, and Durham. We’re looking for an active website with visitors, capacity for more jobs, and an owner or manager willing to test AI with us. You don’t need to run paid ads. We review fit on a short call; applying doesn’t guarantee selection."],
   ["What does three months free include?", "One business, one location, and one website. We include setup, your approved business knowledge, the chat widget, a lead dashboard, agreed email alerts, monthly results reviews, and up to 1,000 AI replies per month. Your three months start at launch. An AI reply is one answer from the assistant; a conversation can use several replies."],
   ["What happens if we reach the usage allowance?", "AI answers pause at the monthly allowance; the follow-up form remains available. We review usage with you before any paid increase. There are no automatic overage charges."],
   ["What happens after the pilot?", "$399/month at the same 1,000-reply allowance if you choose to continue. We confirm the ongoing scope with you before paid service starts. No card is required to apply and there is no automatic paid enrollment. Additional locations or custom integrations are quoted separately."],
@@ -41,7 +41,7 @@ export default function CrawlSpacePilotPage() {
       <div className="page-shell pilot-hero-grid">
         <div>
           <p className="rlr-kicker">For Raleigh-area crawl space business owners</p>
-          <h1>You paid for the click.<br /><em>Make it a conversation.</em></h1>
+          <h1>Your next customer has questions.<br /><em>Make it a conversation.</em></h1>
           <p className="pilot-lede">Turn more website visitors into crawl space inspection requests. Give homeowners clear answers about encapsulation, moisture, and inspections—and a way to reach your team, day or night.</p>
           <a className="rlr-button rlr-button-primary" href="#apply" data-analytics-event="crawl_space_pilot_apply_clicked" data-analytics-location="pilot_hero">Apply for three months free <ArrowRight aria-hidden="true" /></a>
           <p className="pilot-hero-note">Website chat · Setup included · No card required</p>
@@ -57,7 +57,7 @@ export default function CrawlSpacePilotPage() {
       </div>
     </section>
     <section className="page-shell pilot-section" aria-labelledby="pilot-value">
-      <p className="rlr-kicker">From an ad click to a useful conversation</p><h2 id="pilot-value">Be helpful while you’re out on inspections.</h2>
+      <p className="rlr-kicker">From a website visit to a useful conversation</p><h2 id="pilot-value">Be helpful while you’re out on inspections.</h2>
       <div className="pilot-benefits">{included.map(([Icon, title, body]) => <article key={title}><Icon aria-hidden="true" /><h3>{title}</h3><p>{body}</p></article>)}</div>
     </section>
     <section className="pilot-demo-section" id="pilot-demo">
@@ -68,7 +68,7 @@ export default function CrawlSpacePilotPage() {
     </section>
     <section className="page-shell pilot-section pilot-fit" aria-labelledby="pilot-fit-title">
       <div><p className="rlr-kicker">Built for a useful test</p><h2 id="pilot-fit-title">A good fit goes both ways.</h2><p>You don’t need to be an AI expert. You do need an active website, room for more work, and a team ready to follow up.</p><p>We’ll review your traffic and current process together. You can apply if you don’t know your exact visitor count.</p></div>
-      <ul>{["You serve crawl space customers in Raleigh or the Triangle.", "You invest in Google Ads, Local Services Ads, or other paid lead generation.", "You have room for more jobs and someone who follows up with leads.", "You can approve setup, test the answers, and review results monthly.", "You would consider $399/month if the results justify it."].map(item => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
+      <ul>{["You serve crawl space customers in Raleigh or the Triangle.", "Your website receives visitors, whether they find you through search, referrals, ads, or other sources.", "You have room for more jobs and someone who follows up with leads.", "You can approve setup, test the answers, and review results monthly.", "You would consider $399/month if the results justify it."].map(item => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
     </section>
     <section className="pilot-founder page-shell"><Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={100} height={100} /><div><p className="rlr-kicker">You work directly with Danny</p><h2>A person behind the assistant.</h2><p>I’m Danny, an AI product engineer and former service-business owner. When we had our crawl space encapsulated, we got at least ten quotes and the process was confusing. I’ll help your team give homeowners clear answers, get the assistant onto your website, and review what happens after launch.</p></div></section>
     <section className="pilot-application" id="apply"><div className="page-shell pilot-application-grid"><div><p className="rlr-kicker">Apply for the pilot</p><h2>Let’s put your website to work.</h2><p>We’re selecting five crawl space businesses for a hands-on, three-month pilot.</p><ol><li><strong>Apply.</strong> Tell us about your traffic and follow-up process.</li><li><strong>Check the fit.</strong> Danny emails you to arrange a short conversation.</li><li><strong>Launch together.</strong> Approve the answers and installation. Your three months start when the chatbot goes live.</li></ol><p className="pilot-small">Your application is a request to participate. We’ll agree on setup before starting. No card required and no automatic billing.</p></div><HvacPilotForm crawlSpace /></div></section>

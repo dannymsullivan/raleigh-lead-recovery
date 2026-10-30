@@ -44,10 +44,11 @@ describe("website trial requests", () => {
     expect(rpc).toHaveBeenCalledWith("submit_hvac_pilot_application", expect.objectContaining({ p_needs: expect.stringContaining("utm_source: facebook") }));
   });
   it("stores crawl space applications with the correct offer and qualifications", async () => {
-    const pilot = { serviceArea: "Raleigh", leadSource: "Google Ads", traffic: "100–499", responseGap: "We are out on inspections", followUpOwner: "Owner", participation: true, pricing: true, attribution: { utm_campaign: "crawl" } };
+    const pilot = { serviceArea: "Raleigh", leadSource: "Referrals and word of mouth", traffic: "100–499", responseGap: "We are out on inspections", followUpOwner: "Owner", participation: true, pricing: true, attribution: { utm_campaign: "crawl" } };
     expect((await POST(request({ ...valid, offer: "raleigh_crawl_space_pilot", pilot }))).status).toBe(200);
     expect(rpc).toHaveBeenCalledWith("submit_hvac_pilot_application", expect.objectContaining({ p_needs: expect.stringContaining("Raleigh crawl space pilot application · 3 months") }));
     expect(rpc.mock.calls[0][1].p_needs).toContain("Application page: /crawl-space-pilot");
+    expect(rpc.mock.calls[0][1].p_needs).toContain("Main lead source: Referrals and word of mouth");
     expect((await POST(request({ ...valid, offer: "raleigh_crawl_space_pilot", pilot: { ...pilot, pricing: false } }))).status).toBe(400);
   });
   it("rejects incomplete pilot applications and unknown offers before storage", async () => {
