@@ -28,7 +28,7 @@ export function PublicSiteNav({ cta, knowledgeOnly = false }: PublicSiteNavProps
   const pathname = usePathname();
   const navItems = knowledgeOnly ? [
     { href: "/", label: "Knowledge assistant" },
-    { href: "/#industries", label: "Industries" },
+    { href: "/#try-knowledge", label: "Try the demo" },
     { href: "/knowledge-base", label: "Knowledge base" },
     { href: "/login", label: "Sign in" },
   ] : items;

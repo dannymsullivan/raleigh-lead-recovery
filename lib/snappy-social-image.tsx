@@ -15,10 +15,10 @@ export function SnappySocialImage({ mascot }: { mascot: string }) {
       <div style={{ display: "flex", flexDirection: "column", width: 710, position: "relative" }}>
         <div style={{ display: "flex", alignSelf: "flex-start", padding: "7px 12px", background: "#fff9e7", border: "2px solid #17232d", color: "#17232d", fontSize: 13, fontWeight: 700, letterSpacing: 1 }}>COMPLEX QUESTIONS. USEFUL ANSWERS.</div>
         <div style={{ display: "flex", flexDirection: "column", marginTop: 17, fontFamily: "Snappy Display", fontSize: 94, fontWeight: 400, lineHeight: .88, letterSpacing: -1 }}>
-          <span>COLD TRAFFIC.</span>
-          <span style={{ color: "#f7fa00", marginTop: 6 }}>WARM LEADS.</span>
+          <span>YOUR QUESTIONS.</span>
+          <span style={{ color: "#f7fa00", marginTop: 6 }}>QUESTIONS?</span>
         </div>
-        <div style={{ display: "flex", marginTop: 25, maxWidth: 650, fontSize: 24, lineHeight: 1.35 }}>The right answers, fast.</div>
+        <div style={{ display: "flex", marginTop: 25, maxWidth: 650, fontSize: 24, lineHeight: 1.35 }}>Help buyers take the next step.</div>
       </div>
 
       <div style={{ display: "flex", position: "absolute", right: 28, top: 19, width: 390, height: 390, alignItems: "center", justifyContent: "center" }}>

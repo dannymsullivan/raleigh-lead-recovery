@@ -14,6 +14,21 @@ export type ResearchNiche = {
 // or representations about any prospect's services. No sample inquiry is submitted.
 export const researchNiches: ResearchNiche[] = [
   {
+    slug: "crawl-space",
+    name: "Crawl space services",
+    audience: "Crawl space & moisture-control companies",
+    headline: "Turn crawl space questions into better inspection requests.",
+    description: "Help homeowners understand your services, process, and next steps before they request an inspection.",
+    knowledge: ["Encapsulation and vapor barrier options", "Moisture and drainage assessment process", "What an inspection covers", "Dehumidifier and ongoing service policies"],
+    questions: [
+      { question: "Do I need encapsulation or just a vapor barrier?", answer: "A vapor barrier covers the ground, while a full encapsulation can include sealing, moisture control, and other work. This sample company explains the options but recommends a scope only after inspecting the space. Tell the team what concerns you have and they can explain the inspection process.", source: "Encapsulation and barrier options" },
+      { question: "Is a dehumidifier included?", answer: "This sample company lists a dehumidifier separately in the written proposal when it is recommended. It is not automatically included in every project. The team checks moisture conditions and explains the proposed scope after an inspection.", source: "Dehumidifier and proposal scope" },
+      { question: "What happens during an inspection?", answer: "The team discusses your concerns, reviews accessible crawl space conditions, and explains what it finds. If work is recommended, the written proposal identifies the scope and price. The team confirms access and any limitations with you before the visit.", source: "Inspection process" },
+    ],
+    handoff: ["Home location and homeowner's concerns", "Visible water, odors, or other reported conditions", "Questions about the inspection and service scope", "Preferred contact details, shared with permission"],
+    researchQuestion: "What do homeowners need to understand before requesting a crawl space inspection?",
+  },
+  {
     slug: "warehouse-racking",
     name: "Warehouse racking",
     audience: "Racking installers & warehouse build coordinators",

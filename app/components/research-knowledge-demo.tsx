@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
-import { ArrowUpDown, BookOpen, Check, ChevronDown, Layers, Paintbrush, Snowflake, Warehouse, Wind } from "lucide-react";
+import { ArrowUpDown, BookOpen, Check, ChevronDown, House, Layers, Paintbrush, Snowflake, Warehouse, Wind } from "lucide-react";
 import { WebsiteChat } from "./website-chat";
 import { researchNiches, type ResearchNiche } from "@/lib/research-niches";
 import { getResearchDemo } from "@/lib/research-demo-knowledge";
 
 const industryDetails = [
+  { icon: House, detail: "Moisture, encapsulation & inspections" },
   { icon: Warehouse, detail: "Layouts, relocations & installation" },
   { icon: Layers, detail: "Project scope, testing & expansion" },
   { icon: Paintbrush, detail: "Equipment, site work & coordination" },
@@ -62,7 +63,7 @@ function IndustryPicker({ value, onChange }: { value: string; onChange: (slug: s
       <span className="industry-picker-copy"><strong id={`${id}-value`}>{selected.name}</strong><small>{detail}</small></span>
       <span className="industry-picker-chevron"><ChevronDown size={18} aria-hidden="true" /></span>
     </button>
-    {open && <div className="industry-picker-panel"><div className="industry-picker-panel-heading"><span>Choose your demo</span><span>06 industries</span></div><div role="listbox" id={`${id}-options`} aria-labelledby={`${id}-label`} className="industry-picker-options">{researchNiches.map((item, index) => {
+    {open && <div className="industry-picker-panel"><div className="industry-picker-panel-heading"><span>Choose your demo</span><span>{String(researchNiches.length).padStart(2, "0")} industries</span></div><div role="listbox" id={`${id}-options`} aria-labelledby={`${id}-label`} className="industry-picker-options">{researchNiches.map((item, index) => {
       const { icon: OptionIcon, detail: optionDetail } = industryDetails[index];
       return <button key={item.slug} ref={(element) => { options.current[index] = element; }} className="industry-picker-option" role="option" aria-selected={value === item.slug} type="button" tabIndex={-1} onClick={() => choose(index)} onKeyDown={(event) => navigate(event, index)}>
         <span className="industry-picker-icon"><OptionIcon size={19} aria-hidden="true" /></span><span className="industry-picker-copy"><strong>{item.name}</strong><small>{optionDetail}</small></span><span className="industry-picker-check">{value === item.slug && <Check size={17} aria-hidden="true" />}</span>

@@ -4,6 +4,13 @@ import { getResearchNiche } from "./research-niches";
 // Fictional, explicitly labeled business handbooks. These same records supply
 // the live assistant and the public source viewer; no prospect data is used.
 const profiles: Record<string, { name: string; options: string; scope: string; preparation: string; aftercare: string }> = {
+  "crawl-space": {
+    name: "Oak City Crawl Space",
+    options: "We discuss crawl space vapor barriers, encapsulation, dehumidifiers, and moisture-control work. A ground vapor barrier and a full encapsulation are different scopes. The team inspects the accessible space before recommending work; not every home needs the same treatment. We do not diagnose mold, structural damage, or a moisture source through chat.",
+    scope: "The written proposal identifies the work recommended and what is included, such as ground covering, sealing, drainage, or a dehumidifier. A dehumidifier is not automatically included. Electrical work, structural repairs, and other trades are included only if the proposal says so. The team explains any exclusions before work is approved.",
+    preparation: "Tell us your home's location, what you have noticed, and whether you have questions about access or previous work. During an inspection the team reviews accessible conditions, discusses its findings, and explains any recommended next steps. Do not enter an unsafe crawl space to collect information for this chat. Standing water, suspected mold, and structural concerns require an on-site review.",
+    aftercare: "The team explains the care of installed equipment and any maintenance options at handover. Warranty terms, service coverage, and any ongoing maintenance are specified in the written agreement. This sample does not promise a universal warranty or maintenance schedule.",
+  },
   "warehouse-racking": {
     name: "Piedmont Rack Works",
     options: "We review selective pallet rack, push-back, drive-in, shelving, and warehouse relocation projects. Selective rack gives direct access to individual pallet positions; denser storage options require a closer review of product mix and handling workflow. We do not recommend a system based on pallet count alone. Share pallet dimensions, weights, SKU mix, handling equipment, and inventory flow for the project team's review. Customer-owned equipment is considered subject to documented identification and condition review.",

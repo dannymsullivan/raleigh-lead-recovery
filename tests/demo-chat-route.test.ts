@@ -253,6 +253,15 @@ describe("live specialist demos", () => {
     expect(body.answer.sources.map((source: { id: string }) => source.id)).toEqual(["warehouse-racking-policy-1"]);
   });
 
+  it("uses the crawl space handbook for the crawl space demo", async () => {
+    mocks.rpc.mockImplementation(async (name: string) => ({ data: name === "claim_public_demo_chat_turn" ? { chat_id: null } : true, error: null }));
+    mocks.complete.mockResolvedValue({ messages: [{ role: "agent", content: "The team recommends a scope after inspection.\nSOURCES: crawl-space-options" }] });
+    const response = await POST(request({ message: "Do I need encapsulation?", niche: "crawl-space" }));
+    expect(response.status).toBe(200);
+    expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ retell_llm_dynamic_variables: expect.objectContaining({ research_business_name: "Oak City Crawl Space", research_handbook: expect.stringContaining("SOURCE_ID: crawl-space-options") }) }), expect.anything());
+    expect((await response.json()).answer.sources.map((source: { id: string }) => source.id)).toEqual(["crawl-space-options"]);
+  });
+
   it("isolates industry session capabilities while sharing network limits", async () => {
     const hashes = [];
     for (const niche of ["warehouse-racking", "residential-elevators"]) {
