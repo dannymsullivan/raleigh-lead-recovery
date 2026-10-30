@@ -156,7 +156,7 @@ export default async function OutreachPage({ searchParams }: PageProps) {
           <p className="mt-1.5 text-sm text-slate-500">
             {pilotOnly ? "Review qualification answers and campaign tags, then email the applicant to arrange a fit call. Selection and setup are manual." : trialOnly ? "Website trial requests arrive here with their business details and setup goals. Follow up by email, then create their customer workspace when they’re ready." : "Website trial requests and outreach prospects, with every follow-up in one place."}
           </p>
-          <div className="mt-3 flex flex-wrap gap-4 text-sm font-semibold"><Link href="/admin/outreach" className="underline underline-offset-4">All prospects</Link><Link href="/admin/outreach?source=website_trial" className="underline underline-offset-4">Website trial requests</Link><Link href="/admin/outreach?source=hvac_pilot" className="underline underline-offset-4">HVAC pilot applications</Link></div>
+          <div className="mt-3 flex flex-wrap gap-4 text-sm font-semibold"><Link href="/admin/outreach" className="underline underline-offset-4">All prospects</Link><Link href="/admin/outreach?source=website_trial" className="underline underline-offset-4">Website trial requests</Link><Link href="/admin/outreach?source=hvac_pilot" className="underline underline-offset-4">Pilot applications (HVAC + crawl space)</Link></div>
         </section>
 
         <section className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-5" aria-label="Outreach summary">

@@ -17,10 +17,11 @@ export async function POST(request: NextRequest) {
   } catch { return reply({ error: "Please check your details and try again." }, 400); }
   const value = (key: string) => typeof body[key] === "string" ? (body[key] as string).trim() : "";
   if (value("fax")) return reply({ error: "Unable to submit this request." }, 400);
-  const pilot = body.offer === "raleigh_hvac_pilot";
+  const crawlPilot = body.offer === "raleigh_crawl_space_pilot";
+  const pilot = body.offer === "raleigh_hvac_pilot" || crawlPilot;
   if (body.offer !== undefined && !pilot) return reply({ error: "Please select a valid offer." }, 400);
   const name = value("name"), business = value("business"), email = value("email").toLowerCase(), submissionId = value("submissionId");
-  const needs = pilot ? pilotApplicationNotes(body.pilot) : value("needs");
+  const needs = pilot ? pilotApplicationNotes(body.pilot, crawlPilot ? "crawl-space" : "hvac") : value("needs");
   if (pilot && (!needs || !value("website"))) return reply({ error: "Complete the pilot questions, website, and participation acknowledgments." }, 400);
   if (!name || name.length > 100 || !business || business.length > 160 || !needs || needs.length > 2000 || email.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || body.consent !== true || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(submissionId)) {
     return reply({ error: "Enter your name, business, valid email, what you need, and permission to follow up." }, 400);

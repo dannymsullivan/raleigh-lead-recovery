@@ -8,7 +8,6 @@ import { SalesMotion } from "./components/sales-motion";
 import { ResearchKnowledgeDemo } from "./components/research-knowledge-demo";
 import { TrialRequestForm } from "./components/trial-request-form";
 import { getResearchNiche, researchNiches } from "@/lib/research-niches";
-import { contactEmail } from "@/lib/contact";
 import "./knowledge-demo.css";
 import "./research/research.css";
 
@@ -45,7 +44,7 @@ export default function HomePage() {
       <article className="sales-problem-card"><span>03</span><h3>Your team gets a better conversation.</h3><p>When the buyer asks for follow-up, your people can read what they asked, what they learned, and what they need. Start with context and move toward the right quote.</p></article>
     </div></div></section>
 
-    <section className="rlr-founder page-shell"><Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} /><div><p className="rlr-kicker">Founder-led setup</p><h2>Your team’s knowledge is the advantage.</h2><p>I’m Danny Sullivan, a product engineer and former service-business owner. When we had our crawl space encapsulated, we got at least ten quotes—and the whole process was confusing. That experience showed me how much clear answers matter before an inspection or quote. I work with your team to turn your expertise into answers homeowners can use, while keeping your people in charge of recommendations and follow-up.</p></div><a className="rlr-inline-link" href={`mailto:${contactEmail}`}>Email Danny <ArrowRight aria-hidden="true" /></a></section>
+    <section className="rlr-founder page-shell"><Image src="/danny.jpeg" alt="Danny Sullivan, founder of Snappy Leads" width={112} height={112} /><div><p className="rlr-kicker">Founder-led setup</p><h2>Your team’s knowledge is the advantage.</h2><p>I’m Danny Sullivan, a product engineer and former service-business owner. When we had our crawl space encapsulated, we got at least ten quotes—and the whole process was confusing. That experience showed me how much clear answers matter before an inspection or quote. I work with your team to turn your expertise into answers homeowners can use, while keeping your people in charge of recommendations and follow-up.</p></div><Link className="rlr-inline-link" href="/crawl-space-pilot">Explore the three-month pilot <ArrowRight aria-hidden="true" /></Link></section>
     <section className="rlr-flow page-shell" id="how-it-works"><div className="rlr-section-heading"><p className="rlr-kicker">Start with the knowledge</p><h2>Capture the expertise. Test the answers. Help the buyer.</h2><p>The setup starts with what your customers need to understand before they can make an informed inquiry.</p></div><ol className="rlr-flow-steps">
       <li><span>01</span><div><h3>Build your knowledge base</h3><p>Bring your guides, service details, process, policies, and frequently asked questions. We help organize the information and identify gaps for your team to fill.</p></div></li>
       <li><span>02</span><div><h3>Put real buying questions to it</h3><p>Test comparisons, exceptions, and follow-up questions. Approve what the assistant can explain and when it should refer someone to your team.</p></div></li>
